@@ -33,7 +33,6 @@ bool UWorld::InitializeWorld()
 	m_pViewport->Render(&m_Box);
 
 
-
 	m_pCamera = new CCamera();
 
 	m_pViewport->AddCamera(m_pCamera);
@@ -49,4 +48,19 @@ bool UWorld::DestroyWorld()
 	delete m_pCamera;
 	m_pCamera = 0;
 	return TRUE;
+}
+
+void UWorld::InputChar()
+{
+	m_pViewport->InputChar();
+}
+
+void UWorld::InputKey()
+{
+	m_pViewport->InputKey();
+}
+
+void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param Param)
+{
+	m_pViewport->InputMouse(Event, Param);
 }

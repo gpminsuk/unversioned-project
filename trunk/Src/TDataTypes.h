@@ -39,6 +39,16 @@ public:
 	short _1,_2,_3;
 };
 
+class TIntPoint
+{
+public:
+	TIntPoint() : x(0), y(0) {}
+	TIntPoint(int x1,int y1) : x(x1), y(y1) {}
+
+	int x;
+	int y;
+};
+
 class TScalar
 {
 public:

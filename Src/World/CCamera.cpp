@@ -29,7 +29,8 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param Param)
 				{
 					if(Param.bRButtonDown)
 					{
-						m_Position.y += 0.3f;
+						m_Position.y += Param.dY/10.0f;
+						m_Position.x += Param.dX/10.0f;
 					}
 				}
 			}

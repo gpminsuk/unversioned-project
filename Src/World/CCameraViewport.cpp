@@ -24,3 +24,19 @@ void CCameraViewport::UpdateCameraViewport()
 		D3DXMatrixLookAtLH((D3DXMATRIXA16*)&m_ViewMatrix, (D3DXVECTOR3*)&CurCamera->m_Position, (D3DXVECTOR3*)&CurCamera->m_LookAt, (D3DXVECTOR3*)&CurCamera->m_Up);
 	}
 }
+
+void CCameraViewport::InputMouse(EMouse_Event Event, TMouseInput_Param Param)
+{
+	CCamera* CurCamera = GetCurrentCamera();
+	CurCamera->InputMouse(Event, Param);
+}
+
+void CCameraViewport::InputChar()
+{
+
+}
+
+void CCameraViewport::InputKey()
+{
+
+}

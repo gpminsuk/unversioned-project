@@ -1,6 +1,9 @@
 #pragma once
 
+#include <windows.h>
+
 #include "TDataTypes.h"
+#include "InputDefine.h"
 
 #include "BViewport.h"
 
@@ -51,5 +54,8 @@ public:
 		}
 	}
 
-	void UpdateCameraViewport();
+	virtual void UpdateCameraViewport();
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param Param);
+	virtual void InputKey();
+	virtual void InputChar();
 };

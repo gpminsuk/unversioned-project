@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include "TDataTypes.h"
+#include "InputDefine.h"
 
 class BRenderer;
 
@@ -26,4 +27,8 @@ public:
 	BRenderer* m_pRenderer;
 
 	TBox	m_Box;
+
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param Param);
+	virtual void InputKey();
+	virtual void InputChar();
 };

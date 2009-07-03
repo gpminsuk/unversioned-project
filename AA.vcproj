@@ -321,6 +321,10 @@
 					Name="Templates"
 					>
 					<File
+						RelativePath=".\Src\InputDefine.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\TDataTypes.h"
 						>
 					</File>

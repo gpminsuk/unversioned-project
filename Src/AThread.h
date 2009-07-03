@@ -1,3 +1,7 @@
+/*
+ *	Author : Minsuk Kang
+ *	Date : 2009-07-02
+ */
 #pragma once
 
 #include <process.h>

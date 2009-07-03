@@ -16,10 +16,10 @@ public:
 	BViewport(void);
 	virtual ~BViewport(void);
 
-	TPrimitiveTemplateBase** m_BasePrimitives;
-	int	m_nBasePrimitives;
-	TPrimitiveTemplateBase** m_AlphaPrimitives;
-	int m_nAlphaPrimitives;
+	void operator =(BViewport& vp);
+
+	TArray<TPrimitiveTemplateBase*> m_OpaquePrimitives;
+	TArray<TPrimitiveTemplateBase*> m_TranslucentPrimitives;
 
 	TBatch m_Batches;
 

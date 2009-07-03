@@ -28,19 +28,19 @@ public:
 	void ThreadDestroy();
 
 	void AddViewport(BViewport* pViewport);
+	void FetchViewports();
 
 	inline void SetDriver(BDriver* Driver) { m_pDriver = Driver; }
 	inline void SetApplication(BApplication *App) { m_pApp = App; }
 
 protected:
-	TBox *m_pBox;
-	TQuad *m_pQuad;
+	TArray<BViewport*> m_RendererViewport;
+	TArray<BViewport*> m_Viewports;
 
 	BApplication* m_pApp;
 	BDriver* m_pDriver;
 	BPrimitiveBuffer* m_pBuffer;
 	BTextureBuffer* m_pTexture;
-	BViewport** m_ppViewports;
 	int m_nViewportCount;
 
 	DWORD m_dFrameTime[100];

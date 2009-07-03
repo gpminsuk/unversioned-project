@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "BViewport.h"
 #include "BRenderer.h"
+#include "UWorld.h"
 
 #include "CWindowApp.h"
 #include "CDirectXDriver.h"
@@ -41,13 +41,10 @@ bool CWindowApp::CreateWindowApp()
 		m_hInstance,
 		0);
 
-	m_pViewport = new BViewport();
-
 	ShowWindow(m_hWnd, SW_SHOW);
 	UpdateWindow(m_hWnd);
 
 	m_pRenderer = new BRenderer();
-	m_pRenderer->AddViewport(m_pViewport);
 
 	m_pDriver = new CDirectXDriver(this);
 
@@ -55,6 +52,10 @@ bool CWindowApp::CreateWindowApp()
 	m_pRenderer->SetApplication(this);
 
 	m_pRenderer->Start();
+
+	m_pWorld = new UWorld(m_pRenderer);
+	m_pWorld->InitializeWorld();
+
 	return true;
 }
 
@@ -62,10 +63,11 @@ bool CWindowApp::DestroyWindowApp()
 {
 	delete m_pRenderer;
 	m_pRenderer = 0;
-	delete m_pViewport;
-	m_pViewport = 0;
 	delete m_pDriver;
 	m_pDriver = 0;
+	m_pWorld->DestroyWorld();
+	delete m_pWorld;
+	m_pWorld = 0;
 	return true;
 }
 
@@ -83,6 +85,7 @@ void CWindowApp::Do()
 		}
 		else
 		{
+			m_pWorld->Tick(0);
 			// TODI : Do World Tick
 		}
 	}

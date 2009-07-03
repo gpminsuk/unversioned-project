@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Src"
+				AdditionalIncludeDirectories=".\Src\World;.\Src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -172,40 +172,17 @@
 	</References>
 	<Files>
 		<Filter
-			Name="소스 파일"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="World"
 			>
-			<File
-				RelativePath=".\Src\AA.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Src\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
 			<Filter
 				Name="A"
 				>
 				<File
-					RelativePath=".\Src\AThread.cpp"
+					RelativePath=".\Src\World\AObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\World\AObject.h"
 					>
 				</File>
 			</Filter>
@@ -213,27 +190,11 @@
 				Name="B"
 				>
 				<File
-					RelativePath=".\Src\BApplication.cpp"
+					RelativePath=".\Src\World\BThing.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\BDriver.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\BMaterialBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\BRenderer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\BShaderBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\BViewport.cpp"
+					RelativePath=".\Src\World\BThing.h"
 					>
 				</File>
 			</Filter>
@@ -241,137 +202,240 @@
 				Name="C"
 				>
 				<File
-					RelativePath=".\Src\CDirectXDriver.cpp"
+					RelativePath=".\Src\World\CCamera.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\CDirectXShader.cpp"
+					RelativePath=".\Src\World\CCamera.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\CWindowApp.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Resource"
-				>
-				<File
-					RelativePath=".\Src\ResourceManager.cpp"
+					RelativePath=".\Src\World\CCameraViewport.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Src\RResource.cpp"
+					RelativePath=".\Src\World\CCameraViewport.h"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="Templates"
+				Name="U"
 				>
 				<File
-					RelativePath=".\Src\TDataTypes.cpp"
+					RelativePath=".\Src\World\UWorld.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\World\UWorld.h"
 					>
 				</File>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="헤더 파일"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="Rendering"
 			>
-			<File
-				RelativePath=".\Src\stdafx.h"
-				>
-			</File>
 			<Filter
-				Name="A"
+				Name="리소스 파일"
+				Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
-					RelativePath=".\Src\AThread.h"
+					RelativePath=".\Shaders\PixelShader.fx"
+					>
+				</File>
+				<File
+					RelativePath=".\Shaders\VertexShader.fx"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="B"
+				Name="헤더 파일"
+				Filter="h;hpp;hxx;hm;inl;inc;xsd"
+				UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 				>
-				<File
-					RelativePath=".\Src\BApplication.h"
+				<Filter
+					Name="A"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\BDriver.h"
+					<File
+						RelativePath=".\Src\AThread.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="B"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\BMaterialBase.h"
+					<File
+						RelativePath=".\Src\BApplication.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BDriver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BMaterialBase.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BShaderBase.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BViewport.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="C"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\BRenderer.h"
+					<File
+						RelativePath=".\Src\CDirectXDriver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CDirectXShader.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CWindowApp.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Resource"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\BShaderBase.h"
+					<File
+						RelativePath=".\Src\ResourceManager.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\RResource.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Templates"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\BViewport.h"
-					>
-				</File>
+					<File
+						RelativePath=".\Src\TDataTypes.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
-				Name="C"
+				Name="소스 파일"
+				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+				UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 				>
-				<File
-					RelativePath=".\Src\CDirectXDriver.h"
+				<Filter
+					Name="A"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\CDirectXShader.h"
+					<File
+						RelativePath=".\Src\AThread.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="B"
 					>
-				</File>
-				<File
-					RelativePath=".\Src\CWindowApp.h"
+					<File
+						RelativePath=".\Src\BApplication.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BDriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BMaterialBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BShaderBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BViewport.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="C"
 					>
-				</File>
+					<File
+						RelativePath=".\Src\CDirectXDriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CDirectXShader.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CWindowApp.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Resource"
+					>
+					<File
+						RelativePath=".\Src\ResourceManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\RResource.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Templates"
+					>
+					<File
+						RelativePath=".\Src\TDataTypes.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
-			<Filter
-				Name="Resource"
-				>
-				<File
-					RelativePath=".\Src\ResourceManager.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\RResource.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Templates"
-				>
-				<File
-					RelativePath=".\Src\TDataTypes.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="리소스 파일"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-			<File
-				RelativePath=".\Shaders\PixelShader.fx"
-				>
-			</File>
-			<File
-				RelativePath=".\Shaders\VertexShader.fx"
-				>
-			</File>
 		</Filter>
 		<File
+			RelativePath=".\Src\AA.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Src\stdafx.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+					PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\Src\stdafx.h"
 			>
 		</File>
 	</Files>

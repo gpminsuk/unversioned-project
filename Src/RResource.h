@@ -2,6 +2,8 @@
 
 #include "TDataTypes.h"
 
+class BViewport;
+
 class RShaderBase
 {
 public:
@@ -13,7 +15,7 @@ public:
 	virtual bool AssembleShaderFromMemory() = 0;
 
 	virtual bool BeginShader() = 0;
-	virtual bool SetParameter(int iPass) = 0;
+	virtual bool SetParameter(BViewport* vp) = 0;
 	virtual bool EndShader() = 0;
 	virtual bool BeginPass() = 0;
 	virtual bool EndPass() = 0;

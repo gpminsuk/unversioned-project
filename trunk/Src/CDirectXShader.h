@@ -6,6 +6,8 @@
 
 #pragma comment(lib, "d3dx9.lib")
 
+class BViewport;
+
 class CDirectXDriver;
 
 class CDirectXShader : public RShaderBase
@@ -23,7 +25,7 @@ public:
 	virtual bool AssembleShaderFromMemory();
 
 	virtual bool BeginShader();
-	virtual bool SetParameter(int iPass);
+	virtual bool SetParameter(BViewport* vp);
 	virtual bool EndShader();
 	virtual bool BeginPass();
 	virtual bool EndPass();

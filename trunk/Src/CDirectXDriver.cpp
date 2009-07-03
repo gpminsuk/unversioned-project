@@ -9,6 +9,7 @@
 CDirectXDriver::CDirectXDriver(CWindowApp* Window)
 :	m_pWindow(Window)
 {
+	CreateDriver();
 }
 
 bool CDirectXDriver::CreateDriver()

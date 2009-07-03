@@ -18,6 +18,13 @@ public:
 		mArray.push_back(Item);
 	}
 
+	void DeleteItem(unsigned int index)
+	{
+		std::vector<T>::iterator it = mArray.begin();
+		advance(it,index);
+		mArray.erase(it);
+	}
+
 	size_t Size()
 	{
 		return mArray.size();
@@ -95,8 +102,8 @@ public:
 class TPrimitiveTemplateBase
 {
 public:
-	TPrimitiveTemplateBase() : pShader(0), pVertexBuffer(0), pIndexBuffer(0) {}
-	TPrimitiveTemplateBase::~TPrimitiveTemplateBase();
+	TPrimitiveTemplateBase();
+	~TPrimitiveTemplateBase();
 
 	TQuarternion qTranslation;
 	TQuarternion qRotation;
@@ -106,8 +113,8 @@ public:
 
 	class RShaderBase *pShader;
 
-	class RVertexBuffer* pVertexBuffer;
-	class RIndexBuffer* pIndexBuffer;
+	class RVertexBuffer *pVertexBuffer;
+	class RIndexBuffer *pIndexBuffer;
 	
 	struct SBatchInfo
 	{
@@ -132,6 +139,8 @@ class TBox : public TPrimitiveTemplateBase
 public:
 	TBox() : Extent(10.f,10.f,10.f) { Create(); }
 	TBox(TVector3 _Extent) : Extent(_Extent) { Create(); }
+
+	void Resize(TVector3 _Extent) { Extent = _Extent; Create(); }
 
 private:
 	void Create();
@@ -163,3 +172,30 @@ private:
 class TMesh : public TPrimitiveTemplateBase
 {
 };
+
+/*
+template <typename T>
+class TArray
+{
+private: 
+	enum
+	{
+		DEFAULT_SIZE = 16,
+	};
+
+	T* m_Data;
+	int m_Size;
+	int m_Num;
+
+	void Init(int size);
+
+public: 
+	TArray();
+	TArray(int size);
+	~TArray();
+	void Add(T item);
+	void Resize(int size);
+	int GetLength();
+	T& operator [](int& index);
+	void operator =(TArray<T>& R);
+};*/

@@ -9,6 +9,11 @@ TPrimitiveTemplateBase::~TPrimitiveTemplateBase()
 	delete pShader; pShader = 0;
 }
 
+TPrimitiveTemplateBase::TPrimitiveTemplateBase() 
+: pShader(0), pVertexBuffer(0), pIndexBuffer(0)
+{
+	pShader = RShaderTable::pShaders;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void TBox::Create()

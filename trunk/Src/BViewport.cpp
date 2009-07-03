@@ -5,25 +5,15 @@
 #include <algorithm>
 
 BViewport::BViewport(void)
-:	m_BasePrimitives(0),
-	m_nBasePrimitives(0),
-	m_AlphaPrimitives(0),
-	m_nAlphaPrimitives(0)
 {
-	m_BasePrimitives = new TPrimitiveTemplateBase*[10];
-	m_nBasePrimitives = 10;
 }
 
 BViewport::~BViewport(void)
 {
-	delete[] m_BasePrimitives;
 }
 
 void BViewport::SortTemplates()
 {
-	return;
-	std::sort(m_BasePrimitives, m_BasePrimitives + m_nBasePrimitives, BViewport::PrimitiveCompare);
-	std::sort(m_AlphaPrimitives, m_AlphaPrimitives + m_nAlphaPrimitives, BViewport::PrimitiveCompare);
 }
 
 int BViewport::PrimitiveCompare(TPrimitiveTemplateBase *tb1, TPrimitiveTemplateBase *tb2)
@@ -39,7 +29,7 @@ void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_RenderType RenderTyp
 	switch(RenderType)
 	{
 	case RT_BASE_PASS:
-		m_BasePrimitives[0] = pTemplate;
+		m_OpaquePrimitives.AddItem(pTemplate);
 		m_Batches.m_pTemplates.AddItem(pTemplate);
 		m_Batches.nVertexStride = pTemplate->pVertexBuffer->nVertexStride;
 		m_Batches.nVertices += pTemplate->pVertexBuffer->nVertices;
@@ -48,4 +38,13 @@ void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_RenderType RenderTyp
 
 void BViewport::Clear()
 {
+}
+
+void BViewport::operator =(BViewport& vp)
+{
+	m_OpaquePrimitives			=		vp.m_OpaquePrimitives;
+	m_Batches					=		vp.m_Batches;
+	m_ProjectionMatrix			=		vp.m_ProjectionMatrix;
+	m_TranslucentPrimitives		=		vp.m_TranslucentPrimitives;
+	m_ViewMatrix				=		vp.m_ViewMatrix;
 }

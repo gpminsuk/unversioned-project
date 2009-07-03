@@ -7,57 +7,36 @@
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
 	m_iFTimeIdx(0),
-	m_ppViewports(0),
 	m_nViewportCount(0)
 {
 	for(int i=0;i<100;++i)
 		m_dFrameTime[i] = 0;
 
 	m_nViewportCount = 1;
-	m_ppViewports = new BViewport*[5];
 }
 
 void BRenderer::AddViewport(BViewport* pViewport)
 {
-	m_ppViewports[0] = pViewport;
+	m_Viewports.AddItem(pViewport);
 }
 
 bool BRenderer::Initialize()
 {
-	m_pDriver->CreateDriver();
-
-	m_pBox = new TBox(TVector3(1.f,1.f,1.f));
-	m_pBox->pShader = RShaderTable::pShaders;
-
-	m_ppViewports[0]->Render(m_pBox);
-
-	m_pQuad = new TQuad();
-	m_pQuad->pShader = RShaderTable::pShaders;
-	
-	m_ppViewports[0]->Render(m_pQuad);
-	
 	m_pTexture = m_pDriver->CreateTextureBuffer();
 	return true;
 }
 
-
-
 bool BRenderer::Destroy()
 {
 	m_pTexture->DestroyTextureBuffer();
-
 	m_pDriver->DestroyDriver();
-
-	delete m_pBox;
-	m_pBox = 0;
-	delete m_pQuad;
-	m_pQuad = 0;
 	return true;
 }
 
 bool BRenderer::Render()
 {
-	RenderViewport(m_ppViewports[0]);	
+	for(UINT i=0;i<m_RendererViewport.Size();++i)
+		RenderViewport(m_RendererViewport[i]);	
 	return true;
 }
 
@@ -66,26 +45,53 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	Viewport->SortTemplates();
 	m_pBuffer = m_pDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
 
-	Viewport->m_BasePrimitives[0]->pShader->BeginShader();
+	for(UINT PrimIdx = 0;PrimIdx < Viewport->m_OpaquePrimitives.Size(); ++PrimIdx)
+	{
+		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];
+		Prim->pShader->BeginShader();
 
-	m_pDriver->SetTexture(0, m_pTexture);
+		m_pDriver->SetTexture(0, m_pTexture);
 
-	for(unsigned int i=0;i<Viewport->m_BasePrimitives[0]->pShader->m_nPass;++i)
-	{		
-		Viewport->m_BasePrimitives[0]->pShader->BeginPass();
-		Viewport->m_BasePrimitives[0]->pShader->SetParameter(i);
-		
-		m_pDriver->DrawPrimitive();
+		for(UINT i=0;i<Prim->pShader->m_nPass;++i)
+		{		
+			Prim->pShader->BeginPass();
+			Prim->pShader->SetParameter(Viewport);
 
-		Viewport->m_BasePrimitives[0]->pShader->EndPass();
+			m_pDriver->DrawPrimitive();
+
+			Prim->pShader->EndPass();
+		}
+
+		Prim->pShader->EndShader();
 	}
-
-
-	Viewport->m_BasePrimitives[0]->pShader->EndShader();
 
 	m_pBuffer->DestroyVertexBuffer();
 	delete m_pBuffer;
 	return true;
+}
+
+void BRenderer::FetchViewports()
+{
+	int Count = (UINT)(m_Viewports.Size() - m_RendererViewport.Size());
+	if(Count > 0)
+	{
+		for(int i=0;i<Count;++i)
+		{
+			BViewport *vp = new BViewport;
+			m_RendererViewport.AddItem(vp);
+		}
+	}
+	else
+	{
+		for(int i=0;i>Count;--i)
+		{
+			m_RendererViewport.DeleteItem((UINT)(m_RendererViewport.Size()-1));
+		}
+	}
+	for(UINT i=0;i<m_RendererViewport.Size();++i)
+	{
+		*m_RendererViewport[i] = *m_Viewports[i];
+	}
 }
 
 void BRenderer::ThreadSetup()
@@ -99,6 +105,7 @@ void BRenderer::ThreadExecute()
 	int ddd = 0;
 	while(!m_pApp->bQuit)
 	{
+		FetchViewports();
 		dTime = timeGetTime();
 
 

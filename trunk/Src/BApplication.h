@@ -2,7 +2,7 @@
 
 class BRenderer;
 class BDriver;
-class BViewport;
+class UWorld;
 
 class BApplication
 {
@@ -12,7 +12,7 @@ public:
 	BRenderer *m_pRenderer;
 	BDriver* m_pDriver;
 
-	BViewport* m_pViewport;
+	UWorld*	m_pWorld;
 
 	bool bQuit;
 };

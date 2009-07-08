@@ -116,8 +116,14 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
 	Param.bMButtonDown = m_MouseMap.bMButtonDown;
 	Param.X = LOWORD(lParam);
 	Param.Y = HIWORD(lParam);
-	Param.dX = m_MousePt.x - Param.X;
-	Param.dY = m_MousePt.y - Param.Y;
+	if(m_MousePt.x) 
+		Param.dX = m_MousePt.x - Param.X;
+	else
+		Param.dX = 0;
+	if(m_MousePt.y)
+		Param.dY = m_MousePt.y - Param.Y;
+	else
+		Param.dY = 0;
 	m_MousePt.x = Param.X;
 	m_MousePt.y = Param.Y;
 	switch(Message)

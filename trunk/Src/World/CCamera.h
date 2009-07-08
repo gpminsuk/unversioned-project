@@ -20,10 +20,15 @@ public:
 
 	ECamera_Mode m_CameraMode;
 
-	TVector3 m_Position;
-	TVector3 m_LookAt;
-	TVector3 m_Up;
+	TQuaternion m_Rotation;
+	float m_Distance;
+
+	virtual void UpdateCamera();
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param Param);
 	virtual void InputKey();
+
+	TVector3 m_Position;
+	TVector3 m_LookAt;
+	TVector3 m_Up;
 };

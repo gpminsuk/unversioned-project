@@ -1,5 +1,10 @@
 #pragma once
 
+// Shader
+// IndexBuffer
+// VertexBuffer
+// Texture
+
 #include "TDataTypes.h"
 
 class BViewport;
@@ -79,7 +84,7 @@ struct VertexDeclaration
 	char Type;
 };
 
-class RVertexBuffer //: public AMemory
+class RVertexBuffer
 {
 public:
 	RVertexBuffer() : pVertices(0), nVertices(0) {}

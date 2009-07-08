@@ -1,5 +1,7 @@
 #pragma once
 
+#define MOUSE_WHEEL_DELTA	120.0f
+
 enum EMouse_Event
 {
 	MOUSE_None,
@@ -42,5 +44,5 @@ struct TMouseInput_Param : TInput_Param
 	unsigned short Y;
 	short dX;
 	short dY;
-	float delta;
+	short delta;
 };

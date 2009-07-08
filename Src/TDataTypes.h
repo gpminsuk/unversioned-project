@@ -1,6 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <math.h>
+// ∏ «Œ¿ª ¿ß«ÿ
+#define SINE(x)		 sin(x)
+#define COSINE(x)	 cos(x)
+#define SQRT(x)		 sqrt(x)
+#define ARCSINE(x)	 asin(x)
+#define ARCCOSINE(x) acos(x)
 
 template <class T>
 class TArray
@@ -77,8 +84,28 @@ public:
 	TVector3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
 	TVector3(TVector3& v) : x(v.x), y(v.y), z(v.z) {}
 
+	TVector3 operator* (float f) { return TVector3(x*f,y*f,z*f); }
 	TVector3 operator/ (float f) { return TVector3(x/f,y/f,z/f); }
 	TVector3 operator- () { return TVector3(-x,-y,-z); }
+	TVector3 operator^ (TVector3& v) { return TVector3(y*v.z-z*v.y, z*v.x-x*v.z, x*v.y-y*v.x); }
+	TVector3 operator+ (TVector3& v) { return TVector3(x+v.x,y+v.y,z+v.z); }
+	TVector3 operator- (TVector3& v) { return TVector3(x-v.x,y-v.y,z-v.z); }
+	void operator= (TVector3& v) { x=v.x; y=v.y; z=v.z; }
+	float operator| (TVector3& v) { return x*v.x+y*v.y+z*v.z; }
+
+	TVector3& operator+= (TVector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+
+	float SizeSquared()
+	{
+		return x*x+y*y+z*z;
+	}
+
+	TVector3& Normalize()
+	{
+		float Squared = SQRT(SizeSquared());
+		x/=Squared; y/=Squared; z/=Squared;
+		return *this;
+	}
 
 	float x;
 	float y;
@@ -97,7 +124,51 @@ public:
 	float z;
 	float w;
 };
-typedef TVector4 TQuarternion;
+
+__declspec(align(16)) class TQuaternion
+{
+public:
+	TQuaternion() : v(), w(1) {}
+	TQuaternion(float x1, float y1, float z1, float w1) : v(x1, y1, z1), w(w1) {}
+	TQuaternion(TQuaternion& _v) : v(_v.v), w(_v.w) {}
+	TQuaternion(TVector3 Axis, float theta) : v(Axis.x*SINE(theta/2.0f),(Axis.y*SINE(theta/2.0f)),(Axis.z*SINE(theta/2.0f))), w(COSINE(theta/2.0f)) {}
+
+	void Rotate(TVector3 Axis, float theta)
+	{
+		TQuaternion Temp(Axis, theta);
+		*this *= Temp;
+		Normalize();
+	}
+
+	TVector3 TransformVector3D(TVector3& _v)
+	{
+		return (v^(v^_v))*2.0f + ((v^_v)*w*2.0f + _v);
+	}
+
+	TQuaternion& Normalize()
+	{
+		float Squared = SQRT(SizeSquared());
+		v=v/Squared;
+		w=w/Squared;
+		return *this;
+	}
+
+	float SizeSquared()
+	{
+		return v.SizeSquared() + w*w;
+	}
+
+	TQuaternion& operator*=(TQuaternion& q)
+	{
+		float tmpw = w*q.w - (v|q.v);
+		v = (v*q.w) + (q.v*w) + (v^q.v);
+		w = tmpw;
+		return *this;
+	}
+
+	TVector3 v;
+	float w;
+};
 
 class TMatrix
 {
@@ -115,9 +186,9 @@ public:
 	TPrimitiveTemplateBase();
 	~TPrimitiveTemplateBase();
 
-	TQuarternion qTranslation;
-	TQuarternion qRotation;
-	TQuarternion qScale;
+	TVector4 qTranslation;
+	TQuaternion qRotation;
+	TVector4 qScale;
 
 	class RMaterial *pMaterial;
 

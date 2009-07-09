@@ -9,6 +9,7 @@
 #include "CDirectXDriver.h"
 
 CWindowApp	*GApp = 0;
+unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
 bool CWindowApp::CreateWindowApp()
 {
@@ -171,6 +172,29 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
 	}
 }
 
+void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
+{
+	TKeyInput_Param Param;
+	Param.bRAltDown = ::GetKeyState(VK_RMENU);
+	Param.bLAltDown = ::GetKeyState(VK_LMENU);
+	Param.bRCtrlDown = ::GetKeyState(VK_RCONTROL);
+	Param.bLCtrlDown = ::GetKeyState(VK_LCONTROL);
+	Param.bRShiftDown = ::GetKeyState(VK_RSHIFT);
+	Param.bLShiftDown = ::GetKeyState(VK_LSHIFT);
+	Param.Key = (unsigned short)wParam;	
+	switch(Message)
+	{
+	case WM_KEYDOWN:
+		GKeyMap[Param.Key] = 0x01;
+		m_pWorld->InputKey(KEY_Down, Param);
+		break;
+	case WM_KEYUP:
+		GKeyMap[Param.Key] = 0x00;
+		m_pWorld->InputKey(KEY_Up, Param);
+		break;
+	}
+}
+
 void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	switch(Message)
@@ -187,6 +211,10 @@ void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:
 	case WM_MOUSEMOVE:
 		MouseEventTranslator(Message, wParam, lParam);
+		break;
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+		KeyEventTranslator(Message, wParam, lParam);
 		break;
 	}
 }

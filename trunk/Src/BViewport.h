@@ -3,6 +3,7 @@
 #include "TDataTypes.h"
 
 class TPrimitiveTemplateBase;
+class BLight;
 
 enum E_RenderType
 {
@@ -20,6 +21,7 @@ public:
 
 	TArray<TPrimitiveTemplateBase*> m_OpaquePrimitives;
 	TArray<TPrimitiveTemplateBase*> m_TranslucentPrimitives;
+	TArray<BLight*>					m_Lights;
 
 	TBatch m_Batches;
 

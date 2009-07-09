@@ -222,7 +222,7 @@ bool CDirectXVertexBuffer::DestroyVertexBuffer()
 
 bool CDirectXDriver::BeginScene()
 {
-	m_pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00FFFFFF, 1.0f, 0);
+	m_pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.0f, 0);
 
 	return SUCCEEDED(m_pDevice->BeginScene());
 }

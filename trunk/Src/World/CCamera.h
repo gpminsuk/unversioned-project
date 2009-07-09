@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TDataTypes.h"
 #include "InputDefine.h"
 #include "BThing.h"
 
@@ -18,17 +17,19 @@ public:
 	CCamera(void);
 	virtual ~CCamera(void);
 
+	BThing*	m_Subject;
+
 	ECamera_Mode m_CameraMode;
 
 	TQuaternion m_Rotation;
 	float m_Distance;
 
 	virtual void UpdateCamera();
+	virtual bool ShouldUpdate();
 
-	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param Param);
-	virtual void InputKey();
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 
-	TVector3 m_Position;
 	TVector3 m_LookAt;
 	TVector3 m_Up;
 };

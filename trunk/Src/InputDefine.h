@@ -1,6 +1,7 @@
 #pragma once
 
 #define MOUSE_WHEEL_DELTA	120.0f
+#define KEYMAP_SIZE			0xFF
 
 enum EMouse_Event
 {
@@ -24,6 +25,13 @@ enum EMouse_Event
 	MOUSE_Move,
 };
 
+enum EKey_Event
+{
+	KEY_None,
+	KEY_Down,
+	KEY_Up
+};
+
 struct TInput_Param
 {
 	unsigned char bLShiftDown:1;
@@ -45,4 +53,11 @@ struct TMouseInput_Param : TInput_Param
 	short dX;
 	short dY;
 	short delta;
+};
+
+extern unsigned char GKeyMap[KEYMAP_SIZE];
+
+struct TKeyInput_Param : TInput_Param
+{
+	unsigned short Key;
 };

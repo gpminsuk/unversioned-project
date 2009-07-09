@@ -94,6 +94,7 @@ public:
 	float operator| (TVector3& v) { return x*v.x+y*v.y+z*v.z; }
 
 	TVector3& operator+= (TVector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	TVector3& operator-= (TVector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
 
 	float SizeSquared()
 	{

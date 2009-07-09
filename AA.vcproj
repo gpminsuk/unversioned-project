@@ -97,7 +97,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -117,10 +117,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories=".\Src\World;.\Src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
+				ObjectFile="$(IntDir)\"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -273,6 +275,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Src\BLight.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\BMaterialBase.h"
 						>
 					</File>
@@ -293,11 +299,19 @@
 					Name="C"
 					>
 					<File
+						RelativePath=".\Src\CDirectionalLight.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\CDirectXDriver.h"
 						>
 					</File>
 					<File
 						RelativePath=".\Src\CDirectXShader.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CPointLight.h"
 						>
 					</File>
 					<File
@@ -355,6 +369,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Src\BLight.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\BMaterialBase.cpp"
 						>
 					</File>
@@ -375,11 +393,19 @@
 					Name="C"
 					>
 					<File
+						RelativePath=".\Src\CDirectionalLight.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\CDirectXDriver.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\Src\CDirectXShader.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CPointLight.cpp"
 						>
 					</File>
 					<File

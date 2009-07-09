@@ -55,12 +55,12 @@ void UWorld::InputChar()
 	m_pViewport->InputChar();
 }
 
-void UWorld::InputKey()
+void UWorld::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-	m_pViewport->InputKey();
+	m_pViewport->InputKey(Event, Param);
 }
 
-void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param Param)
+void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 {
 	m_pViewport->InputMouse(Event, Param);
 }

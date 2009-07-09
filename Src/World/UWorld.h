@@ -28,7 +28,7 @@ public:
 
 	TBox	m_Box;
 
-	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param Param);
-	virtual void InputKey();
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 	virtual void InputChar();
 };

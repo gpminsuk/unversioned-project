@@ -32,4 +32,5 @@ public:
 
 	void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
+	void KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 };

@@ -3,6 +3,7 @@
 #include "BViewport.h"
 #include "BApplication.h"
 #include "BDriver.h"
+#include "BShaderPass.h"
 
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
@@ -13,6 +14,13 @@ BRenderer::BRenderer(void)
 		m_dFrameTime[i] = 0;
 
 	m_nViewportCount = 1;
+
+	m_pBasePass = new BShaderPass();
+}
+
+BRenderer::~BRenderer()
+{
+	delete m_pBasePass;
 }
 
 void BRenderer::AddViewport(BViewport* pViewport)
@@ -22,14 +30,14 @@ void BRenderer::AddViewport(BViewport* pViewport)
 
 bool BRenderer::Initialize()
 {
-	m_pTexture = m_pDriver->CreateTextureBuffer();
+	m_pTexture = GDriver->CreateTextureBuffer();
 	return true;
 }
 
 bool BRenderer::Destroy()
 {
 	m_pTexture->DestroyTextureBuffer();
-	m_pDriver->DestroyDriver();
+	GDriver->DestroyDriver();
 	return true;
 }
 
@@ -43,26 +51,14 @@ bool BRenderer::Render()
 bool BRenderer::RenderViewport(BViewport* Viewport)
 {
 	Viewport->SortTemplates();
-	m_pBuffer = m_pDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
+	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
 
 	for(UINT PrimIdx = 0;PrimIdx < Viewport->m_OpaquePrimitives.Size(); ++PrimIdx)
 	{
-		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];
-		Prim->pShader->BeginShader();
+		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];		
 
-		m_pDriver->SetTexture(0, m_pTexture);
-
-		for(UINT i=0;i<Prim->pShader->m_nPass;++i)
-		{		
-			Prim->pShader->BeginPass();
-			Prim->pShader->SetParameter(Viewport);
-
-			m_pDriver->DrawPrimitive();
-
-			Prim->pShader->EndPass();
-		}
-
-		Prim->pShader->EndShader();
+		GDriver->SetTexture(0, m_pTexture);
+		m_pBasePass->DrawPrimitive(Viewport, Prim);
 	}
 
 	m_pBuffer->DestroyVertexBuffer();
@@ -109,11 +105,11 @@ void BRenderer::ThreadExecute()
 		dTime = timeGetTime();
 
 
-		if(m_pDriver->BeginScene())
+		if(GDriver->BeginScene())
 		{
 			Render();
 			
-			m_pDriver->EndScene();
+			GDriver->EndScene();
 		}
 
 		++ddd;

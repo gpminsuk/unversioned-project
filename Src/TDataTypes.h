@@ -15,7 +15,12 @@ class TArray
 public:
 	std::vector<T> mArray;
 
-	T operator[] (int idx)
+	T& operator[] (int idx)
+	{
+		return mArray[idx];
+	}
+
+	T& operator() (int idx)
 	{
 		return mArray[idx];
 	}
@@ -138,7 +143,7 @@ public:
 	{
 		TQuaternion Temp(Axis, theta);
 		*this *= Temp;
-		Normalize();
+		//Normalize();
 	}
 
 	TVector3 TransformVector3D(TVector3& _v)
@@ -157,6 +162,11 @@ public:
 	float SizeSquared()
 	{
 		return v.SizeSquared() + w*w;
+	}
+
+	void Initialize()
+	{
+		v.x=0.0f; v.y=0.0f; v.z=0.0f; w=1.0f;
 	}
 
 	TQuaternion& operator*=(TQuaternion& q)
@@ -192,8 +202,6 @@ public:
 	TVector4 qScale;
 
 	class RMaterial *pMaterial;
-
-	class RShaderBase *pShader;
 
 	class RVertexBuffer *pVertexBuffer;
 	class RIndexBuffer *pIndexBuffer;

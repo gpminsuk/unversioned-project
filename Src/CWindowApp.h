@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TDataTypes.h"
+#include "TWindowInfo.h"
 
 #include "BApplication.h"
 #include <windows.h>
@@ -15,11 +16,7 @@ struct UMouseMap
 class CWindowApp : public BApplication
 {
 public:
-	HWND m_hWnd;
-	HINSTANCE m_hInstance;
-
-	int m_wWidth;
-	int m_wHeight;
+	TWindowInfo m_WindowInfo;
 
 	UMouseMap m_MouseMap;
 	TIntPoint m_MousePt;

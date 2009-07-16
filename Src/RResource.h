@@ -12,7 +12,7 @@ class BViewport;
 class RShaderBase
 {
 public:
-	RShaderBase() : m_nPass(1) {}
+	RShaderBase() {}
 
 	virtual bool CompileShaderFromFile() = 0;
 	virtual bool AssembleShaderFromFile() = 0;
@@ -22,11 +22,8 @@ public:
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;
 	virtual bool EndShader() = 0;
-	virtual bool BeginPass() = 0;
-	virtual bool EndPass() = 0;
 
 	char m_FileName[256];
-	unsigned int m_nPass;
 protected:
 };
 

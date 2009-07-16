@@ -1,16 +1,16 @@
 #pragma once
 
+#include "TWindowInfo.h"
+
 #include "BDriver.h"
 #include <d3d9.h>
 
 #pragma comment(lib, "d3d9.lib")
 
-class CWindowApp;
-
 class CDirectXDriver : public BDriver
 {
 public:
-	CDirectXDriver(CWindowApp *Window);
+	CDirectXDriver(TWindowInfo *Window);
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_pDevice; }
 
 	bool CompileShader();
@@ -28,7 +28,7 @@ public:
 	virtual bool EndScene();
 
 private:
-	CWindowApp*			m_pWindow;
+	TWindowInfo*		m_pWindow;
 
 	LPDIRECT3D9			m_pD3D;
 	LPDIRECT3DDEVICE9	m_pDevice;

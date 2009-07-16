@@ -8,12 +8,9 @@
 
 class BViewport;
 
-class CDirectXDriver;
-
 class CDirectXShader : public RShaderBase
 {
 public:
-	CDirectXDriver*		m_pDirectX;
 
 	IDirect3DVertexShader9* m_pVertexShader;
 	IDirect3DPixelShader9* m_pPixelShader;
@@ -27,8 +24,4 @@ public:
 	virtual bool BeginShader();
 	virtual bool SetParameter(BViewport* vp);
 	virtual bool EndShader();
-	virtual bool BeginPass();
-	virtual bool EndPass();
-
-	CDirectXShader(CDirectXDriver* DirectX) : m_pDirectX(DirectX) {}
 };

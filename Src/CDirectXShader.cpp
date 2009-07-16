@@ -11,7 +11,7 @@ bool CDirectXShader::CompileShaderFromFile()
 	D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
 
 	D3DXDeclaratorFromFVF(D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0), Decl);
-	m_pDirectX->GetDevice()->CreateVertexDeclaration(Decl, &m_pDecl);
+	((CDirectXDriver*)(GDriver))->GetDevice()->CreateVertexDeclaration(Decl, &m_pDecl);
 
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
@@ -24,7 +24,7 @@ bool CDirectXShader::CompileShaderFromFile()
 		pErr->Release();
 		return false;
 	}
-	m_pDirectX->GetDevice()->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &m_pVertexShader);
+	((CDirectXDriver*)(GDriver))->GetDevice()->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &m_pVertexShader);
 	pCode->Release();
 	pCode = NULL;
 
@@ -36,7 +36,7 @@ bool CDirectXShader::CompileShaderFromFile()
 		pErr->Release();
 		return false;
 	}
-	m_pDirectX->GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
+	((CDirectXDriver*)(GDriver))->GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &m_pPixelShader);
 	pCode->Release();
 	return true;
 }
@@ -58,9 +58,9 @@ bool CDirectXShader::AssembleShaderFromMemory()
 
 bool CDirectXShader::BeginShader()
 {
-	m_pDirectX->GetDevice()->SetVertexDeclaration(m_pDecl);
-	m_pDirectX->GetDevice()->SetVertexShader(m_pVertexShader);
-	m_pDirectX->GetDevice()->SetPixelShader(m_pPixelShader);
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetVertexDeclaration(m_pDecl);
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetVertexShader(m_pVertexShader);
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetPixelShader(m_pPixelShader);
 	return true;
 }
 
@@ -80,23 +80,13 @@ bool CDirectXShader::SetParameter(BViewport* vp)
 
 	D3DXMatrixTranspose( &ViewProj, &ViewProj );
 
-	m_pDirectX->GetDevice()->SetVertexShaderConstantF(0, (float*)&ViewProj, 4);
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetVertexShaderConstantF(0, (float*)&ViewProj, 4);
 	return true;
 }
 
 bool CDirectXShader::EndShader()
 {
-	m_pDirectX->GetDevice()->SetPixelShader(NULL);
-	m_pDirectX->GetDevice()->SetVertexShader(NULL);
-	return true;
-}
-
-bool CDirectXShader::BeginPass()
-{
-	return true;
-}
-
-bool CDirectXShader::EndPass()
-{
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetPixelShader(NULL);
+	((CDirectXDriver*)(GDriver))->GetDevice()->SetVertexShader(NULL);
 	return true;
 }

@@ -8,15 +8,16 @@
 #pragma comment(lib,"winmm.lib")
 
 class BViewport;
-class BDriver;
 class BPrimitiveBuffer;
 class BTextureBuffer;
 class BApplication;
+class BShaderPass;
 
 class BRenderer : public AThread
 {
 public:
 	BRenderer();
+	~BRenderer();
 
 	bool Initialize();
 	bool Destroy();
@@ -30,15 +31,15 @@ public:
 	void AddViewport(BViewport* pViewport);
 	void FetchViewports();
 
-	inline void SetDriver(BDriver* Driver) { m_pDriver = Driver; }
 	inline void SetApplication(BApplication *App) { m_pApp = App; }
 
 protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;
 
+	BShaderPass* m_pBasePass;
+
 	BApplication* m_pApp;
-	BDriver* m_pDriver;
 	BPrimitiveBuffer* m_pBuffer;
 	BTextureBuffer* m_pTexture;
 	int m_nViewportCount;

@@ -6,13 +6,11 @@ TPrimitiveTemplateBase::~TPrimitiveTemplateBase()
 {
 	delete pVertexBuffer; pVertexBuffer = 0;
 	delete pIndexBuffer; pIndexBuffer = 0;
-	delete pShader; pShader = 0;
 }
 
 TPrimitiveTemplateBase::TPrimitiveTemplateBase() 
-: pShader(0), pVertexBuffer(0), pIndexBuffer(0)
-{
-	pShader = RShaderTable::pShaders;
+: pVertexBuffer(0), pIndexBuffer(0)
+{	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

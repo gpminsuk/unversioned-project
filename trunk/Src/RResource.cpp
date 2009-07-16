@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "RResource.h"
-#include "BShaderBase.h"
 
 RIndexBuffer* RIndexBufferTable::pIndexBuffer = 0;
 int RIndexBufferTable::nTableSize = 0;

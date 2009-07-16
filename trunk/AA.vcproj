@@ -95,7 +95,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="Intermediate\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -287,7 +287,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BShaderBase.h"
+						RelativePath=".\Src\BShaderPass.h"
 						>
 					</File>
 					<File
@@ -342,6 +342,10 @@
 						RelativePath=".\Src\TDataTypes.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Src\TWindowInfo.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -381,7 +385,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BShaderBase.cpp"
+						RelativePath=".\Src\BShaderPass.cpp"
 						>
 					</File>
 					<File

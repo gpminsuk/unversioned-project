@@ -21,8 +21,8 @@ public:
 
 	ECamera_Mode m_CameraMode;
 
-	TQuaternion m_Rotation;
-	float m_Distance;
+	TQuaternion m_RotationX, m_RotationY, m_RotationZ;
+	float m_Distance, m_Pi, m_Theta;
 
 	virtual void UpdateCamera();
 	virtual bool ShouldUpdate();

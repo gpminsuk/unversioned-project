@@ -2,11 +2,15 @@
 #include "CCamera.h"
 
 CCamera::CCamera(void)
-:	m_CameraMode(Free_Mode),
+:	m_CameraMode(Thrid_Person),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
-	m_Distance(10.0f)
+	m_Distance(10.0f),
+	m_Subject(0),
+	m_Pi(0),
+	m_Theta(0)
 {
+	m_Location.x = m_Distance;
 	UpdateCamera();
 	//m_CameraMode = Thrid_Person;
 }
@@ -29,10 +33,12 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 				{
 					if(Param.bRButtonDown)
 					{
-						float dPi = Param.dY/300.0f;
-						float dTheta = Param.dX/300.0f;
-						m_Rotation.Rotate(TVector3(0.0f,0.0f,1.0f),dPi);
-						m_Rotation.Rotate(TVector3(0.0f,1.0f,0.0f),dTheta);
+						m_Pi += Param.dY/300.0f;
+						m_Theta += Param.dX/300.0f;
+						m_RotationZ.Initialize();
+						m_RotationZ.Rotate(TVector3(0.0f,0.0f,1.0f),m_Pi);
+						m_RotationY.Initialize();
+						m_RotationY.Rotate(TVector3(0.0f,1.0f,0.0f),m_Theta);						
 					}					
 				}
 				break;
@@ -51,10 +57,12 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 			{
 			case MOUSE_Move:
 				{
-					float dPi = Param.dY/300.0f;
-					float dTheta = Param.dX/300.0f;
-					m_Rotation.Rotate(TVector3(0.0f,0.0f,-1.0f),dPi);
-					m_Rotation.Rotate(TVector3(0.0f,-1.0f,0.0f),dTheta);
+					m_Pi += Param.dY/300.0f;
+					m_Theta += Param.dX/300.0f;
+					m_RotationZ.Initialize();
+					m_RotationZ.Rotate(TVector3(0.0f,0.0f,-1.0f),m_Pi);
+					m_RotationY.Initialize();
+					m_RotationY.Rotate(TVector3(0.0f,-1.0f,0.0f),m_Theta);
 				}
 				break;
 			}
@@ -84,7 +92,9 @@ void CCamera::UpdateCamera()
 		{
 			if(m_Subject)
 				m_LookAt = m_Subject->m_Location;
-			m_Location = m_Rotation.TransformVector3D(TVector3(m_Distance,0.0f,0.0f));
+			m_Location = m_RotationX.TransformVector3D(TVector3(m_Distance,0.0f,0.0f));
+			m_Location = m_RotationY.TransformVector3D(m_Location);
+			m_Location = m_RotationZ.TransformVector3D(m_Location);
 			m_Location += m_LookAt;
 		}
 		break;
@@ -92,14 +102,16 @@ void CCamera::UpdateCamera()
 	case Free_Mode:
 		{
 			if(GKeyMap['W'])
-				m_Location += (m_LookAt - m_Location).Normalize()/10000.0f;
+				m_Location += (m_LookAt - m_Location).Normalize()/1000000.0f;
 			if(GKeyMap['S'])
-				m_Location -= (m_LookAt - m_Location).Normalize()/10000.0f;
+				m_Location -= (m_LookAt - m_Location).Normalize()/1000000.0f;
 			if(GKeyMap['A'])
-				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up)/10000.0f;
+				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up)/1000000.0f;
 			if(GKeyMap['D'])
-				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up)/10000.0f;
-			m_LookAt = m_Rotation.TransformVector3D(TVector3(-1.0f,0.0f,0.0f));
+				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up)/1000000.0f;
+			m_LookAt = m_RotationX.TransformVector3D(TVector3(-1.0f,0.0f,0.0f));
+			m_LookAt = m_RotationY.TransformVector3D(m_LookAt);
+			m_LookAt = m_RotationZ.TransformVector3D(m_LookAt);
 			m_LookAt += m_Location;
 		}
 		break;
@@ -113,7 +125,7 @@ bool CCamera::ShouldUpdate()
 	{
 	case First_Person:
 	case Thrid_Person:
-		return m_bIsUpdated || (m_Subject)?m_Subject->m_bIsUpdated:false;
+		return m_bIsUpdated;// || (m_Subject)?false:m_Subject->m_bIsUpdated;//:false;
 	case Free_Mode1:
 	case Free_Mode:
 		return m_bIsUpdated || GKeyMap['W'] || GKeyMap['S'] || GKeyMap['A'] || GKeyMap['D'];

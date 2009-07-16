@@ -1,0 +1,14 @@
+﻿<Window x:Class="Mader.MaderMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MaderMain" Height="432.684" Width="703.566">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width ="*"/>
+            <ColumnDefinition Width ="3"/>
+            <ColumnDefinition Width =".4*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter 
+            Grid.Column="1" HorizontalAlignment="Stretch" />
+    </Grid>
+</Window>

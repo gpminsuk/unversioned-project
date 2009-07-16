@@ -52,9 +52,9 @@ bool CWindowApp::CreateWindowApp()
 
 	m_pRenderer = new BRenderer();
 
-	m_pDriver = new CDirectXDriver(this);
+	GDriver = new CDirectXDriver(&m_WindowInfo);
+	GDriver->CreateDriver();
 
-	m_pRenderer->SetDriver(m_pDriver);
 	m_pRenderer->SetApplication(this);
 
 	m_pRenderer->Start();
@@ -75,8 +75,8 @@ bool CWindowApp::DestroyWindowApp()
 {
 	delete m_pRenderer;
 	m_pRenderer = 0;
-	delete m_pDriver;
-	m_pDriver = 0;
+	delete GDriver;
+	GDriver = 0;
 	m_pWorld->DestroyWorld();
 	delete m_pWorld;
 	m_pWorld = 0;

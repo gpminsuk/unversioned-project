@@ -32,3 +32,5 @@ public:
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;
 };
+
+extern BDriver	*GDriver;

@@ -5,9 +5,9 @@
 class TPrimitiveTemplateBase;
 class BLight;
 
-enum E_RenderType
+enum E_PrimitiveType
 {
-	RT_BASE_PASS = 0,
+	RT_OPAQUE = 0,
 	RT_TRANSLUCENT = 1
 };
 
@@ -29,7 +29,7 @@ public:
 	TMatrix m_ProjectionMatrix;
 
 	void Clear();
-	void Render(TPrimitiveTemplateBase* pTemplate, E_RenderType RenderType = RT_BASE_PASS);
+	void Render(TPrimitiveTemplateBase* pTemplate, E_PrimitiveType RenderType = RT_OPAQUE);
 	
 	void SortTemplates();
 private:

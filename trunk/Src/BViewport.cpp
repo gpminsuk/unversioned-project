@@ -16,19 +16,11 @@ void BViewport::SortTemplates()
 {
 }
 
-int BViewport::PrimitiveCompare(TPrimitiveTemplateBase *tb1, TPrimitiveTemplateBase *tb2)
-{
-	if(tb1->pMaterial->TID == tb2->pMaterial->TID)
-		return tb1->pVertexBuffer->nVertices < tb2->pVertexBuffer->nVertices;
-	else
-		return tb1->pMaterial->TID < tb2->pMaterial->TID;	
-}
-
-void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_RenderType RenderType)
+void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_PrimitiveType RenderType)
 {
 	switch(RenderType)
 	{
-	case RT_BASE_PASS:
+	case RT_OPAQUE:
 		m_OpaquePrimitives.AddItem(pTemplate);
 		m_Batches.m_pTemplates.AddItem(pTemplate);
 		m_Batches.nVertexStride = pTemplate->pVertexBuffer->nVertexStride;

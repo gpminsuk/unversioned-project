@@ -6,10 +6,9 @@
 #include "CWindowApp.h"
 #include "CDirectXShader.h"
 
-CDirectXDriver::CDirectXDriver(CWindowApp* Window)
+CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
-	CreateDriver();
 }
 
 bool CDirectXDriver::CreateDriver()
@@ -89,7 +88,7 @@ bool CDirectXDriver::DestroyDriver()
 bool CDirectXDriver::CompileShader()
 {
 	RShaderTable::nTableSize = 1;
-	RShaderTable::pShaders = new CDirectXShader(this);
+	RShaderTable::pShaders = new CDirectXShader();
 	sprintf_s(RShaderTable::pShaders->m_FileName, 256, "Shader.fx");
 	for(int i=0;i<RShaderTable::nTableSize;++i)
 	{

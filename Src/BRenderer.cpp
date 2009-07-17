@@ -36,7 +36,8 @@ bool BRenderer::Initialize()
 
 bool BRenderer::Destroy()
 {
-	m_pTexture->DestroyTextureBuffer();
+	if(m_pTexture)
+		m_pTexture->DestroyTextureBuffer();
 	GDriver->DestroyDriver();
 	return true;
 }
@@ -110,14 +111,6 @@ void BRenderer::ThreadExecute()
 			Render();
 			
 			GDriver->EndScene();
-		}
-
-		++ddd;
-		if(ddd == 100)
-		{
-			system("cls");
-			printf("FPS = %f, %d",100000.0f/(m_fFPS),m_iFTimeIdx);			
-			ddd=0;
 		}
 		Sleep(1);
 		m_fFPS -= m_dFrameTime[m_iFTimeIdx];

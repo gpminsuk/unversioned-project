@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 struct TWindowInfo
 {
 	HWND m_hWnd;

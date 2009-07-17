@@ -99,6 +99,7 @@
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\BuildLog\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -122,7 +123,8 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
-				ObjectFile="$(IntDir)\"
+				ObjectFile="$(IntDir)\Obj\"
+				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -139,6 +141,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				ManifestFile="$(IntDir)\Manifest\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

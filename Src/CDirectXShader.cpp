@@ -16,7 +16,7 @@ bool CDirectXShader::CompileShaderFromFile()
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
 	DWORD dwShaderFlags = 0;
-	hr = D3DXCompileShaderFromFile(".\\Shaders\\VertexShader.fx", NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	hr = D3DXCompileShaderFromFile("..\\Shaders\\VertexShader.fx", NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];
@@ -28,7 +28,7 @@ bool CDirectXShader::CompileShaderFromFile()
 	pCode->Release();
 	pCode = NULL;
 
-	hr = D3DXCompileShaderFromFile(".\\Shaders\\PixelShader.fx", NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	hr = D3DXCompileShaderFromFile("..\\Shaders\\PixelShader.fx", NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];

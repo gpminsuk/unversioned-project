@@ -21,8 +21,8 @@ bool CWindowApp::CreateWindowApp()
 	wcex.lpfnWndProc	= Proc;
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= m_hInstance;
-	wcex.hIcon			= LoadIcon(m_hInstance, 0);
+	wcex.hInstance		= m_WindowInfo.m_hInstance;
+	wcex.hIcon			= LoadIcon(m_WindowInfo.m_hInstance, 0);
 	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= 0;
@@ -31,24 +31,24 @@ bool CWindowApp::CreateWindowApp()
 
 	RegisterClassEx(&wcex);
 
-	m_wWidth = 800;
-	m_wHeight = 600;
+	m_WindowInfo.m_wWidth = 800;
+	m_WindowInfo.m_wHeight = 600;
 	
-	m_hWnd = ::CreateWindow(
+	m_WindowInfo.m_hWnd = ::CreateWindow(
 		_T("CLASS NAME"),
 		_T("CAPTION"),
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		m_wWidth,
-		m_wHeight,
+		m_WindowInfo.m_wWidth,
+		m_WindowInfo.m_wHeight,
 		0,
 		0,
-		m_hInstance,
+		m_WindowInfo.m_hInstance,
 		0);
 
-	ShowWindow(m_hWnd, SW_SHOW);
-	UpdateWindow(m_hWnd);
+	ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
+	UpdateWindow(m_WindowInfo.m_hWnd);
 
 	m_pRenderer = new BRenderer();
 

@@ -129,11 +129,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/CLRTHREADATTRIBUTE:STA"
-				AdditionalDependencies="..\Intermediate\Release\AA\BApplication.obj ..\Intermediate\Release\AA\stdafx.obj"
+				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
+				AdditionalDependencies="..\Intermediate\Release\AA\Obj\*"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
+				IgnoreDefaultLibraryNames="..\Intermediate\Release\AA\Obj\AA.obj"
 				GenerateDebugInformation="true"
+				EntryPointSymbol=""
 				TargetMachine="1"
 			/>
 			<Tool
@@ -195,18 +197,6 @@
 				RelativePath=".\MaderMainCLI.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -221,10 +211,6 @@
 				RelativePath=".\MaderMainCLI.h"
 				>
 			</File>
-			<File
-				RelativePath=".\stdafx.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="리소스 파일"
@@ -232,6 +218,22 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\stdafx.cpp"
+			>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\stdafx.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

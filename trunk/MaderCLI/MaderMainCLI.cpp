@@ -8,4 +8,5 @@ INT WINAPI WinMain( HINSTANCE hInInstance, HINSTANCE hPrevInstance, char*, INT n
 {
 	CMaderApp Application;
 	MaderMainCLI^ m_MaderMainCLI = gcnew MaderMainCLI(&Application);
+	Application.Do();	
 }

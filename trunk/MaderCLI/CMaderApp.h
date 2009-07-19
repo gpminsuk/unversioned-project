@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\Src\TWindowInfo.h"
-#include "..\Src\BApplication.h"
+#include "..\AA\Src\TWindowInfo.h"
+#include "..\AA\Src\BApplication.h"
 
 class CMaderApp : public BApplication
 {

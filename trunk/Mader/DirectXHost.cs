@@ -35,7 +35,8 @@ namespace Mader
                                                       IntPtr hInst,
                                                       [MarshalAs(UnmanagedType.AsAny)] object pvParam);
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Unicode)]
-        internal static extern bool DestroyWindow(IntPtr hwnd);
+        internal static extern bool DestroyWindow(IntPtr hwnd);   
+
     }
 
     class DirectXHost : HwndHost

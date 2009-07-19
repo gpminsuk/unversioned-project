@@ -1,7 +1,8 @@
 #include "StdAfx.h"
 #include "CMaderApp.h"
-#include "..\Src\BRenderer.h"
-#include "..\Src\CDirectXDriver.h"
+#include "..\AA\Src\BRenderer.h"
+#include "..\AA\Src\CDirectXDriver.h"
+#include "..\AA\Src\World\UWorld.h"
 
 bool CMaderApp::CreateMaderApp()
 {
@@ -13,6 +14,9 @@ bool CMaderApp::CreateMaderApp()
 	m_pRenderer->SetApplication(this);
 
 	m_pRenderer->Start();
+	
+	m_pWorld = new UWorld(m_pRenderer);
+	m_pWorld->InitializeWorld();
 	return true;
 }
 
@@ -30,6 +34,7 @@ void CMaderApp::Do()
 		}
 		else
 		{
+			m_pWorld->Tick(0);
 			// TODI : Do World Tick
 		}
 	}

@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Interop;
+using System.Collections;
 
 namespace Mader
 {
@@ -22,13 +23,61 @@ namespace Mader
     {
         private IMaderMainInterface m_Backend;
         private DirectXHost m_DirectXHost;
+        private float m_Scale;
+        private Point m_Translation;
+        private Point m_PrevMousePos;
 
         public MaderMain()
         {
             InitializeComponent();
 
+            m_Scale = 1.0f;
+            m_Translation = new Point(0, 0);
+            m_PrevMousePos = new Point(0, 0);
+
             m_DirectXHost = new DirectXHost();
             ViewerBorder.Child = m_DirectXHost;
+            MaterialExpressionControl Ctrl = new MaterialExpressionControl(5, 3);
+            Ctrl.Width = 120;
+            Ctrl.Height = 150;
+            Ctrl.Margin = new Thickness(0, 0, 0, 0);
+
+            ExpressionControl.Children.Add(Ctrl);
+            ExpressionControl.MouseWheel += new MouseWheelEventHandler(ExpressionControl_MouseWheel);
+            ExpressionControl.MouseMove += new MouseEventHandler(ExpressionControl_MouseMove);
+            ExpressionControl.MouseRightButtonDown += new MouseButtonEventHandler(ExpressionControl_MouseRightButtonDown);
+        }
+
+        void ExpressionControl_MouseRightButtonDown(object Sender, MouseButtonEventArgs e)
+        {
+            m_PrevMousePos = Mouse.GetPosition(ExpressionControl);
+        }
+
+        void ExpressionControl_MouseWheel(object Sender, MouseWheelEventArgs e)
+        {
+            m_Scale *= (1.0f+(e.Delta/120.0f)*0.3f);
+
+            TransformGroup TGroup = new TransformGroup();
+            TGroup.Children.Add(new ScaleTransform(m_Scale, m_Scale));
+            TGroup.Children.Add(new TranslateTransform(m_Translation.X, m_Translation.Y));
+            ExpressionControl.RenderTransform = TGroup;
+        }
+
+        void ExpressionControl_MouseMove(object Sender, MouseEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                m_Translation += (m_PrevMousePos - Mouse.GetPosition(ExpressionControl));
+
+                foreach (object Obj in ExpressionControl.Children)
+                {
+                    if (Obj.GetType() == typeof(MaterialExpressionControl))
+                    {
+                        ((MaterialExpressionControl)Obj).SetTransform(m_Translation, m_Scale);
+                    }
+                }
+                m_PrevMousePos = Mouse.GetPosition(ExpressionControl);
+            }
         }
 
         public void Initialize(IMaderMainInterface Backend)

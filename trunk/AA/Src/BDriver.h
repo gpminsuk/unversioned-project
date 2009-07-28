@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RResource.h"
+
 class BViewport;
 class TPrimitiveTemplateBase;
 class TBatch;
@@ -31,6 +33,11 @@ public:
 
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;
+
+	virtual bool CompileShaderFromFile(RShaderBase *pShader) = 0;
+	virtual bool AssembleShaderFromFile(RShaderBase *pShader) = 0;
+	virtual bool CompileShaderFromMemory(RShaderBase *pShader) = 0;
+	virtual bool AssembleShaderFromMemory(RShaderBase *pShader) = 0;
 };
 
 extern BDriver	*GDriver;

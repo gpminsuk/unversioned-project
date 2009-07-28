@@ -10,4 +10,6 @@ public:
 	virtual ~BShaderPass();
 
 	virtual void DrawPrimitive(BViewport* Viewport, TPrimitiveTemplateBase* Prim);
+
+	unsigned int		m_iShader;
 };

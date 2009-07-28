@@ -4,7 +4,8 @@
 
 #include "CDirectXDriver.h"
 #include "CWindowApp.h"
-#include "CDirectXShader.h"
+
+#include "RDXResource.h"
 
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
@@ -89,11 +90,11 @@ bool CDirectXDriver::DestroyDriver()
 bool CDirectXDriver::CompileShader()
 {
 	RShaderTable::nTableSize = 1;
-	RShaderTable::pShaders = new CDirectXShader();
+	RShaderTable::pShaders = new RDirectXShader();
 	sprintf_s(RShaderTable::pShaders->m_FileName, 256, "Shader.fx");
 	for(int i=0;i<RShaderTable::nTableSize;++i)
 	{
-		RShaderTable::pShaders->CompileShaderFromFile();
+		GDriver->CompileShaderFromFile(RShaderTable::pShaders);
 	}
 	return true;
 }
@@ -232,5 +233,59 @@ bool CDirectXDriver::EndScene()
 	m_pDevice->EndScene();
 
 	m_pDevice->Present(NULL, NULL, NULL, NULL);
+	return true;
+}
+
+bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
+{	
+	RDirectXShader *pDXShader = dynamic_cast<RDirectXShader*>(pShader);
+	if(!pDXShader)
+		return false;
+	HRESULT hr;
+	D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
+
+	D3DXDeclaratorFromFVF(D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0), Decl);
+	GetDevice()->CreateVertexDeclaration(Decl, &pDXShader->m_pDecl);
+
+	LPD3DXBUFFER pCode = NULL;
+	LPD3DXBUFFER pErr = NULL;
+	DWORD dwShaderFlags = 0;
+	hr = D3DXCompileShaderFromFile("..\\Shaders\\VertexShader.fx", NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	if(hr != D3D_OK)
+	{
+		char Err[1024];
+		sprintf_s(Err,1024,"%s",(char*)pErr->GetBufferPointer());
+		pErr->Release();
+		return false;
+	}
+	GetDevice()->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &pDXShader->m_pVertexShader);
+	pCode->Release();
+	pCode = NULL;
+
+	hr = D3DXCompileShaderFromFile("..\\Shaders\\PixelShader.fx", NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	if(hr != D3D_OK)
+	{
+		char Err[1024];
+		sprintf_s(Err,1024,"%s",(char*)pErr->GetBufferPointer());
+		pErr->Release();
+		return false;
+	}
+	GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &pDXShader->m_pPixelShader);
+	pCode->Release();
+	return true;
+}
+
+bool CDirectXDriver::AssembleShaderFromFile(RShaderBase *pShader)
+{
+	return true;
+}
+
+bool CDirectXDriver::CompileShaderFromMemory(RShaderBase *pShader)
+{
+	return true;
+}
+
+bool CDirectXDriver::AssembleShaderFromMemory(RShaderBase *pShader)
+{
 	return true;
 }

@@ -3,7 +3,8 @@
 #include "BViewport.h"
 #include "BApplication.h"
 #include "BDriver.h"
-#include "BShaderPass.h"
+
+#include "BOpaqueBasePass.h"
 
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
@@ -15,7 +16,7 @@ BRenderer::BRenderer(void)
 
 	m_nViewportCount = 1;
 
-	m_pBasePass = new BShaderPass();
+	m_pBasePass = new BOpaqueBasePass();
 }
 
 BRenderer::~BRenderer()

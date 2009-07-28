@@ -4,7 +4,9 @@
 
 #include "BDriver.h"
 #include <d3d9.h>
+#include <d3dx9effect.h>
 
+#pragma comment(lib, "..\\d3dx9.lib")
 #pragma comment(lib, "d3d9.lib")
 
 class CDirectXDriver : public BDriver
@@ -27,11 +29,16 @@ public:
 	virtual bool BeginScene();
 	virtual bool EndScene();
 
+	virtual bool CompileShaderFromFile(RShaderBase *pShader);
+	virtual bool AssembleShaderFromFile(RShaderBase *pShader);
+	virtual bool CompileShaderFromMemory(RShaderBase *pShader);
+	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);
+
+	LPDIRECT3DDEVICE9	m_pDevice;
 private:
 	TWindowInfo*		m_pWindow;
 
 	LPDIRECT3D9			m_pD3D;
-	LPDIRECT3DDEVICE9	m_pDevice;
 };
 
 class CDirectXVertexBuffer : public BPrimitiveBuffer

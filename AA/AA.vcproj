@@ -290,13 +290,21 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BShaderPass.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Src\BViewport.h"
 						>
 					</File>
+					<Filter
+						Name="ShaderPass"
+						>
+						<File
+							RelativePath=".\Src\BOpaqueBasePass.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BShaderPass.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="C"
@@ -307,10 +315,6 @@
 					</File>
 					<File
 						RelativePath=".\Src\CDirectXDriver.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Src\CDirectXShader.h"
 						>
 					</File>
 					<File
@@ -325,6 +329,10 @@
 				<Filter
 					Name="Resource"
 					>
+					<File
+						RelativePath=".\Src\RDXResource.h"
+						>
+					</File>
 					<File
 						RelativePath=".\Src\ResourceManager.h"
 						>
@@ -388,13 +396,21 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BShaderPass.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\Src\BViewport.cpp"
 						>
 					</File>
+					<Filter
+						Name="ShaderPass"
+						>
+						<File
+							RelativePath=".\Src\BOpaqueBasePass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BShaderPass.cpp"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="C"
@@ -405,10 +421,6 @@
 					</File>
 					<File
 						RelativePath=".\Src\CDirectXDriver.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Src\CDirectXShader.cpp"
 						>
 					</File>
 					<File
@@ -423,6 +435,10 @@
 				<Filter
 					Name="Resource"
 					>
+					<File
+						RelativePath=".\Src\RDXResource.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\Src\ResourceManager.cpp"
 						>

@@ -14,11 +14,6 @@ class RShaderBase
 public:
 	RShaderBase() {}
 
-	virtual bool CompileShaderFromFile() = 0;
-	virtual bool AssembleShaderFromFile() = 0;
-	virtual bool CompileShaderFromMemory() = 0;
-	virtual bool AssembleShaderFromMemory() = 0;
-
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;
 	virtual bool EndShader() = 0;

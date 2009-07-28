@@ -33,6 +33,7 @@ public:
 
 	inline void SetApplication(BApplication *App) { m_pApp = App; }
 
+	BTextureBuffer* m_pTexture;
 protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;
@@ -41,7 +42,6 @@ protected:
 
 	BApplication* m_pApp;
 	BPrimitiveBuffer* m_pBuffer;
-	BTextureBuffer* m_pTexture;
 	int m_nViewportCount;
 
 	DWORD m_dFrameTime[100];

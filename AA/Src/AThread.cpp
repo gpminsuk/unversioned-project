@@ -11,12 +11,12 @@ AThread::~AThread(void)
 
 void AThread::Start()
 {
+	ThreadSetup();
 	_beginthreadex(NULL, 0, ThreadEntryPoint, this, 0, &threadID);
 }
 
 void AThread::Run()
 {
-	ThreadSetup();
 	ThreadExecute();
 	ThreadDestroy();
 }

@@ -14,3 +14,14 @@ public:
 	virtual bool SetParameter(BViewport* vp);
 	virtual bool EndShader();
 };
+
+class RDXRenderTarget : public RRenderTarget
+{
+public:
+	struct IDirect3DSurface9* m_pRTSurface;
+
+	virtual bool Release();
+
+	RDXRenderTarget() {}
+	~RDXRenderTarget() {}
+};

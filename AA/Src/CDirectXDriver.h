@@ -34,6 +34,11 @@ public:
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader);
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);
 
+	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat);
+	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
+
+	virtual RRenderTarget* GetBackBuffer();
+
 	LPDIRECT3DDEVICE9	m_pDevice;
 private:
 	TWindowInfo*		m_pWindow;

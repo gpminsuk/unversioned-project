@@ -6,6 +6,11 @@ class BViewport;
 class TPrimitiveTemplateBase;
 class TBatch;
 
+enum EPixelFormat
+{
+	PF_A8R8G8B8,
+};
+
 class BTextureBuffer
 {
 public:
@@ -38,6 +43,11 @@ public:
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader) = 0;
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader) = 0;
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader) = 0;
+
+	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat) = 0;
+	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
+
+	virtual RRenderTarget* GetBackBuffer() = 0;
 };
 
 extern BDriver	*GDriver;

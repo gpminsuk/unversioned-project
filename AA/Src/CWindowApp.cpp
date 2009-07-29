@@ -51,15 +51,14 @@ bool CWindowApp::CreateWindowApp()
 	ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
 	UpdateWindow(m_WindowInfo.m_hWnd);
 
-	m_pRenderer = new BRenderer();
-
 	GDriver = new CDirectXDriver(&m_WindowInfo);
 	if(!GDriver->CreateDriver())
 	{
 		DestroyWindowApp();
 		return false;
 	}
-		
+
+	m_pRenderer = new BRenderer();		
 
 	m_pRenderer->SetApplication(this);
 

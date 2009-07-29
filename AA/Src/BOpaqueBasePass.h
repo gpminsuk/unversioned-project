@@ -1,12 +1,17 @@
 #pragma once
 
-#include "BShaderPass.h"
+#include "TDataTypes.h"
 
-class BOpaqueBasePass : public BShaderPass
+class BOpaqueBasePass
 {
 public:
 	BOpaqueBasePass();
-	virtual ~BOpaqueBasePass();
+	~BOpaqueBasePass();
 
-	virtual void DrawPrimitive(BViewport* Viewport, TPrimitiveTemplateBase* Prim);
+	void DrawPrimitive(TPrimitiveTemplateBase* Prim);
+
+	void BeginPass(BViewport* Viewport);
+	void EndPass();
+
+	TArray<RRenderTarget*>	m_RenderTargets;
 };

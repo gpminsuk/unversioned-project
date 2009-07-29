@@ -9,10 +9,20 @@
 
 class BViewport;
 
+class RRenderTarget
+{
+public:
+	RRenderTarget() {};
+	virtual ~RRenderTarget() {};
+
+	virtual bool Release() = 0;
+};
+
 class RShaderBase
 {
 public:
 	RShaderBase() {}
+	virtual ~RShaderBase() {}
 
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;

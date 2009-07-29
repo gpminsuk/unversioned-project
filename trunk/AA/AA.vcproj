@@ -245,11 +245,11 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
-					RelativePath=".\Shaders\PixelShader.fx"
+					RelativePath="..\Shaders\PixelShader.fx"
 					>
 				</File>
 				<File
-					RelativePath=".\Shaders\VertexShader.fx"
+					RelativePath="..\Shaders\VertexShader.fx"
 					>
 				</File>
 			</Filter>
@@ -301,7 +301,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BShaderPass.h"
+							RelativePath=".\Src\BRTRenderPass.h"
 							>
 						</File>
 					</Filter>
@@ -407,7 +407,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BShaderPass.cpp"
+							RelativePath=".\Src\BRTRenderPass.cpp"
 							>
 						</File>
 					</Filter>

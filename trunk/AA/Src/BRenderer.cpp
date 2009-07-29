@@ -5,6 +5,7 @@
 #include "BDriver.h"
 
 #include "BOpaqueBasePass.h"
+#include "BRTRenderPass.h"
 
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
@@ -16,12 +17,14 @@ BRenderer::BRenderer(void)
 
 	m_nViewportCount = 1;
 
-	m_pBasePass = new BOpaqueBasePass();
+	m_OpaqueBasePass = new BOpaqueBasePass();
+	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
 }
 
 BRenderer::~BRenderer()
 {
-	delete m_pBasePass;
+	delete m_OpaqueBasePass;
+	delete m_BaseRTRenderPass;
 }
 
 void BRenderer::AddViewport(BViewport* pViewport)
@@ -55,13 +58,19 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	Viewport->SortTemplates();
 	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
 
+	m_OpaqueBasePass->BeginPass(Viewport);
 	for(UINT PrimIdx = 0;PrimIdx < Viewport->m_OpaquePrimitives.Size(); ++PrimIdx)
 	{
 		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];		
 
 		GDriver->SetTexture(0, m_pTexture);
-		m_pBasePass->DrawPrimitive(Viewport, Prim);
+		m_OpaqueBasePass->DrawPrimitive(Prim);
 	}
+	m_OpaqueBasePass->EndPass();
+
+	m_BaseRTRenderPass->BeginPass(Viewport);
+	m_BaseRTRenderPass->DrawPrimitive();
+	m_BaseRTRenderPass->EndPass();
 
 	m_pBuffer->DestroyVertexBuffer();
 	delete m_pBuffer;

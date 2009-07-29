@@ -11,7 +11,6 @@ class BViewport;
 class BPrimitiveBuffer;
 class BTextureBuffer;
 class BApplication;
-class BShaderPass;
 
 class BRenderer : public AThread
 {
@@ -38,7 +37,8 @@ protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;
 
-	BShaderPass* m_pBasePass;
+	class BOpaqueBasePass*	m_OpaqueBasePass;
+	class BRTRenderPass*	m_BaseRTRenderPass;
 
 	BApplication* m_pApp;
 	BPrimitiveBuffer* m_pBuffer;

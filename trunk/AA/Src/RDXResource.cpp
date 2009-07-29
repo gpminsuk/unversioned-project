@@ -48,3 +48,13 @@ bool RDirectXShader::EndShader()
 	Driver->GetDevice()->SetVertexShader(NULL);
 	return true;
 }
+
+bool RDXRenderTarget::Release()
+{
+	if(m_pRTSurface)
+	{
+		m_pRTSurface->Release();
+		return true;
+	}
+	return false;	
+}

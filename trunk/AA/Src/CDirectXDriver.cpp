@@ -7,6 +7,11 @@
 
 #include "RDXResource.h"
 
+D3DFORMAT GPixelFormats[] = 
+{
+	D3DFMT_A8R8G8B8
+};
+
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
@@ -288,4 +293,30 @@ bool CDirectXDriver::CompileShaderFromMemory(RShaderBase *pShader)
 bool CDirectXDriver::AssembleShaderFromMemory(RShaderBase *pShader)
 {
 	return true;
+}
+
+bool CDirectXDriver::SetRenderTarget(unsigned int Idx, RRenderTarget* RT)
+{
+	RDXRenderTarget *DXRT = dynamic_cast<RDXRenderTarget*>(RT);
+	if(!DXRT)
+		return false;
+	GetDevice()->SetRenderTarget(Idx, DXRT->m_pRTSurface);
+	return true;
+}
+
+RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat)
+{
+	RDXRenderTarget *DXRT = new RDXRenderTarget();
+	IDirect3DTexture9 *pTexture;
+	D3DXCreateTexture(GetDevice(), Width, Height, 1, D3DUSAGE_RENDERTARGET, GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &pTexture);
+	if(D3D_OK != (pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
+		return NULL;
+	return DXRT;
+}
+
+RRenderTarget* CDirectXDriver::GetBackBuffer()
+{
+	static RDXRenderTarget RT;
+	GetDevice()->GetBackBuffer(0,0,D3DBACKBUFFER_TYPE_MONO,&RT.m_pRTSurface);
+	return &RT;
 }

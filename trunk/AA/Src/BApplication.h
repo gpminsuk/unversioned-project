@@ -13,4 +13,5 @@ public:
 	UWorld*	m_pWorld;
 
 	bool bQuit;
+	bool bRenderThreadQuit;
 };

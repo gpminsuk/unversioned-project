@@ -4,18 +4,20 @@
 
 TPrimitiveTemplateBase::~TPrimitiveTemplateBase()
 {
+	delete pMaterial; pMaterial = 0;
 	delete pVertexBuffer; pVertexBuffer = 0;
 	delete pIndexBuffer; pIndexBuffer = 0;
 }
 
 TPrimitiveTemplateBase::TPrimitiveTemplateBase() 
-: pVertexBuffer(0), pIndexBuffer(0)
+: pVertexBuffer(0), pIndexBuffer(0), pMaterial(0)
 {	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void TBox::Create()
-{	
+{
+	if(pVertexBuffer) delete pVertexBuffer;
 	pVertexBuffer = new RVertexBuffer();
 
 	pVertexBuffer->Declaration = new VertexDeclaration[2];
@@ -54,6 +56,7 @@ void TBox::Create()
 	Vertex[6].UV = TVector2(1.0f,0.0f);
 	Vertex[7].UV = TVector2(1.0f,1.0f);
 
+	if(pIndexBuffer) delete pIndexBuffer;
 	pIndexBuffer = new RIndexBuffer();
 	pIndexBuffer->nIndices = 12;
 	pIndexBuffer->pIndices = new TIndex16[12];

@@ -23,20 +23,21 @@ BOpaqueBasePass::~BOpaqueBasePass()
 
 void BOpaqueBasePass::BeginPass(BViewport* Viewport)
 {
-	RShaderBase* pShader = RShaderTable::pShaders;
+	RShaderBase* pShader = RShaderTable::pShaders(0);
 	for(unsigned int i=0;i<m_RenderTargets.Size();++i)
 		GDriver->SetRenderTarget(i, m_RenderTargets(i));
+	GDriver->Clear(true, 0x00000000);
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);
 }
 
 void BOpaqueBasePass::EndPass()
 {
-	RShaderBase* pShader = RShaderTable::pShaders;
+	RShaderBase* pShader = RShaderTable::pShaders(0);
 	pShader->EndShader();
 }
 
 void BOpaqueBasePass::DrawPrimitive(TPrimitiveTemplateBase *Prim)
 {
-	GDriver->DrawPrimitive();
+	GDriver->DrawPrimitive(Prim->pVertexBuffer->nVertices, Prim->pIndexBuffer->nIndices);
 }

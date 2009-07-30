@@ -23,6 +23,12 @@ BRenderer::BRenderer(void)
 
 BRenderer::~BRenderer()
 {
+	for(UINT i=0;i<m_RendererViewport.Size();++i)
+	{
+		delete m_RendererViewport(0);
+		m_RendererViewport.DeleteItem(0);
+	}
+	
 	delete m_OpaqueBasePass;
 	delete m_BaseRTRenderPass;
 }
@@ -34,14 +40,11 @@ void BRenderer::AddViewport(BViewport* pViewport)
 
 bool BRenderer::Initialize()
 {
-	m_pTexture = GDriver->CreateTextureBuffer();
 	return true;
 }
 
 bool BRenderer::Destroy()
 {
-	if(m_pTexture)
-		m_pTexture->DestroyTextureBuffer();
 	GDriver->DestroyDriver();
 	return true;
 }
@@ -63,8 +66,9 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	{
 		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];		
 
-		GDriver->SetTexture(0, m_pTexture);
+		GDriver->SetTexture(0, RTextureBufferTable::pTextureBuffer(0));
 		m_OpaqueBasePass->DrawPrimitive(Prim);
+		GDriver->SetTexture(0, NULL);
 	}
 	m_OpaqueBasePass->EndPass();
 
@@ -92,6 +96,7 @@ void BRenderer::FetchViewports()
 	{
 		for(int i=0;i>Count;--i)
 		{
+			delete m_RendererViewport((int)(m_RendererViewport.Size()-1));
 			m_RendererViewport.DeleteItem((UINT)(m_RendererViewport.Size()-1));
 		}
 	}
@@ -133,4 +138,5 @@ void BRenderer::ThreadExecute()
 void BRenderer::ThreadDestroy()
 {
 	Destroy();
+	m_pApp->bRenderThreadQuit = true;
 }

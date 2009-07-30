@@ -44,6 +44,7 @@ bool RDirectXShader::EndShader()
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
 	if(!Driver)
 		return false;
+	Driver->GetDevice()->SetVertexDeclaration(NULL);
 	Driver->GetDevice()->SetPixelShader(NULL);
 	Driver->GetDevice()->SetVertexShader(NULL);
 	return true;
@@ -57,4 +58,20 @@ bool RDXRenderTarget::Release()
 		return true;
 	}
 	return false;	
+}
+
+RDXRenderTarget::RDXRenderTarget()
+{
+	m_pTexture = new RDXTextureBuffer();
+}
+
+RDXRenderTarget::~RDXRenderTarget()
+{
+	delete m_pTexture;
+}
+
+RDXTextureBuffer::~RDXTextureBuffer()
+{
+	if(m_pTexture)
+		m_pTexture->Release();
 }

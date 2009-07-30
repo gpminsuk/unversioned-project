@@ -13,21 +13,27 @@ class CDirectXDriver : public BDriver
 {
 public:
 	CDirectXDriver(TWindowInfo *Window);
+	virtual ~CDirectXDriver();
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_pDevice; }
-
-	bool CompileShader();
 
 	virtual bool CreateDriver();
 	virtual bool DestroyDriver();
-	virtual bool DrawPrimitive();
 
-	virtual bool SetTexture(int nStage, BTextureBuffer* pTexture);
+	virtual bool SetIndices(BPrimitiveBuffer* PrimitiveBuffer);
+	virtual bool SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer);
+
+	virtual bool DrawPrimitive(UINT NumVertices, UINT PrimCount);
+	virtual bool DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride);
+
+	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture);
 
 	virtual BPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch);
-	virtual BTextureBuffer* CreateTextureBuffer();
+	virtual RTextureBuffer* CreateTextureBuffer();
 
 	virtual bool BeginScene();
 	virtual bool EndScene();
+
+	virtual bool Clear(bool bClearColor = true, DWORD Color = 0x00000000, bool bClearDepth = false, float Depth = 0.0f, bool bClearStencil = false, DWORD Stencil = 0.0f);
 
 	virtual bool CompileShaderFromFile(RShaderBase *pShader);
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader);
@@ -39,6 +45,8 @@ public:
 
 	virtual RRenderTarget* GetBackBuffer();
 
+	class RDXRenderTarget* BackBuffer;
+
 	LPDIRECT3DDEVICE9	m_pDevice;
 private:
 	TWindowInfo*		m_pWindow;
@@ -46,19 +54,13 @@ private:
 	LPDIRECT3D9			m_pD3D;
 };
 
-class CDirectXVertexBuffer : public BPrimitiveBuffer
+class CDirectXPrimitiveBuffer : public BPrimitiveBuffer
 {
 public:
 	virtual bool DestroyVertexBuffer();
+
+	unsigned int VertexStride;
 	
 	IDirect3DVertexBuffer9* VB;
 	IDirect3DIndexBuffer9* IB;
-};
-
-class CDirectXTextureBuffer : public BTextureBuffer
-{
-public:
-	virtual bool DestroyTextureBuffer();
-
-	IDirect3DTexture9* pTexture;
 };

@@ -16,101 +16,41 @@ BRTRenderPass::~BRTRenderPass()
 
 void BRTRenderPass::BeginPass(BViewport* Viewport)
 {
-	RShaderBase* pShader = RShaderTable::pShaders;
+	RShaderBase* pShader = RShaderTable::pShaders(1);
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
+	GDriver->SetTexture(0, m_RenderTarget->m_pTexture);
 	pShader->BeginShader();
-	pShader->SetParameter(Viewport);
 }
 
 void BRTRenderPass::EndPass()
 {
-	RShaderBase* pShader = RShaderTable::pShaders;
+	RShaderBase* pShader = RShaderTable::pShaders(1);
 	pShader->EndShader();
 }
 
-#include "CDirectXDriver.h"
-
 void BRTRenderPass::DrawPrimitive()
 {
-	TBatch Batch;
-	TQuad Tmp;
-	Batch.m_pTemplates.AddItem(&Tmp);
-	Batch.nVertexStride = Tmp.pVertexBuffer->nVertexStride;
-	Batch.nVertices += Tmp.pVertexBuffer->nVertices;
-	TBatch* pBatch = &Batch;
-	//GDriver->DrawPrimitive();
-	CDirectXDriver* Dr = ((CDirectXDriver*)GDriver);
-
-	CDirectXVertexBuffer* VB = new CDirectXVertexBuffer();
-	HRESULT hr;
-	hr = Dr->GetDevice()->CreateVertexBuffer(
-		pBatch->nVertices * pBatch->nVertexStride,
-		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
-		0,
-		D3DPOOL_DEFAULT,
-		&VB->VB,
-		NULL);
-	if(hr != D3D_OK)
+	struct VD
 	{
-	}
-	void *pData;
-	hr = VB->VB->Lock(0, pBatch->nVertices * pBatch->nVertexStride
-		, (void**)&pData, D3DLOCK_DISCARD);
-	if(hr != D3D_OK)
-	{
-		switch(hr)
-		{
-		case D3DERR_INVALIDCALL:
-			break;
-		}
-	}
-	else
-	{
-		char* pcData = static_cast<char*>(pData);
-		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
-		{			
-			memcpy(pcData, pBatch->m_pTemplates[i]->pVertexBuffer->pVertices, 
-				pBatch->m_pTemplates[i]->pVertexBuffer->nVertices * pBatch->m_pTemplates[i]->pVertexBuffer->nVertexStride);
-			pcData += pBatch->m_pTemplates[i]->pVertexBuffer->nVertices * pBatch->m_pTemplates[i]->pVertexBuffer->nVertexStride;
-		}
-		VB->VB->Unlock();
-	}
+		TVector3 Pos;
+		TVector2 UV;
+	};
 
-	Dr->GetDevice()->SetStreamSource(0, VB->VB, 0, pBatch->nVertexStride);
+	VD Vertices[4];
 
-	hr = Dr->GetDevice()->CreateIndexBuffer(
-		14*sizeof(TIndex16),
-		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,
-		D3DPOOL_DEFAULT,
-		&VB->IB,
-		NULL);
+	Vertices[0].Pos = TVector3(-1.0f, -1.0f, 0.0f);
+	Vertices[1].Pos = TVector3(-1.0f,  1.0f, 0.0f);
+	Vertices[2].Pos = TVector3( 1.0f, -1.0f, 0.0f);
+	Vertices[3].Pos = TVector3( 1.0f,  1.0f, 0.0f);
 
-	hr = VB->IB->Lock(0, 14*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
-	if(hr != D3D_OK)
-	{
-	}
-	else
-	{
-		TIndex16* pcData = static_cast<TIndex16*>(pData);
-		short BaseIdx = 0;
-		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
-		{
-			for(int k=0;k<pBatch->m_pTemplates[i]->pIndexBuffer->nIndices;++k)
-			{
-				TIndex16 tmpIndex;
-				tmpIndex._1 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._1 + BaseIdx;
-				tmpIndex._2 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._2 + BaseIdx;
-				tmpIndex._3 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._3 + BaseIdx;
-				pcData[k] = tmpIndex;
-			}
-			BaseIdx += pBatch->m_pTemplates[i]->pVertexBuffer->nVertices;
-			pcData += pBatch->m_pTemplates[i]->pIndexBuffer->nIndices;
-		}
-		VB->IB->Unlock();
-	}
+	Vertices[0].UV = TVector2(0.0f, 1.0f);
+	Vertices[1].UV = TVector2(0.0f, 0.0f);
+	Vertices[2].UV = TVector2(1.0f, 1.0f);
+	Vertices[3].UV = TVector2(1.0f, 0.0f);
 
-	Dr->GetDevice()->SetIndices(VB->IB);
+	TIndex16 Indices[2];
+	Indices[0] = TIndex16(0, 1, 2);
+	Indices[1] = TIndex16(1, 3, 2);
 
-	Dr->GetDevice()->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 12, 0, 14);
+	GDriver->DrawPrimitiveUP(4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
 }

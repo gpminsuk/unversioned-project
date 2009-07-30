@@ -31,8 +31,6 @@ public:
 	void FetchViewports();
 
 	inline void SetApplication(BApplication *App) { m_pApp = App; }
-
-	BTextureBuffer* m_pTexture;
 protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;

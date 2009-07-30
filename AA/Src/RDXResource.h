@@ -22,6 +22,15 @@ public:
 
 	virtual bool Release();
 
-	RDXRenderTarget() {}
-	~RDXRenderTarget() {}
+	RDXRenderTarget();
+	virtual ~RDXRenderTarget();
+};
+
+class RDXTextureBuffer : public RTextureBuffer
+{
+public:
+	RDXTextureBuffer() : m_pTexture(0) {}
+	virtual ~RDXTextureBuffer();
+
+	struct IDirect3DTexture9* m_pTexture;
 };

@@ -8,12 +8,20 @@
 #include "TDataTypes.h"
 
 class BViewport;
+class RTextureBuffer
+{
+public:
+	RTextureBuffer() {}
+	virtual ~RTextureBuffer() {}
+};
 
 class RRenderTarget
 {
 public:
-	RRenderTarget() {};
-	virtual ~RRenderTarget() {};
+	RRenderTarget() : m_pTexture(0) {}
+	virtual ~RRenderTarget() {}
+
+	RTextureBuffer* m_pTexture;
 
 	virtual bool Release() = 0;
 };
@@ -35,15 +43,18 @@ protected:
 class RShaderTable
 {
 public:
-	static RShaderBase* pShaders;
-	static int nTableSize;
+	static TArray<RShaderBase*> pShaders;
 };
 
 class RIndexBuffer
 {
 public:
 	RIndexBuffer() : pIndices(0), nIndices(0) {}
-	virtual ~RIndexBuffer() { delete[] pIndices; pIndices = 0; nIndices = 0; }
+	virtual ~RIndexBuffer()
+	{
+		delete[] pIndices; pIndices = 0;
+		nIndices = 0;
+	}
 
 	TIndex16 *pIndices;
 	int nIndices;
@@ -52,8 +63,7 @@ public:
 class RIndexBufferTable
 {
 public:
-	static RIndexBuffer* pIndexBuffer;
-	static int nTableSize;
+	static TArray<RIndexBuffer*> pIndexBuffer;
 };
 
 // primitive per one DP
@@ -89,8 +99,13 @@ struct VertexDeclaration
 class RVertexBuffer
 {
 public:
-	RVertexBuffer() : pVertices(0), nVertices(0) {}
-	virtual ~RVertexBuffer() { delete[] pVertices; pVertices = 0; nVertices = 0; }
+	RVertexBuffer() : pVertices(0), nVertices(0), Declaration(0) {}
+	virtual ~RVertexBuffer()
+	{
+		delete[] pVertices; pVertices = 0;
+		delete[] Declaration; Declaration = 0;
+		nVertices = 0;
+	}
 
 	int nVertices;
 	int nVertexStride;
@@ -104,8 +119,7 @@ public:
 class RVertexBufferTable
 {
 public:
-	static RVertexBuffer* pVertexBuffer;
-	static int nTableSize;
+	static TArray<RVertexBuffer*> pVertexBuffer;
 };
 
 class RTexture
@@ -122,11 +136,16 @@ protected:
 	ETextureMemoryType MemoryType;
 };
 
+class RTextureBufferTable
+{
+public:
+	static TArray<RTextureBuffer*> pTextureBuffer;
+};
+
 class RTextureTable
 {
 public:
-	static RTexture* pTextures;
-	static int nTableSize;
+	static TArray<RTexture*> pTextures;
 };
 
 class RMaterial

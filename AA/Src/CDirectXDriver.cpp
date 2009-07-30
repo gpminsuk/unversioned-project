@@ -15,6 +15,12 @@ D3DFORMAT GPixelFormats[] =
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
+	BackBuffer = new RDXRenderTarget();
+}
+
+CDirectXDriver::~CDirectXDriver()
+{
+	delete BackBuffer;
 }
 
 bool CDirectXDriver::CreateDriver()
@@ -72,8 +78,6 @@ bool CDirectXDriver::CreateDriver()
 	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-
-	CompileShader();
 	return true;
 }
 
@@ -92,33 +96,21 @@ bool CDirectXDriver::DestroyDriver()
 	return true;
 }
 
-bool CDirectXDriver::CompileShader()
+bool CDirectXDriver::SetTexture(int nStage, RTextureBuffer* pTexture)
 {
-	RShaderTable::nTableSize = 1;
-	RShaderTable::pShaders = new RDirectXShader();
-	sprintf_s(RShaderTable::pShaders->m_FileName, 256, "Shader.fx");
-	for(int i=0;i<RShaderTable::nTableSize;++i)
-	{
-		GDriver->CompileShaderFromFile(RShaderTable::pShaders);
-	}
-	return true;
-}
-
-bool CDirectXDriver::SetTexture(int nStage, BTextureBuffer* pTexture)
-{
-	CDirectXTextureBuffer* pDXTexture = dynamic_cast<CDirectXTextureBuffer*>(pTexture);
+	RDXTextureBuffer* pDXTexture = dynamic_cast<RDXTextureBuffer*>(pTexture);
 	if(!pDXTexture)
 		return false;
 	m_pDevice->SetSamplerState( 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP );
 	m_pDevice->SetSamplerState( 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP );
 
-	m_pDevice->SetTexture(0,pDXTexture->pTexture);
+	m_pDevice->SetTexture(0,pDXTexture->m_pTexture);
 	return true;
 }
 
 BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 {
-	CDirectXVertexBuffer* VB = new CDirectXVertexBuffer();
+	CDirectXPrimitiveBuffer* VB = new CDirectXPrimitiveBuffer();
 	HRESULT hr;
 	hr = m_pDevice->CreateVertexBuffer(
 		pBatch->nVertices * pBatch->nVertexStride,
@@ -198,32 +190,53 @@ BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	return VB;
 }
 
-BTextureBuffer* CDirectXDriver::CreateTextureBuffer()
+RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 {
-	CDirectXTextureBuffer* TB = new CDirectXTextureBuffer();
+	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
-	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, "../Resources/texture.bmp", &TB->pTexture)))
+	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, "../Resources/texture.bmp", &TB->m_pTexture)))
 		return 0;
 	return TB;
 }
 
-bool CDirectXTextureBuffer::DestroyTextureBuffer()
+bool CDirectXDriver::DrawPrimitive(UINT NumVertices, UINT PrimCount)
 {
-	pTexture->Release();
+	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, NumVertices, 0, PrimCount);
 	return true;
 }
 
-bool CDirectXDriver::DrawPrimitive()
+bool CDirectXDriver::DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride)
 {
-	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 12, 0, 14);
+	m_pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, NumVertices, PrimCount, pIndices, (IndexStride == sizeof(WORD))? D3DFMT_INDEX16 : D3DFMT_INDEX32, pVertices, VertexStride);
 	return true;
 }
 
-bool CDirectXVertexBuffer::DestroyVertexBuffer()
+bool CDirectXPrimitiveBuffer::DestroyVertexBuffer()
 {
 	IB->Release();
 	VB->Release();
 	return true;
+}
+
+bool CDirectXDriver::Clear(bool bClearColor, DWORD Color, bool bClearDepth, float Depth, bool bClearStencil, DWORD Stencil)
+{
+	DWORD Flags = 0;
+
+	if(bClearColor)
+	{
+		Flags |= D3DCLEAR_TARGET;
+	}
+	if(bClearDepth)
+	{
+		Flags |= D3DCLEAR_ZBUFFER;
+	}
+	if(bClearStencil)
+	{
+		Flags |= D3DCLEAR_STENCIL;
+	}
+
+	return m_pDevice->Clear(0, NULL, Flags, Color, Depth, Stencil) == D3D_OK;
+	
 }
 
 bool CDirectXDriver::BeginScene()
@@ -255,7 +268,11 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
 	DWORD dwShaderFlags = 0;
-	hr = D3DXCompileShaderFromFile("..\\Shaders\\VertexShader.fx", NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+
+	char FN[256];
+	sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
+
+	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];
@@ -267,7 +284,9 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pCode->Release();
 	pCode = NULL;
 
-	hr = D3DXCompileShaderFromFile("..\\Shaders\\PixelShader.fx", NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
+
+	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];
@@ -307,16 +326,33 @@ bool CDirectXDriver::SetRenderTarget(unsigned int Idx, RRenderTarget* RT)
 RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat)
 {
 	RDXRenderTarget *DXRT = new RDXRenderTarget();
-	IDirect3DTexture9 *pTexture;
-	D3DXCreateTexture(GetDevice(), Width, Height, 1, D3DUSAGE_RENDERTARGET, GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &pTexture);
-	if(D3D_OK != (pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
+	RDXTextureBuffer *DXTex = dynamic_cast<RDXTextureBuffer*>(DXRT->m_pTexture);
+	D3DXCreateTexture(GetDevice(), Width, Height, 1, D3DUSAGE_RENDERTARGET, GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
+	if(D3D_OK != (DXTex->m_pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
 		return NULL;
 	return DXRT;
 }
 
 RRenderTarget* CDirectXDriver::GetBackBuffer()
+{	
+	GetDevice()->GetBackBuffer(0,0,D3DBACKBUFFER_TYPE_MONO,&BackBuffer->m_pRTSurface);
+	return BackBuffer;
+}
+
+bool CDirectXDriver::SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer)
 {
-	static RDXRenderTarget RT;
-	GetDevice()->GetBackBuffer(0,0,D3DBACKBUFFER_TYPE_MONO,&RT.m_pRTSurface);
-	return &RT;
+	CDirectXPrimitiveBuffer *DXPrimitiveBuffer = dynamic_cast<CDirectXPrimitiveBuffer*>(PrimitiveBuffer);
+	if(!DXPrimitiveBuffer)
+		return false;
+	GetDevice()->SetStreamSource(0, DXPrimitiveBuffer->VB, 0, DXPrimitiveBuffer->VertexStride);
+	return true;
+}
+
+bool CDirectXDriver::SetIndices(BPrimitiveBuffer* PrimitiveBuffer)
+{
+	CDirectXPrimitiveBuffer *DXPrimitiveBuffer = dynamic_cast<CDirectXPrimitiveBuffer*>(PrimitiveBuffer);
+	if(!DXPrimitiveBuffer)
+		return false;
+	GetDevice()->SetIndices(DXPrimitiveBuffer->IB);
+	return true;
 }

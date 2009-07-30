@@ -8,6 +8,8 @@
 #include "CWindowApp.h"
 #include "CDirectXDriver.h"
 
+#include "RResourceManager.h"
+
 
 CWindowApp	*GApp = 0;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
@@ -58,6 +60,8 @@ bool CWindowApp::CreateWindowApp()
 		return false;
 	}
 
+	RResourceManager::LoadResources();
+
 	m_pRenderer = new BRenderer();		
 
 	m_pRenderer->SetApplication(this);
@@ -78,13 +82,17 @@ bool CWindowApp::CreateWindowApp()
 
 bool CWindowApp::DestroyWindowApp()
 {
-	delete m_pRenderer;
-	m_pRenderer = 0;
-	delete GDriver;
-	GDriver = 0;
 	if(m_pWorld) m_pWorld->DestroyWorld();
 	delete m_pWorld;
 	m_pWorld = 0;
+
+	delete m_pRenderer;
+	m_pRenderer = 0;
+
+	RResourceManager::ReleaseAllResources();
+
+	delete GDriver;
+	GDriver = 0;
 	return true;
 }
 
@@ -96,7 +104,10 @@ void CWindowApp::Do()
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT)
+			{
+				bQuit = true;
 				break;
+			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);			
 		}
@@ -106,6 +117,7 @@ void CWindowApp::Do()
 			// TODI : Do World Tick
 		}
 	}
+	while(!bRenderThreadQuit);
 }
 
 void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)

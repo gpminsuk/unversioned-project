@@ -245,7 +245,15 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
+					RelativePath="..\Shaders\PixelRTShader.fx"
+					>
+				</File>
+				<File
 					RelativePath="..\Shaders\PixelShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\Shaders\VertexRTShader.fx"
 					>
 				</File>
 				<File
@@ -334,11 +342,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\ResourceManager.h"
+						RelativePath=".\Src\RResource.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\RResource.h"
+						RelativePath=".\Src\RResourceManager.h"
 						>
 					</File>
 				</Filter>
@@ -440,11 +448,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\ResourceManager.cpp"
+						RelativePath=".\Src\RResource.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\RResource.cpp"
+						RelativePath=".\Src\RResourceManager.cpp"
 						>
 					</File>
 				</Filter>

@@ -25,6 +25,16 @@ public:
 		return mArray[idx];
 	}
 
+	void Clear(bool bFreeMemory = false)
+	{
+		mArray.clear();
+		if(bFreeMemory)
+		{
+			mArray.vector<T>::~vector();
+			mArray.vector<T>::vector();
+		}
+	}
+
 	void AddItem(T Item)
 	{
 		mArray.push_back(Item);

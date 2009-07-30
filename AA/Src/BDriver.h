@@ -11,12 +11,6 @@ enum EPixelFormat
 	PF_A8R8G8B8,
 };
 
-class BTextureBuffer
-{
-public:
-	virtual bool DestroyTextureBuffer() = 0;
-};
-
 class BPrimitiveBuffer
 {
 public:
@@ -26,18 +20,27 @@ public:
 class BDriver
 {
 public:
+	BDriver();
+	virtual ~BDriver();
+
 	virtual bool CreateDriver() = 0;
 	virtual bool DestroyDriver() = 0;
 
-	virtual bool DrawPrimitive() = 0;
+	virtual bool SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer) = 0;
+	virtual bool SetIndices(BPrimitiveBuffer* PrimitiveBuffer) = 0;
 
-	virtual bool SetTexture(int nStage, BTextureBuffer* pTexture) = 0;
+	virtual bool DrawPrimitiveUP(unsigned int NumVertices, unsigned int PrimCount, void* pIndices, unsigned int IndexStride, void* pVertices, unsigned int VertexStride) = 0;
+	virtual bool DrawPrimitive(unsigned int NumVertices, unsigned int PrimCount) = 0;
+
+	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture) = 0;
 
 	virtual BPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch) = 0;
-	virtual BTextureBuffer* CreateTextureBuffer() = 0;
+	virtual RTextureBuffer* CreateTextureBuffer() = 0;
 
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;
+
+	virtual bool Clear(bool bClearColor = true, unsigned long Color = 0x00000000, bool bClearDepth = false, float Depth = 0.0f, bool bClearStencil = false, unsigned long Stencil = 0.0f) = 0;
 
 	virtual bool CompileShaderFromFile(RShaderBase *pShader) = 0;
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader) = 0;

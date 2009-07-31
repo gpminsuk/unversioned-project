@@ -11,12 +11,6 @@ enum EPixelFormat
 	PF_A8R8G8B8,
 };
 
-class BPrimitiveBuffer
-{
-public:
-	virtual bool DestroyVertexBuffer() = 0;
-};
-
 class BDriver
 {
 public:
@@ -26,15 +20,15 @@ public:
 	virtual bool CreateDriver() = 0;
 	virtual bool DestroyDriver() = 0;
 
-	virtual bool SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer) = 0;
-	virtual bool SetIndices(BPrimitiveBuffer* PrimitiveBuffer) = 0;
+	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
+	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
 
 	virtual bool DrawPrimitiveUP(unsigned int NumVertices, unsigned int PrimCount, void* pIndices, unsigned int IndexStride, void* pVertices, unsigned int VertexStride) = 0;
 	virtual bool DrawPrimitive(unsigned int NumVertices, unsigned int PrimCount) = 0;
 
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture) = 0;
 
-	virtual BPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch) = 0;
+	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch) = 0;
 	virtual RTextureBuffer* CreateTextureBuffer() = 0;
 
 	virtual bool BeginScene() = 0;
@@ -51,6 +45,8 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
 
 	virtual RRenderTarget* GetBackBuffer() = 0;
+	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) = 0;
+	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height) = 0;
 };
 
 extern BDriver	*GDriver;

@@ -8,23 +8,6 @@
 #include "TDataTypes.h"
 
 class BViewport;
-class RTextureBuffer
-{
-public:
-	RTextureBuffer() {}
-	virtual ~RTextureBuffer() {}
-};
-
-class RRenderTarget
-{
-public:
-	RRenderTarget() : m_pTexture(0) {}
-	virtual ~RRenderTarget() {}
-
-	RTextureBuffer* m_pTexture;
-
-	virtual bool Release() = 0;
-};
 
 class RShaderBase
 {
@@ -46,11 +29,11 @@ public:
 	static TArray<RShaderBase*> pShaders;
 };
 
-class RIndexBuffer
+class RSystemMemoryIndexBuffer
 {
 public:
-	RIndexBuffer() : pIndices(0), nIndices(0) {}
-	virtual ~RIndexBuffer()
+	RSystemMemoryIndexBuffer() : pIndices(0), nIndices(0) {}
+	virtual ~RSystemMemoryIndexBuffer()
 	{
 		delete[] pIndices; pIndices = 0;
 		nIndices = 0;
@@ -60,10 +43,22 @@ public:
 	int nIndices;
 };
 
-class RIndexBufferTable
+class RVideoMemoryIndexBuffer
 {
 public:
-	static TArray<RIndexBuffer*> pIndexBuffer;
+	RVideoMemoryIndexBuffer() : nIndices(0) {}
+	virtual ~RVideoMemoryIndexBuffer()
+	{
+	   nIndices = 0;
+	}
+	
+	int nIndices;
+};
+
+class RSystemMemoryIndexBufferTable
+{
+public:
+	static TArray<RSystemMemoryIndexBuffer*> pIndexBuffer;
 };
 
 // primitive per one DP
@@ -96,11 +91,11 @@ struct VertexDeclaration
 	char Type;
 };
 
-class RVertexBuffer
+class RSystemMemoryVertexBuffer
 {
 public:
-	RVertexBuffer() : pVertices(0), nVertices(0), Declaration(0) {}
-	virtual ~RVertexBuffer()
+	RSystemMemoryVertexBuffer() : pVertices(0), nVertices(0), Declaration(0) {}
+	virtual ~RSystemMemoryVertexBuffer()
 	{
 		delete[] pVertices; pVertices = 0;
 		delete[] Declaration; Declaration = 0;
@@ -110,16 +105,55 @@ public:
 	int nVertices;
 	int nVertexStride;
 
-
 	VertexDeclaration* Declaration;
 
 	char *pVertices;
 };
 
-class RVertexBufferTable
+class RVideoMemoryVertexBuffer
 {
 public:
-	static TArray<RVertexBuffer*> pVertexBuffer;
+	RVideoMemoryVertexBuffer() : nVertices(0), Declaration(0) {}
+	virtual ~RVideoMemoryVertexBuffer()
+	{
+		delete[] Declaration; Declaration = 0;
+		nVertices = 0;
+	}
+
+	int nVertices;
+	int nVertexStride;
+
+	VertexDeclaration* Declaration;
+};
+
+class RSystemMemoryVertexBufferTable
+{
+public:
+	static TArray<RSystemMemoryVertexBuffer*> pVertexBuffer;
+};
+
+class RPrimitiveBuffer
+{
+public:
+};
+
+class RDynamicPrimitiveBuffer : public RPrimitiveBuffer
+{
+public:
+	RDynamicPrimitiveBuffer() : m_pVB(0), m_pIB(0) {}
+	virtual ~RDynamicPrimitiveBuffer() {}
+
+	RVideoMemoryVertexBuffer* m_pVB;
+	RVideoMemoryIndexBuffer* m_pIB;
+
+	virtual void Release() = 0;
+};
+
+class RStaticPrimitiveBuffer : public RPrimitiveBuffer
+{
+public:
+	RSystemMemoryVertexBuffer* m_pVB;
+	RSystemMemoryIndexBuffer* m_pIB;
 };
 
 class RTexture
@@ -136,20 +170,38 @@ protected:
 	ETextureMemoryType MemoryType;
 };
 
-class RTextureBufferTable
-{
-public:
-	static TArray<RTextureBuffer*> pTextureBuffer;
-};
-
 class RTextureTable
 {
 public:
 	static TArray<RTexture*> pTextures;
 };
 
+class RTextureBuffer
+{
+public:
+	RTextureBuffer() {}
+	virtual ~RTextureBuffer() {}
+};
+
+class RTextureBufferTable
+{
+public:
+	static TArray<RTextureBuffer*> pTextureBuffer;
+};
+
 class RMaterial
 {
 public:
 	int TID;
+};
+
+class RRenderTarget
+{
+public:
+	RRenderTarget() : m_pTexture(0) {}
+	virtual ~RRenderTarget() {}
+
+	RTextureBuffer* m_pTexture;
+
+	virtual bool Release() = 0;
 };

@@ -60,7 +60,8 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 {
 	Viewport->SortTemplates();
 	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
-
+	if(!m_pBuffer)
+		return false;
 	m_OpaqueBasePass->BeginPass(Viewport);
 	for(UINT PrimIdx = 0;PrimIdx < Viewport->m_OpaquePrimitives.Size(); ++PrimIdx)
 	{
@@ -76,7 +77,7 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	m_BaseRTRenderPass->DrawPrimitive();
 	m_BaseRTRenderPass->EndPass();
 
-	m_pBuffer->DestroyVertexBuffer();
+	m_pBuffer->Release();
 	delete m_pBuffer;
 	return true;
 }

@@ -32,7 +32,10 @@ bool UWorld::InitializeWorld()
 
 	m_Box.Resize(TVector3(2.0f,2.0f,2.0f));
 
-	m_pViewport->Render(&m_Box);
+	//m_pViewport->Render(&m_Box);
+	m_Mesh.pIndexBuffer = RSystemMemoryIndexBufferTable::pIndexBuffer(1);
+	m_Mesh.pVertexBuffer = RSystemMemoryVertexBufferTable::pVertexBuffer(1);
+	m_pViewport->Render(&m_Mesh);
 
 
 	m_pCamera = new CCamera();

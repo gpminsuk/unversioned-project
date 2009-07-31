@@ -213,8 +213,8 @@ public:
 
 	class RMaterial *pMaterial;
 
-	class RVertexBuffer *pVertexBuffer;
-	class RIndexBuffer *pIndexBuffer;
+	class RSystemMemoryVertexBuffer *pVertexBuffer;
+	class RSystemMemoryIndexBuffer *pIndexBuffer;
 	
 	struct SBatchInfo
 	{
@@ -227,11 +227,13 @@ public:
 class TBatch
 {
 public:
-	TBatch() : nVertices(0), nVertexStride(0) {}
+	TBatch() : nVertices(0), nVertexStride(0), nIndices(0) {}
 	TArray<TPrimitiveTemplateBase*> m_pTemplates;
 
 	int nVertices;
 	int nVertexStride;
+
+	int nIndices;
 };
 
 class TBox : public TPrimitiveTemplateBase
@@ -271,6 +273,7 @@ private:
 
 class TMesh : public TPrimitiveTemplateBase
 {
+public:
 };
 
 /*

@@ -8,7 +8,7 @@
 #pragma comment(lib,"winmm.lib")
 
 class BViewport;
-class BPrimitiveBuffer;
+class RPrimitiveBuffer;
 class BTextureBuffer;
 class BApplication;
 
@@ -39,7 +39,7 @@ protected:
 	class BRTRenderPass*	m_BaseRTRenderPass;
 
 	BApplication* m_pApp;
-	BPrimitiveBuffer* m_pBuffer;
+	RDynamicPrimitiveBuffer* m_pBuffer;
 	int m_nViewportCount;
 
 	DWORD m_dFrameTime[100];

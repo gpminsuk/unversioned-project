@@ -25,6 +25,8 @@ void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_PrimitiveType Render
 		m_Batches.m_pTemplates.AddItem(pTemplate);
 		m_Batches.nVertexStride = pTemplate->pVertexBuffer->nVertexStride;
 		m_Batches.nVertices += pTemplate->pVertexBuffer->nVertices;
+		m_Batches.nIndices += pTemplate->pIndexBuffer->nIndices;
+		//m_Batches.nVertices = 3;
 	}
 }
 

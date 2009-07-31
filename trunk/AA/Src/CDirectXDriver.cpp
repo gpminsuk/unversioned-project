@@ -78,6 +78,7 @@ bool CDirectXDriver::CreateDriver()
 	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+	m_pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
 	return true;
 }
 
@@ -108,9 +109,17 @@ bool CDirectXDriver::SetTexture(int nStage, RTextureBuffer* pTexture)
 	return true;
 }
 
-BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
+RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 {
-	CDirectXPrimitiveBuffer* VB = new CDirectXPrimitiveBuffer();
+	if(!pBatch->m_pTemplates.Size())
+		return false;
+	RDXDynamicPrimitiveBuffer* PB = new RDXDynamicPrimitiveBuffer();
+	RDXVideoMemoryVertexBuffer* VB = dynamic_cast<RDXVideoMemoryVertexBuffer*>(PB->m_pVB);
+	RDXVideoMemoryIndexBuffer* IB = dynamic_cast<RDXVideoMemoryIndexBuffer*>(PB->m_pIB);
+	if(!VB || !IB)
+	{
+		return 0;
+	}	
 	HRESULT hr;
 	hr = m_pDevice->CreateVertexBuffer(
 		pBatch->nVertices * pBatch->nVertexStride,
@@ -130,6 +139,7 @@ BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	void *pData;
 	hr = VB->VB->Lock(0, pBatch->nVertices * pBatch->nVertexStride
 		, (void**)&pData, D3DLOCK_DISCARD);
+
 	if(hr != D3D_OK)
 	{
 		switch(hr)
@@ -150,17 +160,19 @@ BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		VB->VB->Unlock();
 	}
 
-	m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->nVertexStride);
+	hr = m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->nVertexStride);
+	if(hr != D3D_OK)
+		return false;
 
 	hr = m_pDevice->CreateIndexBuffer(
-		14*sizeof(TIndex16),
+		pBatch->nIndices*sizeof(TIndex16),
 		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_DEFAULT,
-		&VB->IB,
+		&IB->IB,
 		NULL);
 
-	hr = VB->IB->Lock(0, 14*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
+	hr = IB->IB->Lock(0, pBatch->nIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
 	if(hr != D3D_OK)
 	{
 		return false;
@@ -182,12 +194,14 @@ BPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 			BaseIdx += pBatch->m_pTemplates[i]->pVertexBuffer->nVertices;
 			pcData += pBatch->m_pTemplates[i]->pIndexBuffer->nIndices;
 		}
-		VB->IB->Unlock();
+		IB->IB->Unlock();
 	}
 
-	m_pDevice->SetIndices(VB->IB);
+	hr = m_pDevice->SetIndices(IB->IB);
+	if(hr != D3D_OK)
+		return false;
 
-	return VB;
+	return PB;
 }
 
 RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
@@ -208,13 +222,6 @@ bool CDirectXDriver::DrawPrimitive(UINT NumVertices, UINT PrimCount)
 bool CDirectXDriver::DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride)
 {
 	m_pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, NumVertices, PrimCount, pIndices, (IndexStride == sizeof(WORD))? D3DFMT_INDEX16 : D3DFMT_INDEX32, pVertices, VertexStride);
-	return true;
-}
-
-bool CDirectXPrimitiveBuffer::DestroyVertexBuffer()
-{
-	IB->Release();
-	VB->Release();
 	return true;
 }
 
@@ -339,20 +346,42 @@ RRenderTarget* CDirectXDriver::GetBackBuffer()
 	return BackBuffer;
 }
 
-bool CDirectXDriver::SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer)
+bool CDirectXDriver::SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer)
 {
-	CDirectXPrimitiveBuffer *DXPrimitiveBuffer = dynamic_cast<CDirectXPrimitiveBuffer*>(PrimitiveBuffer);
-	if(!DXPrimitiveBuffer)
+	RDXVideoMemoryVertexBuffer *DXVertexBuffer = dynamic_cast<RDXVideoMemoryVertexBuffer*>(PrimitiveBuffer->m_pVB);
+	if(!DXVertexBuffer)
 		return false;
-	GetDevice()->SetStreamSource(0, DXPrimitiveBuffer->VB, 0, DXPrimitiveBuffer->VertexStride);
+	GetDevice()->SetStreamSource(0, DXVertexBuffer->VB, 0, DXVertexBuffer->nVertexStride);
 	return true;
 }
 
-bool CDirectXDriver::SetIndices(BPrimitiveBuffer* PrimitiveBuffer)
+bool CDirectXDriver::SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer)
 {
-	CDirectXPrimitiveBuffer *DXPrimitiveBuffer = dynamic_cast<CDirectXPrimitiveBuffer*>(PrimitiveBuffer);
-	if(!DXPrimitiveBuffer)
+	RDXVideoMemoryIndexBuffer *DXIndexBuffer = dynamic_cast<RDXVideoMemoryIndexBuffer*>(PrimitiveBuffer->m_pIB);
+	if(!DXIndexBuffer)
 		return false;
-	GetDevice()->SetIndices(DXPrimitiveBuffer->IB);
+	GetDevice()->SetIndices(DXIndexBuffer->IB);
 	return true;
+}
+
+bool CDirectXDriver::SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ)
+{
+	D3DVIEWPORT9 vp;
+	vp.X = x;
+	vp.Y = y;
+	vp.Width = Width;
+	vp.Height = Height;
+	vp.MinZ = MinZ;
+	vp.MaxZ = MaxZ;
+	return GetDevice()->SetViewport(&vp) == D3D_OK;
+}
+
+bool CDirectXDriver::SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height)
+{
+	RECT rt;
+	rt.left = x;
+	rt.right = x+Width;
+	rt.top = y;
+	rt.bottom = y+Height;
+	return GetDevice()->SetScissorRect(&rt) == D3D_OK;
 }

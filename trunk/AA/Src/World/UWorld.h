@@ -27,6 +27,7 @@ public:
 	BRenderer* m_pRenderer;
 
 	TBox	m_Box;
+	TMesh	m_Mesh;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

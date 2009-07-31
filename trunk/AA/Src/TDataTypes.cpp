@@ -5,8 +5,6 @@
 TPrimitiveTemplateBase::~TPrimitiveTemplateBase()
 {
 	delete pMaterial; pMaterial = 0;
-	delete pVertexBuffer; pVertexBuffer = 0;
-	delete pIndexBuffer; pIndexBuffer = 0;
 }
 
 TPrimitiveTemplateBase::TPrimitiveTemplateBase() 
@@ -17,8 +15,9 @@ TPrimitiveTemplateBase::TPrimitiveTemplateBase()
 
 void TBox::Create()
 {
-	if(pVertexBuffer) delete pVertexBuffer;
-	pVertexBuffer = new RVertexBuffer();
+	/*if(pVertexBuffer) delete pVertexBuffer;
+	pVertexBuffer = new RSystemMemoryVertexBuffer();
+	RSystemMemoryVertexBufferTable::pVertexBuffer.AddItem(pVertexBuffer);
 
 	pVertexBuffer->Declaration = new VertexDeclaration[2];
 	pVertexBuffer->Declaration[0].Offset = 0;
@@ -57,7 +56,8 @@ void TBox::Create()
 	Vertex[7].UV = TVector2(1.0f,1.0f);
 
 	if(pIndexBuffer) delete pIndexBuffer;
-	pIndexBuffer = new RIndexBuffer();
+	pIndexBuffer = new RSystemMemoryIndexBuffer();
+	RSystemMemoryIndexBufferTable::pIndexBuffer.AddItem(pIndexBuffer);
 	pIndexBuffer->nIndices = 12;
 	pIndexBuffer->pIndices = new TIndex16[12];
 	pIndexBuffer->pIndices[0] = TIndex16(0,2,1);
@@ -71,14 +71,14 @@ void TBox::Create()
 	pIndexBuffer->pIndices[8] = TIndex16(5,4,1);
 	pIndexBuffer->pIndices[9] = TIndex16(1,4,0);
 	pIndexBuffer->pIndices[10] = TIndex16(2,3,6);
-	pIndexBuffer->pIndices[11] = TIndex16(6,3,7);
+	pIndexBuffer->pIndices[11] = TIndex16(6,3,7);*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void TQuad::Create()
 {
-	pVertexBuffer = new RVertexBuffer();
+	/*pVertexBuffer = new RSystemMemoryVertexBuffer();
 
 	pVertexBuffer->Declaration = new VertexDeclaration[2];
 	pVertexBuffer->Declaration[0].Offset = 0;
@@ -106,11 +106,11 @@ void TQuad::Create()
 	Vertex[2].UV = TVector2(10.0f,10.0f);
 	Vertex[3].UV = TVector2(10.0f,0.0f);
 
-	pIndexBuffer = new RIndexBuffer();
+	pIndexBuffer = new RSystemMemoryIndexBuffer();
 	pIndexBuffer->nIndices = 2;
 	pIndexBuffer->pIndices = new TIndex16[2];
 	pIndexBuffer->pIndices[0] = TIndex16(0,1,2);
-	pIndexBuffer->pIndices[1] = TIndex16(0,2,3);
+	pIndexBuffer->pIndices[1] = TIndex16(0,2,3);*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

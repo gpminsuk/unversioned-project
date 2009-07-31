@@ -19,15 +19,15 @@ public:
 	virtual bool CreateDriver();
 	virtual bool DestroyDriver();
 
-	virtual bool SetIndices(BPrimitiveBuffer* PrimitiveBuffer);
-	virtual bool SetStreamSource(BPrimitiveBuffer* PrimitiveBuffer);
+	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer);
+	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer);
 
 	virtual bool DrawPrimitive(UINT NumVertices, UINT PrimCount);
 	virtual bool DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride);
 
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture);
 
-	virtual BPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch);
+	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch);
 	virtual RTextureBuffer* CreateTextureBuffer();
 
 	virtual bool BeginScene();
@@ -44,6 +44,8 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
 
 	virtual RRenderTarget* GetBackBuffer();
+	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
+	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
 
 	class RDXRenderTarget* BackBuffer;
 
@@ -52,15 +54,4 @@ private:
 	TWindowInfo*		m_pWindow;
 
 	LPDIRECT3D9			m_pD3D;
-};
-
-class CDirectXPrimitiveBuffer : public BPrimitiveBuffer
-{
-public:
-	virtual bool DestroyVertexBuffer();
-
-	unsigned int VertexStride;
-	
-	IDirect3DVertexBuffer9* VB;
-	IDirect3DIndexBuffer9* IB;
 };

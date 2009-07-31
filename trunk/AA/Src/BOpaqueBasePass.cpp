@@ -7,7 +7,7 @@
 
 BOpaqueBasePass::BOpaqueBasePass()
 {
-	RRenderTarget *DXRT = GDriver->CreateRenderTarget(100, 100, PF_A8R8G8B8);
+	RRenderTarget *DXRT = GDriver->CreateRenderTarget(800, 800, PF_A8R8G8B8);
 	m_RenderTargets.AddItem(DXRT);
 }
 
@@ -26,7 +26,7 @@ void BOpaqueBasePass::BeginPass(BViewport* Viewport)
 	RShaderBase* pShader = RShaderTable::pShaders(0);
 	for(unsigned int i=0;i<m_RenderTargets.Size();++i)
 		GDriver->SetRenderTarget(i, m_RenderTargets(i));
-	GDriver->Clear(true, 0x00000000);
+	GDriver->Clear(true, 0x0000FF00);
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);
 }

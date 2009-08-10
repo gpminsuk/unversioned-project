@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 
 #include "BViewport.h"
+#include "BPrimitive.h"
 
 #include "CDirectXDriver.h"
 #include "CWindowApp.h"
@@ -9,7 +10,14 @@
 
 D3DFORMAT GPixelFormats[] = 
 {
-	D3DFMT_A8R8G8B8
+	D3DFMT_A8R8G8B8,
+	D3DFMT_D24S8
+};
+
+DWORD GTextureUsage[] = 
+{
+	D3DUSAGE_RENDERTARGET,
+	D3DUSAGE_DEPTHSTENCIL,
 };
 
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
@@ -38,7 +46,7 @@ bool CDirectXDriver::CreateDriver()
 	Parameters.Windowed = true;
 	Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	Parameters.BackBufferWidth = m_pWindow->m_wWidth;
-	Parameters.BackBufferHeight = m_pWindow->m_wHeight;
+	Parameters.BackBufferHeight = 1600;//m_pWindow->m_wHeight;
 	Parameters.BackBufferCount = 1;
 	Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
 
@@ -152,10 +160,18 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	{
 		char* pcData = static_cast<char*>(pData);
 		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
-		{			
-			memcpy(pcData, pBatch->m_pTemplates[i]->pVertexBuffer->pVertices, 
-				pBatch->m_pTemplates[i]->pVertexBuffer->nVertices * pBatch->m_pTemplates[i]->pVertexBuffer->nVertexStride);
-			pcData += pBatch->m_pTemplates[i]->pVertexBuffer->nVertices * pBatch->m_pTemplates[i]->pVertexBuffer->nVertexStride;
+		{
+			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
+			{
+				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
+				memcpy(pcData, Prim->pSubMesh->pVB->pVertices, 
+					Prim->pSubMesh->pVB->nVertices * Prim->pSubMesh->pVB->nVertexStride);
+				for(int k=0;k<Prim->pSubMesh->pVB->nVertices;++k)
+				{
+					*((TVector3*)&(pcData[k*Prim->pSubMesh->pVB->nVertexStride])) = Prim->TM.TransformVector3(*((TVector3*)&(pcData[k*Prim->pSubMesh->pVB->nVertexStride])));
+				}
+				pcData += Prim->pSubMesh->pVB->nVertices * Prim->pSubMesh->pVB->nVertexStride;
+			}
 		}
 		VB->VB->Unlock();
 	}
@@ -183,16 +199,21 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		short BaseIdx = 0;
 		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
 		{
-			for(int k=0;k<pBatch->m_pTemplates[i]->pIndexBuffer->nIndices;++k)
+			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
 			{
-				TIndex16 tmpIndex;
-				tmpIndex._1 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._1 + BaseIdx;
-				tmpIndex._2 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._2 + BaseIdx;
-				tmpIndex._3 = pBatch->m_pTemplates[i]->pIndexBuffer->pIndices[k]._3 + BaseIdx;
-				pcData[k] = tmpIndex;
+				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
+				RSubMesh* Mesh = Prim->pSubMesh;
+				for(int k=0;k<Mesh->pIB->nIndices;++k)
+				{
+					TIndex16 tmpIndex;
+					tmpIndex._1 = Mesh->pIB->pIndices[k]._1 + BaseIdx;
+					tmpIndex._2 = Mesh->pIB->pIndices[k]._2 + BaseIdx;
+					tmpIndex._3 = Mesh->pIB->pIndices[k]._3 + BaseIdx;
+					pcData[k] = tmpIndex;
+				}
+				BaseIdx += Mesh->pVB->nVertices;
+				pcData += Mesh->pIB->nIndices;
 			}
-			BaseIdx += pBatch->m_pTemplates[i]->pVertexBuffer->nVertices;
-			pcData += pBatch->m_pTemplates[i]->pIndexBuffer->nIndices;
 		}
 		IB->IB->Unlock();
 	}
@@ -209,7 +230,10 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
 	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, "../Resources/texture.bmp", &TB->m_pTexture)))
+	{
+		delete TB;
 		return 0;
+	}
 	return TB;
 }
 
@@ -330,11 +354,20 @@ bool CDirectXDriver::SetRenderTarget(unsigned int Idx, RRenderTarget* RT)
 	return true;
 }
 
-RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat)
+bool CDirectXDriver::SetDepthStencilSurface(RRenderTarget* RT)
+{
+	RDXRenderTarget *DXRT = dynamic_cast<RDXRenderTarget*>(RT);
+	if(!DXRT)
+		return false;
+	GetDevice()->SetDepthStencilSurface(DXRT->m_pRTSurface);
+	return true;
+}
+
+RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage)
 {
 	RDXRenderTarget *DXRT = new RDXRenderTarget();
 	RDXTextureBuffer *DXTex = dynamic_cast<RDXTextureBuffer*>(DXRT->m_pTexture);
-	D3DXCreateTexture(GetDevice(), Width, Height, 1, D3DUSAGE_RENDERTARGET, GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
+	D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage], GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
 	if(D3D_OK != (DXTex->m_pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
 		return NULL;
 	return DXRT;

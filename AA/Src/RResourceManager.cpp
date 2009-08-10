@@ -9,6 +9,8 @@ void LoadASEFile(char* fn)
 {
 	char line[1024];
 	char string[1024];
+	TString NodeName;
+	TString ParentNodeName;
 	FILE *fp;
 	fopen_s(&fp, fn, "rt");
 	if(!fp)
@@ -19,6 +21,10 @@ void LoadASEFile(char* fn)
 
 	if(strcmp(string,"*3DSMAX_ASCIIEXPORT") != 0)
 		return;
+
+	RAnimationSequence *AnimationSequence = new RAnimationSequence();
+	RBoneInfo* BoneInfo = new RBoneInfo();
+	RMesh*	Model = new RMesh();
 
 	while(!feof(fp))
 	{
@@ -36,22 +42,26 @@ void LoadASEFile(char* fn)
 				sscanf_s(line,"%s",string, 1024);
 				if(!strcmp(string, "*SCENE_FIRSTFRAME"))
 				{
-
+					sscanf_s(line,"%s%d", string, 1024, &AnimationSequence->StartFrame);
+					continue;
 				}
 
 				if(!strcmp(string, "*SCENE_LASTFRAME"))
 				{
-
+					sscanf_s(line,"%s%d", string, 1024, &AnimationSequence->EndFrame);
+					continue;
 				}
 
 				if(!strcmp(string, "*SCENE_FRAMESPEED"))
 				{
-
+					sscanf_s(line,"%s%d", string, 1024, &AnimationSequence->FrameSpeed);
+					continue;
 				}
 
 				if(!strcmp(string, "*SCENE_TICKSPERFRAME"))
 				{
-
+					sscanf_s(line,"%s%d", string, 1024, &AnimationSequence->TickPerFrame);
+					continue;
 				}
 
 				if(!strcmp(string, "}"))
@@ -328,19 +338,64 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*NODE_NAME"))
 				{
+					char *Spos = strchr(line, '"');
+					char *Epos = strchr(Spos+1, '"');
+					Epos -= 1;
+					memcpy_s(NodeName.Str, 1024, Spos+1, Epos-Spos);
+					NodeName.Str[Epos-Spos] = '\0';
+					continue;
+				}
 
+				if(!strcmp(string, "*NODE_PARENT"))
+				{
+					char *Spos = strchr(line, '"');
+					char *Epos = strchr(Spos+1, '"');
+					Epos -= 1;
+					memcpy_s(ParentNodeName.Str, 1024, Spos+1, Epos-Spos);
+					ParentNodeName.Str[Epos-Spos] = '\0';
+					continue;
 				}
 
 				if(!strcmp(string, "*NODE_TM"))
 				{
+					RBone *Bone = new RBone();
+					TVector3 Inherit_Pos, Inherit_Rot;
 					while(1)
 					{
 						fgets(line, 1024, fp);
 						sscanf_s(line,"%s",string, 1024);
 
-						if(!strcmp(string, "*MESH_FACE"))
+						if(!strcmp(string, "*NODE_NAME"))
 						{
+							char *Spos = strchr(line, '"');
+							char *Epos = strchr(Spos+1, '"');
+							Epos -= 1;
+							memcpy_s(Bone->BoneName.Str, 1024, Spos+1, Epos-Spos);
+							Bone->BoneName.Str[Epos-Spos] = '\0';
+							continue;
+						}
 
+						if(!strcmp(string, "*TM_POS"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Translation.x, &Bone->Translation.y, &Bone->Translation.z);
+							continue;
+						}
+
+						if(!strcmp(string, "*INHERIT_POS"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Inherit_Pos.x, &Inherit_Pos.y, &Inherit_Pos.z);
+							continue;
+						}
+
+						if(!strcmp(string, "*INHERIT_ROT"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Inherit_Rot.x, &Inherit_Rot.y, &Inherit_Rot.z);
+							continue;
+						}
+
+						if(!strcmp(string, "*NODE_NAME"))
+						{
+							continue;
 						}
 
 						if(!strcmp(string, "}"))
@@ -348,6 +403,24 @@ void LoadASEFile(char* fn)
 							break;
 						}
 					}
+					for(int i=0;BoneInfo->Bones.Size();++i)
+					{
+						if(!strcmp(ParentNodeName.Str, BoneInfo->Bones(i)->BoneName.Str))
+						{
+							Bone->Parent = BoneInfo->Bones(i);
+							break;
+						}
+					}
+					RBone* B = Bone;
+					while(B->Parent)
+					{
+						B = B->Parent;
+//						if(Inherit_Pos.x == 0.0f && Inherit_Pos.y == 0.0f && Inherit_Pos.z == 0.0f)
+							Bone->Translation -= B->Translation;
+//						if(Inherit_Rot.x == 0.0f && Inherit_Rot.y == 0.0f && Inherit_Rot.z == 0.0f)
+							Bone->Rotation *= TQuaternion(-B->Rotation.v.x, -B->Rotation.v.y, -B->Rotation.v.z, B->Rotation.w);
+					}
+					BoneInfo->Bones.AddItem(Bone);
 					continue;
 				}
 
@@ -361,6 +434,7 @@ void LoadASEFile(char* fn)
 					TIndex16 *pTextureIndices = 0;
 					TVector3 *pASEVertices = 0;
 					TIndex16 *pASEIndices = 0;
+					RSubMesh *Mesh = new RSubMesh();
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -387,6 +461,15 @@ void LoadASEFile(char* fn)
 						{
 							int index;
 							TVector3 Position;
+							RBone *B = BoneInfo->Bones((int)(BoneInfo->Bones.Size()-1));
+							TVector3 Translation = B->Translation;
+							TQuaternion Quat = B->Rotation;
+							while(B->Parent)
+							{
+								B = B->Parent;
+								Translation += B->Translation;			
+								Quat *= B->Rotation;
+							}
 							while(1)
 							{
 								fgets(line, 1024, fp);
@@ -395,7 +478,10 @@ void LoadASEFile(char* fn)
 								if(!strcmp(string, "*MESH_VERTEX"))
 								{
 									sscanf_s(line,"%s%d%f%f%f", string, 1024, &index, &Position.x, &Position.y, &Position.z);
-									pASEVertices[index] = Position;
+									if(BoneInfo->Bones.Size() > 0)
+										pASEVertices[index] = Position - Translation;
+									else
+										pASEVertices[index] = Position;
 								}
 
 								if(!strcmp(string, "}"))
@@ -476,7 +562,7 @@ void LoadASEFile(char* fn)
 
 								if(!strcmp(string, "*MESH_TFACE"))
 								{
-									sscanf_s(line,"%s%d: A: %hd B: %hd C: %hd", string, 1024, &index, &TVertexIndex._1, &TVertexIndex._2, &TVertexIndex._3);
+									sscanf_s(line,"%s%d%hd%hd%hd", string, 1024, &index, &TVertexIndex._1, &TVertexIndex._2, &TVertexIndex._3);
 									pTextureIndices[index] = TVertexIndex;
 								}
 
@@ -488,13 +574,28 @@ void LoadASEFile(char* fn)
 							continue;
 						}
 
+						if(!strcmp(string, "*MESH_NORMALS"))
+						{
+							while(1)
+							{
+								fgets(line, 1024, fp);
+								sscanf_s(line,"%s",string, 1024);
+							
+								if(!strcmp(string, "}"))
+								{
+									break;
+								}
+							}
+							continue;
+						}
+
 						if(!strcmp(string, "}"))
 						{
 							RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-							RSystemMemoryVertexBufferTable::pVertexBuffer.AddItem(pVB);
+							RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 
 							RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-							RSystemMemoryIndexBufferTable::pIndexBuffer.AddItem(pIB);
+							RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 
 							pVB->Declaration = new VertexDeclaration[2];
 							pVB->Declaration[0].Offset = 0;
@@ -508,17 +609,7 @@ void LoadASEFile(char* fn)
 								TVector2 UV;
 							};
 
-							pVB->nVertexStride = sizeof(VD);
-							pVB->nVertices = nASEVerts;
-							pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
-
-							VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
-							for(int i=0;i<nASEVerts;++i)
-							{
-								Vertex[i].Pos = pASEVertices[i];
-								Vertex[i].UV = TVector2(0.0f,0.0f);
-							}
-							/*
+							pVB->nVertexStride = sizeof(VD);							
 							pVB->nVertices = nASEIndices*3;
 							pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 
@@ -526,19 +617,25 @@ void LoadASEFile(char* fn)
 							for(int i=0;i<nASEIndices;++i)
 							{
 								Vertex[i*3 + 0].Pos = pASEVertices[pASEIndices[i]._1];
-								Vertex[i*3 + 0].UV = pTextureVerts[pTextureIndices[i]._1];
+								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 0].UV = pTextureVerts[pTextureIndices[i]._1];
+								else	Vertex[i*3 + 0].UV = TVector2(0.0f,0.0f);
 								Vertex[i*3 + 1].Pos = pASEVertices[pASEIndices[i]._2];
-								Vertex[i*3 + 1].UV = pTextureVerts[pTextureIndices[i]._2];
+								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 1].UV = pTextureVerts[pTextureIndices[i]._2];
+								else	Vertex[i*3 + 1].UV = TVector2(0.0f,0.0f);
 								Vertex[i*3 + 2].Pos = pASEVertices[pASEIndices[i]._3];
-								Vertex[i*3 + 2].UV = pTextureVerts[pTextureIndices[i]._3];
-							}*/
+								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 2].UV = pTextureVerts[pTextureIndices[i]._3];
+								else	Vertex[i*3 + 2].UV = TVector2(0.0f,0.0f);
+							}
 							
 							pIB->nIndices = nASEIndices;
 							pIB->pIndices = new TIndex16[pIB->nIndices];
 							for(int i=0;i<nASEIndices;++i)
 							{
-								pIB->pIndices[i] = pASEIndices[i];
+								pIB->pIndices[i] = TIndex16(i*3 + 0, i*3 + 1, i*3 + 2);
 							}
+							Mesh->pIB = pIB;
+							Mesh->pVB = pVB;
+							strcpy_s(Mesh->BoneName.Str, 1024, NodeName.Str);
 							break;
 						}
 					}
@@ -546,6 +643,8 @@ void LoadASEFile(char* fn)
 					delete[] pASEVertices;
 					delete[] pTextureIndices;
 					delete[] pTextureVerts;
+					Model->SubMeshes.AddItem(Mesh);
+					continue;
 				}
 
 				if(!strcmp(string, "*PROP_MOTIONBLUR"))
@@ -568,6 +667,88 @@ void LoadASEFile(char* fn)
 
 				}
 
+				if(!strcmp(string, "*TM_ANIMATION"))
+				{
+					RAnimationBoneSequence* Seq = new RAnimationBoneSequence();
+					while(1)
+					{
+						fgets(line, 1024, fp);
+						sscanf_s(line,"%s",string, 1024);
+
+						if(!strcmp(string, "*NODE_NAME"))
+						{
+							char *Spos = strchr(line, '"');
+							char *Epos = strchr(Spos+1, '"');
+							Epos -= 1;
+							memcpy_s(Seq->BoneName.Str, 1024, Spos+1, Epos-Spos);
+							Seq->BoneName.Str[Epos-Spos] = '\0';
+							continue;
+						}
+
+						if(!strcmp(string, "*CONTROL_POS_TRACK"))
+						{
+							float Time;
+							TVector3 Pos;
+							while(1)
+							{
+								fgets(line, 1024, fp);
+								sscanf_s(line,"%s",string, 1024);
+
+								if(!strcmp(string, "*CONTROL_POS_SAMPLE"))
+								{
+									sscanf_s(line,"%s%f%f%f%f", string, 1024, &Time, &Pos.x, &Pos.y, &Pos.z);
+									RAnimationBoneSequence::POSKEY Key;
+									Key.Pos = Pos;
+									Key.Time = Time;
+									Seq->PosKeys.AddItem(Key);
+									continue;
+								}
+
+								if(!strcmp(string, "}"))
+								{
+									break;
+								}
+							}
+							continue;
+						}
+
+						if(!strcmp(string, "*CONTROL_ROT_TRACK"))
+						{
+							float Time;
+							TQuaternion Rot;
+							while(1)
+							{
+								fgets(line, 1024, fp);
+								sscanf_s(line,"%s",string, 1024);
+
+								if(!strcmp(string, "*CONTROL_ROT_SAMPLE"))
+								{
+									sscanf_s(line,"%s%f%f%f%f%f", string, 1024, &Time, &Rot.v.x, &Rot.v.y, &Rot.v.z, &Rot.w);
+									RAnimationBoneSequence::ROTKEY Key;
+									Rot.Normalize();
+									Key.Rot = Rot;
+									Key.Time = Time;
+									Seq->RotKeys.AddItem(Key);
+									continue;
+								}
+
+								if(!strcmp(string, "}"))
+								{
+									break;
+								}
+							}
+							continue;
+						}
+
+						if(!strcmp(string, "}"))
+						{
+							break;
+						}
+					}
+					AnimationSequence->AnimationBoneSequences.AddItem(Seq);	
+					continue;
+				}
+
 				if(!strcmp(string, "}"))
 				{
 					break;
@@ -575,6 +756,10 @@ void LoadASEFile(char* fn)
 			}
 		}
 	}
+
+	RAnimationSequenceTable::Sequences.AddItem(AnimationSequence);
+	RBoneInfoTable::BoneInfos.AddItem(BoneInfo);
+	RMeshTable::Meshes.AddItem(Model);
 	
 	fclose(fp);
 }
@@ -591,27 +776,27 @@ bool RResourceManager::LoadResources()
 {
 	//////////////////////////////////// Texture Loading
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer();
-	RTextureBufferTable::pTextureBuffer.AddItem(pTexBuffer);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
 	//////////////////////////////////// Shader Loading
 	RDirectXShader *pShader = new RDirectXShader();
 	sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-	RShaderTable::pShaders.AddItem(pShader);
+	RShaderTable::Shaders.AddItem(pShader);
 
 	pShader = new RDirectXShader();
 	sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
-	RShaderTable::pShaders.AddItem(pShader);
+	RShaderTable::Shaders.AddItem(pShader);
 
-	for(unsigned int i=0;i<RShaderTable::pShaders.Size();++i)
+	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
 	{
-		GDriver->CompileShaderFromFile(RShaderTable::pShaders(i));
+		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
 	}
 
 	//////////////////////////////////// Geometry Loading
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
-	LoadASEFile("../Resources/beast.ase");
+	LoadASEFile("../Resources/woman_01_all.ase");
 	return true;
 }
 
@@ -619,32 +804,53 @@ bool RResourceManager::ReleaseAllResources()
 {
 	//////////////////////////////////// Geometry Releasing
 	/////////////////////////////////////////////////////// Vertex Buffer Releasing
-	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::pVertexBuffer.Size();++i)
+	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
 	{
-		delete RSystemMemoryVertexBufferTable::pVertexBuffer(i);
+		delete RSystemMemoryVertexBufferTable::VertexBuffers(i);
 	}
-	RSystemMemoryVertexBufferTable::pVertexBuffer.Clear(true);
+	RSystemMemoryVertexBufferTable::VertexBuffers.Clear(true);
 
 	/////////////////////////////////////////////////////// Index Buffer Releasing
-	for(unsigned int i=0;i<RSystemMemoryIndexBufferTable::pIndexBuffer.Size();++i)
+	for(unsigned int i=0;i<RSystemMemoryIndexBufferTable::IndexBuffers.Size();++i)
 	{
-		delete RSystemMemoryIndexBufferTable::pIndexBuffer(i);
+		delete RSystemMemoryIndexBufferTable::IndexBuffers(i);
 	}
-	RSystemMemoryIndexBufferTable::pIndexBuffer.Clear(true);
+	RSystemMemoryIndexBufferTable::IndexBuffers.Clear(true);
 
 	//////////////////////////////////// Shader Releasing
-	for(unsigned int i=0;i<RShaderTable::pShaders.Size();++i)
+	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
 	{
-		delete RShaderTable::pShaders(i);
+		delete RShaderTable::Shaders(i);
 	}
-	RShaderTable::pShaders.Clear(true);
+	RShaderTable::Shaders.Clear(true);
 
 	//////////////////////////////////// Texture Releasing
-	for(unsigned int i=0;i<RTextureBufferTable::pTextureBuffer.Size();++i)
+	for(unsigned int i=0;i<RTextureBufferTable::TextureBuffers.Size();++i)
 	{
-		delete RTextureBufferTable::pTextureBuffer(i);		
+		delete RTextureBufferTable::TextureBuffers(i);		
 	}
-	RTextureBufferTable::pTextureBuffer.Clear(true);
+	RTextureBufferTable::TextureBuffers.Clear(true);
+
+	//////////////////////////////////// Animation Releasing
+	for(unsigned int i=0;i<RAnimationSequenceTable::Sequences.Size();++i)
+	{
+		delete RAnimationSequenceTable::Sequences(i);
+	}
+	RAnimationSequenceTable::Sequences.Clear(true);
+
+	//////////////////////////////////// Model Releasing
+	for(unsigned int i=0;i<RMeshTable::Meshes.Size();++i)
+	{
+		delete RMeshTable::Meshes(i);
+	}
+	RMeshTable::Meshes.Clear(true);
+
+	//////////////////////////////////// Bone Releasing
+	for(unsigned int i=0;i<RBoneInfoTable::BoneInfos.Size();++i)
+	{
+		delete RBoneInfoTable::BoneInfos(i);
+	}
+	RBoneInfoTable::BoneInfos.Clear(true);
 
 	return true;
 }

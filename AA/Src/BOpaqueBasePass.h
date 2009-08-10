@@ -8,7 +8,7 @@ public:
 	BOpaqueBasePass();
 	~BOpaqueBasePass();
 
-	void DrawPrimitive(TPrimitiveTemplateBase* Prim);
+	void DrawPrimitive(TBatch *Batch);
 
 	void BeginPass(BViewport* Viewport);
 	void EndPass();

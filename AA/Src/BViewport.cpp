@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "BDriver.h"
+#include "BPrimitive.h"
+
 BViewport::BViewport(void)
 {
 }
@@ -16,17 +19,21 @@ void BViewport::SortTemplates()
 {
 }
 
-void BViewport::Render(TPrimitiveTemplateBase* pTemplate, E_PrimitiveType RenderType)
+void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
 {
 	switch(RenderType)
 	{
 	case RT_OPAQUE:
 		m_OpaquePrimitives.AddItem(pTemplate);
 		m_Batches.m_pTemplates.AddItem(pTemplate);
-		m_Batches.nVertexStride = pTemplate->pVertexBuffer->nVertexStride;
-		m_Batches.nVertices += pTemplate->pVertexBuffer->nVertices;
-		m_Batches.nIndices += pTemplate->pIndexBuffer->nIndices;
-		//m_Batches.nVertices = 3;
+		for(unsigned int i=0;i<pTemplate->Primitives.Size();++i)
+		{
+			TPrimitive* Prim = pTemplate->Primitives(i);
+			RSubMesh* Mesh = Prim->pSubMesh;
+			m_Batches.nVertexStride = Mesh->pVB->nVertexStride;
+			m_Batches.nVertices += Mesh->pVB->nVertices;
+			m_Batches.nIndices += Mesh->pIB->nIndices;
+		}
 	}
 }
 

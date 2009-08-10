@@ -40,8 +40,9 @@ public:
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader);
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);
 
-	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat);
+	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage = TexUsage_RenderTarget);
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
+	virtual bool SetDepthStencilSurface(RRenderTarget* RT);
 
 	virtual RRenderTarget* GetBackBuffer();
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
@@ -50,8 +51,8 @@ public:
 	class RDXRenderTarget* BackBuffer;
 
 	LPDIRECT3DDEVICE9	m_pDevice;
+	LPDIRECT3D9			m_pD3D;
 private:
 	TWindowInfo*		m_pWindow;
 
-	LPDIRECT3D9			m_pD3D;
 };

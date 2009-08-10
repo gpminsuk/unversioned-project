@@ -3,12 +3,19 @@
 #include "RResource.h"
 
 class BViewport;
-class TPrimitiveTemplateBase;
+class BPrimitive;
 class TBatch;
+
+enum ETextureUsage
+{
+	TexUsage_RenderTarget,
+	TexUsage_DepthStencil,
+};
 
 enum EPixelFormat
 {
 	PF_A8R8G8B8,
+	PF_D24S8,
 };
 
 class BDriver
@@ -41,8 +48,9 @@ public:
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader) = 0;
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader) = 0;
 
-	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat) = 0;
+	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage = TexUsage_RenderTarget) = 0;
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
+	virtual bool SetDepthStencilSurface(RRenderTarget* RT) = 0;
 
 	virtual RRenderTarget* GetBackBuffer() = 0;
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) = 0;

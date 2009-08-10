@@ -85,7 +85,7 @@ void CCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 	}
 }
 
-void CCamera::UpdateCamera()
+void CCamera::Tick(unsigned long  dTime)
 {
 	switch(m_CameraMode)
 	{

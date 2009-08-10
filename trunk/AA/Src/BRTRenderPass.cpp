@@ -16,7 +16,7 @@ BRTRenderPass::~BRTRenderPass()
 
 void BRTRenderPass::BeginPass(BViewport* Viewport)
 {
-	RShaderBase* pShader = RShaderTable::pShaders(1);
+	RShaderBase* pShader = RShaderTable::Shaders(1);
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	GDriver->SetTexture(0, m_RenderTarget->m_pTexture);
 	pShader->BeginShader();
@@ -24,7 +24,7 @@ void BRTRenderPass::BeginPass(BViewport* Viewport)
 
 void BRTRenderPass::EndPass()
 {
-	RShaderBase* pShader = RShaderTable::pShaders(1);
+	RShaderBase* pShader = RShaderTable::Shaders(1);
 	pShader->EndShader();
 }
 

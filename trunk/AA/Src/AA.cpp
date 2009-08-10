@@ -7,7 +7,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//_CrtSetBreakAlloc(183);
+//	_CrtSetBreakAlloc(970);
 	CWindowApp app;
 	if(app.CreateWindowApp())
 		app.Do();
@@ -15,4 +15,3 @@ int _tmain(int argc, _TCHAR* argv[])
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
-

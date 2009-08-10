@@ -16,6 +16,7 @@ unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
 bool CWindowApp::CreateWindowApp()
 {
+	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
 	WNDCLASSEX wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -30,7 +31,7 @@ bool CWindowApp::CreateWindowApp()
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= 0;
 	wcex.lpszClassName	= _T("CLASS NAME");
-	wcex.hIconSm		= LoadIcon(wcex.hInstance, 0);
+	wcex.hIconSm		= LoadIcon(m_WindowInfo.m_hInstance, 0);
 
 	RegisterClassEx(&wcex);
 

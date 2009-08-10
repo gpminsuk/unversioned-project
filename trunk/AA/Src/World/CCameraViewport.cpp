@@ -20,7 +20,7 @@ void CCameraViewport::UpdateCameraViewport()
 	CCamera* CurCamera = GetCurrentCamera();
 	if(CurCamera && CurCamera->ShouldUpdate())
 	{
-		CurCamera->UpdateCamera();
+		CurCamera->Tick(0);
 		//임시코드
 		D3DXMatrixLookAtLH((D3DXMATRIXA16*)&m_ViewMatrix, (D3DXVECTOR3*)&CurCamera->m_Location, (D3DXVECTOR3*)&CurCamera->m_LookAt, (D3DXVECTOR3*)&CurCamera->m_Up);
 	}

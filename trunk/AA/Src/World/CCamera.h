@@ -24,7 +24,7 @@ public:
 	TQuaternion m_RotationX, m_RotationY, m_RotationZ;
 	float m_Distance, m_Pi, m_Theta;
 
-	virtual void UpdateCamera();
+	virtual void Tick(unsigned long dTime);
 	virtual bool ShouldUpdate();
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);

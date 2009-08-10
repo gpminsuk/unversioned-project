@@ -4,10 +4,15 @@
 #include "TDataTypes.h"
 #include "InputDefine.h"
 
+class AObject;
+
 class BRenderer;
 
 class CCamera;
 class CCameraViewport;
+
+//юс╫ц
+#include "CSkeletalMeshPrimitive.h"
 
 class UWorld
 {
@@ -26,8 +31,9 @@ public:
 	CCamera* m_pCamera;
 	BRenderer* m_pRenderer;
 
-	TBox	m_Box;
-	TMesh	m_Mesh;
+	TArray<class BThing*> Objects;
+
+	CSkeletalMeshPrimitive	*m_Mesh;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

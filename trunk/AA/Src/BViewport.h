@@ -2,7 +2,7 @@
 
 #include "TDataTypes.h"
 
-class TPrimitiveTemplateBase;
+class BPrimitive;
 class BLight;
 
 enum E_PrimitiveType
@@ -19,8 +19,8 @@ public:
 
 	void operator =(BViewport& vp);
 
-	TArray<TPrimitiveTemplateBase*> m_OpaquePrimitives;
-	TArray<TPrimitiveTemplateBase*> m_TranslucentPrimitives;
+	TArray<BPrimitive*> m_OpaquePrimitives;
+	TArray<BPrimitive*> m_TranslucentPrimitives;
 	TArray<BLight*>					m_Lights;
 
 	TBatch m_Batches;
@@ -29,10 +29,10 @@ public:
 	TMatrix m_ProjectionMatrix;
 
 	void Clear();
-	void Render(TPrimitiveTemplateBase* pTemplate, E_PrimitiveType RenderType = RT_OPAQUE);
+	void Render(BPrimitive* pTemplate, E_PrimitiveType RenderType = RT_OPAQUE);
 	
 	void SortTemplates();
 private:
 
-	static int PrimitiveCompare(TPrimitiveTemplateBase* tb1, TPrimitiveTemplateBase* tb2);
+	static int PrimitiveCompare(BPrimitive* tb1, BPrimitive* tb2);
 };

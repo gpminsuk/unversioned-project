@@ -62,15 +62,13 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
 	if(!m_pBuffer)
 		return false;
-	m_OpaqueBasePass->BeginPass(Viewport);
-	for(UINT PrimIdx = 0;PrimIdx < Viewport->m_OpaquePrimitives.Size(); ++PrimIdx)
-	{
-		TPrimitiveTemplateBase* Prim = Viewport->m_OpaquePrimitives[PrimIdx];		
 
-		GDriver->SetTexture(0, RTextureBufferTable::pTextureBuffer(0));
-		m_OpaqueBasePass->DrawPrimitive(Prim);
-		GDriver->SetTexture(0, NULL);
-	}
+	m_OpaqueBasePass->BeginPass(Viewport);
+
+	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
+	m_OpaqueBasePass->DrawPrimitive(&Viewport->m_Batches);
+	GDriver->SetTexture(0, NULL);
+
 	m_OpaqueBasePass->EndPass();
 
 	m_BaseRTRenderPass->BeginPass(Viewport);

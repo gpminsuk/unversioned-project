@@ -26,7 +26,7 @@ protected:
 class RShaderTable
 {
 public:
-	static TArray<RShaderBase*> pShaders;
+	static TArray<RShaderBase*> Shaders;
 };
 
 class RSystemMemoryIndexBuffer
@@ -58,7 +58,7 @@ public:
 class RSystemMemoryIndexBufferTable
 {
 public:
-	static TArray<RSystemMemoryIndexBuffer*> pIndexBuffer;
+	static TArray<RSystemMemoryIndexBuffer*> IndexBuffers;
 };
 
 // primitive per one DP
@@ -129,7 +129,7 @@ public:
 class RSystemMemoryVertexBufferTable
 {
 public:
-	static TArray<RSystemMemoryVertexBuffer*> pVertexBuffer;
+	static TArray<RSystemMemoryVertexBuffer*> VertexBuffers;
 };
 
 class RPrimitiveBuffer
@@ -173,7 +173,7 @@ protected:
 class RTextureTable
 {
 public:
-	static TArray<RTexture*> pTextures;
+	static TArray<RTexture*> Textures;
 };
 
 class RTextureBuffer
@@ -186,7 +186,7 @@ public:
 class RTextureBufferTable
 {
 public:
-	static TArray<RTextureBuffer*> pTextureBuffer;
+	static TArray<RTextureBuffer*> TextureBuffers;
 };
 
 class RMaterial
@@ -204,4 +204,108 @@ public:
 	RTextureBuffer* m_pTexture;
 
 	virtual bool Release() = 0;
+};
+
+class RAnimationBoneSequence
+{
+public:
+	TString				BoneName;
+
+	struct POSKEY
+	{
+		TVector3 Pos;
+		float Time;
+	};
+
+	struct ROTKEY
+	{
+		TQuaternion Rot;
+		float Time;
+	};
+
+	TArray<POSKEY>	PosKeys;
+	TArray<ROTKEY>	RotKeys;
+};
+
+class RAnimationSequence
+{
+public:
+	~RAnimationSequence()
+	{
+		for(unsigned int i = 0;i<AnimationBoneSequences.Size();++i)
+			delete AnimationBoneSequences(i);
+		AnimationBoneSequences.Clear(true);
+	}
+
+	TArray<RAnimationBoneSequence*> AnimationBoneSequences;
+
+	unsigned int StartFrame;
+	unsigned int EndFrame;
+	unsigned int TickPerFrame;
+	unsigned int FrameSpeed;
+};
+
+class RAnimationSequenceTable
+{
+public:
+	static TArray<RAnimationSequence*> Sequences;
+};
+
+class RSubMesh
+{
+public:
+	TString				BoneName;
+
+	RSystemMemoryVertexBuffer*	pVB;
+	RSystemMemoryIndexBuffer* pIB;
+};
+
+class RMesh
+{
+public:
+	~RMesh()
+	{
+		for(unsigned int i = 0;i<SubMeshes.Size();++i)
+			delete SubMeshes(i);
+		SubMeshes.Clear(true);
+	}
+	TArray<RSubMesh*>	SubMeshes;
+};
+
+class RMeshTable
+{
+public:
+	static TArray<RMesh*> Meshes;
+};
+
+class RBone
+{
+public:
+	RBone() : Parent(0) {}
+
+	TString BoneName;
+	RBone *Parent;
+
+	TQuaternion Rotation;
+	TVector3 Translation;
+	float Scale;
+};
+
+class RBoneInfo
+{
+public:
+	~RBoneInfo()
+	{
+		for(unsigned int i = 0;i<Bones.Size();++i)
+			delete Bones(i);
+		Bones.Clear(true);
+	}
+
+	TArray<RBone*> Bones;
+};
+
+class RBoneInfoTable
+{
+public:
+	static TArray<RBoneInfo*> BoneInfos;
 };

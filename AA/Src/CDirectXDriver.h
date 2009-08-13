@@ -48,6 +48,10 @@ public:
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
 
+	////////////////////////////////////////////////////// RenderState //////////////////////////////////////////////////
+	virtual bool SetFillMode(EFillMode FM);
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	class RDXRenderTarget* BackBuffer;
 
 	LPDIRECT3DDEVICE9	m_pDevice;

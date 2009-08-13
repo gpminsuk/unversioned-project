@@ -17,6 +17,7 @@ BRTRenderPass::~BRTRenderPass()
 void BRTRenderPass::BeginPass(BViewport* Viewport)
 {
 	RShaderBase* pShader = RShaderTable::Shaders(1);
+	GDriver->SetFillMode(FillMode_Solid);
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	GDriver->SetTexture(0, m_RenderTarget->m_pTexture);
 	pShader->BeginShader();

@@ -16,6 +16,37 @@ public:
 	float Scale;
 };
 
+class TSkeletalSubMeshPrimitive : public TPrimitive
+{
+public:
+	TSkeletalSubMeshPrimitive();
+	~TSkeletalSubMeshPrimitive();
+
+	virtual void Render(TBatch *Batch);
+	virtual unsigned int FillDynamicVertexBuffer(char** pData);
+	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
+
+	class RMaterial *pMaterial;
+
+	class RSubMesh* pSubMesh;
+
+	class RAnimationBoneSequence *pAnimationSequence;
+	class RBone				 *pBone;
+};
+
+class TSkeletalMeshPrimitive : public TPrimitive
+{
+public:
+	TSkeletalMeshPrimitive();
+	~TSkeletalMeshPrimitive();
+
+	virtual void Render(TBatch *Batch);
+	virtual unsigned int FillDynamicVertexBuffer(char** pData);
+	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
+
+	TArray<TSkeletalSubMeshPrimitive*>	SubMeshes;
+};
+
 class CSkeletalMeshPrimitive : public CMeshPrimitive
 {
 public:

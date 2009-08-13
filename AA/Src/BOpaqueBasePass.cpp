@@ -24,6 +24,7 @@ BOpaqueBasePass::~BOpaqueBasePass()
 void BOpaqueBasePass::BeginPass(BViewport* Viewport)
 {
 	RShaderBase* pShader = RShaderTable::Shaders(0);
+	GDriver->SetFillMode(FillMode_Wireframe);
 	for(unsigned int i=0;i<m_RenderTargets.Size();++i)
 		GDriver->SetRenderTarget(i, m_RenderTargets(i));
 	GDriver->Clear(true, 0x00000000);

@@ -4,6 +4,7 @@
 #include "BRenderer.h"
 
 #include "CCameraViewport.h"
+#include "CTerrain.h"
 #include "CCamera.h"
 
 UWorld::UWorld(BRenderer* R)
@@ -16,6 +17,7 @@ UWorld::UWorld(BRenderer* R)
 UWorld::~UWorld()
 {
 	delete m_Mesh;
+	delete m_Terrain;
 }
 float frame = 0;
 void UWorld::Tick(DWORD dTime)
@@ -23,7 +25,7 @@ void UWorld::Tick(DWORD dTime)
 	m_pViewport->UpdateCameraViewport();
 	for(unsigned int i=0;i<Objects.Size();++i)
 		Objects(i)->Tick(dTime);
-
+/*
 	for(unsigned int i=0;i<m_Mesh->Primitives.Size();++i)
 	{
 		TPrimitive *Prim = m_Mesh->Primitives(i);
@@ -97,7 +99,7 @@ void UWorld::Tick(DWORD dTime)
 			}
 		}
 		Prim->TM = TM;
-	}
+	}*/
 }
 
 bool UWorld::InitializeWorld()
@@ -111,7 +113,11 @@ bool UWorld::InitializeWorld()
 	m_Mesh->Animations.AddItem(RAnimationSequenceTable::Sequences(0));
 	m_Mesh->BoneInfo = RBoneInfoTable::BoneInfos(0);
 
-	for(unsigned int i=0;i<RMeshTable::Meshes.Size();++i)
+	m_Terrain = new CTerrain();
+
+	m_pViewport->Render(m_Terrain->Primitives(0));
+
+/*	for(unsigned int i=0;i<RMeshTable::Meshes.Size();++i)
 	{
 		RMesh *Mesh = RMeshTable::Meshes(i);
 		for(unsigned int j=0;j<Mesh->SubMeshes.Size();++j)
@@ -145,8 +151,8 @@ bool UWorld::InitializeWorld()
 
 			m_Mesh->Primitives.AddItem(Prim);
 		}
-	}
-	m_pViewport->Render(m_Mesh);
+		}
+		m_pViewport->Render(m_Mesh);*/
 
 
 	m_pCamera = new CCamera();

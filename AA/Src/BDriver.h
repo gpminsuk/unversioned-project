@@ -18,6 +18,13 @@ enum EPixelFormat
 	PF_D24S8,
 };
 
+enum EFillMode
+{
+	FillMode_Point,
+	FillMode_Wireframe,
+	FillMode_Solid
+};
+
 class BDriver
 {
 public:
@@ -55,6 +62,10 @@ public:
 	virtual RRenderTarget* GetBackBuffer() = 0;
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) = 0;
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height) = 0;
+
+	////////////////////////////////////////////////////// RenderState //////////////////////////////////////////////////
+	virtual bool SetFillMode(EFillMode FM) = 0;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 
 extern BDriver	*GDriver;

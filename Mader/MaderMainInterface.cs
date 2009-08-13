@@ -9,6 +9,7 @@ namespace Mader
     {
         void Test();
         bool CreateMaderApp();
+        IntPtr GetBackBuffer();
         IntPtr HandleMessages(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled);
     }
 }

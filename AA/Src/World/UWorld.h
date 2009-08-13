@@ -34,6 +34,7 @@ public:
 	TArray<class BThing*> Objects;
 
 	CSkeletalMeshPrimitive	*m_Mesh;
+	class CTerrain *m_Terrain;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

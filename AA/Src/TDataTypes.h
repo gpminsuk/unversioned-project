@@ -360,22 +360,6 @@ public:
 	}
 };
 
-class TPrimitive
-{
-public:
-	TPrimitive();
-	~TPrimitive();
-
-	TMatrix TM;
-
-	class RMaterial *pMaterial;
-
-	class RSubMesh* pSubMesh;
-
-	class RAnimationBoneSequence *pAnimationSequence;
-	class RBone				 *pBone;
-};
-
 class TBatch
 {
 public:

@@ -9,7 +9,7 @@
             <ColumnDefinition Width =".4*"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-        <Border Name="ViewerBorder" Grid.Column="2" Grid.Row="0" Background="Aquamarine"></Border>
-        <StackPanel Name="ExpressionControl" Grid.Column="0" Grid.Row="0" Background="Coral" />
+        <Border Name="ViewerBorder" Grid.Column="2" Grid.Row="0"></Border>
+        <StackPanel Name="ExpressionControl" Grid.Column="0" Grid.Row="0" />
     </Grid>
 </Window>

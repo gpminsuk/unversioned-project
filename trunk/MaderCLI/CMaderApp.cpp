@@ -14,7 +14,7 @@ bool CMaderApp::CreateMaderApp()
 	m_pRenderer->SetApplication(this);
 
 	m_pRenderer->Start();
-	
+
 	m_pWorld = new UWorld(m_pRenderer);
 	m_pWorld->InitializeWorld();
 	return true;

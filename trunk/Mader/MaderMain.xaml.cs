@@ -21,7 +21,7 @@ namespace Mader
     /// </summary>
     public partial class MaderMain : Window
     {
-        private IMaderMainInterface m_Backend;
+        static public IMaderMainInterface m_Backend;
         private DirectXHost m_DirectXHost;
         private float m_Scale;
         private Point m_Translation;
@@ -37,15 +37,6 @@ namespace Mader
 
             m_DirectXHost = new DirectXHost();
             ViewerBorder.Child = m_DirectXHost;
-            MaterialExpressionControl Ctrl = new MaterialExpressionControl(5, 3);
-            Ctrl.Width = 120;
-            Ctrl.Height = 150;
-            Ctrl.Margin = new Thickness(0, 0, 0, 0);
-
-            ExpressionControl.Children.Add(Ctrl);
-            ExpressionControl.MouseWheel += new MouseWheelEventHandler(ExpressionControl_MouseWheel);
-            ExpressionControl.MouseMove += new MouseEventHandler(ExpressionControl_MouseMove);
-            ExpressionControl.MouseRightButtonDown += new MouseButtonEventHandler(ExpressionControl_MouseRightButtonDown);
         }
 
         void ExpressionControl_MouseRightButtonDown(object Sender, MouseButtonEventArgs e)
@@ -83,8 +74,19 @@ namespace Mader
         public void Initialize(IMaderMainInterface Backend)
         {
             m_Backend = Backend;
+            
             Show();
             m_Backend.CreateMaderApp();
+
+            MaterialExpressionControl Ctrl = new MaterialExpressionControl(5, 3);
+            Ctrl.Width = 120;
+            Ctrl.Height = 150;
+            Ctrl.Margin = new Thickness(0, 0, 0, 0);
+
+            ExpressionControl.Children.Add(Ctrl);
+            ExpressionControl.MouseWheel += new MouseWheelEventHandler(ExpressionControl_MouseWheel);
+            ExpressionControl.MouseMove += new MouseEventHandler(ExpressionControl_MouseMove);
+            ExpressionControl.MouseRightButtonDown += new MouseButtonEventHandler(ExpressionControl_MouseRightButtonDown);
         }
 
         public IntPtr GetHwnd()

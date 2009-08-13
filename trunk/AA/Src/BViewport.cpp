@@ -29,10 +29,7 @@ void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
 		for(unsigned int i=0;i<pTemplate->Primitives.Size();++i)
 		{
 			TPrimitive* Prim = pTemplate->Primitives(i);
-			RSubMesh* Mesh = Prim->pSubMesh;
-			m_Batches.nVertexStride = Mesh->pVB->nVertexStride;
-			m_Batches.nVertices += Mesh->pVB->nVertices;
-			m_Batches.nIndices += Mesh->pIB->nIndices;
+			Prim->Render(&m_Batches);
 		}
 	}
 }

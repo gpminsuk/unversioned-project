@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CMaderApp.h"
+#include "..\AA\Src\CDirectXDriver.h"
+#include "..\AA\Src\BRenderer.h"
 
 #using <System.Windows.Forms.dll>
 
@@ -17,6 +19,33 @@ public:
 	virtual void Test()
 	{		
 		MainWindow->ShowDialog();
+	}
+
+	virtual IntPtr GetBackBuffer()
+	{
+		CDirectXTextureBuffer* pDXTexture = dynamic_cast<CDirectXTextureBuffer*>(m_Application->m_pRenderer->m_pTexture);
+		if(!pDXTexture)
+			return (IntPtr)NULL;
+
+		D3DSURFACE_DESC Desc;
+		pDXTexture->pTexture->GetLevelDesc(0, &Desc);
+		CDirectXTextureBuffer* TB = new CDirectXTextureBuffer();
+		((CDirectXDriver*)GDriver)->m_pDevice->CreateTexture(Desc.Width, Desc.Height, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &TB->pTexture, NULL );
+		RECT Rect;
+		Rect.left = Rect.top = 0;
+		Rect.bottom = Desc.Height;
+		Rect.right = Desc.Width;
+		D3DLOCKED_RECT LRect;
+		TB->pTexture->LockRect(0, &LRect, &Rect, D3DLOCK_DISCARD );
+		char* Bits = (char*)LRect.pBits;
+		for(int i=0;i<Desc.Height;++i)
+		{
+			for(int j=0;j<LRect.Pitch;++j)
+				Bits[i*LRect.Pitch+j] = 255;
+		}
+		IDirect3DSurface9* Surface;
+		TB->pTexture->GetSurfaceLevel(0, &Surface);
+		return (IntPtr)Surface;
 	}
 
 	virtual bool CreateMaderApp()

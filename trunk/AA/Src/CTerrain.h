@@ -6,4 +6,6 @@ class CTerrain : public BThing
 public:
 	CTerrain(void);
 	~CTerrain(void);
+
+	virtual void Tick(unsigned long dTime);
 };

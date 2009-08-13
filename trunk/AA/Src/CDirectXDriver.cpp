@@ -20,6 +20,13 @@ DWORD GTextureUsage[] =
 	D3DUSAGE_DEPTHSTENCIL,
 };
 
+DWORD GFillMode[] = 
+{
+	D3DFILL_POINT,
+	D3DFILL_WIREFRAME,
+	D3DFILL_SOLID,
+};
+
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
@@ -164,13 +171,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
 			{
 				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
-				memcpy(pcData, Prim->pSubMesh->pVB->pVertices, 
-					Prim->pSubMesh->pVB->nVertices * Prim->pSubMesh->pVB->nVertexStride);
-				for(int k=0;k<Prim->pSubMesh->pVB->nVertices;++k)
-				{
-					*((TVector3*)&(pcData[k*Prim->pSubMesh->pVB->nVertexStride])) = Prim->TM.TransformVector3(*((TVector3*)&(pcData[k*Prim->pSubMesh->pVB->nVertexStride])));
-				}
-				pcData += Prim->pSubMesh->pVB->nVertices * Prim->pSubMesh->pVB->nVertexStride;
+				Prim->FillDynamicVertexBuffer(&pcData);
 			}
 		}
 		VB->VB->Unlock();
@@ -196,23 +197,13 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	else
 	{
 		TIndex16* pcData = static_cast<TIndex16*>(pData);
-		short BaseIdx = 0;
+		unsigned short BaseIdx = 0;
 		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
 		{
 			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
 			{
 				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
-				RSubMesh* Mesh = Prim->pSubMesh;
-				for(int k=0;k<Mesh->pIB->nIndices;++k)
-				{
-					TIndex16 tmpIndex;
-					tmpIndex._1 = Mesh->pIB->pIndices[k]._1 + BaseIdx;
-					tmpIndex._2 = Mesh->pIB->pIndices[k]._2 + BaseIdx;
-					tmpIndex._3 = Mesh->pIB->pIndices[k]._3 + BaseIdx;
-					pcData[k] = tmpIndex;
-				}
-				BaseIdx += Mesh->pVB->nVertices;
-				pcData += Mesh->pIB->nIndices;
+				Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
 			}
 		}
 		IB->IB->Unlock();
@@ -417,4 +408,10 @@ bool CDirectXDriver::SetClipRect(unsigned int x, unsigned int y, unsigned int Wi
 	rt.top = y;
 	rt.bottom = y+Height;
 	return GetDevice()->SetScissorRect(&rt) == D3D_OK;
+}
+
+bool CDirectXDriver::SetFillMode(EFillMode FM)
+{
+	GetDevice()->SetRenderState(D3DRS_FILLMODE,GFillMode[FM]);
+	return true;
 }

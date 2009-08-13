@@ -609,7 +609,7 @@ void LoadASEFile(char* fn)
 								TVector2 UV;
 							};
 
-							pVB->nVertexStride = sizeof(VD);							
+							pVB->nVertexStride = sizeof(VD);
 							pVB->nVertices = nASEIndices*3;
 							pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 

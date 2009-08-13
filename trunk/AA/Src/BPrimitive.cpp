@@ -13,3 +13,12 @@ BPrimitive::~BPrimitive(void)
 	}
 	Primitives.Clear();
 }
+
+TPrimitive::TPrimitive()
+: pBuffer(0)
+{
+}
+
+TPrimitive::~TPrimitive()
+{
+}

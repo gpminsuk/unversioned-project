@@ -9,7 +9,7 @@ public:
 	BThing(void);
 	virtual ~BThing(void);
 
-	class BPrimitive* Primitives;
+	TArray<class BPrimitive*> Primitives;
 
 	TVector3 m_Location;
 

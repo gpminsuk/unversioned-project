@@ -16,7 +16,7 @@ namespace Mader
           WS_VISIBLE = 0x10000000,
           LBS_NOTIFY = 0x00000001,
           HOST_ID = 0x00000002,
-          LISTBOX_ID = 0x00000001,
+          LISCBoxPrimitive_ID = 0x00000001,
           WS_VSCROLL = 0x00200000,
           WS_BORDER = 0x00800000;
     }

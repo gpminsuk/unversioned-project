@@ -8,6 +8,7 @@
 #define SQRT(x)		 sqrt(x)
 #define ARCSINE(x)	 asin(x)
 #define ARCCOSINE(x) acos(x)
+#define MATH_PI			3.141592f
 
 // Bitfield type.
 typedef unsigned long       BITFIELD;	// For bitfields.
@@ -124,6 +125,11 @@ public:
 	float SizeSquared()
 	{
 		return x*x+y*y+z*z;
+	}
+
+	float Size()
+	{
+		return SQRT(SizeSquared());
 	}
 
 	TVector3& Normalize()
@@ -366,13 +372,13 @@ public:
 class TBatch
 {
 public:
-	TBatch() : nVertices(0), nVertexStride(0), nIndices(0) {}
+	TBatch() : nVertices(0), nVertexStride(0) {}
 	TArray<class BPrimitive*> m_pTemplates;
 
 	int nVertices;
 	int nVertexStride;
 
-	int nIndices;
+	int GetNumIndices();
 };
 /*
 template <typename T>

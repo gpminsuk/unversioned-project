@@ -5,6 +5,7 @@
 #include "CTerrainPrimitive.h"
 
 TTerrainPrimitive::TTerrainPrimitive()
+: pLODIndices(0)
 {
 
 }
@@ -13,7 +14,11 @@ void TTerrainPrimitive::Render(TBatch *Batch)
 {
 	Batch->nVertexStride = pBuffer->m_pVB->nVertexStride;
 	Batch->nVertices += pBuffer->m_pVB->nVertices;
-	Batch->nIndices += pBuffer->m_pIB->nIndices;
+}
+
+unsigned int TTerrainPrimitive::GetNumIndices()
+{
+	return pBuffer->m_pIB->nIndices;
 }
 
 unsigned int TTerrainPrimitive::FillDynamicVertexBuffer(char** pData)
@@ -30,7 +35,7 @@ unsigned int TTerrainPrimitive::FillDynamicVertexBuffer(char** pData)
 
 unsigned int TTerrainPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
-	for(int k=0;k<pBuffer->m_pIB->nIndices;++k)
+	for(unsigned int k=0;k<GetNumIndices();++k)
 	{
 		TIndex16 tmpIndex;
 		tmpIndex._1 = pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
@@ -44,11 +49,28 @@ unsigned int TTerrainPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigne
 	return pBuffer->m_pVB->nVertices;
 }
 
+bool TTerrainPrimitive::Tessellate(TVector3 Origin)
+{	
+	delete pLODIndices;
+	for(int k=0;k<pBuffer->m_pVB->nVertices;++k)
+	{
+		GetLODLevel(Origin, *((TVector3*)(pBuffer->m_pVB->pVertices) + k));
+	}
+	return true;
+}
+
+float TTerrainPrimitive::GetLODLevel(TVector3 Origin, TVector3 Dest)
+{
+	return (Origin - Dest).SizeSquared();
+}
+
 CTerrainPrimitive::CTerrainPrimitive(void)
-: NumCellX(10),
+:	NumCellX(10),
 	NumCellY(10),
 	NumPatchX(1),
-	NumPatchY(1)
+	NumPatchY(1),
+	QuadTree(0),
+	MaxTessellationLevel(16)
 {
 }
 
@@ -60,6 +82,24 @@ CTerrainPrimitive::~CTerrainPrimitive(void)
 bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned int NumCellY, unsigned int NumPatchX, unsigned int NumPatchY)
 {
 	DestroyTerrainPrimitive();
+
+	QuadTreeSizeX = NumCellX/MaxTessellationLevel;
+	QuadTreeSizeY = NumCellY/MaxTessellationLevel;
+
+	QuadTree = new TTerrainQuadTree*[QuadTreeSizeX];
+	for(unsigned int i=0;i<QuadTreeSizeX;++i)
+	{
+		QuadTree[i] = new TTerrainQuadTree[QuadTreeSizeY];
+		for(unsigned int j=0;j<QuadTreeSizeY;++j)
+		{
+			QuadTree[i][j].Root = new TTerrainQuadTreeNode();
+			QuadTree[i][j].Root->Indices[0] = MaxTessellationLevel*i*4 + j*NumCellX*4;
+			QuadTree[i][j].Root->Indices[1] = MaxTessellationLevel*(i+1)*4 + j*NumCellX*4 - 3;
+			QuadTree[i][j].Root->Indices[2] = MaxTessellationLevel*i*4 + j*NumCellX*4 + 2;
+			QuadTree[i][j].Root->Indices[3] = MaxTessellationLevel*(i+1)*4 + (j+1)*NumCellX*4 - 1;
+		}
+	}
+
 	for(unsigned int nPatchX = 0; nPatchX < NumPatchX; ++nPatchX)
 	{
 		for(unsigned int nPatchY = 0; nPatchY < NumPatchY; ++nPatchY)
@@ -89,6 +129,9 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			unsigned int SizeX = (NumCellX/NumPatchX);
 			unsigned int SizeY = (NumCellY/NumPatchY);
 
+			Primitive->CellHeight = SizeY;
+			Primitive->CellWidth = SizeX;
+
 			pVB->nVertexStride = sizeof(VD);
 			pVB->nVertices = SizeX*SizeY*4;
 			pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
@@ -98,13 +141,21 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			{
 				for(unsigned int j=0;j<SizeY;++j)
 				{
-					Vertex[(i*SizeX + j)*4 + 0].Pos = TVector3((float)i    ,(float)j    ,0.0f);
+					/*Vertex[(i*SizeX + j)*4 + 0].Pos = TVector3((float)i    ,(float)j    ,0.0f);
 					Vertex[(i*SizeX + j)*4 + 0].UV = TVector2(0.0f,0.0f);
 					Vertex[(i*SizeX + j)*4 + 1].Pos = TVector3((float)i    ,(float)j + 1,0.0f);
 					Vertex[(i*SizeX + j)*4 + 1].UV = TVector2(0.0f,0.0f);
 					Vertex[(i*SizeX + j)*4 + 2].Pos = TVector3((float)i + 1,(float)j    ,0.0f);
 					Vertex[(i*SizeX + j)*4 + 2].UV = TVector2(0.0f,0.0f);
 					Vertex[(i*SizeX + j)*4 + 3].Pos = TVector3((float)i + 1,(float)j + 1,0.0f);
+					Vertex[(i*SizeX + j)*4 + 3].UV = TVector2(0.0f,0.0f);*/
+					Vertex[(i*SizeX + j)*4 + 0].Pos = TVector3((float)i    ,0.0f		,(float)j);
+					Vertex[(i*SizeX + j)*4 + 0].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 1].Pos = TVector3((float)i    ,0.0f		,(float)j + 1);
+					Vertex[(i*SizeX + j)*4 + 1].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 2].Pos = TVector3((float)i + 1,0.0f		,(float)j);
+					Vertex[(i*SizeX + j)*4 + 2].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 3].Pos = TVector3((float)i + 1,0.0f		,(float)j + 1);
 					Vertex[(i*SizeX + j)*4 + 3].UV = TVector2(0.0f,0.0f);
 				}
 			}
@@ -115,8 +166,8 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			{
 				for(unsigned int j=0;j<SizeY;++j)
 				{
-					pIB->pIndices[(i*SizeX + j)*2 + 0] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 3, (i*SizeX + j)*4 + 1);
-					pIB->pIndices[(i*SizeX + j)*2 +	1] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 2, (i*SizeX + j)*4 + 3);
+					pIB->pIndices[(i*SizeX + j)*2 + 0] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 1, (i*SizeX + j)*4 + 3);
+					pIB->pIndices[(i*SizeX + j)*2 +	1] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 3, (i*SizeX + j)*4 + 2);
 				}
 			}
 		}
@@ -134,6 +185,21 @@ bool CTerrainPrimitive::DestroyTerrainPrimitive()
 		delete Primitives(i);
 	}
 	Primitives.Clear();
+
+	if(QuadTree)
+	{
+		for(unsigned int i=0;i<QuadTreeSizeX;++i)
+		{
+			for(unsigned int j=0;i<QuadTreeSizeY;++j)
+			{
+				QuadTree[i][j].Root->DestroyNode();
+				delete QuadTree[i][j].Root;
+			}
+			delete[] QuadTree[i];
+		}
+		delete[] QuadTree;
+	}	
+
 	return true;
 }
 
@@ -142,4 +208,30 @@ bool CTerrainPrimitive::DestroyTerrainPrimitive()
 bool CTerrainPrimitive::Tessellate(TVector3 Origin)
 {
 	return true;
+}
+
+//////////////////////////////////////////////////// Terrain QuadTree /////////////////////////////////////////////////////////////
+
+void TTerrainQuadTreeNode::DestroyNode()
+{
+	if(Node1)
+	{
+		Node1->DestroyNode();
+		delete Node1;
+	}
+	if(Node2)
+	{
+		Node2->DestroyNode();
+		delete Node2;
+	}
+	if(Node3)
+	{
+		Node3->DestroyNode();
+		delete Node3;
+	}
+	if(Node4)
+	{
+		Node4->DestroyNode();
+		delete Node4;
+	}
 }

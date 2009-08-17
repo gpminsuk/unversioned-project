@@ -9,6 +9,9 @@
 #define ARCSINE(x)	 asin(x)
 #define ARCCOSINE(x) acos(x)
 
+// Bitfield type.
+typedef unsigned long       BITFIELD;	// For bitfields.
+
 template <class T>
 class TArray
 {

@@ -30,4 +30,8 @@ public:
 	void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
+
+	virtual void SetMousePos(float X, float Y, bool isRatio = false);
 };
+
+extern CWindowApp* GApp;

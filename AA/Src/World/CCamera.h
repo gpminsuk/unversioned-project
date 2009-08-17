@@ -21,7 +21,7 @@ public:
 
 	ECamera_Mode m_CameraMode;
 
-	TQuaternion m_RotationX, m_RotationY, m_RotationZ;
+	TMatrix m_RotationMatrix;
 	float m_Distance, m_Pi, m_Theta;
 
 	virtual void Tick(unsigned long dTime);

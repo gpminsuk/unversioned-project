@@ -42,6 +42,6 @@ void BOpaqueBasePass::DrawPrimitive(TBatch *Batch)
 {
 	//for(unsigned int i=0;i<Prim->Primitives.Size();++i)
 	//{
-		GDriver->DrawPrimitive(Batch->nVertices, Batch->nIndices);
+		GDriver->DrawPrimitive(Batch->nVertices, Batch->GetNumIndices());
 	//}	
 }

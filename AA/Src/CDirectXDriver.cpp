@@ -181,15 +181,16 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	if(hr != D3D_OK)
 		return false;
 
+	int NumIndices = pBatch->GetNumIndices();
 	hr = m_pDevice->CreateIndexBuffer(
-		pBatch->nIndices*sizeof(TIndex16),
+		NumIndices*sizeof(TIndex16),
 		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_DEFAULT,
 		&IB->IB,
 		NULL);
 
-	hr = IB->IB->Lock(0, pBatch->nIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
+	hr = IB->IB->Lock(0, NumIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
 	if(hr != D3D_OK)
 	{
 		return false;

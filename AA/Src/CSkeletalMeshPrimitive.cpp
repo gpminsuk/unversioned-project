@@ -13,7 +13,6 @@ void TSkeletalSubMeshPrimitive::Render(TBatch *Batch)
 	RSubMesh *Mesh = pSubMesh;
 	Batch->nVertexStride = Mesh->pVB->nVertexStride;
 	Batch->nVertices += Mesh->pVB->nVertices;
-	Batch->nIndices += Mesh->pIB->nIndices;
 }
 
 unsigned int TSkeletalSubMeshPrimitive::FillDynamicVertexBuffer(char** pData)

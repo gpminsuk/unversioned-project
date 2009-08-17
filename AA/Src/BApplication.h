@@ -14,4 +14,6 @@ public:
 
 	bool bQuit;
 	bool bRenderThreadQuit;
+
+	virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
 };

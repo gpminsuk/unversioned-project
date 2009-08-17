@@ -7,7 +7,7 @@ CTerrain::CTerrain(void)
 	CTerrainPrimitive* TerrainPrimitive = new CTerrainPrimitive();
 	Primitives.AddItem(TerrainPrimitive);
 
-	TerrainPrimitive->CreateTerrainPrimitive(10, 10, 1, 1);
+	TerrainPrimitive->CreateTerrainPrimitive(32, 32, 1, 1);
 }
 
 CTerrain::~CTerrain(void)

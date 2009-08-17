@@ -104,7 +104,7 @@ void CWindowApp::Do()
 	{
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			if(msg.message == WM_QUIT)
+			if(msg.message == WM_QUIT || GKeyMap[VK_ESCAPE])
 			{
 				bQuit = true;
 				break;
@@ -119,6 +119,27 @@ void CWindowApp::Do()
 		}
 	}
 	while(!bRenderThreadQuit);
+}
+
+void CWindowApp::SetMousePos(float X, float Y, bool isRatio)
+{
+	POINT MousePt;
+	if(isRatio)
+	{
+		RECT rt;
+		::GetClientRect(m_WindowInfo.m_hWnd, &rt);
+		MousePt.x = (LONG)(X*(rt.right - rt.left));
+		MousePt.y = (LONG)(Y*(rt.bottom - rt.top));
+	}
+	else
+	{
+		MousePt.x = (LONG)X;
+		MousePt.y = (LONG)Y;
+	}
+	m_MousePt.x = MousePt.x;
+	m_MousePt.y = MousePt.y;
+	::ClientToScreen(m_WindowInfo.m_hWnd, &MousePt);
+	::SetCursorPos((int)MousePt.x ,(int)MousePt.y);
 }
 
 void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
@@ -143,6 +164,8 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
 		Param.dY = m_MousePt.y - Param.Y;
 	else
 		Param.dY = 0;
+	if(m_MousePt.x && m_MousePt.y && Param.dX == 0 && Param.dY == 0)
+		return;
 	m_MousePt.x = Param.X;
 	m_MousePt.y = Param.Y;
 	switch(Message)

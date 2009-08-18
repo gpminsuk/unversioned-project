@@ -16,7 +16,7 @@ UWorld::UWorld(BRenderer* R)
 
 UWorld::~UWorld()
 {
-	delete m_Mesh;
+//	delete m_Mesh;
 	delete m_Terrain;
 }
 float frame = 0;
@@ -108,10 +108,10 @@ bool UWorld::InitializeWorld()
 
 	m_pRenderer->AddViewport(m_pViewport);
 
-	m_Mesh = new CSkeletalMeshPrimitive(RBoneInfoTable::BoneInfos(0));
+/*	m_Mesh = new CSkeletalMeshPrimitive(RBoneInfoTable::BoneInfos(0));
 
 	m_Mesh->Animations.AddItem(RAnimationSequenceTable::Sequences(0));
-	m_Mesh->BoneInfo = RBoneInfoTable::BoneInfos(0);
+	m_Mesh->BoneInfo = RBoneInfoTable::BoneInfos(0);*/
 
 	m_Terrain = new CTerrain();
 

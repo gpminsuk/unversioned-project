@@ -4,6 +4,7 @@
 class TTerrainQuadTreeNode
 {
 public:
+	TTerrainQuadTreeNode() : Node1(0),Node2(0),Node3(0),Node4(0) {}
 	TTerrainQuadTreeNode* Node1;
 	TTerrainQuadTreeNode* Node2;
 	TTerrainQuadTreeNode* Node3;

@@ -190,7 +190,7 @@ bool CTerrainPrimitive::DestroyTerrainPrimitive()
 	{
 		for(unsigned int i=0;i<QuadTreeSizeX;++i)
 		{
-			for(unsigned int j=0;i<QuadTreeSizeY;++j)
+			for(unsigned int j=0;j<QuadTreeSizeY;++j)
 			{
 				QuadTree[i][j].Root->DestroyNode();
 				delete QuadTree[i][j].Root;

@@ -113,10 +113,6 @@ bool UWorld::InitializeWorld()
 	m_Mesh->Animations.AddItem(RAnimationSequenceTable::Sequences(0));
 	m_Mesh->BoneInfo = RBoneInfoTable::BoneInfos(0);*/
 
-	m_Terrain = new CTerrain();
-
-	m_pViewport->Render(m_Terrain->Primitives(0));
-
 /*	for(unsigned int i=0;i<RMeshTable::Meshes.Size();++i)
 	{
 		RMesh *Mesh = RMeshTable::Meshes(i);
@@ -160,6 +156,11 @@ bool UWorld::InitializeWorld()
 	m_pViewport->AddCamera(m_pCamera);
 
 	m_pViewport->SetCurrentCamera(0);
+
+	m_Terrain = new CTerrain(m_pCamera);
+	m_pViewport->Render(m_Terrain->Primitives(0));
+	Objects.AddItem(m_Terrain);
+
 	return TRUE;
 }
 

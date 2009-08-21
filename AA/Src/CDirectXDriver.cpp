@@ -181,36 +181,41 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 	if(hr != D3D_OK)
 		return false;
 
+	pBatch->IndexTessellate();
+
 	int NumIndices = pBatch->GetNumIndices();
-	hr = m_pDevice->CreateIndexBuffer(
-		NumIndices*sizeof(TIndex16),
-		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16,
-		D3DPOOL_DEFAULT,
-		&IB->IB,
-		NULL);
+	if(NumIndices)
+	{
+		hr = m_pDevice->CreateIndexBuffer(
+			NumIndices*sizeof(TIndex16),
+			D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
+			D3DFMT_INDEX16,
+			D3DPOOL_DEFAULT,
+			&IB->IB,
+			NULL);
 
-	hr = IB->IB->Lock(0, NumIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
-	if(hr != D3D_OK)
-	{
-		return false;
-	}
-	else
-	{
-		TIndex16* pcData = static_cast<TIndex16*>(pData);
-		unsigned short BaseIdx = 0;
-		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
+		hr = IB->IB->Lock(0, NumIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
+		if(hr != D3D_OK)
 		{
-			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
-			{
-				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
-				Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
-			}
+			return false;
 		}
-		IB->IB->Unlock();
-	}
+		else
+		{
+			TIndex16* pcData = static_cast<TIndex16*>(pData);
+			unsigned short BaseIdx = 0;
+			for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
+			{
+				for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
+				{
+					TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
+					Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
+				}
+			}
+			IB->IB->Unlock();
+		}
 
-	hr = m_pDevice->SetIndices(IB->IB);
+		hr = m_pDevice->SetIndices(IB->IB);
+	}
 	if(hr != D3D_OK)
 		return false;
 

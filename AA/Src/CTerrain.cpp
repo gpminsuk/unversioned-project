@@ -2,8 +2,12 @@
 #include "CTerrain.h"
 #include "CTerrainPrimitive.h"
 
-CTerrain::CTerrain(void)
+#include "CCamera.h"
+
+CTerrain::CTerrain(CCamera* Camera)
 {
+	m_pCamera = Camera;
+
 	CTerrainPrimitive* TerrainPrimitive = new CTerrainPrimitive();
 	Primitives.AddItem(TerrainPrimitive);
 
@@ -16,5 +20,12 @@ CTerrain::~CTerrain(void)
 
 void CTerrain::Tick(unsigned long dTime)
 {
-
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		CTerrainPrimitive* Prim = dynamic_cast<CTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			Prim->UpdateTerrainPrimitive(m_pCamera->m_Location);
+		}
+	}
 }

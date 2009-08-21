@@ -517,10 +517,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
-		<File
 			RelativePath=".\Src\stdafx.cpp"
 			>
 			<FileConfiguration

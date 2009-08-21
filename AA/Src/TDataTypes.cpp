@@ -14,3 +14,12 @@ int TBatch::GetNumIndices()
 	}
 	return NumIndices;
 }
+
+void TBatch::IndexTessellate()
+{
+	for(unsigned int i=0;i<m_pTemplates.Size();++i)
+	{
+		for(unsigned int j=0;j<m_pTemplates(i)->Primitives.Size();++j)
+			m_pTemplates(i)->Primitives(j)->IndexTessellate();
+	}
+}

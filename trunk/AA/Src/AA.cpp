@@ -7,7 +7,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-//	_CrtSetBreakAlloc(970);
+	//_CrtSetBreakAlloc(6529);
 	CWindowApp app;
 	if(app.CreateWindowApp())
 		app.Do();

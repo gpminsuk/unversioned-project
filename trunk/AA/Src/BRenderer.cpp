@@ -7,6 +7,8 @@
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
 
+#include "BPrimitive.h"
+
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
 	m_iFTimeIdx(0),

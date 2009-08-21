@@ -20,7 +20,7 @@ class TSkeletalSubMeshPrimitive : public TPrimitive
 {
 public:
 	TSkeletalSubMeshPrimitive();
-	~TSkeletalSubMeshPrimitive();
+	virtual ~TSkeletalSubMeshPrimitive();
 
 	virtual void Render(TBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
@@ -38,7 +38,7 @@ class TSkeletalMeshPrimitive : public TPrimitive
 {
 public:
 	TSkeletalMeshPrimitive();
-	~TSkeletalMeshPrimitive();
+	virtual ~TSkeletalMeshPrimitive();
 
 	virtual void Render(TBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);

@@ -7,6 +7,11 @@ TSkeletalSubMeshPrimitive::TSkeletalSubMeshPrimitive()
 
 }
 
+TSkeletalSubMeshPrimitive::~TSkeletalSubMeshPrimitive()
+{
+
+}
+
 
 void TSkeletalSubMeshPrimitive::Render(TBatch *Batch)
 {

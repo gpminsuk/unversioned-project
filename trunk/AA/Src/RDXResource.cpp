@@ -23,7 +23,7 @@ bool RDirectXShader::SetParameter(BViewport* vp)
 		return false;
 	//임시코드
 	D3DXMATRIXA16 Proj;
-	D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI/2, 1.0f, 0.0001f, 10000.0f);
+	D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI/4, 1.0f, 0.0001f, 10000.0f);
 	D3DXMATRIXA16 View;
 	View._11 = vp->m_ViewMatrix._11; View._21 = vp->m_ViewMatrix._21; View._31 = vp->m_ViewMatrix._31; View._41 = vp->m_ViewMatrix._41;
 	View._12 = vp->m_ViewMatrix._12; View._22 = vp->m_ViewMatrix._22; View._32 = vp->m_ViewMatrix._32; View._42 = vp->m_ViewMatrix._42;
@@ -85,7 +85,8 @@ void RDXDynamicPrimitiveBuffer::Release()
 	RDXVideoMemoryIndexBuffer* DXIB = dynamic_cast<RDXVideoMemoryIndexBuffer*>(m_pIB);
 
 	DXVB->VB->Release();
-	DXIB->IB->Release();
+	if(DXIB->nIndices)
+		DXIB->IB->Release();
 }
 
 RDXDynamicPrimitiveBuffer::RDXDynamicPrimitiveBuffer()

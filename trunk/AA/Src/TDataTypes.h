@@ -122,6 +122,8 @@ public:
 	TVector3& operator-= (TVector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
 	TVector3& operator*= (TVector3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
 
+	bool operator!= (TVector3& v) { return (x != v.x || y != v.y || z != v.z); }
+
 	float SizeSquared()
 	{
 		return x*x+y*y+z*z;
@@ -379,6 +381,7 @@ public:
 	int nVertexStride;
 
 	int GetNumIndices();
+	void IndexTessellate();
 };
 /*
 template <typename T>

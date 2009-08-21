@@ -8,13 +8,14 @@ class TPrimitive
 {
 public:
 	TPrimitive();
-	~TPrimitive();
+	virtual ~TPrimitive();
 
 	TMatrix TM;
 
 	class RStaticPrimitiveBuffer* pBuffer;
 
 	virtual void Render(TBatch *Batch) = 0;
+	virtual void IndexTessellate() {};
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

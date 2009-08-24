@@ -10,15 +10,7 @@ public:
 	TPrimitive();
 	virtual ~TPrimitive();
 
-	TMatrix TM;
-
 	class RStaticPrimitiveBuffer* pBuffer;
-
-	virtual void Render(TBatch *Batch) = 0;
-	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
-	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
-	virtual unsigned int GetNumIndices() = 0;
-	virtual void IndexTessellate() {};
 };
 
 class BPrimitive : public AObject
@@ -31,6 +23,8 @@ public:
 	TQuaternion qRotation;
 	TVector4 qScale;
 
+	TMatrix TM;
+
 	TArray<TPrimitive*> Primitives;
 
 	struct TBatchInfo
@@ -39,4 +33,10 @@ public:
 		short SlotNum;
 	};
 	TBatchInfo BatchInfo;
+
+	virtual void Render(TBatch *Batch) = 0;
+	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
+	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
+	virtual unsigned int GetNumIndices() = 0;
+	virtual void IndexTessellate() {};
 };

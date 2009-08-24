@@ -73,12 +73,6 @@ public:
 	TTerrainPrimitive();
 	virtual ~TTerrainPrimitive();
 
-	virtual void Render(TBatch *Batch);
-	virtual unsigned int FillDynamicVertexBuffer(char** pData);
-	virtual void IndexTessellate();
-	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
-	virtual unsigned int GetNumIndices();
-
 	unsigned int CellWidth;
 	unsigned int CellHeight;
 	unsigned int CellStepSize;
@@ -108,6 +102,12 @@ public:
 	bool CreateTerrainPrimitive(unsigned int NumCellX, unsigned int NumCellY, unsigned int NumPatchX, unsigned int NumPatchY);
 	bool DestroyTerrainPrimitive();
 	void UpdateTerrainPrimitive(TVector3 _LODOrigin);
+
+	virtual void Render(TBatch *Batch);
+	virtual unsigned int FillDynamicVertexBuffer(char** pData);
+	virtual void IndexTessellate();
+	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
+	virtual unsigned int GetNumIndices();
 
 	/////////////////////// Render Thread Function //////////////////////////
 	bool Tessellate(TVector3 Origin);

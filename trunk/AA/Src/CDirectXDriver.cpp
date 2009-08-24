@@ -168,11 +168,8 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		char* pcData = static_cast<char*>(pData);
 		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
 		{
-			for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
-			{
-				TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
-				Prim->FillDynamicVertexBuffer(&pcData);
-			}
+			BPrimitive* Prim = pBatch->m_pTemplates(i);
+			Prim->FillDynamicVertexBuffer(&pcData);
 		}
 		VB->VB->Unlock();
 	}
@@ -205,11 +202,8 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 			unsigned short BaseIdx = 0;
 			for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
 			{
-				for(unsigned int j=0;j<pBatch->m_pTemplates(i)->Primitives.Size();++j)
-				{
-					TPrimitive* Prim = pBatch->m_pTemplates(i)->Primitives(j);
-					Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
-				}
+				BPrimitive* Prim = pBatch->m_pTemplates(i);
+				Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
 			}
 			IB->IB->Unlock();
 		}

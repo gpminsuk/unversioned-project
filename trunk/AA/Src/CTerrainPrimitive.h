@@ -23,9 +23,10 @@ public:
 		NeighborType_Lower = 8
 	};
 
+	class TTerrainQuadTree* ThisTree;
+
 	TTerrainQuadTreeNode* ParentNode;
 
-	TTerrainQuadTreeNode() : Node1(0),Node2(0),Node3(0),Node4(0) {}
 	TTerrainQuadTreeNode* Node1;
 	TTerrainQuadTreeNode* Node2;
 	TTerrainQuadTreeNode* Node3;
@@ -40,7 +41,7 @@ public:
 	unsigned int Depth;
 
 	void DestroyNode();
-	void CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType = Node_Root);
+	void CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, TTerrainQuadTree* Tree, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType = Node_Root);
 
 	void FillLODIndexBuffer(TIndex16** pData);
 	void CheckLODLeafNode(TVector3 LODOrigin);
@@ -56,7 +57,10 @@ class TTerrainQuadTree
 public:
 	TTerrainQuadTree();
 
+	class TTerrainPrimitive* Primitive;
+
 	TTerrainQuadTreeNode* Root;
+	TIntPoint TreeCoord;
 
 	void FillLODIndexBuffer(TIndex16** pData);
 
@@ -87,13 +91,12 @@ public:
 
 	void CreateTerrainQuadTree(float** HeightValue, unsigned int CellSizeX, unsigned int CellSizeY,unsigned int MaxTessellationLevel);
 	bool Tessellate(TVector3 Origin);
-private:
+
 	TTerrainQuadTree** QuadTree;
 
 	unsigned int QuadTreeSizeX;
 	unsigned int QuadTreeSizeY;
-
-
+private:
 };
 
 class CTerrainPrimitive : public BPrimitive

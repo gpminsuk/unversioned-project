@@ -5,7 +5,7 @@ class CTerrain : public BThing
 {
 public:
 	CTerrain(class CCamera* Camera);
-	~CTerrain(void);
+	virtual ~CTerrain(void);
 
 	CCamera* m_pCamera;
 

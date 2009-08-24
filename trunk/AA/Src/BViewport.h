@@ -28,6 +28,9 @@ public:
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;
 
+	unsigned int m_Width;
+	unsigned int m_Height;
+
 	void Clear();
 	void Render(BPrimitive* pTemplate, E_PrimitiveType RenderType = RT_OPAQUE);
 	

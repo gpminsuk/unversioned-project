@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "CBoxPrimitive.h"
+
 #include "RResourceManager.h"
 
 #include "RDXResource.h"
@@ -793,6 +796,9 @@ bool RResourceManager::LoadResources()
 	}
 
 	//////////////////////////////////// Geometry Loading
+	/////////////////////////////////////////////////////// Basic Geometry Creating
+	extern TBoxPrimitive* BoxPrimitive;
+	BoxPrimitive = new TBoxPrimitive();
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
@@ -803,6 +809,9 @@ bool RResourceManager::LoadResources()
 bool RResourceManager::ReleaseAllResources()
 {
 	//////////////////////////////////// Geometry Releasing
+	/////////////////////////////////////////////////////// Basic Geometry Releasing
+	extern TBoxPrimitive* BoxPrimitive;
+	delete BoxPrimitive;
 	/////////////////////////////////////////////////////// Vertex Buffer Releasing
 	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
 	{

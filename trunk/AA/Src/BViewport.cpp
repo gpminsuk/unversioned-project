@@ -45,4 +45,6 @@ void BViewport::operator =(BViewport& vp)
 	m_ProjectionMatrix			=		vp.m_ProjectionMatrix;
 	m_TranslucentPrimitives		=		vp.m_TranslucentPrimitives;
 	m_ViewMatrix				=		vp.m_ViewMatrix;
+	m_Height					=		vp.m_Height;
+	m_Width						=		vp.m_Width;
 }

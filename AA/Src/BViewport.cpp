@@ -24,13 +24,12 @@ void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
 	switch(RenderType)
 	{
 	case RT_OPAQUE:
-		m_OpaquePrimitives.AddItem(pTemplate);
-		m_Batches.m_pTemplates.AddItem(pTemplate);
-		for(unsigned int i=0;i<pTemplate->Primitives.Size();++i)
 		{
-			TPrimitive* Prim = pTemplate->Primitives(i);
+			m_OpaquePrimitives.AddItem(pTemplate);
+			m_Batches.m_pTemplates.AddItem(pTemplate);
+			BPrimitive* Prim = pTemplate;
 			Prim->Render(&m_Batches);
-		}
+		}		
 	}
 }
 

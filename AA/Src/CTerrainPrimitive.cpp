@@ -32,54 +32,94 @@ TTerrainPrimitive::~TTerrainPrimitive()
 	delete pLODIndices;
 }
 
-void TTerrainPrimitive::Render(TBatch *Batch)
+void CTerrainPrimitive::Render(TBatch *Batch)
 {
-	Batch->nVertexStride = pBuffer->m_pVB->nVertexStride;
-	Batch->nVertices += pBuffer->m_pVB->nVertices;
-}
-
-unsigned int TTerrainPrimitive::GetNumIndices()
-{
-	return nLODIndices;
-}
-
-unsigned int TTerrainPrimitive::FillDynamicVertexBuffer(char** pData)
-{
-	memcpy((*pData), pBuffer->m_pVB->pVertices, 
-		pBuffer->m_pVB->nVertices * pBuffer->m_pVB->nVertexStride);
-	for(int k=0;k<pBuffer->m_pVB->nVertices;++k)
+	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		*((TVector3*)&((*pData)[k*pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*pBuffer->m_pVB->nVertexStride])));
-	}
-	*pData += pBuffer->m_pVB->nVertices * pBuffer->m_pVB->nVertexStride;
-	return pBuffer->m_pVB->nVertices;
+		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			Batch->nVertexStride = Prim->pBuffer->m_pVB->nVertexStride;
+			Batch->nVertices += Prim->pBuffer->m_pVB->nVertices;
+		}		
+	}	
 }
 
-void TTerrainPrimitive::IndexTessellate()
+unsigned int CTerrainPrimitive::GetNumIndices()
 {
-	if(bShouldTessellate)
+	unsigned int Ret = 0;
+	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		Tessellate(LODOrigin);
-		bShouldTessellate = false;
+		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			Ret += Prim->nLODIndices;
+		}
+	}
+	return Ret;
+}
+
+unsigned int CTerrainPrimitive::FillDynamicVertexBuffer(char** pData)
+{
+	unsigned int Ret = 0;
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			memcpy((*pData), Prim->pBuffer->m_pVB->pVertices, 
+				Prim->pBuffer->m_pVB->nVertices * Prim->pBuffer->m_pVB->nVertexStride);
+			for(int k=0;k<Prim->pBuffer->m_pVB->nVertices;++k)
+			{
+				*((TVector3*)&((*pData)[k*Prim->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Prim->pBuffer->m_pVB->nVertexStride])));
+			}
+			*pData += Prim->pBuffer->m_pVB->nVertices * Prim->pBuffer->m_pVB->nVertexStride;
+			Ret += Prim->pBuffer->m_pVB->nVertices;
+		}
+	}
+	return Ret;
+}
+
+void CTerrainPrimitive::IndexTessellate()
+{
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			if(Prim->bShouldTessellate)
+			{
+				Tessellate(LODOrigin);
+				Prim->bShouldTessellate = false;
+			}
+		}
 	}
 }
 
-unsigned int TTerrainPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
+unsigned int CTerrainPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
-	if(!pLODIndices)
-		return 0;
-	for(unsigned int k=0;k<GetNumIndices();++k)
+	unsigned int Ret = 0;
+	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		TIndex16 tmpIndex;
-		tmpIndex._1 = pLODIndices[k]._1 + *BaseIndex;
-		tmpIndex._2 = pLODIndices[k]._2 + *BaseIndex;
-		tmpIndex._3 = pLODIndices[k]._3 + *BaseIndex;
-		(*pData)[k] = tmpIndex;
+		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+		if(Prim)
+		{
+			if(!Prim->pLODIndices)
+				continue;
+			for(unsigned int k=0;k<GetNumIndices();++k)
+			{
+				TIndex16 tmpIndex;
+				tmpIndex._1 = Prim->pLODIndices[k]._1 + *BaseIndex;
+				tmpIndex._2 = Prim->pLODIndices[k]._2 + *BaseIndex;
+				tmpIndex._3 = Prim->pLODIndices[k]._3 + *BaseIndex;
+				(*pData)[k] = tmpIndex;
+			}
+			*BaseIndex += Prim->pBuffer->m_pVB->nVertices;
+			*pData += GetNumIndices();
+			Ret += Prim->pBuffer->m_pVB->nVertices;
+		}
 	}
-	*BaseIndex += pBuffer->m_pVB->nVertices;
-	*pData += GetNumIndices();
-
-	return pBuffer->m_pVB->nVertices;
+	return Ret;
 }
 
 bool TTerrainPrimitive::Tessellate(TVector3 Origin)

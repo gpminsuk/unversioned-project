@@ -84,41 +84,41 @@ TBoxPrimitive::TBoxPrimitive()
 	Index[10] = TIndex16(20,22,23);	Index[11] = TIndex16(20,23,21);
 }
 
-void TBoxPrimitive::Render(TBatch *Batch)
+void CBoxPrimitive::Render(TBatch *Batch)
 {
-	Batch->nVertexStride = pBuffer->m_pVB->nVertexStride;
-	Batch->nVertices += pBuffer->m_pVB->nVertices;
+	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
+	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 
-unsigned int TBoxPrimitive::GetNumIndices()
+unsigned int CBoxPrimitive::GetNumIndices()
 {
-	return pBuffer->m_pIB->nIndices;
+	return Primitives(0)->pBuffer->m_pIB->nIndices;
 }
 
-unsigned int TBoxPrimitive::FillDynamicVertexBuffer(char** pData)
+unsigned int CBoxPrimitive::FillDynamicVertexBuffer(char** pData)
 {
-	memcpy((*pData), pBuffer->m_pVB->pVertices, 
-		pBuffer->m_pVB->nVertices * pBuffer->m_pVB->nVertexStride);
-	for(int k=0;k<pBuffer->m_pVB->nVertices;++k)
+	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
+		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
+	for(int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
 	{
-		*((TVector3*)&((*pData)[k*pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*pBuffer->m_pVB->nVertexStride])));
+		*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])));
 	}
-	*pData += pBuffer->m_pVB->nVertices * pBuffer->m_pVB->nVertexStride;
-	return pBuffer->m_pVB->nVertices;
+	*pData += Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride;
+	return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 
-unsigned int TBoxPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
+unsigned int CBoxPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
 	for(unsigned int k=0;k<GetNumIndices();++k)
 	{
 		TIndex16 tmpIndex;
-		tmpIndex._1 = pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
-		tmpIndex._2 = pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
-		tmpIndex._3 = pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
+		tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
+		tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
+		tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
 		(*pData)[k] = tmpIndex;
 	}
-	*BaseIndex += pBuffer->m_pVB->nVertices;
+	*BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
 	*pData += GetNumIndices();
 
-	return pBuffer->m_pVB->nVertices;
+	return Primitives(0)->pBuffer->m_pVB->nVertices;
 }

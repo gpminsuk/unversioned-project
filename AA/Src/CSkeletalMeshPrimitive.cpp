@@ -26,7 +26,7 @@ unsigned int TSkeletalSubMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 		pSubMesh->pVB->nVertices * pSubMesh->pVB->nVertexStride);
 	for(int k=0;k<pSubMesh->pVB->nVertices;++k)
 	{
-		*((TVector3*)&((*pData)[k*pSubMesh->pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*pSubMesh->pVB->nVertexStride])));
+		//*((TVector3*)&((*pData)[k*pSubMesh->pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*pSubMesh->pVB->nVertexStride])));
 	}
 	*pData += pSubMesh->pVB->nVertices * pSubMesh->pVB->nVertexStride;
 	return pSubMesh->pVB->nVertices;

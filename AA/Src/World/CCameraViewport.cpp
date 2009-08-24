@@ -6,9 +6,15 @@
 #include <d3d9.h>
 #include <d3dx9effect.h>
 
+#include "CWindowApp.h"
+
+extern CWindowApp	*GApp;
+
 CCameraViewport::CCameraViewport(void)
 : m_curCameraIdx(-1)
 {
+	m_Width = GApp->m_WindowInfo.m_wWidth;
+	m_Height = GApp->m_WindowInfo.m_wHeight;
 }
 
 CCameraViewport::~CCameraViewport(void)

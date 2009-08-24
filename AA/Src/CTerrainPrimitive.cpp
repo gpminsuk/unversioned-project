@@ -109,6 +109,9 @@ void TTerrainPrimitive::CreateTerrainQuadTree(float** HeightValue, unsigned int 
 		for(unsigned int j=0;j<QuadTreeSizeY;++j)
 		{
 			QuadTree[i][j].Root = new TTerrainQuadTreeNode();
+			QuadTree[i][j].Primitive = this;
+			QuadTree[i][j].TreeCoord.x = i;
+			QuadTree[i][j].TreeCoord.y = j;
 			QuadTree[i][j].Root->Indices[0] = MaxTessellationLevel*i*4 + MaxTessellationLevel*j*CellSizeX*4;
 			QuadTree[i][j].Root->Indices[1] = MaxTessellationLevel*i*4 + MaxTessellationLevel*j*CellSizeX*4 + MaxTessellationLevel*4 - 3;
 			QuadTree[i][j].Root->Indices[2] = MaxTessellationLevel*i*4 + MaxTessellationLevel*(j+1)*CellSizeX*4 - CellSizeX*4 + 2;
@@ -127,7 +130,7 @@ void TTerrainPrimitive::CreateTerrainQuadTree(float** HeightValue, unsigned int 
 			HeightSum /= (MaxTessellationLevel*MaxTessellationLevel);
 			QuadTree[i][j].Root->Origin.y = HeightSum;
 
-			QuadTree[i][j].Root->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(0,0), NULL, 4, CellSizeX);
+			QuadTree[i][j].Root->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(i*16,j*16), NULL, &QuadTree[i][j], 4, CellSizeX);
 		}
 	}
 }
@@ -310,17 +313,17 @@ void TTerrainQuadTreeNode::DestroyNode()
 	}
 }
 
-void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType)
+void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, TTerrainQuadTree* Tree, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType)
 {
 	unsigned int TessellationSize = (1<<(Level));
 	Depth = Level;
 	ParentNode = Parent;
+	ThisTree = Tree;
+	Coord = Coordinate;
 	switch(NodeType)
 	{
 	case Node_LeftBottom:
 		{
-			Coord = Coordinate;
-
 			Indices[0] = Parent->Indices[0];
 			Indices[1] = Indices[0] + ((Parent->Indices[1] + 3) - Parent->Indices[0])/2 - 3;
 			Indices[2] = Indices[0] + (((Parent->Indices[2] - 2) + NumCellX*4) - Parent->Indices[0])/2 - NumCellX*4 + 2;
@@ -338,8 +341,6 @@ void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TInt
 		break;
 	case Node_RightBottom:
 		{
-			Coord = Coordinate;
-
 			Indices[0] = Parent->Indices[0] + ((Parent->Indices[1] + 3) - Parent->Indices[0])/2;
 			Indices[1] = Parent->Indices[1];
 			Indices[2] = Indices[0] + (((Parent->Indices[2] - 2) + NumCellX*4) - Parent->Indices[0])/2 - NumCellX*4 + 2;
@@ -357,8 +358,6 @@ void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TInt
 		break;
 	case Node_LeftTop:
 		{
-			Coord = Coordinate;
-
 			Indices[0] = Parent->Indices[0] + (((Parent->Indices[2] - 2) + NumCellX*4) - Parent->Indices[0])/2;
 			Indices[1] = Indices[0] + ((Parent->Indices[1] + 3) - Parent->Indices[0])/2 - 3;
 			Indices[2] = Parent->Indices[2];
@@ -376,8 +375,6 @@ void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TInt
 		break;
 	case Node_RightTop:
 		{
-			Coord = Coordinate;
-
 			Indices[1] = Parent->Indices[0] + (((Parent->Indices[2] - 2) + NumCellX*4) - Parent->Indices[0])/2 + (Parent->Indices[1] - Parent->Indices[0]);
 			Indices[0] = Indices[1] - ((Parent->Indices[1] + 3) - Parent->Indices[0])/2 + 3;
 			Indices[2] = Parent->Indices[2] + ((Parent->Indices[1] + 3) - Parent->Indices[0])/2;
@@ -401,10 +398,10 @@ void TTerrainQuadTreeNode::CreateTerrainQuadTreeLeaves(float** HeightValue, TInt
 		Node2 = new TTerrainQuadTreeNode();
 		Node3 = new TTerrainQuadTreeNode();
 		Node4 = new TTerrainQuadTreeNode();		
-		Node1->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x, Coordinate.y), this, Level-1, NumCellX, Node_LeftBottom);
-		Node2->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x + TessellationSize, Coordinate.y), this, Level-1, NumCellX, Node_RightBottom);
-		Node3->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x, Coordinate.y + TessellationSize), this, Level-1, NumCellX, Node_LeftTop);
-		Node4->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x + TessellationSize, Coordinate.y + TessellationSize), this, Level-1, NumCellX, Node_RightTop);
+		Node1->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x, Coordinate.y), this, Tree, Level-1, NumCellX, Node_LeftBottom);
+		Node2->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x + TessellationSize, Coordinate.y), this, Tree, Level-1, NumCellX, Node_RightBottom);
+		Node3->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x, Coordinate.y + TessellationSize), this, Tree, Level-1, NumCellX, Node_LeftTop);
+		Node4->CreateTerrainQuadTreeLeaves(HeightValue, TIntPoint(Coordinate.x + TessellationSize, Coordinate.y + TessellationSize), this, Tree, Level-1, NumCellX, Node_RightTop);
 	}
 }
 
@@ -419,30 +416,51 @@ void TTerrainQuadTreeNode::FillLODIndexBuffer(TIndex16** pData)
 			(*pData)[1]._1 = Indices[0];		(*pData)[1]._2 = Indices[3];		(*pData)[1]._3 = Indices[1];
 			*pData += 2;
 		}
-		if(NeighborType&1)
+		else
 		{
-			(*pData)[Num]._1 = Indices[1];			(*pData)[Num]._2 = Node2->Indices[2];	(*pData)[Num++]._3 = Node2->Indices[3];
-			(*pData)[Num]._1 = Node4->Indices[0];	(*pData)[Num]._2 = Node4->Indices[3];	(*pData)[Num++]._3 = Node4->Indices[1];
-		}
-		if(NeighborType&2)
-		{
-			(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Node1->Indices[2];	(*pData)[Num++]._3 = Node1->Indices[3];
-			(*pData)[Num]._1 = Node3->Indices[1];	(*pData)[Num]._2 = Node3->Indices[0];	(*pData)[Num++]._3 = Node3->Indices[2];
-		}
-		if(NeighborType&4)
-		{
-			(*pData)[Num]._1 = Indices[2];			(*pData)[Num]._2 = Node3->Indices[1];	(*pData)[Num++]._3 = Node3->Indices[3];
-			(*pData)[Num]._1 = Node4->Indices[2];	(*pData)[Num]._2 = Node4->Indices[0];	(*pData)[Num++]._3 = Node4->Indices[3];
-		}
-		if(NeighborType&8)
-		{
-			(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Node1->Indices[3];	(*pData)[Num++]._3 = Node1->Indices[1];
-			(*pData)[Num]._1 = Node2->Indices[0];	(*pData)[Num]._2 = Node2->Indices[2];	(*pData)[Num++]._3 = Node2->Indices[1];
-		}
-		if(NeighborType==1 || NeighborType==2 || NeighborType==4 || NeighborType==8)
+			if(NeighborType&1)
+			{
+				(*pData)[Num]._1 = Indices[1];			(*pData)[Num]._2 = Node2->Indices[2];	(*pData)[Num++]._3 = Node2->Indices[3];
+				(*pData)[Num]._1 = Node4->Indices[0];	(*pData)[Num]._2 = Node4->Indices[3];	(*pData)[Num++]._3 = Node4->Indices[1];
+			}
+			else
+			{
+				(*pData)[Num]._1 = Indices[1];			(*pData)[Num]._2 = Node2->Indices[2];	(*pData)[Num++]._3 = Indices[3];
+			}
 
+			if(NeighborType&2)
+			{
+				(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Node1->Indices[2];	(*pData)[Num++]._3 = Node1->Indices[3];
+				(*pData)[Num]._1 = Node3->Indices[1];	(*pData)[Num]._2 = Node3->Indices[0];	(*pData)[Num++]._3 = Node3->Indices[2];
+			}
+			else
+			{
+				(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Indices[2];			(*pData)[Num++]._3 = Node1->Indices[3];
+			}
+
+			if(NeighborType&4)
+			{
+				(*pData)[Num]._1 = Indices[2];			(*pData)[Num]._2 = Node3->Indices[1];	(*pData)[Num++]._3 = Node3->Indices[3];
+				(*pData)[Num]._1 = Node4->Indices[2];	(*pData)[Num]._2 = Node4->Indices[0];	(*pData)[Num++]._3 = Node4->Indices[3];
+			}
+			else
+			{
+				(*pData)[Num]._1 = Indices[2];			(*pData)[Num]._2 = Indices[3];			(*pData)[Num++]._3 = Node3->Indices[1];
+			}
+
+			if(NeighborType&8)
+			{
+				(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Node1->Indices[3];	(*pData)[Num++]._3 = Node1->Indices[1];
+				(*pData)[Num]._1 = Node2->Indices[0];	(*pData)[Num]._2 = Node2->Indices[2];	(*pData)[Num++]._3 = Node2->Indices[1];
+			}
+			else
+			{
+				(*pData)[Num]._1 = Indices[0];			(*pData)[Num]._2 = Node1->Indices[3];	(*pData)[Num++]._3 = Indices[1];
+			}
+
+			*pData += Num;
+		}
 		//(*pData)[3]._1 = Indices[0];		(*pData)[3]._2 = Indices[2];		(*pData)[3]._3 = Indices[3];
-		*pData += Num;
 		
 	}
 
@@ -473,43 +491,71 @@ void TTerrainQuadTreeNode::CheckLODLeafNode(TVector3 LODOrigin)
 
 bool TTerrainQuadTreeNode::IsNeighborCracked(E_NeighborType Type)
 {
-	unsigned int X, Y;
-	TTerrainQuadTreeNode* Node = this;
-	while(Node->ParentNode)
-		Node = Node->ParentNode;
+	int X, Z;
+	TTerrainQuadTreeNode* Node = ThisTree->Root;
 	switch(Type)
 	{
 	case NeighborType_Right:
 		{
-			X = Coord.x + (1<<(Depth-1));
-			Y = Coord.y;
+			X = Coord.x + (1<<Depth);
+			Z = Coord.y;
 		}
 		break;
 	case NeighborType_Left:
 		{
-			X = Coord.x - (1<<(Depth-1));
-			Y = Coord.y;
+			X = Coord.x - (1<<Depth);
+			Z = Coord.y;
 		}
 		break;
 	case NeighborType_Upper:
 		{
 			X = Coord.x;
-			Y = Coord.y + (1<<(Depth-1));
+			Z = Coord.y + (1<<Depth);
 		}
 		break;
 	case NeighborType_Lower:
 		{
 			X = Coord.x;
-			Y = Coord.y - (1<<(Depth-1));
+			Z = Coord.y - (1<<Depth);
 		}
 		break;
 	}
+	TIntPoint TreeCoord = ThisTree->TreeCoord;
+	while(Node->Coord.x > X)
+	{
+		if(ThisTree->TreeCoord.x-1 < 0)
+			return false;
+		TreeCoord.x-=1;
+		Node = ThisTree->Primitive->QuadTree[TreeCoord.x][TreeCoord.y].Root;
+	}
+	while(Node->Coord.x+(1<<Node->Depth) <= X)
+	{
+		if(ThisTree->TreeCoord.x+1 >= (int)(ThisTree->Primitive->QuadTreeSizeX))
+			return false;
+		TreeCoord.x+=1;
+		Node = ThisTree->Primitive->QuadTree[TreeCoord.x][TreeCoord.y].Root;
+	}
+	while(Node->Coord.y > Z)
+	{
+		if(ThisTree->TreeCoord.y-1 < 0)
+			return false;
+		TreeCoord.y-=1;
+		Node = ThisTree->Primitive->QuadTree[TreeCoord.x][TreeCoord.y].Root;
+	}
+	while(Node->Coord.y+(1<<Node->Depth) <= Z)
+	{
+		if(ThisTree->TreeCoord.y+1 >= (int)(ThisTree->Primitive->QuadTreeSizeY))
+			return false;
+		TreeCoord.y+=1;
+		Node = ThisTree->Primitive->QuadTree[TreeCoord.x][TreeCoord.y].Root;
+	}
+		
 	while(!Node->bIsLODLeaf)
 	{
-		if(Node->Origin.x < X && Node->Origin.y < Y) Node = Node->Node1;
-		else if(Node->Origin.x >= X && Node->Origin.y < Y) Node = Node->Node2;
-		else if(Node->Origin.x < X && Node->Origin.y >= Y) Node = Node->Node3;
-		else if(Node->Origin.x >= X && Node->Origin.y >= Y) Node = Node->Node4;
+		if(Node->Origin.x > X && Node->Origin.z > Z) Node = Node->Node1;
+		else if(Node->Origin.x <= X && Node->Origin.z > Z) Node = Node->Node2;
+		else if(Node->Origin.x > X && Node->Origin.z <= Z) Node = Node->Node3;
+		else if(Node->Origin.x <= X && Node->Origin.z <= Z) Node = Node->Node4;
 	}
 	if(Node->Depth < Depth)
 		return true;
@@ -530,12 +576,11 @@ unsigned int TTerrainQuadTreeNode::CheckLODSolderNeighbor()
 			NeighborType |= 4;
 		if(IsNeighborCracked(NeighborType_Lower))
 			NeighborType |= 8;
-		if(NeighborType == 0)																Ret = 2;
-		else if(NeighborType==1 || NeighborType==2 || NeighborType==4 || NeighborType==8)	Ret = 4;
-		else if(NeighborType==6 || NeighborType==9)											Ret = 5;
-		else if(NeighborType==5 || NeighborType==10 || NeighborType==12 || NeighborType==3)	Ret = 6;
-		else if(NeighborType==7 || NeighborType==11 || NeighborType==13 || NeighborType==14)Ret = 7;
-		else if(NeighborType==15)															Ret = 8;
+		if(NeighborType == 0)																										Ret = 2;
+		else if(NeighborType==1 || NeighborType==2 || NeighborType==4 || NeighborType==8)											Ret = 5;
+		else if(NeighborType==6 || NeighborType==9 || NeighborType==5 || NeighborType==10 || NeighborType==12 || NeighborType==3)	Ret = 6;
+		else if(NeighborType==7 || NeighborType==11 || NeighborType==13 || NeighborType==14)										Ret = 7;
+		else if(NeighborType==15)																									Ret = 8;
 	}
 	else if(Node1)
 	{

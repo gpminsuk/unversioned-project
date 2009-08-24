@@ -6,6 +6,7 @@
 #include "CCameraViewport.h"
 #include "CTerrain.h"
 #include "CCamera.h"
+#include "CCharacter.h"
 
 UWorld::UWorld(BRenderer* R)
 : m_pRenderer(R),
@@ -18,6 +19,7 @@ UWorld::~UWorld()
 {
 //	delete m_Mesh;
 	delete m_Terrain;
+	delete m_Character;
 }
 float frame = 0;
 void UWorld::Tick(DWORD dTime)
@@ -160,6 +162,10 @@ bool UWorld::InitializeWorld()
 	m_Terrain = new CTerrain(m_pCamera);
 	m_pViewport->Render(m_Terrain->Primitives(0));
 	Objects.AddItem(m_Terrain);
+
+	m_Character = new CCharacter();
+	m_pViewport->Render(m_Character->Primitives(0));
+	Objects.AddItem(m_Character);
 
 	return TRUE;
 }

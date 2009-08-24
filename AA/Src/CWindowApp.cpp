@@ -16,6 +16,8 @@ unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
 bool CWindowApp::CreateWindowApp()
 {
+	GApp = this;
+
 	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
 	WNDCLASSEX wcex;
 
@@ -72,7 +74,6 @@ bool CWindowApp::CreateWindowApp()
 	m_pWorld = new UWorld(m_pRenderer);
 	m_pWorld->InitializeWorld();
 
-	GApp = this;
 
 	m_MouseMap.bLButtonDown = 0;
 	m_MouseMap.bRButtonDown = 0;

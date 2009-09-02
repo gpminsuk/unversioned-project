@@ -23,9 +23,9 @@ public:
 
 	static LRESULT CALLBACK Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
-	bool CreateWindowApp();
+	bool CreateApp();
 	void Do();
-	bool DestroyWindowApp();
+	bool DestroyApp();
 
 	void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);

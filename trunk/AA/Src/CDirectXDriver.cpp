@@ -27,6 +27,16 @@ DWORD GFillMode[] =
 	D3DFILL_SOLID,
 };
 
+DWORD GPrimitiveType[] =
+{
+	D3DPT_POINTLIST,
+	D3DPT_LINELIST,
+	D3DPT_LINESTRIP,
+	D3DPT_TRIANGLELIST,
+	D3DPT_TRIANGLESTRIP,
+	D3DPT_TRIANGLEFAN
+};
+
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
@@ -228,15 +238,27 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 	return TB;
 }
 
-bool CDirectXDriver::DrawPrimitive(UINT NumVertices, UINT PrimCount)
+bool CDirectXDriver::DrawIndexedPrimitive(EPrimitiveType PrimitiveType, UINT NumVertices, UINT PrimCount)
 {
-	m_pDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, NumVertices, 0, PrimCount);
+	m_pDevice->DrawIndexedPrimitive((D3DPRIMITIVETYPE)GPrimitiveType[PrimitiveType], 0, 0, NumVertices, 0, PrimCount);
 	return true;
 }
 
-bool CDirectXDriver::DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride)
+bool CDirectXDriver::DrawPrimitive(EPrimitiveType PrimitiveType, UINT PrimCount)
 {
-	m_pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, NumVertices, PrimCount, pIndices, (IndexStride == sizeof(WORD))? D3DFMT_INDEX16 : D3DFMT_INDEX32, pVertices, VertexStride);
+	m_pDevice->DrawPrimitive((D3DPRIMITIVETYPE)GPrimitiveType[PrimitiveType], 0, PrimCount);
+	return true;
+}
+
+bool CDirectXDriver::DrawIndexedPrimitiveUP(EPrimitiveType PrimitiveType, UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride)
+{
+	m_pDevice->DrawIndexedPrimitiveUP((D3DPRIMITIVETYPE)GPrimitiveType[PrimitiveType], 0, NumVertices, PrimCount, pIndices, (IndexStride == sizeof(WORD))? D3DFMT_INDEX16 : D3DFMT_INDEX32, pVertices, VertexStride);
+	return true;
+}
+
+bool CDirectXDriver::DrawPrimitiveUP(EPrimitiveType PrimitiveType, unsigned int NumVertices, void* pVertices, unsigned int VertexStride)
+{
+	m_pDevice->DrawPrimitiveUP((D3DPRIMITIVETYPE)GPrimitiveType[PrimitiveType], NumVertices, pVertices, VertexStride);
 	return true;
 }
 
@@ -385,6 +407,30 @@ bool CDirectXDriver::SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer)
 	if(!DXIndexBuffer)
 		return false;
 	GetDevice()->SetIndices(DXIndexBuffer->IB);
+	return true;
+}
+
+bool CDirectXDriver::SetVertexDeclaration(unsigned long Type)
+{
+	D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
+	unsigned long FVF = 0;
+	unsigned int TexCount = 0;
+
+	if(Type & VertexType_Position)
+	{
+		FVF |= D3DFVF_XYZ;
+	}
+	if(Type & VertexType_UV)
+	{
+		FVF |= D3DFVF_TEX1;
+		FVF |= D3DFVF_TEXCOORDSIZE2(TexCount++);
+	}
+
+	IDirect3DVertexDeclaration9* pDecl;
+	D3DXDeclaratorFromFVF(FVF, Decl);
+	GetDevice()->CreateVertexDeclaration(Decl, &pDecl);
+	GetDevice()->SetVertexDeclaration(pDecl);
+	pDecl->Release();
 	return true;
 }
 

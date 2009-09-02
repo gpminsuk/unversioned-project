@@ -122,6 +122,11 @@ void CCamera::Tick(unsigned long  dTime)
 	m_bIsUpdated = false;
 }
 
+void CCamera::PhysicsTick(unsigned long dTime)
+{
+
+}
+
 bool CCamera::ShouldUpdate()
 {
 	switch(m_CameraMode)

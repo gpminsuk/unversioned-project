@@ -53,5 +53,6 @@ void BRTRenderPass::DrawPrimitive()
 	Indices[0] = TIndex16(0, 1, 2);
 	Indices[1] = TIndex16(1, 3, 2);
 
-	GDriver->DrawPrimitiveUP(4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
+	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
+	GDriver->DrawIndexedPrimitiveUP(PrimitiveType_TriangleList, 4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
 }

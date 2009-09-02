@@ -203,6 +203,8 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
 			Primitive->pBuffer->m_pVB = pVB;
 
+			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
+
 			pVB->Declaration = new VertexDeclaration[2];
 			pVB->Declaration[0].Offset = 0;
 			pVB->Declaration[0].Type = DECLTYPE_FLOAT3;	// Position
@@ -480,8 +482,8 @@ void TTerrainQuadTreeNode::FillLODIndexBuffer(TIndex16** pData)
 
 			if(NeighborType&4)
 			{
-				(*pData)[Num]._1 = Indices[2];			(*pData)[Num]._2 = Node3->Indices[1];	(*pData)[Num++]._3 = Node3->Indices[3];
-				(*pData)[Num]._1 = Node4->Indices[2];	(*pData)[Num]._2 = Node4->Indices[0];	(*pData)[Num++]._3 = Node4->Indices[3];
+				(*pData)[Num]._1 = Indices[2];			(*pData)[Num]._2 = Node3->Indices[3];	(*pData)[Num++]._3 = Node3->Indices[1];
+				(*pData)[Num]._1 = Node4->Indices[2];	(*pData)[Num]._2 = Node4->Indices[3];	(*pData)[Num++]._3 = Node4->Indices[0];
 			}
 			else
 			{

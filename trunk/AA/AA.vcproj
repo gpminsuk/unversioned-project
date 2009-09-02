@@ -185,11 +185,19 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
+					RelativePath="..\Shaders\PixelLineShader.fx"
+					>
+				</File>
+				<File
 					RelativePath="..\Shaders\PixelRTShader.fx"
 					>
 				</File>
 				<File
 					RelativePath="..\Shaders\PixelShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\Shaders\VertexLineShader.fx"
 					>
 				</File>
 				<File
@@ -285,6 +293,14 @@
 						Name="ShaderPass"
 						>
 						<File
+							RelativePath=".\Src\BDrawLinePass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BDrawLinePass.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Src\BOpaqueBasePass.cpp"
 							>
 						</File>
@@ -304,6 +320,14 @@
 					<Filter
 						Name="Primitive"
 						>
+						<File
+							RelativePath=".\Src\BLineBatcher.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BLineBatcher.h"
+							>
+						</File>
 						<File
 							RelativePath=".\Src\BPrimitive.cpp"
 							>
@@ -358,6 +382,14 @@
 						</File>
 						<File
 							RelativePath=".\Src\CBoxPrimitive.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\CCylinderPrimitive.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\CCylinderPrimitive.h"
 							>
 						</File>
 						<File
@@ -462,6 +494,18 @@
 					RelativePath=".\Src\World\BThing.h"
 					>
 				</File>
+				<Filter
+					Name="CollisionBody"
+					>
+					<File
+						RelativePath=".\Src\World\BCollisionBody.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\BCollisionBody.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="C"
@@ -498,6 +542,26 @@
 					RelativePath=".\Src\CTerrain.h"
 					>
 				</File>
+				<Filter
+					Name="CollisionBody"
+					>
+					<File
+						RelativePath=".\Src\World\CCylinderCollisionBody.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCylinderCollisionBody.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CHeightFieldCollisionBody.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CHeightFieldCollisionBody.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="U"

@@ -17,8 +17,10 @@ void AThread::Start()
 
 void AThread::Run()
 {
+	CriticalSection = new ACriticalSection();
 	ThreadExecute();
 	ThreadDestroy();
+	delete CriticalSection;
 }
 
 unsigned __stdcall AThread::ThreadEntryPoint(void *thread)

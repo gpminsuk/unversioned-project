@@ -25,6 +25,9 @@ public:
 	float m_Distance, m_Pi, m_Theta;
 
 	virtual void Tick(unsigned long dTime);
+	virtual void PhysicsTick(unsigned long dTime);
+	virtual void UpdateTransform() {}
+
 	virtual bool ShouldUpdate();
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);

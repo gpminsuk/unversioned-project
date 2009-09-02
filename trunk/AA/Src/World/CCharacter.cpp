@@ -1,6 +1,11 @@
 #include "StdAfx.h"
 #include "CCharacter.h"
+
 #include "CBoxPrimitive.h"
+
+#include "CCylinderCollisionBody.h"
+
+#include "UWorld.h"
 
 CCharacter::CCharacter()
 {
@@ -20,8 +25,10 @@ CCharacter::CCharacter()
 	CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
 	Primitives.AddItem(CharacterPrimitive);
 
-	//TODO: 곧 추가예정(바뀔수도있음)
-	//CharacterPrimitive->CreateBoxPrimitive(m_Location);
+	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CharacterCollisionBody);
+
+	UpdateTransform();
 }
 
 CCharacter::~CCharacter()
@@ -32,9 +39,35 @@ CCharacter::~CCharacter()
 void CCharacter::SetCharacterPosition(TVector3 pos)
 {
 	m_Location = pos;
+	UpdateTransform();
 }
 
 void CCharacter::Tick(unsigned long dTime)
 {
 	
+}
+
+void CCharacter::PhysicsTick(unsigned long dTime)
+{
+	TVector3 Loc = m_Location;
+	float t = 0.001f;
+	Loc.y -= (float)(t*t*9.8/2.0f);
+	SetCharacterPosition(Loc);
+}
+
+void CCharacter::UpdateTransform()
+{
+	m_Location = GWorld->LineCheck(TVector3(0,0,0), TVector3(0,0,0)).HitPosition;
+
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		Primitives(i)->Translation = m_Location;
+		Primitives(i)->TM._41 = m_Location.x;
+		Primitives(i)->TM._42 = m_Location.y;
+		Primitives(i)->TM._43 = m_Location.z;
+	}
+
+	CollisionBodyBounds.Box.Extent = TVector3(5.0f,5.0f,5.0f);
+	CollisionBodyBounds.Position = m_Location;
+	CollisionBodyBounds.Sphere.Radius = 5.0f;	
 }

@@ -7,6 +7,36 @@
 #include <process.h>
 #include <windows.h>
 
+class ACriticalSection
+{
+	CRITICAL_SECTION CriticalSection;
+
+public:
+	FORCEINLINE ACriticalSection(void)
+	{
+		InitializeCriticalSection(&CriticalSection);
+		SetCriticalSectionSpinCount(&CriticalSection,4000);
+	}
+
+	FORCEINLINE ~ACriticalSection(void)
+	{
+		DeleteCriticalSection(&CriticalSection);
+	}
+
+	FORCEINLINE void Lock(void)
+	{
+		if( TryEnterCriticalSection(&CriticalSection) == 0 )
+		{
+			EnterCriticalSection(&CriticalSection);
+		}
+	}
+
+	FORCEINLINE void Unlock(void)
+	{
+		LeaveCriticalSection(&CriticalSection);
+	}
+};
+
 class AThread
 {
 public:
@@ -21,7 +51,10 @@ protected:
 	virtual void ThreadExecute() = 0;
 	virtual void ThreadDestroy() = 0;
 
-private:
+protected:
 	HANDLE hThread;
 	unsigned int threadID;
+
+public:
+	ACriticalSection *CriticalSection;
 };

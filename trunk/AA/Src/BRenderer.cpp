@@ -6,8 +6,10 @@
 
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
+#include "BDrawLinePass.h"
 
 #include "BPrimitive.h"
+#include "BLineBatcher.h"
 
 BRenderer::BRenderer(void)
 :	m_fFPS(0.f),
@@ -21,16 +23,22 @@ BRenderer::BRenderer(void)
 
 	m_OpaqueBasePass = new BOpaqueBasePass();
 	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
+	m_DrawLinePass = new BDrawLinePass();
+
+	LineBatcher = new BLineBatcher();
 }
 
 BRenderer::~BRenderer()
 {
+	delete LineBatcher;
+
 	for(UINT i=0;i<m_RendererViewport.Size();++i)
 	{
 		delete m_RendererViewport(0);
 		m_RendererViewport.DeleteItem(0);
 	}
 	
+	delete m_DrawLinePass;
 	delete m_OpaqueBasePass;
 	delete m_BaseRTRenderPass;
 }
@@ -66,21 +74,33 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 		return false;
 
 	m_OpaqueBasePass->BeginPass(Viewport);
-
 	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
 	m_OpaqueBasePass->DrawPrimitive(&Viewport->m_Batches);
-	GDriver->SetTexture(0, NULL);
 
+	m_pBuffer->Release();
+	delete m_pBuffer;
+
+	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_LineBatch);
+	if(!m_pBuffer)
+		return false;
+
+	m_OpaqueBasePass->DrawPrimitive(&Viewport->m_LineBatch);
+	GDriver->SetTexture(0, NULL);
 	m_OpaqueBasePass->EndPass();
+
+	m_pBuffer->Release();
+	delete m_pBuffer;
 
 	m_BaseRTRenderPass->BeginPass(Viewport);
 	m_BaseRTRenderPass->DrawPrimitive();
 	m_BaseRTRenderPass->EndPass();
-
-	m_pBuffer->Release();
-	delete m_pBuffer;
+	
+	m_DrawLinePass->BeginPass(Viewport);
+	m_DrawLinePass->DrawPrimitive(LineBatcher);
+	m_DrawLinePass->EndPass();
 	return true;
 }
+
 
 void BRenderer::FetchViewports()
 {
@@ -105,6 +125,8 @@ void BRenderer::FetchViewports()
 	{
 		*m_RendererViewport[i] = *m_Viewports[i];
 	}
+
+	LineBatcher->Lines = GLineBatcher->Lines;
 }
 
 void BRenderer::ThreadSetup()

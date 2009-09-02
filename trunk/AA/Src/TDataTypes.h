@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <math.h>
+#include <algorithm>
 // TODO ∏ «Œ¿ª ¿ß«ÿ
 #define SINE(x)		 sin(x)
 #define COSINE(x)	 cos(x)
@@ -44,11 +45,23 @@ public:
 		mArray.push_back(Item);
 	}
 
+	void AddItems(TArray<T> Items)
+	{
+		for(unsigned int i=0;i<Items.Size();++i)
+			mArray.push_back(Items(i));
+	}
+
 	void DeleteItem(unsigned int index)
 	{
 		std::vector<T>::iterator it = mArray.begin();
 		advance(it,index);
 		mArray.erase(it);
+	}
+
+	void DeleteItemByVal(T Item)
+	{
+		mArray.erase(find(mArray.begin(), mArray.end(), Item));
+		
 	}
 
 	size_t Size()
@@ -152,6 +165,7 @@ public:
 	TVector4() : x(0), y(0), z(0), w(0) {}
 	TVector4(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
 	TVector4(const TVector4& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+	TVector4(const TVector3& v, float w1) : x(v.x), y(v.y), z(v.z), w(w1) {}
 
 	float x;
 	float y;
@@ -371,6 +385,27 @@ public:
 	}
 };
 
+class TBoundingBox
+{
+public:
+	TVector3 Extent;
+};
+
+class TBoundingSphere
+{
+public:
+	float Radius;
+};
+
+class TBounds
+{
+public:
+	TVector3 Position;
+
+	TBoundingBox Box;
+	TBoundingSphere Sphere;
+};
+
 class TBatch
 {
 public:
@@ -379,6 +414,8 @@ public:
 
 	int nVertices;
 	int nVertexStride;
+
+	enum EPrimitiveType RenderType;
 
 	int GetNumIndices();
 	void IndexTessellate();

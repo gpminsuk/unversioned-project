@@ -21,9 +21,12 @@ public:
 
 	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer);
 	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer);
+	virtual bool SetVertexDeclaration(unsigned long Type);
 
-	virtual bool DrawPrimitive(UINT NumVertices, UINT PrimCount);
-	virtual bool DrawPrimitiveUP(UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride);
+	virtual bool DrawPrimitive(EPrimitiveType PrimitiveType, UINT PrimCount);
+	virtual bool DrawIndexedPrimitive(EPrimitiveType PrimitiveType, UINT NumVertices, UINT PrimCount);
+	virtual bool DrawPrimitiveUP(EPrimitiveType PrimitiveType, unsigned int NumVertices, void* pVertices, unsigned int VertexStride);
+	virtual bool DrawIndexedPrimitiveUP(EPrimitiveType PrimitiveType, UINT NumVertices, UINT PrimCount, PVOID pIndices, UINT IndexStride, PVOID pVertices, UINT VertexStride);
 
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture);
 

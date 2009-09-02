@@ -25,6 +25,22 @@ enum EFillMode
 	FillMode_Solid
 };
 
+enum EPrimitiveType
+{
+	PrimitiveType_PointList,
+	PrimitiveType_LineList,
+	PrimitiveType_LineStrip,
+	PrimitiveType_TriangleList,
+	PrimitiveType_TriangleStrip,
+	PrimitiveType_TriangleFan,
+};
+
+enum EVertexDeclarationType
+{
+	VertexType_Position		= 1,
+	VertexType_UV			= 1 << 1,
+};
+
 class BDriver
 {
 public:
@@ -36,9 +52,12 @@ public:
 
 	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
 	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
+	virtual bool SetVertexDeclaration(unsigned long Type) = 0;
 
-	virtual bool DrawPrimitiveUP(unsigned int NumVertices, unsigned int PrimCount, void* pIndices, unsigned int IndexStride, void* pVertices, unsigned int VertexStride) = 0;
-	virtual bool DrawPrimitive(unsigned int NumVertices, unsigned int PrimCount) = 0;
+	virtual bool DrawIndexedPrimitiveUP(EPrimitiveType PrimitiveType, unsigned int NumVertices, unsigned int PrimCount, void* pIndices, unsigned int IndexStride, void* pVertices, unsigned int VertexStride) = 0;
+	virtual bool DrawIndexedPrimitive(EPrimitiveType PrimitiveType, unsigned int NumVertices, unsigned int PrimCount) = 0;
+	virtual bool DrawPrimitiveUP(EPrimitiveType PrimitiveType, unsigned int NumVertices, void* pVertices, unsigned int VertexStride) = 0;
+	virtual bool DrawPrimitive(EPrimitiveType PrimitiveType, unsigned int PrimCount) = 0;
 
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture) = 0;
 

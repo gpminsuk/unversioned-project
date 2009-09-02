@@ -7,11 +7,12 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//_CrtSetBreakAlloc(152);
-	CWindowApp app;
-	if(app.CreateWindowApp())
-		app.Do();
-	app.DestroyWindowApp();
+	//_CrtSetBreakAlloc(2357);
+	BApplication *app = new CWindowApp();
+	if(app->CreateApp())
+		app->Do();
+	app->DestroyApp();
+	delete app;
 	_CrtDumpMemoryLeaks();
 	return 0;
 }

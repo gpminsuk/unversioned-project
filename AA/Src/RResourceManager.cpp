@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 
 #include "CBoxPrimitive.h"
+#include "CCylinderPrimitive.h"
 
 #include "RResourceManager.h"
 
@@ -790,6 +791,10 @@ bool RResourceManager::LoadResources()
 	sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
 	RShaderTable::Shaders.AddItem(pShader);
 
+	pShader = new RDirectXShader();
+	sprintf_s(pShader->m_FileName, 256, "LineShader.fx");
+	RShaderTable::Shaders.AddItem(pShader);
+
 	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
 	{
 		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
@@ -799,6 +804,8 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Basic Geometry Creating
 	extern TBoxPrimitive* BoxPrimitive;
 	BoxPrimitive = new TBoxPrimitive();
+	extern TCylinderPrimitive* CylinderPrimitive;
+	CylinderPrimitive = new TCylinderPrimitive();
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
@@ -812,6 +819,8 @@ bool RResourceManager::ReleaseAllResources()
 	/////////////////////////////////////////////////////// Basic Geometry Releasing
 	extern TBoxPrimitive* BoxPrimitive;
 	delete BoxPrimitive;
+	extern TCylinderPrimitive* CylinderPrimitive;
+	delete CylinderPrimitive;
 	/////////////////////////////////////////////////////// Vertex Buffer Releasing
 	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
 	{

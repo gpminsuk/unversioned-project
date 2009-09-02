@@ -19,7 +19,5 @@ TPrimitive::TPrimitive()
 
 TPrimitive::~TPrimitive()
 {
-	delete pBuffer->m_pIB;
-	delete pBuffer->m_pVB;
 	delete pBuffer;
 }

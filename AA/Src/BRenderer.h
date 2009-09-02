@@ -22,6 +22,7 @@ public:
 	bool Destroy();
 	bool Render();
 	bool RenderViewport(BViewport* Viewport);
+	void RenderLines(BViewport* Viewport);
 
 	void ThreadSetup();
 	void ThreadExecute();
@@ -34,9 +35,11 @@ public:
 protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;
+	class BLineBatcher* LineBatcher;
 
 	class BOpaqueBasePass*	m_OpaqueBasePass;
 	class BRTRenderPass*	m_BaseRTRenderPass;
+	class BDrawLinePass*	m_DrawLinePass;	
 
 	BApplication* m_pApp;
 	RDynamicPrimitiveBuffer* m_pBuffer;

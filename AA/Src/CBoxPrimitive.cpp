@@ -19,7 +19,9 @@ TBoxPrimitive::TBoxPrimitive()
 	pBuffer = new RStaticPrimitiveBuffer();
 
 	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 	pBuffer->m_pVB = pVB;
 	pBuffer->m_pIB = pIB;
 
@@ -41,35 +43,35 @@ TBoxPrimitive::TBoxPrimitive()
 
 	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
 
-	Vertex[0].Pos = TVector3(-1.0f,-1.0f,-1.0f);	Vertex[0].UV = TVector2(0.0f,0.0f);
-	Vertex[1].Pos = TVector3( 1.0f,-1.0f,-1.0f);	Vertex[1].UV = TVector2(0.0f,0.0f);
-	Vertex[2].Pos = TVector3(-1.0f, 1.0f,-1.0f);	Vertex[2].UV = TVector2(0.0f,0.0f);
-	Vertex[3].Pos = TVector3( 1.0f, 1.0f,-1.0f);	Vertex[3].UV = TVector2(0.0f,0.0f);
+	Vertex[0].Pos = TVector3(-1.0f,-1.0f,-1.0f);
+	Vertex[1].Pos = TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[2].Pos = TVector3(-1.0f, 1.0f,-1.0f);
+	Vertex[3].Pos = TVector3( 1.0f, 1.0f,-1.0f);
 
-	Vertex[4].Pos = TVector3( 1.0f,-1.0f,-1.0f);	Vertex[4].UV = TVector2(0.0f,0.0f);
-	Vertex[5].Pos = TVector3( 1.0f,-1.0f, 1.0f);	Vertex[5].UV = TVector2(0.0f,0.0f);
-	Vertex[6].Pos = TVector3( 1.0f, 1.0f,-1.0f);	Vertex[6].UV = TVector2(0.0f,0.0f);
-	Vertex[7].Pos = TVector3( 1.0f, 1.0f, 1.0f);	Vertex[7].UV = TVector2(0.0f,0.0f);
+	Vertex[4].Pos = TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[5].Pos = TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[6].Pos = TVector3( 1.0f, 1.0f,-1.0f);
+	Vertex[7].Pos = TVector3( 1.0f, 1.0f, 1.0f);
 
-	Vertex[8].Pos = TVector3( 1.0f,-1.0f, 1.0f);	Vertex[8].UV = TVector2(0.0f,0.0f);
-	Vertex[9].Pos = TVector3(-1.0f,-1.0f, 1.0f);	Vertex[9].UV = TVector2(0.0f,0.0f);
-	Vertex[10].Pos = TVector3( 1.0f, 1.0f, 1.0f);	Vertex[10].UV = TVector2(0.0f,0.0f);
-	Vertex[11].Pos = TVector3(-1.0f, 1.0f, 1.0f);	Vertex[11].UV = TVector2(0.0f,0.0f);
+	Vertex[8].Pos = TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[9].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+	Vertex[10].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+	Vertex[11].Pos = TVector3(-1.0f, 1.0f, 1.0f);
 
-	Vertex[12].Pos = TVector3(-1.0f,-1.0f, 1.0f);	Vertex[12].UV = TVector2(0.0f,0.0f);
-	Vertex[13].Pos = TVector3(-1.0f,-1.0f,-1.0f);	Vertex[13].UV = TVector2(0.0f,0.0f);
-	Vertex[14].Pos = TVector3(-1.0f, 1.0f, 1.0f);	Vertex[14].UV = TVector2(0.0f,0.0f);
-	Vertex[15].Pos = TVector3(-1.0f, 1.0f,-1.0f);	Vertex[15].UV = TVector2(0.0f,0.0f);
+	Vertex[12].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+	Vertex[13].Pos = TVector3(-1.0f,-1.0f,-1.0f);
+	Vertex[14].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+	Vertex[15].Pos = TVector3(-1.0f, 1.0f,-1.0f);
 
-	Vertex[16].Pos = TVector3(-1.0f, 1.0f,-1.0f);	Vertex[16].UV = TVector2(0.0f,0.0f);
-	Vertex[17].Pos = TVector3( 1.0f, 1.0f,-1.0f);	Vertex[17].UV = TVector2(0.0f,0.0f);
-	Vertex[18].Pos = TVector3(-1.0f, 1.0f, 1.0f);	Vertex[18].UV = TVector2(0.0f,0.0f);
-	Vertex[19].Pos = TVector3( 1.0f, 1.0f, 1.0f);	Vertex[19].UV = TVector2(0.0f,0.0f);
+	Vertex[16].Pos = TVector3(-1.0f, 1.0f,-1.0f);
+	Vertex[17].Pos = TVector3( 1.0f, 1.0f,-1.0f);
+	Vertex[18].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+	Vertex[19].Pos = TVector3( 1.0f, 1.0f, 1.0f);
 
-	Vertex[20].Pos = TVector3( 1.0f,-1.0f, 1.0f);	Vertex[20].UV = TVector2(0.0f,0.0f);
-	Vertex[21].Pos = TVector3(-1.0f,-1.0f, 1.0f);	Vertex[21].UV = TVector2(0.0f,0.0f);
-	Vertex[22].Pos = TVector3( 1.0f,-1.0f,-1.0f);	Vertex[22].UV = TVector2(0.0f,0.0f);
-	Vertex[23].Pos = TVector3(-1.0f,-1.0f,-1.0f);	Vertex[23].UV = TVector2(0.0f,0.0f);
+	Vertex[20].Pos = TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[21].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+	Vertex[22].Pos = TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[23].Pos = TVector3(-1.0f,-1.0f,-1.0f);
 
 	pIB->nIndices = 12;
 	pIB->pIndices = new TIndex16[pIB->nIndices];

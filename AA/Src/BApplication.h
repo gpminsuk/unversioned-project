@@ -16,4 +16,8 @@ public:
 	bool bRenderThreadQuit;
 
 	virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
+
+	virtual bool CreateApp() = 0;
+	virtual void Do() = 0;
+	virtual bool DestroyApp() = 0;
 };

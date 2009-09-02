@@ -14,7 +14,7 @@
 CWindowApp	*GApp = 0;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
-bool CWindowApp::CreateWindowApp()
+bool CWindowApp::CreateApp()
 {
 	GApp = this;
 
@@ -58,10 +58,7 @@ bool CWindowApp::CreateWindowApp()
 
 	GDriver = new CDirectXDriver(&m_WindowInfo);
 	if(!GDriver->CreateDriver())
-	{
-		DestroyWindowApp();
 		return false;
-	}
 
 	RResourceManager::LoadResources();
 
@@ -82,7 +79,7 @@ bool CWindowApp::CreateWindowApp()
 	return true;
 }
 
-bool CWindowApp::DestroyWindowApp()
+bool CWindowApp::DestroyApp()
 {
 	if(m_pWorld) m_pWorld->DestroyWorld();
 	delete m_pWorld;

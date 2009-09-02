@@ -16,12 +16,12 @@ public:
 class BPrimitive : public AObject
 {
 public:
-	BPrimitive(void);
-	~BPrimitive(void);
+	BPrimitive();
+	virtual ~BPrimitive(void);
 
-	TVector4 qTranslation;
-	TQuaternion qRotation;
-	TVector4 qScale;
+	TVector3 Translation;
+	TQuaternion Rotation;
+	TVector3 Scale;
 
 	TMatrix TM;
 

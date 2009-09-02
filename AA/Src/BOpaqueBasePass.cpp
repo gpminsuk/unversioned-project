@@ -40,8 +40,8 @@ void BOpaqueBasePass::EndPass()
 
 void BOpaqueBasePass::DrawPrimitive(TBatch *Batch)
 {
-	//for(unsigned int i=0;i<Prim->Primitives.Size();++i)
-	//{
-		GDriver->DrawPrimitive(Batch->nVertices, Batch->GetNumIndices());
-	//}	
+	if(Batch->RenderType == PrimitiveType_LineList)
+		GDriver->DrawPrimitive(Batch->RenderType, Batch->nVertices/2);
+	else
+		GDriver->DrawIndexedPrimitive(Batch->RenderType, Batch->nVertices, Batch->GetNumIndices());
 }

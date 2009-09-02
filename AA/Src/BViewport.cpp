@@ -6,8 +6,10 @@
 
 #include "BDriver.h"
 #include "BPrimitive.h"
+#include "BLineBatcher.h"
 
 BViewport::BViewport(void)
+:	VisibleScenes(Scene_World|Scene_Collision) // TODO
 {
 }
 
@@ -29,7 +31,17 @@ void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
 			m_Batches.m_pTemplates.AddItem(pTemplate);
 			BPrimitive* Prim = pTemplate;
 			Prim->Render(&m_Batches);
-		}		
+			m_Batches.RenderType = PrimitiveType_TriangleList;
+		}
+		break;
+	case RT_LINE:
+		{
+			m_LineBatch.m_pTemplates.AddItem(pTemplate);
+			BPrimitive* Prim = pTemplate;
+			Prim->Render(&m_LineBatch);
+			m_LineBatch.RenderType = PrimitiveType_LineList;
+		}
+		break;
 	}
 }
 
@@ -41,9 +53,11 @@ void BViewport::operator =(BViewport& vp)
 {
 	m_OpaquePrimitives			=		vp.m_OpaquePrimitives;
 	m_Batches					=		vp.m_Batches;
+	m_LineBatch					=		vp.m_LineBatch;
 	m_ProjectionMatrix			=		vp.m_ProjectionMatrix;
 	m_TranslucentPrimitives		=		vp.m_TranslucentPrimitives;
 	m_ViewMatrix				=		vp.m_ViewMatrix;
 	m_Height					=		vp.m_Height;
 	m_Width						=		vp.m_Width;
+	VisibleScenes				=		vp.VisibleScenes;
 }

@@ -18,6 +18,7 @@ DWORD GTextureUsage[] =
 {
 	D3DUSAGE_RENDERTARGET,
 	D3DUSAGE_DEPTHSTENCIL,
+	D3DUSAGE_DYNAMIC,
 };
 
 DWORD GFillMode[] = 
@@ -41,10 +42,15 @@ CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
 	BackBuffer = new RDXRenderTarget();
+	for(int i=0;i<VertexType_End;++i)
+		m_Declarations[i] = 0;
 }
 
 CDirectXDriver::~CDirectXDriver()
 {
+	for(int i=0;i<VertexType_End;++i)
+		if(m_Declarations[i])
+			m_Declarations[i]->Release();
 	delete BackBuffer;
 }
 
@@ -63,13 +69,14 @@ bool CDirectXDriver::CreateDriver()
 	Parameters.Windowed = true;
 	Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	Parameters.BackBufferWidth = m_pWindow->m_wWidth;
-	Parameters.BackBufferHeight = 1600;//m_pWindow->m_wHeight;
+	Parameters.BackBufferHeight = m_pWindow->m_wHeight;
 	Parameters.BackBufferCount = 1;
 	Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
 
 	Parameters.EnableAutoDepthStencil = TRUE;
 	Parameters.AutoDepthStencilFormat = D3DFMT_D16;
-	//Parameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	Parameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	//Parameters.PresentationInterval = D3DPRESENT_DONOTWAIT;	
 
 	HRESULT hResult;
 	if((hResult = m_pD3D->CreateDevice(
@@ -230,7 +237,7 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 {
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
-	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, "../Resources/texture.bmp", &TB->m_pTexture)))
+	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("../Resources/texture.bmp"), &TB->m_pTexture)))
 	{
 		delete TB;
 		return 0;
@@ -313,8 +320,10 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	LPD3DXBUFFER pErr = NULL;
 	DWORD dwShaderFlags = 0;
 
-	char FN[256];
-	sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
+	WCHAR FN[256];
+	
+	//sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
+	wsprintf(FN, TEXT("..\\Shaders\\Vertex%s"), pShader->m_FileName);
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
@@ -328,7 +337,8 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pCode->Release();
 	pCode = NULL;
 
-	sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
+	//sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
+	wsprintf(FN, TEXT("..\\Shaders\\Pixel%s"), pShader->m_FileName);
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
@@ -383,8 +393,29 @@ RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned i
 	D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage], GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
 	if(D3D_OK != (DXTex->m_pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
 		return NULL;
+	DXRT->m_SizeX = Width;
+	DXRT->m_SizeY = Height;
 	return DXRT;
 }
+
+RTextureBuffer* CDirectXDriver::CreateTextureBuffer(unsigned int Width, unsigned int Height)
+{
+	RDXTextureBuffer* DXTex = new RDXTextureBuffer();	
+	D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage_Dynamic], GPixelFormats[PixelFormat_A8R8G8B8], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
+	DXTex->Width = Width;
+	DXTex->Height = Height;
+	return DXTex;
+}
+
+RTextureBuffer* CDirectXDriver::CreateFontBuffer(unsigned int Width, unsigned int Height)
+{
+	RDXFontBuffer* DXTex = new RDXFontBuffer();	
+	D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage_Dynamic], GPixelFormats[PixelFormat_A8R8G8B8], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
+	DXTex->Width = Width;
+	DXTex->Height = Height;
+	return DXTex;
+}
+
 
 RRenderTarget* CDirectXDriver::GetBackBuffer()
 {	
@@ -412,25 +443,26 @@ bool CDirectXDriver::SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer)
 
 bool CDirectXDriver::SetVertexDeclaration(unsigned long Type)
 {
-	D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
-	unsigned long FVF = 0;
-	unsigned int TexCount = 0;
-
-	if(Type & VertexType_Position)
+	if(!m_Declarations[Type])
 	{
-		FVF |= D3DFVF_XYZ;
-	}
-	if(Type & VertexType_UV)
-	{
-		FVF |= D3DFVF_TEX1;
-		FVF |= D3DFVF_TEXCOORDSIZE2(TexCount++);
-	}
+		D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
+		unsigned long FVF = 0;
+		unsigned int TexCount = 0;
 
-	IDirect3DVertexDeclaration9* pDecl;
-	D3DXDeclaratorFromFVF(FVF, Decl);
-	GetDevice()->CreateVertexDeclaration(Decl, &pDecl);
-	GetDevice()->SetVertexDeclaration(pDecl);
-	pDecl->Release();
+		if(Type & VertexType_Position)
+		{
+			FVF |= D3DFVF_XYZ;
+		}
+		if(Type & VertexType_UV)
+		{
+			FVF |= D3DFVF_TEX1;
+			FVF |= D3DFVF_TEXCOORDSIZE2(TexCount++);
+		}
+
+		D3DXDeclaratorFromFVF(FVF, Decl);
+		GetDevice()->CreateVertexDeclaration(Decl, &m_Declarations[Type]);
+	}
+	GetDevice()->SetVertexDeclaration(m_Declarations[Type]);
 	return true;
 }
 

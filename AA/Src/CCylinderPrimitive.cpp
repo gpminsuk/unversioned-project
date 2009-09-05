@@ -3,11 +3,12 @@
 
 #include "RResource.h"
 
-TCylinderPrimitive* CylinderPrimitive;
+TCylinderPrimitive* GCylinderPrimitive;
 
 CCylinderPrimitive::CCylinderPrimitive(void)
 {
-	Primitives.AddItem(CylinderPrimitive);
+	RenderType = RenderType_Line;
+	Primitives.AddItem(GCylinderPrimitive);
 }
 
 CCylinderPrimitive::~CCylinderPrimitive(void)

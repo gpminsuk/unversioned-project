@@ -25,4 +25,8 @@ public:
 	virtual void Tick(unsigned long dTime);		//업데이트	
 	virtual void PhysicsTick(unsigned long dTime);
 	virtual void UpdateTransform();
+
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
+	virtual void InputChar();
 };

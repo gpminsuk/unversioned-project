@@ -2,6 +2,8 @@
 #include "CCamera.h"
 #include "CWindowApp.h"
 
+#include "BThing.h"
+
 CCamera::CCamera(void)
 :	m_CameraMode(Thrid_Person),
 	m_LookAt(0.0f,0.0f,0.0f),
@@ -15,7 +17,7 @@ CCamera::CCamera(void)
 	//m_Location.y = m_Distance;
 	//m_Location.z = m_Distance;
 
-	m_CameraMode = Free_Mode;
+	m_CameraMode = First_Person;
 }
 
 CCamera::~CCamera(void)
@@ -28,6 +30,21 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 	switch(m_CameraMode)
 	{
 	case First_Person:
+		{
+			switch(Event)
+			{
+			case MOUSE_Move:
+				{
+					float dY = (Param.dY/100.0f), dX = (Param.dX/100.0f);
+					if(m_Pi + dY < (MATH_PI/2.0f) && (m_Pi + dY) > -(MATH_PI/2.0f))
+						m_Pi += dY;
+					m_Theta += dX;
+					GApp->SetMousePos(0.5f, 0.5f, true);
+				}
+				break;
+			}
+		}
+		break;
 	case Thrid_Person:
 		{
 			switch(Event)
@@ -87,6 +104,17 @@ void CCamera::Tick(unsigned long  dTime)
 	switch(m_CameraMode)
 	{
 	case First_Person:
+		{
+			if(m_Subject)
+				m_Location = m_Subject->m_Location + TVector3(0.0f,0.6f,0.0f);
+
+			m_LookAt.x = COSINE(m_Pi)*COSINE(m_Theta)*m_Distance;
+			m_LookAt.z = COSINE(m_Pi)*SINE(m_Theta)*m_Distance;
+			m_LookAt.y = SINE(m_Pi)*m_Distance;
+
+			m_LookAt += m_Location;
+		}
+		break;
 	case Thrid_Person:
 		{
 			if(m_Subject)
@@ -103,13 +131,13 @@ void CCamera::Tick(unsigned long  dTime)
 	case Free_Mode:
 		{
 			if(GKeyMap['W'])
-				m_Location += (m_LookAt - m_Location).Normalize()/100000.0f;
+				m_Location += (m_LookAt - m_Location).Normalize()/10000.0f;
 			if(GKeyMap['S'])
-				m_Location -= (m_LookAt - m_Location).Normalize()/100000.0f;
+				m_Location -= (m_LookAt - m_Location).Normalize()/10000.0f;
 			if(GKeyMap['A'])
-				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up)/100000.0f;
+				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up)/10000.0f;
 			if(GKeyMap['D'])
-				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up)/100000.0f;
+				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up)/10000.0f;
 
 			m_LookAt.x = COSINE(m_Pi)*COSINE(m_Theta)*m_Distance;
 			m_LookAt.z = COSINE(m_Pi)*SINE(m_Theta)*m_Distance;
@@ -122,18 +150,13 @@ void CCamera::Tick(unsigned long  dTime)
 	m_bIsUpdated = false;
 }
 
-void CCamera::PhysicsTick(unsigned long dTime)
-{
-
-}
-
 bool CCamera::ShouldUpdate()
 {
 	switch(m_CameraMode)
 	{
 	case First_Person:
 	case Thrid_Person:
-		return m_bIsUpdated;// || (m_Subject)?false:m_Subject->m_bIsUpdated;//:false;
+		return m_bIsUpdated || (!m_Subject)?false:m_Subject->m_bIsUpdated;
 	case Free_Mode1:
 	case Free_Mode:
 		return m_bIsUpdated || GKeyMap['W'] || GKeyMap['S'] || GKeyMap['A'] || GKeyMap['D'];

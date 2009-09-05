@@ -7,6 +7,7 @@ TBoxPrimitive* BoxPrimitive;
 
 CBoxPrimitive::CBoxPrimitive(void)
 {
+	RenderType = RenderType_Line;
 	Primitives.AddItem(BoxPrimitive);
 }
 
@@ -38,6 +39,41 @@ TBoxPrimitive::TBoxPrimitive()
 	};
 
 	pVB->nVertexStride = sizeof(VD);
+	
+	pVB->nVertices = 24;
+	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
+	
+	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+
+	Vertex[0].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+	Vertex[1].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[2].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[3].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
+	Vertex[4].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
+	Vertex[5].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
+	Vertex[6].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
+	Vertex[7].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+
+	Vertex[8].Pos =  TVector3(-1.0f,-1.0f, 1.0f);
+	Vertex[9].Pos =  TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[10].Pos = TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[11].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+	Vertex[12].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+	Vertex[13].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+	Vertex[14].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+	Vertex[15].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+
+	Vertex[16].Pos = TVector3(-1.0f,-1.0f,-1.0f);
+	Vertex[17].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+	Vertex[18].Pos = TVector3(-1.0f, 1.0f,-1.0f);
+	Vertex[19].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+	Vertex[20].Pos = TVector3( 1.0f,-1.0f,-1.0f);
+	Vertex[21].Pos = TVector3( 1.0f,-1.0f, 1.0f);
+	Vertex[22].Pos = TVector3( 1.0f, 1.0f,-1.0f);
+	Vertex[23].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+
+	pIB->nIndices = 0;
+	/*
 	pVB->nVertices = 24;
 	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 
@@ -83,7 +119,7 @@ TBoxPrimitive::TBoxPrimitive()
 	Index[4] = TIndex16(8,10,11);	Index[5] = TIndex16(8,11,9);
 	Index[6] = TIndex16(12,14,15);	Index[7] = TIndex16(12,15,13);
 	Index[8] = TIndex16(16,18,19);	Index[9] = TIndex16(16,19,17);
-	Index[10] = TIndex16(20,22,23);	Index[11] = TIndex16(20,23,21);
+	Index[10] = TIndex16(20,22,23);	Index[11] = TIndex16(20,23,21);*/
 }
 
 void CBoxPrimitive::Render(TBatch *Batch)

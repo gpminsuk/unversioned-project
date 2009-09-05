@@ -182,6 +182,7 @@ CTerrainPrimitive::CTerrainPrimitive(void)
 	NumPatchY(1),
 	MaxTessellationLevel(16)
 {
+	RenderType = RenderType_Opaque;
 }
 
 CTerrainPrimitive::~CTerrainPrimitive(void)

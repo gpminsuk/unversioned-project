@@ -33,6 +33,15 @@ public:
 	virtual ~RDXTextureBuffer();
 
 	struct IDirect3DTexture9* m_pTexture;
+
+	virtual TLockedRect Lock();
+	virtual bool Unlock();
+};
+
+class RDXFontBuffer : public RDXTextureBuffer
+{
+public:
+	TString String;
 };
 
 class RDXVideoMemoryVertexBuffer : public RVideoMemoryVertexBuffer

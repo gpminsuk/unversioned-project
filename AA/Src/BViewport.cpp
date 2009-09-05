@@ -21,11 +21,11 @@ void BViewport::SortTemplates()
 {
 }
 
-void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
+void BViewport::Render(BPrimitive* pTemplate)
 {
-	switch(RenderType)
+	switch(pTemplate->RenderType)
 	{
-	case RT_OPAQUE:
+	case RenderType_Opaque:
 		{
 			m_OpaquePrimitives.AddItem(pTemplate);
 			m_Batches.m_pTemplates.AddItem(pTemplate);
@@ -34,7 +34,7 @@ void BViewport::Render(BPrimitive* pTemplate, E_PrimitiveType RenderType)
 			m_Batches.RenderType = PrimitiveType_TriangleList;
 		}
 		break;
-	case RT_LINE:
+	case RenderType_Line:
 		{
 			m_LineBatch.m_pTemplates.AddItem(pTemplate);
 			BPrimitive* Prim = pTemplate;

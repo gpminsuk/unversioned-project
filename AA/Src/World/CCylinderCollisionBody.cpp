@@ -22,7 +22,7 @@ CCylinderCollisionBody::~CCylinderCollisionBody()
 	Primitives.Clear();
 }
 
-TVector3 CCylinderCollisionBody::LineCheck(TVector3 Start, TVector3 End, TVector3 Extent)
+TVector3 CCylinderCollisionBody::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent)
 {
 	return TVector3(Owner->m_Location.x, 0, Owner->m_Location.z);
 }

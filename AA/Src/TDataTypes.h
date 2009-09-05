@@ -74,6 +74,16 @@ class TString
 {
 public:
 	char Str[1024];
+
+	bool operator ==(TString& _Str)
+	{
+		return !strcmp(Str,_Str.Str);
+	}
+
+	void operator =(TString& _Str)
+	{
+		memcpy(Str, _Str.Str, 1024);
+	}
 };
 
 class TIndex16
@@ -110,6 +120,12 @@ public:
 	TVector2() : x(0), y(0) {}
 	TVector2(float x1, float y1) : x(x1), y(y1) {}
 	TVector2(const TVector2& v) : x(v.x), y(v.y) {}
+
+	TVector2& operator-= (TVector2& v) { x -= v.x; y -= v.y; return *this; }
+	TVector2& operator*= (TVector2& v) { x *= v.x; y *= v.y; return *this; }
+
+	TVector2& operator-= (float f) { x -= f; y -= f; return *this; }
+	TVector2& operator*= (float f) { x *= f; y *= f; return *this; }
 
 	float x;
 	float y;

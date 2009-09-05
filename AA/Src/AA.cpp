@@ -7,7 +7,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//_CrtSetBreakAlloc(2357);
+	//_CrtSetBreakAlloc(1010);
 	BApplication *app = new CWindowApp();
 	if(app->CreateApp())
 		app->Do();

@@ -22,7 +22,7 @@ CHeightFieldCollisionBody::~CHeightFieldCollisionBody()
 	Primitives.Clear();
 }
 
-TVector3 CHeightFieldCollisionBody::LineCheck(TVector3 Start, TVector3 End, TVector3 Extent)
+TVector3 CHeightFieldCollisionBody::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent)
 {
-	return TVector3(Owner->m_Location.x, 0, Owner->m_Location.z);
+	return TVector3(End.x, (End.y<0)?0:End.y, End.z);
 }

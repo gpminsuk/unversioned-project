@@ -23,7 +23,7 @@ BThing::~BThing(void)
 	CollisionBodies.Clear();
 }
 
-TVector3 BThing::LineCheck(TVector3 Start, TVector3 End, TVector3 Extent)
+TVector3 BThing::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent)
 {
 	TArray<TVector3> HitPositions;
 	TVector3 HitPosition;

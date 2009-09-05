@@ -4,6 +4,13 @@
 
 #include "TDataTypes.h"
 
+enum ERenderType
+{
+	RenderType_Opaque,
+	RenderType_Translucent,
+	RenderType_Line,
+};
+
 class TPrimitive
 {
 public:
@@ -32,7 +39,10 @@ public:
 		short BatchNum;
 		short SlotNum;
 	};
+
 	TBatchInfo BatchInfo;
+
+	enum ERenderType RenderType;
 
 	virtual void Render(TBatch *Batch) = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;

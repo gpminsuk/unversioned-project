@@ -19,7 +19,7 @@ public:
 	virtual bool SetParameter(BViewport* vp) = 0;
 	virtual bool EndShader() = 0;
 
-	char m_FileName[256];
+	wchar_t m_FileName[256];
 protected:
 };
 
@@ -181,6 +181,12 @@ class RTextureBuffer
 public:
 	RTextureBuffer() {}
 	virtual ~RTextureBuffer() {}
+
+	unsigned int Width;
+	unsigned int Height;
+
+	virtual struct TLockedRect Lock() = 0;
+	virtual bool Unlock() = 0;
 };
 
 class RTextureBufferTable
@@ -202,6 +208,9 @@ public:
 	virtual ~RRenderTarget() {}
 
 	RTextureBuffer* m_pTexture;
+
+	unsigned int m_SizeX;
+	unsigned int m_SizeY;
 
 	virtual bool Release() = 0;
 };

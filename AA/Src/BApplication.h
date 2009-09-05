@@ -7,6 +7,7 @@ class BApplication
 {
 public:
 	BApplication(void);
+	virtual ~BApplication();
 
 	BRenderer *m_pRenderer;
 

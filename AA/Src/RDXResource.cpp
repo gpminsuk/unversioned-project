@@ -68,8 +68,6 @@ RDXRenderTarget::RDXRenderTarget()
 
 RDXRenderTarget::~RDXRenderTarget()
 {
-	if(m_pRTSurface)
-		m_pRTSurface->Release();
 	delete m_pTexture;
 }
 
@@ -77,6 +75,22 @@ RDXTextureBuffer::~RDXTextureBuffer()
 {
 	if(m_pTexture)
 		m_pTexture->Release();
+}
+
+TLockedRect RDXTextureBuffer::Lock()
+{
+	TLockedRect Rect;
+	D3DLOCKED_RECT DXRect;
+	m_pTexture->LockRect(0, &DXRect, NULL, D3DLOCK_DISCARD);
+	Rect.pBits = DXRect.pBits;
+	Rect.Pitch = DXRect.Pitch;
+	return Rect;
+}
+
+bool RDXTextureBuffer::Unlock()
+{
+	m_pTexture->UnlockRect(0);
+	return true;
 }
 
 void RDXDynamicPrimitiveBuffer::Release()

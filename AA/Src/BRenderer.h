@@ -5,6 +5,8 @@
 #include "RResource.h"
 #include "TDataTypes.h"
 
+#define FPS_COUNTER_NUMBER		50
+
 #pragma comment(lib,"winmm.lib")
 
 class BViewport;
@@ -40,12 +42,13 @@ protected:
 	class BOpaqueBasePass*	m_OpaqueBasePass;
 	class BRTRenderPass*	m_BaseRTRenderPass;
 	class BDrawLinePass*	m_DrawLinePass;	
+	class BDrawFontPass*	m_DrawFontPass;
 
 	BApplication* m_pApp;
 	RDynamicPrimitiveBuffer* m_pBuffer;
 	int m_nViewportCount;
 
-	DWORD m_dFrameTime[100];
+	DWORD m_dFrameTime[FPS_COUNTER_NUMBER];
 	int m_iFTimeIdx;
-	float m_fFPS;
+	DWORD m_fFPS;
 };

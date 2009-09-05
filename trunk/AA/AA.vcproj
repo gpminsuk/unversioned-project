@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Src\World;.\Src;.\Src\Temporary"
+				AdditionalIncludeDirectories=".\Src\World;.\Src;.\Src\Temporary;&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,6 +64,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -185,6 +188,10 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
+					RelativePath="..\Shaders\PixelFontShader.fx"
+					>
+				</File>
+				<File
 					RelativePath="..\Shaders\PixelLineShader.fx"
 					>
 				</File>
@@ -194,6 +201,10 @@
 				</File>
 				<File
 					RelativePath="..\Shaders\PixelShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\Shaders\VertexFontShader.fx"
 					>
 				</File>
 				<File
@@ -292,6 +303,14 @@
 					<Filter
 						Name="ShaderPass"
 						>
+						<File
+							RelativePath=".\Src\BDrawFontPass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BDrawFontPass.h"
+							>
+						</File>
 						<File
 							RelativePath=".\Src\BDrawLinePass.cpp"
 							>
@@ -562,6 +581,10 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Thing"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="U"
@@ -572,6 +595,22 @@
 				</File>
 				<File
 					RelativePath=".\Src\World\UWorld.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="External"
+			>
+			<Filter
+				Name="FreeTypeFont"
+				>
+				<File
+					RelativePath=".\Src\UFreeTypeDrawer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\UFreeTypeDrawer.h"
 					>
 				</File>
 			</Filter>

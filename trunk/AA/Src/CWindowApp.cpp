@@ -37,8 +37,8 @@ bool CWindowApp::CreateApp()
 
 	RegisterClassEx(&wcex);
 
-	m_WindowInfo.m_wWidth = 800;
-	m_WindowInfo.m_wHeight = 600;
+	m_WindowInfo.m_wWidth = 1024;
+	m_WindowInfo.m_wHeight = 768;
 	
 	m_WindowInfo.m_hWnd = ::CreateWindow(
 		_T("CLASS NAME"),
@@ -46,8 +46,8 @@ bool CWindowApp::CreateApp()
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		m_WindowInfo.m_wWidth,
-		m_WindowInfo.m_wHeight,
+		m_WindowInfo.m_wWidth + 14,
+		m_WindowInfo.m_wHeight + 36,
 		0,
 		0,
 		m_WindowInfo.m_hInstance,
@@ -98,6 +98,7 @@ bool CWindowApp::DestroyApp()
 void CWindowApp::Do()
 {
 	MSG msg;
+	int Count = 0;
 	while(!bQuit)
 	{
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -113,8 +114,9 @@ void CWindowApp::Do()
 		else
 		{
 			m_pWorld->Tick(0);
-			// TODI : Do World Tick
+			// TODO : Do World Tick
 		}
+		//Sleep(1);
 	}
 	while(!bRenderThreadQuit);
 }
@@ -124,7 +126,7 @@ void CWindowApp::SetMousePos(float X, float Y, bool isRatio)
 	POINT MousePt;
 	if(isRatio)
 	{
-		RECT rt;
+		RECT rt;	
 		::GetClientRect(m_WindowInfo.m_hWnd, &rt);
 		MousePt.x = (LONG)(X*(rt.right - rt.left));
 		MousePt.y = (LONG)(Y*(rt.bottom - rt.top));

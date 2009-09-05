@@ -7,7 +7,7 @@
 
 BOpaqueBasePass::BOpaqueBasePass()
 {
-	RRenderTarget *DXRT = GDriver->CreateRenderTarget(800, 600, PF_A8R8G8B8);
+	RRenderTarget *DXRT = GDriver->CreateRenderTarget(1024, 768, PixelFormat_A8R8G8B8);
 	m_RenderTargets.AddItem(DXRT);
 }
 
@@ -27,6 +27,7 @@ void BOpaqueBasePass::BeginPass(BViewport* Viewport)
 	GDriver->SetFillMode(FillMode_Wireframe);
 	for(unsigned int i=0;i<m_RenderTargets.Size();++i)
 		GDriver->SetRenderTarget(i, m_RenderTargets(i));
+	//GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	GDriver->Clear(true, 0x00000000);
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);

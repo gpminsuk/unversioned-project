@@ -53,7 +53,6 @@ bool UWorld::InitializeWorld()
 	m_pCamera = new CCamera();
 
 	m_pViewport->AddCamera(m_pCamera);
-
 	m_pViewport->SetCurrentCamera(0);
 
 	m_Terrain = new CTerrain(m_pCamera);
@@ -63,10 +62,12 @@ bool UWorld::InitializeWorld()
 	m_Character = new CCharacter();
 	m_Character->SetCharacterPosition(TVector3(10.0f,10.0f,10.0f));
 	m_pViewport->Render(m_Character->Primitives(0));
-	m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0), RT_LINE);
+	m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0));
 	m_pWorldData->AddThing(m_Character);
 
 	GLineBatcher->AddLine(TVector3(0.0f,0.0f,0.0f), TVector3(10.0f,10.0f,10.0f));
+
+	m_pCamera->m_Subject = m_Character;
 	return TRUE;
 }
 
@@ -82,21 +83,24 @@ bool UWorld::DestroyWorld()
 void UWorld::InputChar()
 {
 	m_pViewport->InputChar();
+	m_pWorldData->InputChar();
 }
 
 void UWorld::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
 	m_pViewport->InputKey(Event, Param);
+	m_pWorldData->InputKey(Event, Param);
 }
 
 void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 {
 	m_pViewport->InputMouse(Event, Param);
+	m_pWorldData->InputMouse(Event, Param);
 }
 
-THitInfo UWorld::LineCheck(TVector3 Start, TVector3 End, TVector3 Extent)
+THitInfo UWorld::LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent)
 {
-	return m_pWorldData->LineCheck(Start, End, Extent);
+	return m_pWorldData->LineCheck(SourceThing, Start, End, Extent);
 }
 
 /////////////////////////////////////////////////////// World Octree Structure /////////////////////////////////////////////////
@@ -234,12 +238,13 @@ void TWorldOctree::AddThing(BThing* Thing)
 	AddPrimitive(Thing);
 }
 
-THitInfo TWorldOctree::LineCheck(TVector3 Start, TVector3 End, TVector3 Extent)
+THitInfo TWorldOctree::LineCheck(BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent)
 {
 	THitInfo HitInfo;
 	for(unsigned int i = 0;i<CollisionBodyRootNode->Objects.Size();++i)
 	{
-		HitInfo.HitPosition = CollisionBodyRootNode->Objects(i)->LineCheck(Start, End, Extent);
+		if(CollisionBodyRootNode->Objects(i) !=  SourceThing)
+			HitInfo.HitPosition = CollisionBodyRootNode->Objects(i)->LineCheck(Start, End, Extent);
 	}
 	return HitInfo;
 }
@@ -299,4 +304,28 @@ void TWorldOctree::AddPrimitive(BThing* Thing)
 void TWorldOctree::RemoveThing(BThing* Thing)
 {
 	AllObjects.DeleteItemByVal(Thing);
+}
+
+void TWorldOctree::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
+{
+	for(unsigned int i=0;i<AllObjects.Size();++i)
+	{
+		AllObjects(i)->InputMouse(Event, Param);
+	}
+}
+
+void TWorldOctree::InputKey(EKey_Event Event, TKeyInput_Param& Param)
+{
+	for(unsigned int i=0;i<AllObjects.Size();++i)
+	{
+		AllObjects(i)->InputKey(Event, Param);
+	}
+}
+
+void TWorldOctree::InputChar()
+{
+	for(unsigned int i=0;i<AllObjects.Size();++i)
+	{
+		AllObjects(i)->InputChar();
+	}
 }

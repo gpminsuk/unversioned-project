@@ -7,16 +7,17 @@
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
 #include "BDrawLinePass.h"
+#include "BDrawFontPass.h"
 
 #include "BPrimitive.h"
 #include "BLineBatcher.h"
 
 BRenderer::BRenderer(void)
-:	m_fFPS(0.f),
+:	m_fFPS(0),
 	m_iFTimeIdx(0),
 	m_nViewportCount(0)
 {
-	for(int i=0;i<100;++i)
+	for(int i=0;i<FPS_COUNTER_NUMBER;++i)
 		m_dFrameTime[i] = 0;
 
 	m_nViewportCount = 1;
@@ -24,6 +25,7 @@ BRenderer::BRenderer(void)
 	m_OpaqueBasePass = new BOpaqueBasePass();
 	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
 	m_DrawLinePass = new BDrawLinePass();
+	m_DrawFontPass = new BDrawFontPass();
 
 	LineBatcher = new BLineBatcher();
 }
@@ -38,6 +40,7 @@ BRenderer::~BRenderer()
 		m_RendererViewport.DeleteItem(0);
 	}
 	
+	delete m_DrawFontPass;
 	delete m_DrawLinePass;
 	delete m_OpaqueBasePass;
 	delete m_BaseRTRenderPass;
@@ -98,6 +101,10 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	m_DrawLinePass->BeginPass(Viewport);
 	m_DrawLinePass->DrawPrimitive(LineBatcher);
 	m_DrawLinePass->EndPass();
+
+	m_DrawFontPass->BeginPass(Viewport);
+	m_DrawFontPass->DrawPrimitive(FPS_COUNTER_NUMBER*1000.0f/m_fFPS);
+	m_DrawFontPass->EndPass();
 	return true;
 }
 
@@ -136,13 +143,20 @@ void BRenderer::ThreadSetup()
 
 void BRenderer::ThreadExecute()
 {
-	DWORD dTime;
+	DWORD dTime = timeGetTime();
 	int ddd = 0;
+	int Count = 0;
+	int AccumulatedCount = 0;
 	while(!m_pApp->bQuit)
 	{
+		if(++Count > 896)
+		{
+			WCHAR Str[1024];
+			wsprintf(Str, L"Render Thread = %d \n",(int)(FPS_COUNTER_NUMBER*1000.0f/m_fFPS));
+			OutputDebugString(Str);
+			Count = 0;
+		}
 		FetchViewports();
-		dTime = timeGetTime();
-
 
 		if(GDriver->BeginScene())
 		{
@@ -150,11 +164,15 @@ void BRenderer::ThreadExecute()
 			
 			GDriver->EndScene();
 		}
-		Sleep(1);
+		
 		m_fFPS -= m_dFrameTime[m_iFTimeIdx];
 		m_dFrameTime[m_iFTimeIdx] = timeGetTime() - dTime;
-		m_fFPS += m_dFrameTime[m_iFTimeIdx];
-		if(++m_iFTimeIdx >= 100) m_iFTimeIdx = 0;
+		if(m_dFrameTime[m_iFTimeIdx] != 0)
+		{
+			m_fFPS += m_dFrameTime[m_iFTimeIdx];
+			dTime = timeGetTime();
+		}
+		if(++m_iFTimeIdx >= FPS_COUNTER_NUMBER) m_iFTimeIdx = 0;
 	}
 }
 

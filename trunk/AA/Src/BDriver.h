@@ -10,12 +10,13 @@ enum ETextureUsage
 {
 	TexUsage_RenderTarget,
 	TexUsage_DepthStencil,
+	TexUsage_Dynamic,
 };
 
 enum EPixelFormat
 {
-	PF_A8R8G8B8,
-	PF_D24S8,
+	PixelFormat_A8R8G8B8,
+	PixelFormat_D24S8,
 };
 
 enum EFillMode
@@ -39,6 +40,13 @@ enum EVertexDeclarationType
 {
 	VertexType_Position		= 1,
 	VertexType_UV			= 1 << 1,
+	VertexType_End			= 1 << 2,
+};
+
+struct TLockedRect
+{
+	unsigned int Pitch;
+	void* pBits;
 };
 
 class BDriver
@@ -75,6 +83,8 @@ public:
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader) = 0;
 
 	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage = TexUsage_RenderTarget) = 0;
+	virtual RTextureBuffer* CreateTextureBuffer(unsigned int Width, unsigned int Height) = 0;
+	virtual RTextureBuffer* CreateFontBuffer(unsigned int Width, unsigned int Height) = 0;
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT) = 0;
 

@@ -44,6 +44,8 @@ public:
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);
 
 	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage = TexUsage_RenderTarget);
+	virtual RTextureBuffer* CreateTextureBuffer(unsigned int Width, unsigned int Height);
+	virtual RTextureBuffer* CreateFontBuffer(unsigned int Width, unsigned int Height);
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT);
 
@@ -62,4 +64,5 @@ public:
 private:
 	TWindowInfo*		m_pWindow;
 
+	IDirect3DVertexDeclaration9* m_Declarations[VertexType_End];
 };

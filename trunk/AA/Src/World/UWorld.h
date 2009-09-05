@@ -4,6 +4,8 @@
 #include "TDataTypes.h"
 #include "InputDefine.h"
 
+#include "..\\UFreeTypeDrawer.h"
+
 class AObject;
 
 class BRenderer;
@@ -28,7 +30,11 @@ public:
 	virtual void AddThing(class BThing* Thing) = 0;
 	virtual void RemoveThing(class BThing* Thing) = 0;
 
-	virtual THitInfo LineCheck(TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0)) = 0;
+	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent = TVector3(0,0,0)) = 0;
+
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) = 0;
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) = 0;
+	virtual void InputChar() = 0;
 };
 
 class TWorldOctree : public TWorldStructure
@@ -45,7 +51,11 @@ public:
 	virtual void Tick(unsigned long dTime);
 	virtual void AddThing(class BThing* Thing);
 	virtual void RemoveThing(class BThing* Thing);
-	virtual THitInfo LineCheck(TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
+	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent = TVector3(0,0,0));
+
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
+	virtual void InputChar();
 
 	virtual void AddCollisionBody(class BThing* Thing);
 	virtual void AddPrimitive(class BThing* Thing);
@@ -94,7 +104,7 @@ public:
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 	virtual void InputChar();
 
-	virtual THitInfo LineCheck(TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
+	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
 };
 
 extern UWorld* GWorld;

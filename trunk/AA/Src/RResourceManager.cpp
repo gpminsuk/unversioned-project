@@ -775,24 +775,35 @@ RResourceManager::RResourceManager(void)
 RResourceManager::~RResourceManager(void)
 {
 }
-
+#include <Windows.h>
 bool RResourceManager::LoadResources()
 {
 	//////////////////////////////////// Texture Loading
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer();
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+	
+	pTexBuffer = GDriver->CreateFontBuffer(128,32);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
 	//////////////////////////////////// Shader Loading
 	RDirectXShader *pShader = new RDirectXShader();
-	sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+	wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
 	pShader = new RDirectXShader();
-	sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
+	//sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
+	wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
 	pShader = new RDirectXShader();
-	sprintf_s(pShader->m_FileName, 256, "LineShader.fx");
+	//sprintf_s(pShader->m_FileName, 256, "LineShader.fx");
+	wsprintf(pShader->m_FileName, TEXT("LineShader.fx"));
+	RShaderTable::Shaders.AddItem(pShader);
+
+	pShader = new RDirectXShader();
+	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+	wsprintf(pShader->m_FileName, TEXT("FontShader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
 	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
@@ -804,8 +815,8 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Basic Geometry Creating
 	extern TBoxPrimitive* BoxPrimitive;
 	BoxPrimitive = new TBoxPrimitive();
-	extern TCylinderPrimitive* CylinderPrimitive;
-	CylinderPrimitive = new TCylinderPrimitive();
+	extern TCylinderPrimitive* GCylinderPrimitive;
+	GCylinderPrimitive = new TCylinderPrimitive();
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
@@ -819,8 +830,8 @@ bool RResourceManager::ReleaseAllResources()
 	/////////////////////////////////////////////////////// Basic Geometry Releasing
 	extern TBoxPrimitive* BoxPrimitive;
 	delete BoxPrimitive;
-	extern TCylinderPrimitive* CylinderPrimitive;
-	delete CylinderPrimitive;
+	extern TCylinderPrimitive* GCylinderPrimitive;
+	delete GCylinderPrimitive;
 	/////////////////////////////////////////////////////// Vertex Buffer Releasing
 	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
 	{

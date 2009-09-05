@@ -19,3 +19,5 @@ public:
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();
 };
+
+extern TCylinderPrimitive* GCylinderPrimitive;

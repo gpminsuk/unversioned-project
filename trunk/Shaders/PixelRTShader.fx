@@ -5,6 +5,9 @@ sampler samp = sampler_state
     MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
+    AddressU  = CLAMP;
+    AddressV  = CLAMP;
+    AddressW  = CLAMP;    
 };
 
 void PS(float4 Color : COLOR0,

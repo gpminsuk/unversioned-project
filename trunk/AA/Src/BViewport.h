@@ -5,13 +5,6 @@
 class BPrimitive;
 class BLight;
 
-enum E_PrimitiveType
-{
-	RT_OPAQUE = 0,
-	RT_TRANSLUCENT = 1,
-	RT_LINE = 2,
-};
-
 enum E_SceneType
 {
 	Scene_World			= 1 << 0,
@@ -42,7 +35,7 @@ public:
 	unsigned long VisibleScenes;
 
 	void Clear();
-	void Render(BPrimitive* pTemplate, E_PrimitiveType RenderType = RT_OPAQUE);
+	void Render(BPrimitive* pTemplate);
 	
 	void SortTemplates();
 private:

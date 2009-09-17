@@ -2,21 +2,28 @@
 #include "CMaderApp.h"
 #include "..\AA\Src\BRenderer.h"
 #include "..\AA\Src\CDirectXDriver.h"
+#include "..\AA\Src\RResourceManager.h"
+
+#define generic GENERIC
 #include "..\AA\Src\World\UWorld.h"
+#undef GENERIC
 
 bool CMaderApp::CreateMaderApp()
 {
-	m_pRenderer = new BRenderer();
-
 	GDriver = new CDirectXDriver(&WindowInfo);
-	GDriver->CreateDriver();
+	if(!GDriver->CreateDriver())
+		return false;
+
+	RResourceManager::LoadResources();
+
+	m_pRenderer = new BRenderer();		
 
 	m_pRenderer->SetApplication(this);
 
-	m_pRenderer->Start();
-
 	m_pWorld = new UWorld(m_pRenderer);
 	m_pWorld->InitializeWorld();
+
+	m_pRenderer->Start();
 	return true;
 }
 
@@ -30,7 +37,7 @@ void CMaderApp::Do()
 			if(msg.message == WM_QUIT)
 				break;
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);			
+			DispatchMessage(&msg);
 		}
 		else
 		{

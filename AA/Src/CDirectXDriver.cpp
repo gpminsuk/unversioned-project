@@ -11,6 +11,7 @@
 D3DFORMAT GPixelFormats[] = 
 {
 	D3DFMT_A8R8G8B8,
+	D3DFMT_A16B16G16R16,
 	D3DFMT_D24S8
 };
 
@@ -311,10 +312,6 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	if(!pDXShader)
 		return false;
 	HRESULT hr;
-	D3DVERTEXELEMENT9 Decl[MAX_FVF_DECL_SIZE];
-
-	D3DXDeclaratorFromFVF(D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0), Decl);
-	GetDevice()->CreateVertexDeclaration(Decl, &pDXShader->m_pDecl);
 
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
@@ -457,6 +454,10 @@ bool CDirectXDriver::SetVertexDeclaration(unsigned long Type)
 		{
 			FVF |= D3DFVF_TEX1;
 			FVF |= D3DFVF_TEXCOORDSIZE2(TexCount++);
+		}
+		if(Type & VertexType_Normal)
+		{
+			FVF |= D3DFVF_NORMAL;
 		}
 
 		D3DXDeclaratorFromFVF(FVF, Decl);

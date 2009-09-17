@@ -10,7 +10,6 @@ bool RDirectXShader::BeginShader()
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
 	if(!Driver)
 		return false;
-	Driver->GetDevice()->SetVertexDeclaration(m_pDecl);
 	Driver->GetDevice()->SetVertexShader(m_pVertexShader);
 	Driver->GetDevice()->SetPixelShader(m_pPixelShader);
 	return true;
@@ -25,6 +24,7 @@ bool RDirectXShader::SetParameter(BViewport* vp)
 	D3DXMATRIXA16 Proj;
 	D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI/4, (float)vp->m_Width/(float)vp->m_Height, 0.0001f, 10000.0f);
 	D3DXMATRIXA16 View;
+	D3DXMatrixIdentity(&View);
 	View._11 = vp->m_ViewMatrix._11; View._21 = vp->m_ViewMatrix._21; View._31 = vp->m_ViewMatrix._31; View._41 = vp->m_ViewMatrix._41;
 	View._12 = vp->m_ViewMatrix._12; View._22 = vp->m_ViewMatrix._22; View._32 = vp->m_ViewMatrix._32; View._42 = vp->m_ViewMatrix._42;
 	View._13 = vp->m_ViewMatrix._13; View._23 = vp->m_ViewMatrix._23; View._33 = vp->m_ViewMatrix._33; View._43 = vp->m_ViewMatrix._43;
@@ -35,7 +35,9 @@ bool RDirectXShader::SetParameter(BViewport* vp)
 
 	D3DXMatrixTranspose( &ViewProj, &ViewProj );
 
+	float EyeVector[3] = {0,5,0};
 	Driver->GetDevice()->SetVertexShaderConstantF(0, (float*)&ViewProj, 4);
+	Driver->GetDevice()->SetPixelShaderConstantF(0, (float*)EyeVector, 1);
 	return true;
 }
 

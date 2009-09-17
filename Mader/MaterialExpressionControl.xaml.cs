@@ -59,7 +59,7 @@ namespace Mader
 
         public void CompositionTarget_Rendering(object Sender, EventArgs e)
         {
-            RenderingEventArgs args = (RenderingEventArgs)e;
+            /*RenderingEventArgs args = (RenderingEventArgs)e;
 
             // It's possible for Rendering to call back twice in the same frame 
             // so only render when we haven't already rendered in this frame.
@@ -79,7 +79,7 @@ namespace Mader
 
                     _lastRender = args.RenderingTime;
                 }
-            }
+            }*/
         }
 
         public void SetTransform(Point Translate, float Scale)

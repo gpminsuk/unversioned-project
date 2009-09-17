@@ -24,7 +24,7 @@ CCameraViewport::~CCameraViewport(void)
 void CCameraViewport::UpdateCameraViewport()
 {
 	CCamera* CurCamera = GetCurrentCamera();
-	if(CurCamera && CurCamera->ShouldUpdate())
+	if(CurCamera && CurCamera->ShouldUpdate() || true)
 	{
 		CurCamera->Tick(0);
 		//임시코드

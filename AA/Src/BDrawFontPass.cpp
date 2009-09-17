@@ -25,6 +25,8 @@ void BDrawFontPass::BeginPass(BViewport* Viewport)
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);
+
+	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
 }
 
 void BDrawFontPass::EndPass()
@@ -38,7 +40,6 @@ void BDrawFontPass::DrawPrimitive(float fps)
 	TString Str;
 	sprintf_s(Str.Str, 1024, "FPS = %.3f", fps);
 	GFontDrawer->DrawString(Str, RTextureBufferTable::TextureBuffers(1));
-
 	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
 
 	struct VD
@@ -76,6 +77,5 @@ void BDrawFontPass::DrawPrimitive(float fps)
 	Indices[0] = TIndex16(0, 1, 2);
 	Indices[1] = TIndex16(1, 3, 2);
 
-	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
 	GDriver->DrawIndexedPrimitiveUP(PrimitiveType_TriangleList, 4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
 }

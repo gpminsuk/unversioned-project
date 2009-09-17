@@ -806,6 +806,11 @@ bool RResourceManager::LoadResources()
 	wsprintf(pShader->m_FileName, TEXT("FontShader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
+	pShader = new RDirectXShader();
+	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+	wsprintf(pShader->m_FileName, TEXT("ParticleShader.fx"));
+	RShaderTable::Shaders.AddItem(pShader);
+
 	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
 	{
 		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
@@ -816,7 +821,9 @@ bool RResourceManager::LoadResources()
 	extern TBoxPrimitive* BoxPrimitive;
 	BoxPrimitive = new TBoxPrimitive();
 	extern TCylinderPrimitive* GCylinderPrimitive;
-	GCylinderPrimitive = new TCylinderPrimitive();
+	GCylinderPrimitive = new TCylinderPrimitive(RenderType_Opaque);
+	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
+	GCylinderPrimitiveWireFrame= new TCylinderPrimitive(RenderType_Line);
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
@@ -832,6 +839,8 @@ bool RResourceManager::ReleaseAllResources()
 	delete BoxPrimitive;
 	extern TCylinderPrimitive* GCylinderPrimitive;
 	delete GCylinderPrimitive;
+	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
+	delete GCylinderPrimitiveWireFrame;
 	/////////////////////////////////////////////////////// Vertex Buffer Releasing
 	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
 	{

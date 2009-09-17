@@ -43,6 +43,7 @@ protected:
 	class BRTRenderPass*	m_BaseRTRenderPass;
 	class BDrawLinePass*	m_DrawLinePass;	
 	class BDrawFontPass*	m_DrawFontPass;
+	class BParticleRenderPass* m_ParticleRenderPass;
 
 	BApplication* m_pApp;
 	RDynamicPrimitiveBuffer* m_pBuffer;

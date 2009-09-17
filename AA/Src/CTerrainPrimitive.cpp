@@ -206,15 +206,10 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 
 			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 
-			pVB->Declaration = new VertexDeclaration[2];
-			pVB->Declaration[0].Offset = 0;
-			pVB->Declaration[0].Type = DECLTYPE_FLOAT3;	// Position
-			pVB->Declaration[1].Offset = 12;
-			pVB->Declaration[1].Type = DECLTYPE_FLOAT2;	// UV
-
 			struct VD
 			{
 				TVector3 Pos;
+				TVector3 Normal;
 				TVector2 UV;
 			};
 
@@ -245,12 +240,19 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 				{
 					Vertex[(i*SizeX + j)*4 + 0].Pos = TVector3((float)j	   ,0.0f		,(float)i);
 					Vertex[(i*SizeX + j)*4 + 0].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 0].Normal = TVector3(0.0f,1.0f,0.0f);
+
 					Vertex[(i*SizeX + j)*4 + 1].Pos = TVector3((float)j + 1,0.0f		,(float)i);
 					Vertex[(i*SizeX + j)*4 + 1].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 1].Normal = TVector3(0.0f,1.0f,0.0f);
+
 					Vertex[(i*SizeX + j)*4 + 2].Pos = TVector3((float)j    ,0.0f		,(float)i + 1);
 					Vertex[(i*SizeX + j)*4 + 2].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 2].Normal = TVector3(0.0f,1.0f,0.0f);
+
 					Vertex[(i*SizeX + j)*4 + 3].Pos = TVector3((float)j + 1,0.0f		,(float)i + 1);
 					Vertex[(i*SizeX + j)*4 + 3].UV = TVector2(0.0f,0.0f);
+					Vertex[(i*SizeX + j)*4 + 3].Normal = TVector3(0.0f,1.0f,0.0f);
 				}
 			}
 

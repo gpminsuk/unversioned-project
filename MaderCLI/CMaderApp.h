@@ -12,5 +12,9 @@ public:
 	TWindowInfo WindowInfo;
 
 	bool CreateMaderApp();
-	void Do();
+
+	virtual bool CreateApp() { return true; };
+	virtual void Do();
+	virtual bool DestroyApp() { return true; };
+	virtual void SetMousePos(float X, float Y, bool isRatio = false) {};
 };

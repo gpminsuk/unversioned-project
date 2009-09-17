@@ -8,6 +8,7 @@ enum ERenderType
 {
 	RenderType_Opaque,
 	RenderType_Translucent,
+	RenderType_Particle,
 	RenderType_Line,
 };
 

@@ -4,80 +4,129 @@
 #include "RResource.h"
 
 TCylinderPrimitive* GCylinderPrimitive;
+TCylinderPrimitive* GCylinderPrimitiveWireFrame;
 
-CCylinderPrimitive::CCylinderPrimitive(void)
+CCylinderPrimitive::CCylinderPrimitive(ERenderType _RenderType)
 {
-	RenderType = RenderType_Line;
-	Primitives.AddItem(GCylinderPrimitive);
+	RenderType = _RenderType;
+	switch(RenderType)
+	{
+	case RenderType_Opaque:
+	case RenderType_Translucent:
+		Primitives.AddItem(GCylinderPrimitive);
+		break;
+	case RenderType_Line:
+		Primitives.AddItem(GCylinderPrimitiveWireFrame);
+		break;
+	}
 }
 
 CCylinderPrimitive::~CCylinderPrimitive(void)
 {
 }
 
-TCylinderPrimitive::TCylinderPrimitive()
+TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 {
-	pBuffer = new RStaticPrimitiveBuffer();
-
-	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
-	pBuffer->m_pVB = pVB;
-	pBuffer->m_pIB = pIB;
-
-	pVB->Declaration = new VertexDeclaration[2];
-	pVB->Declaration[0].Offset = 0;
-	pVB->Declaration[0].Type = DECLTYPE_FLOAT3;	// Position
-	pVB->Declaration[1].Offset = 12;
-	pVB->Declaration[1].Type = DECLTYPE_FLOAT2;	// UV
-
-	struct VD
+	switch(_RenderType)
 	{
-		TVector3 Pos;
-		TVector2 UV;
-	};
-
-	int Smoothness = 24;
-
-	pVB->nVertexStride = sizeof(VD);
-	pVB->nVertices = Smoothness*6;
-	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
-
-	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
-
-	float Theta = 0.0f;
-	for(int i=0;i<pVB->nVertices/6;++i)
-	{
-		Vertex[i*6+0].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
-		Vertex[i*6+1].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
-		Vertex[i*6+2].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
-		Vertex[i*6+4].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
-		Theta += (MATH_PI*2.0f)/((float)pVB->nVertices/6.0f);
-		Vertex[i*6+3].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
-		Vertex[i*6+5].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
-	}
-
-	pIB->nIndices = 0;
-	/*
-	pIB->pIndices = new TIndex16[pIB->nIndices];
-
-	TIndex16 *Index = pIB->pIndices;
-	for(int i=0;i<pIB->nIndices/2;++i)
-	{
-		if(i == (pIB->nIndices/2)-1)
+	case RenderType_Line:
 		{
-			//Index[i*2+0] = TIndex16(i*2,0,0);
-			//Index[i*2+1] = TIndex16((i*2)+1,1,0);
+			pBuffer = new RStaticPrimitiveBuffer();
+
+			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
+			RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+			RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
+			pBuffer->m_pVB = pVB;
+			pBuffer->m_pIB = pIB;
+
+			struct VD
+			{
+				TVector3 Pos;
+			};
+
+			int Smoothness = 24;
+
+			pVB->nVertexStride = sizeof(VD);
+			pVB->nVertices = Smoothness*6;
+			pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
+
+			VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+
+			float Theta = 0.0f;
+			for(int i=0;i<pVB->nVertices/6;++i)
+			{
+				Vertex[i*6+0].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
+				Vertex[i*6+1].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
+				Vertex[i*6+2].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
+				Vertex[i*6+4].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
+				Theta += (MATH_PI*2.0f)/((float)pVB->nVertices/6.0f);
+				Vertex[i*6+3].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
+				Vertex[i*6+5].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
+			}
+
+			pIB->nIndices = 0;
 		}
-		else
+		break;
+	case RenderType_Opaque:
+	case RenderType_Translucent:
 		{
-			//Index[i*2+0] = TIndex16(i*2,(i*2)+2,0);
-			//Index[i*2+1] = TIndex16((i*2)+1,(i*2)+3,0);
+			pBuffer = new RStaticPrimitiveBuffer();
+
+			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
+			RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+			RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
+			pBuffer->m_pVB = pVB;
+			pBuffer->m_pIB = pIB;
+
+			struct VD
+			{
+				TVector3 Pos;
+				TVector3 Normal;
+				TVector2 UV;
+			};
+
+			int Smoothness = 24;
+
+			pVB->nVertexStride = sizeof(VD);
+			pVB->nVertices = Smoothness*10;
+			pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
+
+			VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+
+			float Theta = 0.0f;
+			for(int i=0;i<pVB->nVertices/10;++i)
+			{
+				float NextTheta = Theta + (MATH_PI*2.0f)/((float)pVB->nVertices/10.0f);
+				Vertex[i*10+0].Pos = TVector3(0.0f, 1.0f, 0.0f);									Vertex[i*10+0].Normal = TVector3(0.0f,1.0f,0.0f);				
+				Vertex[i*10+1].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));					Vertex[i*10+1].Normal = TVector3(0.0f,1.0f,0.0f);
+				Vertex[i*10+2].Pos = TVector3(COSINE(NextTheta), 1.0f, SINE(NextTheta));			Vertex[i*10+2].Normal = TVector3(0.0f,1.0f,0.0f);
+
+				Vertex[i*10+3].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));					Vertex[i*10+3].Normal = TVector3(COSINE(Theta),0.0f,SINE(Theta));
+				Vertex[i*10+4].Pos = TVector3(COSINE(NextTheta), 1.0f, SINE(NextTheta));			Vertex[i*10+4].Normal = TVector3(COSINE(NextTheta),0.0f,SINE(NextTheta));
+				Vertex[i*10+5].Pos = TVector3(COSINE(NextTheta), 0.0f, SINE(NextTheta));			Vertex[i*10+5].Normal = TVector3(COSINE(NextTheta),0.0f,SINE(NextTheta));
+				Vertex[i*10+6].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));					Vertex[i*10+6].Normal = TVector3(COSINE(Theta),0.0f,SINE(Theta));
+
+				Vertex[i*10+7].Pos = TVector3(0.0f, 0.0f, 0.0f);									Vertex[i*10+7].Normal = TVector3(0.0f,-1.0f,0.0f);
+				Vertex[i*10+8].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));					Vertex[i*10+8].Normal = TVector3(0.0f,-1.0f,0.0f);
+				Vertex[i*10+9].Pos = TVector3(COSINE(NextTheta), 0.0f, SINE(NextTheta));			Vertex[i*10+9].Normal = TVector3(0.0f,-1.0f,0.0f);
+				Theta = NextTheta;
+			}
+
+			pIB->nIndices = Smoothness*4;
+			pIB->pIndices = new TIndex16[pIB->nIndices];
+
+			for(int i=0;i<pIB->nIndices/4;++i)
+			{
+				pIB->pIndices[i*4+0] = TIndex16(i*10 + 0,i*10 + 2,i*10 + 1);
+				pIB->pIndices[i*4+1] = TIndex16(i*10 + 3,i*10 + 4,i*10 + 5);
+				pIB->pIndices[i*4+2] = TIndex16(i*10 + 3,i*10 + 5,i*10 + 6);
+				pIB->pIndices[i*4+3] = TIndex16(i*10 + 7,i*10 + 8,i*10 + 9);
+			}
 		}
-		//Index[i*2+0] = TIndex16(0,1,2);
-		//Index[i*2+1] = TIndex16(1,3,2);
-	}*/
+		break;
+	}	
 }
 
 void CCylinderPrimitive::Render(TBatch *Batch)

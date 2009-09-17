@@ -21,6 +21,8 @@ void BRTRenderPass::BeginPass(BViewport* Viewport)
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	GDriver->SetTexture(0, m_RenderTarget->m_pTexture);
 	pShader->BeginShader();
+
+	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
 }
 
 void BRTRenderPass::EndPass()
@@ -56,6 +58,5 @@ void BRTRenderPass::DrawPrimitive()
 	Indices[0] = TIndex16(0, 1, 2);
 	Indices[1] = TIndex16(1, 3, 2);
 
-	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
 	GDriver->DrawIndexedPrimitiveUP(PrimitiveType_TriangleList, 4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
 }

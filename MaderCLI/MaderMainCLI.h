@@ -23,7 +23,7 @@ public:
 
 	virtual IntPtr GetBackBuffer()
 	{
-		CDirectXTextureBuffer* pDXTexture = dynamic_cast<CDirectXTextureBuffer*>(m_Application->m_pRenderer->m_pTexture);
+/*		CDirectXTextureBuffer* pDXTexture = dynamic_cast<CDirectXTextureBuffer*>(m_Application->m_pRenderer->m_pTexture);
 		if(!pDXTexture)
 			return (IntPtr)NULL;
 
@@ -44,8 +44,8 @@ public:
 				Bits[i*LRect.Pitch+j] = 255;
 		}
 		IDirect3DSurface9* Surface;
-		TB->pTexture->GetSurfaceLevel(0, &Surface);
-		return (IntPtr)Surface;
+		TB->pTexture->GetSurfaceLevel(0, &Surface);*/
+		return (IntPtr)0;
 	}
 
 	virtual bool CreateMaderApp()

@@ -5,13 +5,13 @@
 class TCylinderPrimitive : public TPrimitive
 {
 public:
-	TCylinderPrimitive();
+	TCylinderPrimitive(ERenderType _RenderType = RenderType_Opaque);
 };
 
 class CCylinderPrimitive : public BPrimitive
 {
 public:
-	CCylinderPrimitive(void);
+	CCylinderPrimitive(ERenderType _RenderType = RenderType_Opaque);
 	virtual ~CCylinderPrimitive(void);
 
 	virtual void Render(TBatch *Batch);

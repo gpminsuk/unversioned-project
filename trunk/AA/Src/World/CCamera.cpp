@@ -5,7 +5,7 @@
 #include "BThing.h"
 
 CCamera::CCamera(void)
-:	m_CameraMode(Thrid_Person),
+:	m_CameraMode(Free_Mode),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
 	m_Distance(10.0f),
@@ -13,11 +13,11 @@ CCamera::CCamera(void)
 	m_Theta(0),
 	m_Subject(0)
 {
-	//m_Location.x = m_Distance;
-	//m_Location.y = m_Distance;
-	//m_Location.z = m_Distance;
+	m_Location.x = 10;
+	m_Location.y = 5;
+	m_Location.z = 10;
 
-	m_CameraMode = First_Person;
+	//m_CameraMode = First_Person;
 }
 
 CCamera::~CCamera(void)
@@ -119,6 +119,8 @@ void CCamera::Tick(unsigned long  dTime)
 		{
 			if(m_Subject)
 				m_LookAt = m_Subject->m_Location;
+			else
+				m_Location = TVector3(0.0f,0.0f,0.0f);
 
 			m_Location.x = COSINE(m_Pi)*COSINE(m_Theta)*m_Distance;			
 			m_Location.z = COSINE(m_Pi)*SINE(m_Theta)*m_Distance;

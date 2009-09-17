@@ -8,6 +8,7 @@
 #include "BRTRenderPass.h"
 #include "BDrawLinePass.h"
 #include "BDrawFontPass.h"
+#include "BParticleRenderPass.h"
 
 #include "BPrimitive.h"
 #include "BLineBatcher.h"
@@ -26,6 +27,7 @@ BRenderer::BRenderer(void)
 	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
 	m_DrawLinePass = new BDrawLinePass();
 	m_DrawFontPass = new BDrawFontPass();
+	m_ParticleRenderPass = new BParticleRenderPass();
 
 	LineBatcher = new BLineBatcher();
 }
@@ -40,6 +42,7 @@ BRenderer::~BRenderer()
 		m_RendererViewport.DeleteItem(0);
 	}
 	
+	delete m_ParticleRenderPass;
 	delete m_DrawFontPass;
 	delete m_DrawLinePass;
 	delete m_OpaqueBasePass;
@@ -73,26 +76,43 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 {
 	Viewport->SortTemplates();
 	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
-	if(!m_pBuffer)
-		return false;
 
 	m_OpaqueBasePass->BeginPass(Viewport);
-	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
-	m_OpaqueBasePass->DrawPrimitive(&Viewport->m_Batches);
+	if(m_pBuffer)
+	{
+		GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
+		m_OpaqueBasePass->DrawPrimitive(&Viewport->m_Batches);
+		GDriver->SetTexture(0, NULL);
 
-	m_pBuffer->Release();
-	delete m_pBuffer;
+		m_pBuffer->Release();
+		delete m_pBuffer;
+	}
+
 
 	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_LineBatch);
-	if(!m_pBuffer)
-		return false;
+	if(m_pBuffer)
+	{
+		m_OpaqueBasePass->DrawPrimitive(&Viewport->m_LineBatch);
 
-	m_OpaqueBasePass->DrawPrimitive(&Viewport->m_LineBatch);
-	GDriver->SetTexture(0, NULL);
+		m_pBuffer->Release();
+		delete m_pBuffer;
+	}
+
 	m_OpaqueBasePass->EndPass();
 
-	m_pBuffer->Release();
-	delete m_pBuffer;
+	m_ParticleRenderPass->BeginPass(Viewport);
+
+	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_ParticleBatch);
+	if(m_pBuffer)
+	{
+		GDriver->SetRenderTarget(0, m_OpaqueBasePass->m_RenderTargets(0));
+		m_ParticleRenderPass->DrawPrimitive(&Viewport->m_ParticleBatch);
+
+		m_pBuffer->Release();
+		delete m_pBuffer;
+	}
+
+	m_ParticleRenderPass->EndPass();
 
 	m_BaseRTRenderPass->BeginPass(Viewport);
 	m_BaseRTRenderPass->DrawPrimitive();

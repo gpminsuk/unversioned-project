@@ -38,6 +38,8 @@ void UFreeTypeFontDrawer::DrawString(TString String, RTextureBuffer *Tex)
 	RDXFontBuffer* DXTex = dynamic_cast<RDXFontBuffer*>(Tex);
 	if(!DXTex)// || DXTex->String == String)
 		return;
+
+	// TODO 매프레임 텍스트 로딩 안해도 되게 캐싱 해야함
 	TLockedRect Rect = DXTex->Lock();
 	int *pColor = (int*)Rect.pBits;
 

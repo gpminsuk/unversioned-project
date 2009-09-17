@@ -25,6 +25,7 @@ public:
 
 	TBatch m_Batches;
 	TBatch m_LineBatch;
+	TBatch m_ParticleBatch;
 
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;

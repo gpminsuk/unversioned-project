@@ -16,6 +16,7 @@ enum ETextureUsage
 enum EPixelFormat
 {
 	PixelFormat_A8R8G8B8,
+	PixelFormat_A16B16G16R16,
 	PixelFormat_D24S8,
 };
 
@@ -40,7 +41,8 @@ enum EVertexDeclarationType
 {
 	VertexType_Position		= 1,
 	VertexType_UV			= 1 << 1,
-	VertexType_End			= 1 << 2,
+	VertexType_Normal		= 1 << 2,
+	VertexType_End			= 1 << 3,
 };
 
 struct TLockedRect

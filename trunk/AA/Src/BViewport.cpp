@@ -42,6 +42,14 @@ void BViewport::Render(BPrimitive* pTemplate)
 			m_LineBatch.RenderType = PrimitiveType_LineList;
 		}
 		break;
+	case RenderType_Particle:
+		{
+			m_ParticleBatch.m_pTemplates.AddItem(pTemplate);
+			BPrimitive* Prim = pTemplate;
+			Prim->Render(&m_ParticleBatch);
+			m_ParticleBatch.RenderType = PrimitiveType_TriangleList;
+		}
+		break;
 	}
 }
 
@@ -54,6 +62,7 @@ void BViewport::operator =(BViewport& vp)
 	m_OpaquePrimitives			=		vp.m_OpaquePrimitives;
 	m_Batches					=		vp.m_Batches;
 	m_LineBatch					=		vp.m_LineBatch;
+	m_ParticleBatch				=		vp.m_ParticleBatch;
 	m_ProjectionMatrix			=		vp.m_ProjectionMatrix;
 	m_TranslucentPrimitives		=		vp.m_TranslucentPrimitives;
 	m_ViewMatrix				=		vp.m_ViewMatrix;

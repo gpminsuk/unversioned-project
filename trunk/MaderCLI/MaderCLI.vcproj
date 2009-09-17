@@ -112,10 +112,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\"
+				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile=".\$(IntDir).pch"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -133,8 +134,8 @@
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
 				AdditionalDependencies="..\Intermediate\Release\AA\Obj\*"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
-				IgnoreDefaultLibraryNames="..\Intermediate\Release\AA\Obj\AA.obj"
+				AdditionalLibraryDirectories="..\External\freetype-2.3.7\objs"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				EntryPointSymbol=""
 				TargetMachine="1"

@@ -100,7 +100,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
-			CharacterSet="2"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			BuildLogFile="$(IntDir)\BuildLog\BuildLog.htm"
 			>
@@ -121,11 +121,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\Src\World;.\Src"
+				AdditionalIncludeDirectories=".\Src\World;.\Src;.\Src\Temporary;&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
+				PrecompiledHeaderFile=".\$(IntDir).pch"
 				ObjectFile="$(IntDir)\Obj\"
 				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
@@ -144,7 +144,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
 				ManifestFile="$(IntDir)\Manifest\$(TargetFileName).intermediate.manifest"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -196,6 +198,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Shaders\PixelParticleShader.fx"
+					>
+				</File>
+				<File
 					RelativePath="..\Shaders\PixelRTShader.fx"
 					>
 				</File>
@@ -209,6 +215,10 @@
 				</File>
 				<File
 					RelativePath="..\Shaders\VertexLineShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\Shaders\VertexParticleShader.fx"
 					>
 				</File>
 				<File
@@ -328,6 +338,14 @@
 							>
 						</File>
 						<File
+							RelativePath=".\Src\BParticleRenderPass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BParticleRenderPass.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Src\BRTRenderPass.cpp"
 							>
 						</File>
@@ -417,6 +435,14 @@
 						</File>
 						<File
 							RelativePath=".\Src\CMeshPrimitive.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\CParticlePrimitive.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\CParticlePrimitive.h"
 							>
 						</File>
 						<File
@@ -551,6 +577,14 @@
 				</File>
 				<File
 					RelativePath=".\Src\World\CCharacter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\World\CEmitter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\World\CEmitter.h"
 					>
 				</File>
 				<File

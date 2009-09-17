@@ -24,8 +24,11 @@ void BDrawLinePass::BeginPass(BViewport* Viewport)
 	RShaderBase* pShader = RShaderTable::Shaders(2);
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
 	GDriver->Clear(false, 0x00000000,true, 1.0f);
+
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);
+
+	GDriver->SetVertexDeclaration(VertexType_Position);
 }
 
 void BDrawLinePass::EndPass()
@@ -50,8 +53,6 @@ void BDrawLinePass::DrawPrimitive(BLineBatcher* LineBatcher)
 			Vertices[i*2+0].Pos = LineBatcher->Lines(i).Point1;
 			Vertices[i*2+1].Pos = LineBatcher->Lines(i).Point2;
 		}
-
-		GDriver->SetVertexDeclaration(VertexType_Position);
 		GDriver->DrawPrimitiveUP(PrimitiveType_LineList, (unsigned int)(NumLines), Vertices, sizeof(VD));
 		delete Vertices;
 	}

@@ -37,8 +37,8 @@ bool CWindowApp::CreateApp()
 
 	RegisterClassEx(&wcex);
 
-	m_WindowInfo.m_wWidth = 1024;
-	m_WindowInfo.m_wHeight = 768;
+	m_WindowInfo.m_wWidth = 800;
+	m_WindowInfo.m_wHeight = 600;
 	
 	m_WindowInfo.m_hWnd = ::CreateWindow(
 		_T("CLASS NAME"),
@@ -63,12 +63,10 @@ bool CWindowApp::CreateApp()
 	RResourceManager::LoadResources();
 
 	m_pRenderer = new BRenderer();		
+	m_pWorld = new UWorld(m_pRenderer);
 
 	m_pRenderer->SetApplication(this);
-
 	m_pRenderer->Start();
-
-	m_pWorld = new UWorld(m_pRenderer);
 	m_pWorld->InitializeWorld();
 
 

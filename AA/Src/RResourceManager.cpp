@@ -11,7 +11,7 @@
 
 void LoadASEFile(char* fn)
 {
-	char line[1024];
+/*	char line[1024];
 	char string[1024];
 	TString NodeName;
 	TString ParentNodeName;
@@ -27,8 +27,8 @@ void LoadASEFile(char* fn)
 		return;
 
 	RAnimationSequence *AnimationSequence = new RAnimationSequence();
-	RBoneInfo* BoneInfo = new RBoneInfo();
-	RMesh*	Model = new RMesh();
+	RBoneHierarchy* BoneInfo = new RBoneHierarchy();
+	RSkeletalMesh*	Model = new RSkeletalMesh();
 
 	while(!feof(fp))
 	{
@@ -362,7 +362,7 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*NODE_TM"))
 				{
-					RBone *Bone = new RBone();
+					RBoneHierarchy::RBone *Bone = new RBoneHierarchy::RBone();
 					TVector3 Inherit_Pos, Inherit_Rot;
 					while(1)
 					{
@@ -407,15 +407,7 @@ void LoadASEFile(char* fn)
 							break;
 						}
 					}
-					for(int i=0;BoneInfo->Bones.Size();++i)
-					{
-						if(!strcmp(ParentNodeName.Str, BoneInfo->Bones(i)->BoneName.Str))
-						{
-							Bone->Parent = BoneInfo->Bones(i);
-							break;
-						}
-					}
-					RBone* B = Bone;
+					RBoneHierarchy::RBone* B = Bone;
 					while(B->Parent)
 					{
 						B = B->Parent;
@@ -762,10 +754,10 @@ void LoadASEFile(char* fn)
 	}
 
 	RAnimationSequenceTable::Sequences.AddItem(AnimationSequence);
-	RBoneInfoTable::BoneInfos.AddItem(BoneInfo);
-	RMeshTable::Meshes.AddItem(Model);
-	
-	fclose(fp);
+	RBoneHierarchyTable::BoneHierarchies.AddItem(BoneInfo);
+	RSkeletalMeshTable::Meshes.AddItem(Model);
+
+	fclose(fp);*/	
 }
 
 RResourceManager::RResourceManager(void)
@@ -877,18 +869,18 @@ bool RResourceManager::ReleaseAllResources()
 	RAnimationSequenceTable::Sequences.Clear(true);
 
 	//////////////////////////////////// Model Releasing
-	for(unsigned int i=0;i<RMeshTable::Meshes.Size();++i)
+	for(unsigned int i=0;i<RSkeletalMeshTable::SkeletalMeshes.Size();++i)
 	{
-		delete RMeshTable::Meshes(i);
+		delete RSkeletalMeshTable::SkeletalMeshes(i);
 	}
-	RMeshTable::Meshes.Clear(true);
+	RSkeletalMeshTable::SkeletalMeshes.Clear(true);
 
 	//////////////////////////////////// Bone Releasing
-	for(unsigned int i=0;i<RBoneInfoTable::BoneInfos.Size();++i)
+	for(unsigned int i=0;i<RBoneHierarchyTable::BoneHierarchies.Size();++i)
 	{
-		delete RBoneInfoTable::BoneInfos(i);
+		delete RBoneHierarchyTable::BoneHierarchies(i);
 	}
-	RBoneInfoTable::BoneInfos.Clear(true);
+	RBoneHierarchyTable::BoneHierarchies.Clear(true);
 
 	return true;
 }

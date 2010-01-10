@@ -30,7 +30,7 @@ void UFreeTypeFontDrawer::DrawString(TString String, RTextureBuffer *Tex)
 	unsigned int width, height;
 
 	// 폰트 읽음
-	error=FT_New_Face(Library,"D:\\내 자료\\MyProject\\Resources\\font.ttf",0,&face);
+	error=FT_New_Face(Library,"..\\Resources\\font.ttf",0,&face);
 	if (error != 0) {
 		// 에러 처리
 	}

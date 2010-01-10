@@ -7,7 +7,7 @@
 
 BOpaqueBasePass::BOpaqueBasePass()
 {
-	RRenderTarget *DXRT = GDriver->CreateRenderTarget(1024, 768, PixelFormat_A8R8G8B8);
+	RRenderTarget *DXRT = GDriver->CreateRenderTarget(800, 600, PixelFormat_A8R8G8B8);
 	m_RenderTargets.AddItem(DXRT);
 }
 

@@ -7,5 +7,5 @@ TArray<RTexture*>						RTextureTable::Textures;
 TArray<RShaderBase*>					RShaderTable::Shaders;
 TArray<RTextureBuffer*>					RTextureBufferTable::TextureBuffers;
 TArray<RAnimationSequence*>				RAnimationSequenceTable::Sequences;
-TArray<RMesh*>							RMeshTable::Meshes;
-TArray<RBoneInfo*>						RBoneInfoTable::BoneInfos;
+TArray<RSkeletalMesh*>					RSkeletalMeshTable::SkeletalMeshes;
+TArray<RBoneHierarchy*>					RBoneHierarchyTable::BoneHierarchies;

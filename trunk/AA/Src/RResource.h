@@ -260,7 +260,7 @@ public:
 	static TArray<RAnimationSequence*> Sequences;
 };
 
-class RSubMesh
+class RSkeletalSubMesh
 {
 public:
 	TString				BoneName;
@@ -269,52 +269,46 @@ public:
 	RSystemMemoryIndexBuffer* pIB;
 };
 
-class RMesh
+class RSkeletalMesh
 {
 public:
-	~RMesh()
+	~RSkeletalMesh()
 	{
-		for(unsigned int i = 0;i<SubMeshes.Size();++i)
-			delete SubMeshes(i);
-		SubMeshes.Clear(true);
+		for(unsigned int i = 0;i<SkeletalSubMeshes.Size();++i)
+			delete SkeletalSubMeshes(i);
+		SkeletalSubMeshes.Clear(true);
 	}
-	TArray<RSubMesh*>	SubMeshes;
+	TArray<RSkeletalSubMesh*>	SkeletalSubMeshes;
 };
 
-class RMeshTable
+class RSkeletalMeshTable
 {
 public:
-	static TArray<RMesh*> Meshes;
+	static TArray<RSkeletalMesh*> SkeletalMeshes;
 };
 
-class RBone
+class RBoneHierarchy
 {
 public:
-	RBone() : Parent(0) {}
-
-	TString BoneName;
-	RBone *Parent;
-
-	TQuaternion Rotation;
-	TVector3 Translation;
-	float Scale;
-};
-
-class RBoneInfo
-{
-public:
-	~RBoneInfo()
+	class RBone
 	{
-		for(unsigned int i = 0;i<Bones.Size();++i)
-			delete Bones(i);
-		Bones.Clear(true);
-	}
+	public:
+		RBone() : Parent(0) {}
 
-	TArray<RBone*> Bones;
+		TString BoneName;
+		RBone *Parent;
+		TArray<RBone*> ChildBones;
+
+		TQuaternion Rotation;
+		TVector3 Translation;
+		float Scale;
+	};
+
+	RBone *RootBone;
 };
 
-class RBoneInfoTable
+class RBoneHierarchyTable
 {
 public:
-	static TArray<RBoneInfo*> BoneInfos;
+	static TArray<RBoneHierarchy*> BoneHierarchies;
 };

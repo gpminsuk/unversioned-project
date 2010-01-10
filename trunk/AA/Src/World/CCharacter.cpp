@@ -2,6 +2,7 @@
 #include "CCharacter.h"
 
 #include "CBoxPrimitive.h"
+#include "CSkeletalMeshPrimitive.h"
 
 #include "CCylinderCollisionBody.h"
 
@@ -22,6 +23,7 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
+	//CSkeletalMeshPrimitive* CharacterPrimitives = new CSkeletalMeshPrimitive(RBoneHierarchy::Bones(0));
 	CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
 	Primitives.AddItem(CharacterPrimitive);
 

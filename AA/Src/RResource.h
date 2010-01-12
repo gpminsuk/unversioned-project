@@ -266,6 +266,7 @@ public:
 	typedef struct
 	{
 		TVector3 Pos;
+		TVector3 Normal;
 		TVector2 UV;
 	} VD;
 	typedef TIndex16 ID;
@@ -301,6 +302,13 @@ public:
 	{
 	public:
 		RBone() : Parent(0) {}
+		~RBone()
+		{
+			for(unsigned int i=0;i<ChildBones.Size();++i)
+			{
+				delete ChildBones(i);
+			}
+		}
 
 		void AddBone_Recursive(RBone* Bone, TString ParentName)
 		{
@@ -335,6 +343,16 @@ public:
 		{
 			RootBone->AddBone_Recursive(Bone, ParentName);
 		}
+	}
+
+	RBoneHierarchy()
+		: RootBone(0)
+	{
+	}
+
+	~RBoneHierarchy()
+	{
+		delete RootBone;
 	}
 
 	RBone *RootBone;

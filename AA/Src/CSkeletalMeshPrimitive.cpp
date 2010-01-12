@@ -134,6 +134,9 @@ unsigned int TSkeletalMesh::TBone::NumTotalVertices_Recursive()
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
+
+		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
+			continue;
 #endif
 		NumVertices += SubMesh->pVB->nVertices;
 	}
@@ -153,6 +156,9 @@ unsigned int TSkeletalMesh::TBone::NumTotalIndices_Recursive()
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
+
+		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
+			continue;
 #endif
 		NumIndices += SubMesh->pIB->nIndices;
 	}
@@ -171,12 +177,16 @@ void TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatr
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
+
+		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
+			continue;
 #endif
 		for(unsigned int j=0;j<SubMesh->pVB->nVertices;++j)
 		{
 			RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(SubMesh->pVB->pVertices);
 			pVertices[j].Pos = BoneRef->BoneTM.TransformVector3(Vertex[j].Pos);
 			pVertices[j].UV = Vertex[j].UV;
+			pVertices[j].Normal = Vertex[i].Normal;
 		}
 		pVertices += SubMesh->pVB->nVertices;
 	}
@@ -194,6 +204,9 @@ void TSkeletalMesh::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices)
 		RSkeletalSubMesh* SubMesh = SubMesheRefs(i);
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
+			continue;
+
+		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
 			continue;
 #endif
 		for(unsigned int j=0;j<SubMesh->pIB->nIndices;++j)

@@ -75,6 +75,11 @@ class TString
 public:
 	char Str[1024];
 
+	TString()
+	{
+		Str[0] = '\0';
+	};
+
 	bool operator ==(TString& _Str)
 	{
 		return !strcmp(Str,_Str.Str);

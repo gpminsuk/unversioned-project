@@ -69,7 +69,7 @@ unsigned int CTerrainPrimitive::FillDynamicVertexBuffer(char** pData)
 		{
 			memcpy((*pData), Prim->pBuffer->m_pVB->pVertices, 
 				Prim->pBuffer->m_pVB->nVertices * Prim->pBuffer->m_pVB->nVertexStride);
-			for(int k=0;k<Prim->pBuffer->m_pVB->nVertices;++k)
+			for(unsigned int k=0;k<Prim->pBuffer->m_pVB->nVertices;++k)
 			{
 				*((TVector3*)&((*pData)[k*Prim->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Prim->pBuffer->m_pVB->nVertexStride])));
 			}

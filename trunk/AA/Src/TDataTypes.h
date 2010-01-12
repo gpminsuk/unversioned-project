@@ -80,6 +80,11 @@ public:
 		return !strcmp(Str,_Str.Str);
 	}
 
+	bool operator ==(char* _Str)
+	{
+		return !strcmp(Str,_Str);
+	}
+
 	void operator =(TString& _Str)
 	{
 		memcpy(Str, _Str.Str, 1024);
@@ -299,6 +304,20 @@ public:
 		_21 = 0.0f; _22 = 1.0f; _23 = 0.0f; _24 = 0.0f;
 		_31 = 0.0f; _32 = 0.0f; _33 = 1.0f; _34 = 0.0f;
 		_41 = 0.0f; _42 = 0.0f; _43 = 0.0f; _44 = 1.0f;
+	}
+
+	TMatrix(TVector3 Translation, TQuaternion Rotation, TVector3 Scale)
+	{
+		_11 = 1.0f*Scale.x;	_12 = 0.0f;			_13 = 0.0f;			_14 = 0.0f;
+		_21 = 0.0f;			_22 = 1.0f*Scale.y; _23 = 0.0f;			_24 = 0.0f;
+		_31 = 0.0f;			_32 = 0.0f;			_33 = 1.0f*Scale.z; _34 = 0.0f;
+		_41 = Translation.x;_42 = Translation.y;_43 = Translation.z;_44 = 1.0f;
+		Rotate(Rotation);
+	}
+
+	TMatrix(TVector3 Translation, TQuaternion Rotation, float Scale)
+	{
+		TMatrix(Translation, Rotation, TVector3(Scale, Scale, Scale));
 	}
 
 	TVector3 TransformVector3(TVector3 In)

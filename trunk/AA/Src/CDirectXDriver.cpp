@@ -111,8 +111,7 @@ bool CDirectXDriver::CreateDriver()
 	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
+	//m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	return true;
 }
 

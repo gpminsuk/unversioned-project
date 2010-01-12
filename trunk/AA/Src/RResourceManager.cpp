@@ -440,6 +440,7 @@ void LoadASEFile(char* fn)
 					TVector2 *pTextureVerts = 0;
 					TIndex16 *pTextureIndices = 0;
 					TVector3 *pASEVertices = 0;
+					TVector3 *pASENormals = 0;
 					TIndex16 *pASEIndices = 0;
 					RSkeletalSubMesh *Mesh = new RSkeletalSubMesh();
 					while(1)
@@ -462,6 +463,7 @@ void LoadASEFile(char* fn)
 						{
 							sscanf_s(line,"%s%d", string, 1024, &nASEIndices);
 							pASEIndices = new TIndex16[nASEIndices];
+							pASENormals = new TVector3[nASEIndices];
 						}
 
 						if(!strcmp(string, "*MESH_VERTEX_LIST"))
@@ -571,11 +573,20 @@ void LoadASEFile(char* fn)
 
 						if(!strcmp(string, "*MESH_NORMALS"))
 						{
+							int index;
+							TVector3 TNormal;
 							while(1)
 							{
 								fgets(line, 1024, fp);
 								sscanf_s(line,"%s",string, 1024);
 							
+								if(!strcmp(string, "*MESH_FACENORMAL"))
+								{
+									sscanf_s(line,"%s%d%f%f%f", string, 1024, &index, &TNormal.x, &TNormal.y, &TNormal.z);
+									pASENormals[index] = TNormal;
+									continue;
+								}
+
 								if(!strcmp(string, "}"))
 								{
 									break;
@@ -592,7 +603,7 @@ void LoadASEFile(char* fn)
 							RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
 							RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 
-							pVB->Declaration = new VertexDeclaration[2];
+							pVB->Declaration = new VertexDeclaration[3];
 							pVB->Declaration[0].Offset = 0;
 							pVB->Declaration[0].Type = DECLTYPE_FLOAT3;	// Position
 							pVB->Declaration[1].Offset = 12;
@@ -606,12 +617,17 @@ void LoadASEFile(char* fn)
 							for(int i=0;i<nASEIndices;++i)
 							{
 								Vertex[i*3 + 0].Pos = pASEVertices[pASEIndices[i]._1];
+								Vertex[i*3 + 0].Normal = pASENormals[pASEIndices[i]._1];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 0].UV = pTextureVerts[pTextureIndices[i]._1];
 								else	Vertex[i*3 + 0].UV = TVector2(0.0f,0.0f);
+
 								Vertex[i*3 + 1].Pos = pASEVertices[pASEIndices[i]._2];
+								Vertex[i*3 + 1].Normal = pASENormals[pASEIndices[i]._2];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 1].UV = pTextureVerts[pTextureIndices[i]._2];
 								else	Vertex[i*3 + 1].UV = TVector2(0.0f,0.0f);
+
 								Vertex[i*3 + 2].Pos = pASEVertices[pASEIndices[i]._3];
+								Vertex[i*3 + 2].Normal = pASENormals[pASEIndices[i]._3];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 2].UV = pTextureVerts[pTextureIndices[i]._3];
 								else	Vertex[i*3 + 2].UV = TVector2(0.0f,0.0f);
 							}
@@ -629,6 +645,7 @@ void LoadASEFile(char* fn)
 						}
 					}
 					delete[] pASEIndices;
+					delete[] pASENormals;
 					delete[] pASEVertices;
 					delete[] pTextureIndices;
 					delete[] pTextureVerts;

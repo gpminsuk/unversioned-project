@@ -146,7 +146,7 @@ unsigned int CParticlePrimitive::FillDynamicVertexBuffer(char** pData)
 {
 	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
 		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
-	for(int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
+	for(unsigned int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
 	{
 		(*((VD*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride]))).Pos = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])));
 		//(*((VD*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride]))).Size = TVector3(0.1f,0.1f,0.1f);

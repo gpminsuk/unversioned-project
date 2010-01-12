@@ -54,7 +54,7 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 			VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
 
 			float Theta = 0.0f;
-			for(int i=0;i<pVB->nVertices/6;++i)
+			for(unsigned int i=0;i<pVB->nVertices/6;++i)
 			{
 				Vertex[i*6+0].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
 				Vertex[i*6+1].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
@@ -64,7 +64,6 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 				Vertex[i*6+3].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
 				Vertex[i*6+5].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
 			}
-
 			pIB->nIndices = 0;
 		}
 		break;
@@ -96,7 +95,7 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 			VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
 
 			float Theta = 0.0f;
-			for(int i=0;i<pVB->nVertices/10;++i)
+			for(unsigned int i=0;i<pVB->nVertices/10;++i)
 			{
 				float NextTheta = Theta + (MATH_PI*2.0f)/((float)pVB->nVertices/10.0f);
 				Vertex[i*10+0].Pos = TVector3(0.0f, 1.0f, 0.0f);									Vertex[i*10+0].Normal = TVector3(0.0f,1.0f,0.0f);				
@@ -117,7 +116,7 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 			pIB->nIndices = Smoothness*4;
 			pIB->pIndices = new TIndex16[pIB->nIndices];
 
-			for(int i=0;i<pIB->nIndices/4;++i)
+			for(unsigned int i=0;i<pIB->nIndices/4;++i)
 			{
 				pIB->pIndices[i*4+0] = TIndex16(i*10 + 0,i*10 + 2,i*10 + 1);
 				pIB->pIndices[i*4+1] = TIndex16(i*10 + 3,i*10 + 4,i*10 + 5);
@@ -144,7 +143,7 @@ unsigned int CCylinderPrimitive::FillDynamicVertexBuffer(char** pData)
 {
 	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
 		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
-	for(int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
+	for(unsigned int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
 	{
 		*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])));
 	}

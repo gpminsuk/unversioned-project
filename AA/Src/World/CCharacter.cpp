@@ -23,9 +23,9 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	//CSkeletalMeshPrimitive* CharacterPrimitives = new CSkeletalMeshPrimitive(RBoneHierarchy::Bones(0));
-	CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
-	Primitives.AddItem(CharacterPrimitive);
+	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(0), RSkeletalMeshTable::SkeletalMeshes(0), RAnimationSequenceTable::Sequences(0));
+	//CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
+	Primitives.AddItem(SkeletalMeshPrimitive);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CharacterCollisionBody);
@@ -48,18 +48,19 @@ void CCharacter::SetCharacterPosition(TVector3 pos)
 
 void CCharacter::Tick(unsigned long dTime)
 {
-	if(GKeyMap['W'])
+	/*if(GKeyMap['W'])
 		SetCharacterPosition(m_Location + TVector3(0.0005f,0.0f,0.0f));
 	if(GKeyMap['S'])
 		SetCharacterPosition(m_Location + TVector3(-0.0005f,0.0f,0.0f));
 	if(GKeyMap['A'])
 		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,0.0005f));
 	if(GKeyMap['D'])
-		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));
+		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));*/
 }
 
 void CCharacter::PhysicsTick(unsigned long dTime)
 {
+	return;
 	TVector3 Loc = m_Location;
 	float t = 0.003f;
 	Loc.y -= (float)(t*t*9.8/2.0f);
@@ -74,6 +75,9 @@ void CCharacter::UpdateTransform()
 		Primitives(i)->TM._41 = m_Location.x;
 		Primitives(i)->TM._42 = m_Location.y;
 		Primitives(i)->TM._43 = m_Location.z;
+		Primitives(i)->TM._11 = 10.0f;
+		Primitives(i)->TM._22 = 10.0f;
+		Primitives(i)->TM._33 = 10.0f;
 	}
 	for(unsigned int i=0;i<CollisionBodies(0)->Primitives.Size();++i)
 	{

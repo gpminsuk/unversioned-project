@@ -60,7 +60,7 @@ bool UWorld::InitializeWorld()
 	m_pViewport->SetCurrentCamera(0);
 
 	m_Terrain = new CTerrain(m_pCamera);
-	m_pViewport->Render(m_Terrain->Primitives(0));
+	//m_pViewport->Render(m_Terrain->Primitives(0));
 	m_pWorldData->AddThing(m_Terrain);
 
 	//m_Emitter = new CEmitter();
@@ -69,9 +69,9 @@ bool UWorld::InitializeWorld()
 
 
 	m_Character = new CCharacter();
-	m_Character->SetCharacterPosition(TVector3(10.0f,10.0f,10.0f));
+	m_Character->SetCharacterPosition(TVector3(5.0f,5.0f,5.0f));
 	m_pViewport->Render(m_Character->Primitives(0));
-	m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0));
+	//m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0));
 	m_pWorldData->AddThing(m_Character);
 
 	m_Cylinder = new CCylinderPrimitive();
@@ -80,7 +80,7 @@ bool UWorld::InitializeWorld()
 	m_Cylinder->TM._41 = 5;
 	m_Cylinder->TM._42 = 2.5;
 	m_Cylinder->TM._43 = 5;
-	m_pViewport->Render(m_Cylinder);
+	//m_pViewport->Render(m_Cylinder);
 	
 	m_pCamera->m_Subject = m_Character;
 	return TRUE;

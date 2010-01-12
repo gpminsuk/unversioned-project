@@ -11,7 +11,7 @@
 
 void LoadASEFile(char* fn)
 {
-/*	char line[1024];
+	char line[1024];
 	char string[1024];
 	TString NodeName;
 	TString ParentNodeName;
@@ -27,7 +27,7 @@ void LoadASEFile(char* fn)
 		return;
 
 	RAnimationSequence *AnimationSequence = new RAnimationSequence();
-	RBoneHierarchy* BoneInfo = new RBoneHierarchy();
+	RBoneHierarchy* BoneHierarchy = new RBoneHierarchy();
 	RSkeletalMesh*	Model = new RSkeletalMesh();
 
 	while(!feof(fp))
@@ -378,10 +378,28 @@ void LoadASEFile(char* fn)
 							Bone->BoneName.Str[Epos-Spos] = '\0';
 							continue;
 						}
-
-						if(!strcmp(string, "*TM_POS"))
+						
+						if(!strcmp(string, "*TM_ROW0"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Translation.x, &Bone->Translation.y, &Bone->Translation.z);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._11, &Bone->BoneTM._12, &Bone->BoneTM._13);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW1"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._21, &Bone->BoneTM._22, &Bone->BoneTM._23);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW2"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._31, &Bone->BoneTM._32, &Bone->BoneTM._33);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW3"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._41, &Bone->BoneTM._42, &Bone->BoneTM._43);
 							continue;
 						}
 
@@ -397,26 +415,19 @@ void LoadASEFile(char* fn)
 							continue;
 						}
 
-						if(!strcmp(string, "*NODE_NAME"))
-						{
-							continue;
-						}
-
 						if(!strcmp(string, "}"))
 						{
 							break;
 						}
 					}
-					RBoneHierarchy::RBone* B = Bone;
-					while(B->Parent)
+					if(!strcmp(ParentNodeName.Str, ""))
 					{
-						B = B->Parent;
-//						if(Inherit_Pos.x == 0.0f && Inherit_Pos.y == 0.0f && Inherit_Pos.z == 0.0f)
-							Bone->Translation -= B->Translation;
-//						if(Inherit_Rot.x == 0.0f && Inherit_Rot.y == 0.0f && Inherit_Rot.z == 0.0f)
-							Bone->Rotation *= TQuaternion(-B->Rotation.v.x, -B->Rotation.v.y, -B->Rotation.v.z, B->Rotation.w);
+						BoneHierarchy->RootBone = Bone;
 					}
-					BoneInfo->Bones.AddItem(Bone);
+					else if(BoneHierarchy->RootBone)
+					{
+						BoneHierarchy->AddBone(Bone, ParentNodeName);
+					}
 					continue;
 				}
 
@@ -430,7 +441,7 @@ void LoadASEFile(char* fn)
 					TIndex16 *pTextureIndices = 0;
 					TVector3 *pASEVertices = 0;
 					TIndex16 *pASEIndices = 0;
-					RSubMesh *Mesh = new RSubMesh();
+					RSkeletalSubMesh *Mesh = new RSkeletalSubMesh();
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -456,16 +467,7 @@ void LoadASEFile(char* fn)
 						if(!strcmp(string, "*MESH_VERTEX_LIST"))
 						{
 							int index;
-							TVector3 Position;
-							RBone *B = BoneInfo->Bones((int)(BoneInfo->Bones.Size()-1));
-							TVector3 Translation = B->Translation;
-							TQuaternion Quat = B->Rotation;
-							while(B->Parent)
-							{
-								B = B->Parent;
-								Translation += B->Translation;			
-								Quat *= B->Rotation;
-							}
+							TVector3 Position;							
 							while(1)
 							{
 								fgets(line, 1024, fp);
@@ -474,10 +476,7 @@ void LoadASEFile(char* fn)
 								if(!strcmp(string, "*MESH_VERTEX"))
 								{
 									sscanf_s(line,"%s%d%f%f%f", string, 1024, &index, &Position.x, &Position.y, &Position.z);
-									if(BoneInfo->Bones.Size() > 0)
-										pASEVertices[index] = Position - Translation;
-									else
-										pASEVertices[index] = Position;
+									pASEVertices[index] = Position;
 								}
 
 								if(!strcmp(string, "}"))
@@ -599,17 +598,11 @@ void LoadASEFile(char* fn)
 							pVB->Declaration[1].Offset = 12;
 							pVB->Declaration[1].Type = DECLTYPE_FLOAT2;	// UV
 
-							struct VD
-							{
-								TVector3 Pos;
-								TVector2 UV;
-							};
-
-							pVB->nVertexStride = sizeof(VD);
+							pVB->nVertexStride = sizeof(RSkeletalSubMesh::VD);
 							pVB->nVertices = nASEIndices*3;
 							pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 
-							VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+							RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(pVB->pVertices);
 							for(int i=0;i<nASEIndices;++i)
 							{
 								Vertex[i*3 + 0].Pos = pASEVertices[pASEIndices[i]._1];
@@ -639,7 +632,7 @@ void LoadASEFile(char* fn)
 					delete[] pASEVertices;
 					delete[] pTextureIndices;
 					delete[] pTextureVerts;
-					Model->SubMeshes.AddItem(Mesh);
+					Model->SkeletalSubMeshes.AddItem(Mesh);
 					continue;
 				}
 
@@ -754,10 +747,10 @@ void LoadASEFile(char* fn)
 	}
 
 	RAnimationSequenceTable::Sequences.AddItem(AnimationSequence);
-	RBoneHierarchyTable::BoneHierarchies.AddItem(BoneInfo);
-	RSkeletalMeshTable::Meshes.AddItem(Model);
+	RBoneHierarchyTable::BoneHierarchies.AddItem(BoneHierarchy);
+	RSkeletalMeshTable::SkeletalMeshes.AddItem(Model);
 
-	fclose(fp);*/	
+	fclose(fp);
 }
 
 RResourceManager::RResourceManager(void)

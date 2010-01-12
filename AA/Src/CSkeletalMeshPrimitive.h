@@ -4,64 +4,39 @@
 
 #include "RResource.h"
 
-class TSkeletalMesh
+class TSkeletalMesh : public TPrimitive
 {
 public:
-	TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL)
+	typedef struct
 	{
-		RootBone = new TBone(InBoneHierarchy->RootBone, InSkeletalMesh);
-	}
+		TVector3 Pos;
+		TVector3 Normal;
+		TVector2 UV;
+	} VD;
 
-	~TSkeletalMesh()
-	{
-		delete RootBone;
-	}
+	typedef TIndex16 ID;
+
+	TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
+	~TSkeletalMesh();
 
 	class TBone
 	{
 	public:
-		TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL)
-		{
-			BoneName = InBone->BoneName;
-			for(unsigned int i=0;i<InSkeletalMesh->SkeletalSubMeshes.Size();++i)
-			{	
-				RSkeletalSubMesh* SubMesh = InSkeletalMesh->SkeletalSubMeshes(i);
-				if(SubMesh->BoneName == BoneName)
-				{
-					SubMeshes.AddItem(SubMesh);
-				}
-			}
-			for(unsigned int i=0;i<InAnimationSequence->AnimationBoneSequences.Size();++i)
-			{	
-				RAnimationBoneSequence* AnimSeq = InAnimationSequence->AnimationBoneSequences(i);
-				if(AnimSeq->BoneName == BoneName)
-				{
-					AnimationBoneSequence = AnimSeq;
-				}
-			}
-			for(unsigned int i=0;i<InBone->ChildBones.Size();++i)
-			{
-				TBone* Bone = new TBone(InBone->ChildBones(i), InSkeletalMesh, InAnimationSequence);
-				ChildBones.AddItem(Bone);
-			}
-		}
-		~TBone()
-		{
-			for(unsigned int i=0;i<ChildBones.Size();++i)
-			{
-				delete ChildBones(i);
-			}
-		}
-		TString BoneName;
-		TArray<RSkeletalSubMesh*> SubMeshes;
-		RAnimationBoneSequence* AnimationBoneSequence;
+		TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
+		~TBone();
+
+		RBoneHierarchy::RBone* BoneRef;
+		TArray<RSkeletalSubMesh*> SubMesheRefs;
+		RAnimationBoneSequence* AnimationBoneSequenceRef;
+
 		TArray<TBone*> ChildBones;
 
-		TQuaternion Rotation;
-		TVector3 Translation;
-		float Scale;
-	};
+		void FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix BoneTM = TMatrix());
+		void FillStaticIndexBuffer_Recursive(ID* pIndices);
 
+		unsigned int NumTotalVertices_Recursive();
+		unsigned int NumTotalIndices_Recursive();
+	};
 	TBone* RootBone;
 };
 
@@ -71,5 +46,10 @@ public:
 	CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence);
 	~CSkeletalMeshPrimitive(void);
 
-	TSkeletalMesh *SkeletalMeshTemplate;
+	TSkeletalMesh* SkeletalMeshTemplate;
+
+	virtual void Render(TBatch *Batch);
+	virtual unsigned int FillDynamicVertexBuffer(char** pData);
+	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
+	virtual unsigned int GetNumIndices();
 };

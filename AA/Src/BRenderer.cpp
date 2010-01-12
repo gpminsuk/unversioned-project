@@ -169,19 +169,11 @@ void BRenderer::ThreadExecute()
 	int AccumulatedCount = 0;
 	while(!m_pApp->bQuit)
 	{
-		if(++Count > 896)
-		{
-			WCHAR Str[1024];
-			wsprintf(Str, L"Render Thread = %d \n",(int)(FPS_COUNTER_NUMBER*1000.0f/m_fFPS));
-			OutputDebugString(Str);
-			Count = 0;
-		}
 		FetchViewports();
 
 		if(GDriver->BeginScene())
 		{
 			Render();
-			
 			GDriver->EndScene();
 		}
 		

@@ -40,7 +40,7 @@ public:
 	}
 
 	TIndex16 *pIndices;
-	int nIndices;
+	unsigned int nIndices;
 };
 
 class RVideoMemoryIndexBuffer
@@ -52,7 +52,7 @@ public:
 	   nIndices = 0;
 	}
 	
-	int nIndices;
+	unsigned int nIndices;
 };
 
 class RSystemMemoryIndexBufferTable
@@ -102,8 +102,8 @@ public:
 		nVertices = 0;
 	}
 
-	int nVertices;
-	int nVertexStride;
+	unsigned int nVertices;
+	unsigned int nVertexStride;
 
 	VertexDeclaration* Declaration;
 
@@ -120,8 +120,8 @@ public:
 		nVertices = 0;
 	}
 
-	int nVertices;
-	int nVertexStride;
+	unsigned int nVertices;
+	unsigned int nVertexStride;
 
 	VertexDeclaration* Declaration;
 };
@@ -263,6 +263,13 @@ public:
 class RSkeletalSubMesh
 {
 public:
+	typedef struct
+	{
+		TVector3 Pos;
+		TVector2 UV;
+	} VD;
+	typedef TIndex16 ID;
+
 	TString				BoneName;
 
 	RSystemMemoryVertexBuffer*	pVB;
@@ -295,14 +302,40 @@ public:
 	public:
 		RBone() : Parent(0) {}
 
+		void AddBone_Recursive(RBone* Bone, TString ParentName)
+		{
+			if(BoneName == ParentName)
+			{
+				ChildBones.AddItem(Bone);
+				Bone->Parent = this;
+			}
+			else
+			{
+				for(unsigned int i=0;i<ChildBones.Size();++i)
+				{
+					ChildBones(i)->AddBone_Recursive(Bone, ParentName);
+				}
+			}			
+		}
+
 		TString BoneName;
 		RBone *Parent;
 		TArray<RBone*> ChildBones;
 
-		TQuaternion Rotation;
-		TVector3 Translation;
-		float Scale;
+		TMatrix BoneTM;
 	};
+
+	void AddBone(RBone* Bone, TString ParentName)
+	{
+		if(ParentName == "")
+		{
+			RootBone = Bone;
+		}
+		else
+		{
+			RootBone->AddBone_Recursive(Bone, ParentName);
+		}
+	}
 
 	RBone *RootBone;
 };

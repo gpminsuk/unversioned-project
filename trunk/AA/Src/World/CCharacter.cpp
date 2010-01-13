@@ -24,8 +24,9 @@ CCharacter::CCharacter()
 	m_Location		= TVector3(0, 0, 0);
 
 	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(0), RSkeletalMeshTable::SkeletalMeshes(0), RAnimationSequenceTable::Sequences(0));
-	//CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
+	CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
 	Primitives.AddItem(SkeletalMeshPrimitive);
+	Primitives.AddItem(CharacterPrimitive);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CharacterCollisionBody);
@@ -69,7 +70,7 @@ void CCharacter::PhysicsTick(unsigned long dTime)
 
 void CCharacter::UpdateTransform()
 {
-	for(unsigned int i=0;i<Primitives.Size();++i)
+	for(unsigned int i=0;i<1;++i)
 	{
 		Primitives(i)->Translation = m_Location;
 		Primitives(i)->TM._41 = m_Location.x;

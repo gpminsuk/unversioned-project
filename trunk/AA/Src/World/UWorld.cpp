@@ -60,7 +60,7 @@ bool UWorld::InitializeWorld()
 	m_pViewport->SetCurrentCamera(0);
 
 	m_Terrain = new CTerrain(m_pCamera);
-	m_pViewport->Render(m_Terrain->Primitives(0));
+	//m_pViewport->Render(m_Terrain->Primitives(0));
 	m_pWorldData->AddThing(m_Terrain);
 
 	//m_Emitter = new CEmitter();
@@ -69,8 +69,9 @@ bool UWorld::InitializeWorld()
 
 
 	m_Character = new CCharacter();
-	m_Character->SetCharacterPosition(TVector3(0.0f,6.0f,-17.0f));
+	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
 	m_pViewport->Render(m_Character->Primitives(0));
+	m_pViewport->Render(m_Character->Primitives(1));
 	//m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0));
 	m_pWorldData->AddThing(m_Character);
 

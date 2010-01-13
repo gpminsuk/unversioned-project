@@ -335,6 +335,7 @@ void LoadASEFile(char* fn)
 
 		if(!strcmp(string, "*GEOMOBJECT"))
 		{
+			RBoneHierarchy::RBone *Bone = NULL;
 			while(1)
 			{
 				fgets(line, 1024, fp);
@@ -362,8 +363,8 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*NODE_TM"))
 				{
-					RBoneHierarchy::RBone *Bone = new RBoneHierarchy::RBone();
-					TVector3 Inherit_Pos, Inherit_Rot;
+					Bone = new RBoneHierarchy::RBone();
+					TVector3 Inherit_Pos, Inherit_Rot, RotAxis;
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -379,27 +380,29 @@ void LoadASEFile(char* fn)
 							continue;
 						}
 						
-						if(!strcmp(string, "*TM_ROW0"))
+						if(!strcmp(string, "*TM_ROTAXIS"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._11, &Bone->BoneTM._12, &Bone->BoneTM._13);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &RotAxis.x, &RotAxis.y, &RotAxis.z);
 							continue;
 						}
 
-						if(!strcmp(string, "*TM_ROW1"))
+						if(!strcmp(string, "*TM_ROTANGLE"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._21, &Bone->BoneTM._22, &Bone->BoneTM._23);
+							float Theta;
+							sscanf_s(line, "%s%f",string, 1024, &Theta);
+							Bone->Rotation = TQuaternion(RotAxis, Theta);
 							continue;
 						}
 
-						if(!strcmp(string, "*TM_ROW2"))
+						if(!strcmp(string, "*TM_SCALE"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._31, &Bone->BoneTM._32, &Bone->BoneTM._33);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Scale.x, &Bone->Scale.y, &Bone->Scale.z);
 							continue;
 						}
 
-						if(!strcmp(string, "*TM_ROW3"))
+						if(!strcmp(string, "*TM_POS"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->BoneTM._41, &Bone->BoneTM._42, &Bone->BoneTM._43);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Translation.x, &Bone->Translation.y, &Bone->Translation.z);
 							continue;
 						}
 
@@ -614,19 +617,24 @@ void LoadASEFile(char* fn)
 							pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 
 							RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(pVB->pVertices);
+							TMatrix InvWorld = BoneHierarchy->GetBoneMatrix(Bone);
+							InvWorld = InvWorld.Inverse();
 							for(int i=0;i<nASEIndices;++i)
 							{
-								Vertex[i*3 + 0].Pos = pASEVertices[pASEIndices[i]._1];
+								Vertex[i*3 + 0].Pos = InvWorld.TransformVector3(pASEVertices[pASEIndices[i]._1]);
+								//Vertex[i*3 + 0].Pos = pASEVertices[pASEIndices[i]._1];
 								Vertex[i*3 + 0].Normal = pASENormals[pASEIndices[i]._1];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 0].UV = pTextureVerts[pTextureIndices[i]._1];
 								else	Vertex[i*3 + 0].UV = TVector2(0.0f,0.0f);
 
-								Vertex[i*3 + 1].Pos = pASEVertices[pASEIndices[i]._2];
+								Vertex[i*3 + 1].Pos = InvWorld.TransformVector3(pASEVertices[pASEIndices[i]._2]);
+								//Vertex[i*3 + 1].Pos = pASEVertices[pASEIndices[i]._2];
 								Vertex[i*3 + 1].Normal = pASENormals[pASEIndices[i]._2];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 1].UV = pTextureVerts[pTextureIndices[i]._2];
 								else	Vertex[i*3 + 1].UV = TVector2(0.0f,0.0f);
 
-								Vertex[i*3 + 2].Pos = pASEVertices[pASEIndices[i]._3];
+								Vertex[i*3 + 2].Pos = InvWorld.TransformVector3(pASEVertices[pASEIndices[i]._3]);
+								//Vertex[i*3 + 2 ].Pos = pASEVertices[pASEIndices[i]._3];
 								Vertex[i*3 + 2].Normal = pASENormals[pASEIndices[i]._3];
 								if(pTextureVerts && pTextureIndices) Vertex[i*3 + 2].UV = pTextureVerts[pTextureIndices[i]._3];
 								else	Vertex[i*3 + 2].UV = TVector2(0.0f,0.0f);
@@ -675,7 +683,7 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*TM_ANIMATION"))
 				{
-					RAnimationBoneSequence* Seq = new RAnimationBoneSequence();
+					RAnimationBoneSequence* Seq = new RAnimationBoneSequence(Bone->Translation, Bone->Rotation);
 					while(1)
 					{
 						fgets(line, 1024, fp);

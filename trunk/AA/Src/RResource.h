@@ -218,6 +218,18 @@ public:
 class RAnimationBoneSequence
 {
 public:
+	RAnimationBoneSequence(TVector3 StartPos, TQuaternion StartRot)
+	{
+		POSKEY Pos;
+		Pos.Pos = StartPos;
+		Pos.Time = 0.0f;
+		ROTKEY Rot;
+		Rot.Rot = StartRot;
+		Rot.Time = 0.0f;
+		PosKeys.AddItem(Pos);
+		RotKeys.AddItem(Rot);
+	}
+
 	TString				BoneName;
 
 	struct POSKEY
@@ -234,6 +246,47 @@ public:
 
 	TArray<POSKEY>	PosKeys;
 	TArray<ROTKEY>	RotKeys;
+
+	TVector3 GetPosKey(unsigned int InFrame)
+	{
+		if(PosKeys.Size() < 2)
+		{
+			return TVector3(0,0,0);
+		}
+		unsigned int Idx = 1;
+		for(unsigned int i=0;i<PosKeys.Size();++i)
+		{
+			POSKEY& PosKey = PosKeys(i);
+			if(PosKey.Time > InFrame)
+			{
+				Idx = i;
+				break;
+			}
+		}
+		float t = (InFrame - PosKeys(Idx-1).Time)/(PosKeys(Idx).Time - PosKeys(Idx-1).Time);
+		return (PosKeys(Idx-1).Pos*t + PosKeys(Idx).Pos*(1 - t));
+	}
+
+	TQuaternion GetRotKey(unsigned int InFrame)
+	{
+		if(RotKeys.Size() < 2)
+		{
+			return TQuaternion();
+		}
+		unsigned int Idx = 1;
+		for(unsigned int i=0;i<RotKeys.Size();++i)
+		{
+			ROTKEY& RotKey = RotKeys(i);
+			if(RotKey.Time > InFrame)
+			{
+				Idx = i;
+				break;
+			}
+		}
+		float t = (InFrame - RotKeys(Idx-1).Time)/(RotKeys(Idx).Time - RotKeys(Idx-1).Time);
+		TQuaternion Ret = TQuaternion::Slerp(RotKeys(Idx-1).Rot, RotKeys(Idx).Rot, t);
+		return Ret;
+	}
 };
 
 class RAnimationSequence
@@ -326,12 +379,45 @@ public:
 			}			
 		}
 
+		bool GetBoneMatrix_Recursive(RBone* Bone, TMatrix& InBoneTM)
+		{
+			TMatrix BoneTM(Translation, Rotation, Scale);
+			if(this == Bone)
+			{
+				InBoneTM = BoneTM;
+				return true;
+			}
+			else
+			{
+				for(unsigned int i=0;i<ChildBones.Size();++i)
+				{
+					TMatrix TempBoneTM = InBoneTM;
+					if(ChildBones(i)->GetBoneMatrix_Recursive(Bone, TempBoneTM))
+					{
+						InBoneTM = TempBoneTM;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		TString BoneName;
 		RBone *Parent;
 		TArray<RBone*> ChildBones;
 
-		TMatrix BoneTM;
+		TQuaternion Rotation;
+		TVector3 Translation;
+		TVector3 Scale;
 	};
+
+	TMatrix GetBoneMatrix(RBone* Bone)
+	{
+		TMatrix Ret;
+		Ret.SetIdentity();
+		RootBone->GetBoneMatrix_Recursive(Bone, Ret);
+		return Ret;
+	}
 
 	void AddBone(RBone* Bone, TString ParentName)
 	{

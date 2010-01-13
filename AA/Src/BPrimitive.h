@@ -18,6 +18,8 @@ public:
 	TPrimitive();
 	virtual ~TPrimitive();
 
+	virtual void UpdatePrimitive() {}
+
 	class RStaticPrimitiveBuffer* pBuffer;
 };
 
@@ -44,6 +46,8 @@ public:
 	TBatchInfo BatchInfo;
 
 	enum ERenderType RenderType;
+
+	virtual void UpdatePrimitive() {}
 
 	virtual void Render(TBatch *Batch) = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;

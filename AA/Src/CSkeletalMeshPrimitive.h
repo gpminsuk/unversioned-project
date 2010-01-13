@@ -25,19 +25,29 @@ public:
 		TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
 		~TBone();
 
+		TMatrix BoneTM;
+
 		RBoneHierarchy::RBone* BoneRef;
 		TArray<RSkeletalSubMesh*> SubMesheRefs;
 		RAnimationBoneSequence* AnimationBoneSequenceRef;
 
 		TArray<TBone*> ChildBones;
 
-		void FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix BoneTM = TMatrix());
-		void FillStaticIndexBuffer_Recursive(ID* pIndices);
+		VD* FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix BoneTM = TMatrix());
+		ID* FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex);
 
 		unsigned int NumTotalVertices_Recursive();
 		unsigned int NumTotalIndices_Recursive();
+
+		void CalcBoneMatrices_Recursive(unsigned int CurrentFrame);
 	};
+
+	virtual void UpdatePrimitive();
+	virtual void CalcBoneMatrices();
+
 	TBone* RootBone;
+	RAnimationSequence* AnimationSequenceRef;
+	unsigned int CurrentFrame;
 };
 
 class CSkeletalMeshPrimitive : public CMeshPrimitive
@@ -47,6 +57,8 @@ public:
 	~CSkeletalMeshPrimitive(void);
 
 	TSkeletalMesh* SkeletalMeshTemplate;
+
+	virtual void UpdatePrimitive();
 
 	virtual void Render(TBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);

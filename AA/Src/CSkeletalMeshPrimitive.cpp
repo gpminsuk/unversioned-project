@@ -17,6 +17,14 @@ CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void)
 	delete SkeletalMeshTemplate;
 }
 
+void CSkeletalMeshPrimitive::UpdatePrimitive()
+{
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		Primitives(i)->UpdatePrimitive();
+	}
+}
+
 void CSkeletalMeshPrimitive::Render(TBatch *Batch)
 {
 	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
@@ -25,6 +33,7 @@ void CSkeletalMeshPrimitive::Render(TBatch *Batch)
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 {
+	UpdatePrimitive();
 	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
 		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
 	for(unsigned int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
@@ -57,8 +66,30 @@ unsigned int CSkeletalMeshPrimitive::GetNumIndices()
 }
 
 TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+:	CurrentFrame(0),
+	AnimationSequenceRef(InAnimationSequence)
 {
-	RootBone = new TBone(InBoneHierarchy->RootBone, InSkeletalMesh);
+	RootBone = new TBone(InBoneHierarchy->RootBone, InSkeletalMesh, InAnimationSequence);	
+
+	UpdatePrimitive();
+}
+
+TSkeletalMesh::~TSkeletalMesh()
+{
+	delete RootBone;
+}
+
+void TSkeletalMesh::UpdatePrimitive()
+{
+	delete pBuffer;
+
+	CurrentFrame+=20;
+	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame)
+	{
+		CurrentFrame = 0;
+	}
+
+	CalcBoneMatrices();
 
 	pBuffer = new RStaticPrimitiveBuffer();
 
@@ -80,15 +111,38 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InS
 	pIB->nIndices = RootBone->NumTotalIndices_Recursive();
 	pIB->pIndices = new ID[pIB->nIndices];
 
-	RootBone->FillStaticIndexBuffer_Recursive(pIB->pIndices);
+	unsigned short BaseIndex = 0;
+	RootBone->FillStaticIndexBuffer_Recursive(pIB->pIndices, &BaseIndex);
 }
 
-TSkeletalMesh::~TSkeletalMesh()
+void TSkeletalMesh::CalcBoneMatrices()
 {
-	delete RootBone;
+	RootBone->CalcBoneMatrices_Recursive(CurrentFrame);
+}
+
+void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame)
+{
+	BoneTM.SetIdentity();
+	//if(AnimationBoneSequenceRef)
+	{
+		//BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));
+		//BoneTM.Translate(AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
+		//BoneTM.Scale(BoneRef->Scale);
+	}
+	//else
+	{
+		BoneTM.Rotate(BoneRef->Rotation);
+		BoneTM.Translate(BoneRef->Translation);
+		BoneTM.Scale(BoneRef->Scale);
+	}
+	for(unsigned int i=0;i<ChildBones.Size();++i)
+	{
+		ChildBones(i)->CalcBoneMatrices_Recursive(CurrentFrame);
+	}
 }
 
 TSkeletalMesh::TBone::TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+:	AnimationBoneSequenceRef(0)
 {
 	BoneRef = InBone;
 	for(unsigned int i=0;i<InSkeletalMesh->SkeletalSubMeshes.Size();++i)
@@ -134,9 +188,6 @@ unsigned int TSkeletalMesh::TBone::NumTotalVertices_Recursive()
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
-
-		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
-			continue;
 #endif
 		NumVertices += SubMesh->pVB->nVertices;
 	}
@@ -156,9 +207,6 @@ unsigned int TSkeletalMesh::TBone::NumTotalIndices_Recursive()
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
-
-		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
-			continue;
 #endif
 		NumIndices += SubMesh->pIB->nIndices;
 	}
@@ -169,7 +217,7 @@ unsigned int TSkeletalMesh::TBone::NumTotalIndices_Recursive()
 	return NumIndices;
 }
 
-void TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix BoneTM)
+TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix InBoneTM)
 {
 	for(unsigned int i=0;i<SubMesheRefs.Size();++i)
 	{
@@ -177,14 +225,12 @@ void TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatr
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
-
-		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
-			continue;
 #endif
 		for(unsigned int j=0;j<SubMesh->pVB->nVertices;++j)
 		{
 			RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(SubMesh->pVB->pVertices);
-			pVertices[j].Pos = BoneRef->BoneTM.TransformVector3(Vertex[j].Pos);
+			pVertices[j].Pos = BoneTM.TransformVector3(Vertex[j].Pos);
+			//pVertices[j].Pos = Vertex[j].Pos;
 			pVertices[j].UV = Vertex[j].UV;
 			pVertices[j].Normal = Vertex[i].Normal;
 		}
@@ -192,12 +238,13 @@ void TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatr
 	}
 	for(unsigned int i=0;i<ChildBones.Size();++i)
 	{
-		BoneTM *= BoneRef->BoneTM;
-		ChildBones(i)->FillStaticVertexBuffer_Recursive(pVertices, BoneTM);
+		//InBoneTM *= BoneTM;
+		pVertices = ChildBones(i)->FillStaticVertexBuffer_Recursive(pVertices, InBoneTM);
 	}
+	return pVertices;
 }
 
-void TSkeletalMesh::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices)
+TSkeletalMesh::ID* TSkeletalMesh::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex)
 {
 	for(unsigned int i=0;i<SubMesheRefs.Size();++i)
 	{
@@ -205,19 +252,20 @@ void TSkeletalMesh::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices)
 #ifdef TEST_BIP_EXCLUDED
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
-
-		if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
-			continue;
 #endif
 		for(unsigned int j=0;j<SubMesh->pIB->nIndices;++j)
 		{
 			RSkeletalSubMesh::ID *Index = reinterpret_cast<RSkeletalSubMesh::ID*>(SubMesh->pIB->pIndices);
-			pIndices[j] = Index[j];
+			pIndices[j]._1 = Index[j]._1 + *BaseIndex;
+			pIndices[j]._2 = Index[j]._2 + *BaseIndex;
+			pIndices[j]._3 = Index[j]._3 + *BaseIndex;
 		}
 		pIndices += SubMesh->pIB->nIndices;
+		*BaseIndex += SubMesh->pVB->nVertices;
 	}
 	for(unsigned int i=0;i<ChildBones.Size();++i)
 	{
-		ChildBones(i)->FillStaticIndexBuffer_Recursive(pIndices);
+		pIndices = ChildBones(i)->FillStaticIndexBuffer_Recursive(pIndices, BaseIndex);
 	}
+	return pIndices;
 }

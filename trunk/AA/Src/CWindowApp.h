@@ -34,4 +34,5 @@ public:
 	virtual void SetMousePos(float X, float Y, bool isRatio = false);
 };
 
+extern SYSTEM_INFO GSystemInformation;
 extern CWindowApp* GApp;

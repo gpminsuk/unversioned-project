@@ -39,6 +39,30 @@ DWORD GPrimitiveType[] =
 	D3DPT_TRIANGLEFAN
 };
 
+DWORD GStencilOperation[] =
+{
+	D3DSTENCILOP_KEEP,
+	D3DSTENCILOP_ZERO,
+	D3DSTENCILOP_REPLACE,
+	D3DSTENCILOP_INCRSAT,
+	D3DSTENCILOP_DECRSAT,
+	D3DSTENCILOP_INVERT,
+	D3DSTENCILOP_INCR,
+	D3DSTENCILOP_DECR
+};
+
+DWORD GCompareFunction[] = 
+{
+	D3DCMP_NEVER,
+	D3DCMP_LESS,
+	D3DCMP_EQUAL,
+	D3DCMP_LESSEQUAL,
+	D3DCMP_GREATER,
+	D3DCMP_NOTEQUAL,
+	D3DCMP_GREATEREQUAL,
+	D3DCMP_ALWAYS,
+};
+
 CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
 :	m_pWindow(Window)
 {
@@ -489,8 +513,99 @@ bool CDirectXDriver::SetClipRect(unsigned int x, unsigned int y, unsigned int Wi
 	return GetDevice()->SetScissorRect(&rt) == D3D_OK;
 }
 
-bool CDirectXDriver::SetFillMode(EFillMode FM)
+void CDirectXDriver::SetFillMode(EFillMode FM)
 {
-	GetDevice()->SetRenderState(D3DRS_FILLMODE,GFillMode[FM]);
-	return true;
+	if(CurrentFillMode != FM)
+	{
+		GetDevice()->SetRenderState(D3DRS_FILLMODE,GFillMode[CurrentFillMode = FM]);
+	}
+}
+
+void CDirectXDriver::SetStencilState(TStencilState& StencilState)
+{
+	if(CurrentStencilState.EnableStencil != StencilState.EnableStencil)
+	{
+		GetDevice()->SetRenderState(D3DRS_STENCILENABLE, CurrentStencilState.EnableStencil = StencilState.EnableStencil);
+	}
+	if(CurrentStencilState.EnableStencil)
+	{
+		bool DoesUseComp=false;
+		if(CurrentStencilState.StencilTest != StencilState.StencilTest)
+		{
+			GetDevice()->SetRenderState(D3DRS_STENCILFUNC, GCompareFunction[CurrentStencilState.StencilTest = StencilState.StencilTest]);
+		}
+		if(CurrentStencilState.StencilTest != CompareFunc_Always || CurrentStencilState.StencilTest != CompareFunc_Never)
+		{
+			if(CurrentStencilState.StencilFailOp != StencilState.StencilFailOp)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILFAIL, GStencilOperation[CurrentStencilState.StencilFailOp = StencilState.StencilFailOp]);
+			}
+			if(CurrentStencilState.StencilZFailOp != StencilState.StencilZFailOp)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILZFAIL, GStencilOperation[CurrentStencilState.StencilZFailOp = StencilState.StencilZFailOp]);
+			}
+			if(CurrentStencilState.StencilZPassOp != StencilState.StencilZPassOp)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILPASS, GStencilOperation[CurrentStencilState.StencilZPassOp = StencilState.StencilZPassOp]);
+			}
+			DoesUseComp = true;
+		}
+		if(CurrentStencilState.EnableTwoSideStencil != StencilState.EnableTwoSideStencil)
+		{
+			GetDevice()->SetRenderState(D3DRS_CCW_STENCILFUNC, GCompareFunction[CurrentStencilState.StencilTest = StencilState.StencilTest]);
+		}
+		if(CurrentStencilState.EnableTwoSideStencil)
+		{
+			if(CurrentStencilState.BackFaceStencilTest != StencilState.BackFaceStencilTest)
+			{
+				GetDevice()->SetRenderState(D3DRS_CCW_STENCILFUNC, GCompareFunction[CurrentStencilState.BackFaceStencilTest = StencilState.BackFaceStencilTest]);
+			}
+			if(CurrentStencilState.BackFaceStencilTest != CompareFunc_Always || CurrentStencilState.BackFaceStencilTest != CompareFunc_Never)
+			{
+				if(CurrentStencilState.BackFaceStencilFailOp != StencilState.BackFaceStencilFailOp)
+				{
+					GetDevice()->SetRenderState(D3DRS_CCW_STENCILFAIL, GStencilOperation[CurrentStencilState.BackFaceStencilFailOp = StencilState.BackFaceStencilFailOp]);
+				}
+				if(CurrentStencilState.BackFaceStencilZFailOp != StencilState.BackFaceStencilZFailOp)
+				{
+					GetDevice()->SetRenderState(D3DRS_CCW_STENCILZFAIL, GStencilOperation[CurrentStencilState.BackFaceStencilZFailOp = StencilState.BackFaceStencilZFailOp]);
+				}
+				if(CurrentStencilState.BackFaceStencilZPassOp != StencilState.BackFaceStencilZPassOp)
+				{
+					GetDevice()->SetRenderState(D3DRS_CCW_STENCILPASS, GStencilOperation[CurrentStencilState.BackFaceStencilZPassOp = StencilState.BackFaceStencilZPassOp]);
+				}
+				DoesUseComp = true;
+			}
+		}
+		if(DoesUseComp)
+		{
+			if(CurrentStencilState.StencilReadMask != StencilState.StencilReadMask)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILMASK, CurrentStencilState.StencilReadMask = StencilState.StencilReadMask);
+			}
+			if(CurrentStencilState.StencilWriteMask != StencilState.StencilWriteMask)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILWRITEMASK, CurrentStencilState.StencilWriteMask = StencilState.StencilWriteMask);
+			}
+			if(CurrentStencilState.StencilRef != CurrentStencilState.StencilRef)
+			{
+				GetDevice()->SetRenderState(D3DRS_STENCILREF, CurrentStencilState.StencilRef = StencilState.StencilRef);
+			}
+		}
+	}
+}
+
+void CDirectXDriver::SetDepthState(TDepthState& DepthState)
+{
+	if(CurrentDepthState.EnableDepthWrite != DepthState.EnableDepthWrite)
+	{
+		GetDevice()->SetRenderState(D3DRS_ZWRITEENABLE, CurrentDepthState.EnableDepthWrite = DepthState.EnableDepthWrite);
+	}
+	if(CurrentDepthState.EnableDepthWrite)
+	{
+		if(CurrentDepthState.DepthTest != DepthState.DepthTest)
+		{
+			GetDevice()->SetRenderState(D3DRS_ZFUNC, CurrentDepthState.DepthTest = DepthState.DepthTest);
+		}
+	}
 }

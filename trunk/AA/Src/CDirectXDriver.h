@@ -54,7 +54,9 @@ public:
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
 
 	////////////////////////////////////////////////////// RenderState //////////////////////////////////////////////////
-	virtual bool SetFillMode(EFillMode FM);
+	virtual void SetFillMode(EFillMode FM);
+	virtual void SetStencilState(TStencilState& StencilState);
+	virtual void SetDepthState(TDepthState& DepthState);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	class RDXRenderTarget* BackBuffer;

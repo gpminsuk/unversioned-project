@@ -1,8 +1,8 @@
 #pragma once
 
 #include <windows.h>
-#include "TDataTypes.h"
-#include "InputDefine.h"
+#include "..\\TDataTypes.h"
+#include "..\\InputDefine.h"
 
 #include "..\\UFreeTypeDrawer.h"
 

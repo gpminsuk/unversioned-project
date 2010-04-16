@@ -19,9 +19,11 @@ CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void)
 
 void CSkeletalMeshPrimitive::UpdatePrimitive()
 {
+	NumIndices = 0;
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
 		Primitives(i)->UpdatePrimitive();
+		NumIndices += Primitives(i)->pBuffer->m_pIB->nIndices;
 	}
 }
 
@@ -34,35 +36,37 @@ void CSkeletalMeshPrimitive::Render(TBatch *Batch)
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 {
 	UpdatePrimitive();
-	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
-		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
-	for(unsigned int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
+	TPrimitive* Primitive = Primitives(0);
+	memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices, 
+		Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride);
+	for(unsigned int k=0;k<Primitive->pBuffer->m_pVB->nVertices;++k)
 	{
-		*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride])));
+		*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])));
 	}
-	*pData += Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride;
-	return Primitives(0)->pBuffer->m_pVB->nVertices;
+	*pData += Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride;
+	return Primitive->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
+	TPrimitive* Primitive = Primitives(0);
 	for(unsigned int k=0;k<GetNumIndices();++k)
 	{
 		TIndex16 tmpIndex;
-		tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
-		tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
-		tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
+		tmpIndex._1 = Primitive->pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
+		tmpIndex._2 = Primitive->pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
+		tmpIndex._3 = Primitive->pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
 		(*pData)[k] = tmpIndex;
 	}
-	*BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
+	*BaseIndex += Primitive->pBuffer->m_pVB->nVertices;
 	*pData += GetNumIndices();
 
-	return Primitives(0)->pBuffer->m_pVB->nVertices;
+	return Primitive->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CSkeletalMeshPrimitive::GetNumIndices()
 {
-	return Primitives(0)->pBuffer->m_pIB->nIndices;
+	return NumIndices;
 }
 
 TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)

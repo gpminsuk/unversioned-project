@@ -12,10 +12,13 @@
 
 
 CWindowApp	*GApp = 0;
+SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
 bool CWindowApp::CreateApp()
 {
+	GetSystemInfo(&GSystemInformation);
+
 	GApp = this;
 
 	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);

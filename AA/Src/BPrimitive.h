@@ -36,6 +36,7 @@ public:
 	TMatrix TM;
 
 	TArray<TPrimitive*> Primitives;
+	unsigned int NumIndices;
 
 	struct TBatchInfo
 	{

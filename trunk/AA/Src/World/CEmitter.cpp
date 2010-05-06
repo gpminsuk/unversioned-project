@@ -10,9 +10,6 @@ CEmitter::CEmitter()
 :	ParticleIndex(0),
 	CurrentParticleNum(0)
 {
-	CParticlePrimitive* Primitive = new CParticlePrimitive();
-	Primitives.AddItem(Primitive);
-
 	for(int i=0;i<100;++i)
 	{
 		TParticleInstance* Inst = new TParticleInstance();
@@ -21,7 +18,7 @@ CEmitter::CEmitter()
 		Inst->Size = TVector2(0.05f,0.5f);
 		Particles.AddItem(Inst);
 	}
-	Primitive->CreateParticlePrimitive(100);
+	//Primitive->CreateParticlePrimitive(100);
 }
 
 CEmitter::~CEmitter()
@@ -32,10 +29,9 @@ CEmitter::~CEmitter()
 	}
 }
 
-#include <Windows.h>
 void CEmitter::Tick(unsigned long dTime)
 {
-	for(unsigned int i=0;i<Primitives.Size();++i)
+	/*for(unsigned int i=0;i<Primitives.Size();++i)
 	{
 		CParticlePrimitive* Prim = dynamic_cast<CParticlePrimitive*>(Primitives(i));
 		if(Prim)
@@ -59,7 +55,7 @@ void CEmitter::Tick(unsigned long dTime)
 		Particles(ParticleIndex)->LifeTime = 5;
 		Particles(ParticleIndex)->Position = TVector3(0,0,0);
 		Particles(ParticleIndex)->Size = TVector2(0.5f,0.5f);
-		Particles(ParticleIndex)->Velocity = TVector3(0.0/*(rand()%10)/10.0f-0.5f*/,0,0);
+		Particles(ParticleIndex)->Velocity = TVector3(0.0/*(rand()%10)/10.0f-0.5f*//*,0,0);
 		Particles(ParticleIndex)->isAlive = true;
 	}
 	static unsigned long TC = GetTickCount();
@@ -78,7 +74,7 @@ void CEmitter::Tick(unsigned long dTime)
 			}
 		}
 	}	
-	TC = GetTickCount();
+	TC = GetTickCount();*/
 }
 
 void CEmitter::PhysicsTick(unsigned long dTime)

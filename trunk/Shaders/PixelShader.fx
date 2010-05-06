@@ -42,4 +42,5 @@ void PS(float2 TexCoord : TEXCOORD0,
 		OutColor = Ambient;
 	else
 		OutColor = Specular + Diffuse + Ambient;
+	OutColor = float4(TexCoord.x, TexCoord.y, 1, 1);
 }

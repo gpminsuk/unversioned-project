@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\Src\World;.\Src;.\Src\Temporary;&quot;..\External\freetype-2.3.7\include&quot;"
+				AdditionalIncludeDirectories=".\Src\World;.\Src;.\Src\Temporary;&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
@@ -531,14 +531,6 @@
 			<Filter
 				Name="B"
 				>
-				<File
-					RelativePath=".\Src\World\BThing.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\BThing.h"
-					>
-				</File>
 				<Filter
 					Name="CollisionBody"
 					>
@@ -551,50 +543,34 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Component"
+					>
+					<File
+						RelativePath=".\Src\World\BComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\BComponent.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Thing"
+					>
+					<File
+						RelativePath=".\Src\World\BThing.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\BThing.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="C"
 				>
-				<File
-					RelativePath=".\Src\World\CCamera.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CCamera.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CCameraViewport.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CCameraViewport.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CCharacter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CCharacter.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CEmitter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\CEmitter.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\CTerrain.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\CTerrain.h"
-					>
-				</File>
 				<Filter
 					Name="CollisionBody"
 					>
@@ -618,6 +594,66 @@
 				<Filter
 					Name="Thing"
 					>
+					<File
+						RelativePath=".\Src\World\CCamera.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCamera.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCameraViewport.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCameraViewport.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCharacter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CCharacter.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CEmitter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CEmitter.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CTerrain.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CTerrain.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Components"
+					>
+					<File
+						RelativePath=".\Src\World\CSkeletalMeshComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CSkeletalMeshComponent.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CTerrainComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\World\CTerrainComponent.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -647,6 +683,26 @@
 					RelativePath=".\Src\UFreeTypeDrawer.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="XMLParser"
+				>
+				<File
+					RelativePath=".\Src\UXMLParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Src\UXMLParser.h"
+					>
+				</File>
+				<Filter
+					Name="include"
+					>
+					<File
+						RelativePath="..\External\expat\include\xmlparse.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

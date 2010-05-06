@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "CTerrain.h"
-#include "CTerrainPrimitive.h"
+#include "CTerrainComponent.h"
 
 #include "CHeightFieldCollisionBody.h"
 
@@ -10,13 +10,11 @@ CTerrain::CTerrain(CCamera* Camera)
 {
 	m_pCamera = Camera;
 
-	CTerrainPrimitive* TerrainPrimitive = new CTerrainPrimitive();
-	Primitives.AddItem(TerrainPrimitive);
+	CTerrainComponent* TerrainComponent = new CTerrainComponent(this, m_pCamera);
+	Components.AddItem(TerrainComponent);
 
 	CHeightFieldCollisionBody* TerrainCollisionBody = new CHeightFieldCollisionBody(this);
 	CollisionBodies.AddItem(TerrainCollisionBody);
-
-	TerrainPrimitive->CreateTerrainPrimitive(32, 32, 1, 1);
 
 	UpdateTransform();
 }
@@ -27,19 +25,11 @@ CTerrain::~CTerrain(void)
 
 void CTerrain::Tick(unsigned long dTime)
 {
-	for(unsigned int i=0;i<Primitives.Size();++i)
-	{
-		CTerrainPrimitive* Prim = dynamic_cast<CTerrainPrimitive*>(Primitives(i));
-		if(Prim)
-		{
-			Prim->UpdateTerrainPrimitive(m_pCamera->m_Location);
-		}
-	}
+	BThing::Tick(dTime);
 }
 
 void CTerrain::PhysicsTick(unsigned long dTime)
 {
-
 }
 
 void CTerrain::UpdateTransform()

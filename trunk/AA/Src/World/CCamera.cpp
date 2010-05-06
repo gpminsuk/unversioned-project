@@ -137,9 +137,9 @@ void CCamera::Tick(unsigned long  dTime)
 			if(GKeyMap['S'])
 				m_Location -= (m_LookAt - m_Location).Normalize()/100000.0f;
 			if(GKeyMap['A'])
-				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up)/100000.0f;
+				m_Location += ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize()/100000.0f;
 			if(GKeyMap['D'])
-				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up)/100000.0f;
+				m_Location -= ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize()/100000.0f;
 
 			m_LookAt.x = COSINE(m_Pi)*COSINE(m_Theta)*m_Distance;
 			m_LookAt.z = COSINE(m_Pi)*SINE(m_Theta)*m_Distance;

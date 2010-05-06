@@ -20,6 +20,13 @@ enum EPixelFormat
 	PixelFormat_D24S8,
 };
 
+enum ECullMode
+{
+	CullMode_None,
+	CullMode_CW,
+	CullMode_CCW
+};
+
 enum EFillMode
 {
 	FillMode_Point,
@@ -118,7 +125,6 @@ struct TDepthState
 		EnableDepthWrite(_EnableDepthWrite),
 		DepthTest(_DepthTest)
 	{ }
-
 };
 
 struct TLockedRect
@@ -174,10 +180,12 @@ public:
 	EFillMode CurrentFillMode;
 	TStencilState CurrentStencilState;
 	TDepthState CurrentDepthState;
+	ECullMode CurrentCullMode;
 
 	virtual void SetFillMode(EFillMode FM) = 0;
+	virtual void SetCullMode(ECullMode& CullMode) = 0;
 	virtual void SetStencilState(TStencilState& StencilState) = 0;
-	virtual void SetDepthState(TDepthState& DepthState) = 0;
+	virtual void SetDepthState(TDepthState& DepthState) = 0;	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 

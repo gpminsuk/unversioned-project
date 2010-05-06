@@ -30,6 +30,11 @@ public:
 		return mArray[idx];
 	}
 
+	T& EndItem()
+	{
+		return mArray[Size()-1];
+	}
+
 	void Clear(bool bFreeMemory = false)
 	{
 		mArray.clear();
@@ -85,14 +90,35 @@ public:
 		return !strcmp(Str,_Str.Str);
 	}
 
-	bool operator ==(char* _Str)
+	bool operator ==(const char* _Str)
 	{
 		return !strcmp(Str,_Str);
 	}
 
-	void operator =(TString& _Str)
+	void operator =(const TString _Str)
 	{
 		memcpy(Str, _Str.Str, 1024);
+	}
+
+	void operator =(const char* _Str)
+	{
+		size_t len = (strlen(_Str) < 1024)?strlen(_Str):1024;
+		memcpy(Str, _Str, len + 1);
+	}
+
+	char* GetBuffer()
+	{
+		return Str;
+	}
+
+	unsigned int GetLength()
+	{
+		return (unsigned int)strlen(Str);
+	}
+
+	int ToInt()
+	{
+		return atoi(Str);
 	}
 };
 
@@ -502,7 +528,6 @@ public:
 
 	TMatrix& Rotate(TQuaternion Rotation)
 	{
-		TMatrix OutMatrix;
 		const float x2 = Rotation.v.x + Rotation.v.x;	
 		const float y2 = Rotation.v.y + Rotation.v.y;  
 		const float z2 = Rotation.v.z + Rotation.v.z;
@@ -511,30 +536,30 @@ public:
 			const float yy2 = Rotation.v.y * y2;			
 			const float zz2 = Rotation.v.z * z2;
 
-			OutMatrix._11 = (1.0f - (yy2 + zz2));	
-			OutMatrix._22 = (1.0f - (xx2 + zz2));
-			OutMatrix._33 = (1.0f - (xx2 + yy2));
+			_11 = (1.0f - (yy2 + zz2));	
+			_22 = (1.0f - (xx2 + zz2));
+			_33 = (1.0f - (xx2 + yy2));
 		}
 		{
 			const float yz2 = Rotation.v.y * z2;   
 			const float wx2 = Rotation.w * x2;	
 
-			OutMatrix._32 = (yz2 - wx2);
-			OutMatrix._23 = (yz2 + wx2);
+			_32 = (yz2 - wx2);
+			_23 = (yz2 + wx2);
 		}
 		{
 			const float xy2 = Rotation.v.x * y2;
 			const float wz2 = Rotation.w * z2;
 
-			OutMatrix._21 = (xy2 - wz2);
-			OutMatrix._12 = (xy2 + wz2);
+			_21 = (xy2 - wz2);
+			_12 = (xy2 + wz2);
 		}
 		{
 			const float xz2 = Rotation.v.x * z2;
 			const float wy2 = Rotation.w * y2;   
 
-			OutMatrix._31 = (xz2 + wy2);
-			OutMatrix._13 = (xz2 - wy2);
+			_31 = (xz2 + wy2);
+			_13 = (xz2 - wy2);
 		}
 		return *this;
 	}

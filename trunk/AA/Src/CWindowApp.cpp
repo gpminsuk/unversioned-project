@@ -15,8 +15,9 @@ CWindowApp	*GApp = 0;
 SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
-bool CWindowApp::CreateApp()
+bool CWindowApp::CreateApp(TApplicationInfo& Info)
 {
+	m_WindowInfo = (TWindowsInfo&)Info;
 	GetSystemInfo(&GSystemInformation);
 
 	GApp = this;

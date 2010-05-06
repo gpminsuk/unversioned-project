@@ -29,14 +29,14 @@ UWorld::UWorld(BRenderer* R)
 UWorld::~UWorld()
 {
 	//delete m_Emitter;
-	delete m_Cylinder;
+//	delete m_Cylinder;
 	delete m_Terrain;
 	delete m_Character;
 	delete m_pWorldData;
 
 	delete GLineBatcher;
 }
-float frame = 0;
+
 void UWorld::Tick(DWORD dTime)
 {
 	m_pViewport->UpdateCameraViewport();
@@ -60,27 +60,20 @@ bool UWorld::InitializeWorld()
 	m_pViewport->SetCurrentCamera(0);
 
 	m_Terrain = new CTerrain(m_pCamera);
-	//m_pViewport->Render(m_Terrain->Primitives(0));
+	m_pViewport->Render(m_Terrain);
 	m_pWorldData->AddThing(m_Terrain);
-
-	//m_Emitter = new CEmitter();
-	//m_pViewport->Render(m_Emitter->Primitives(0));
-	//m_pWorldData->AddThing(m_Emitter);
-
 
 	m_Character = new CCharacter();
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
-	m_pViewport->Render(m_Character->Primitives(0));
-	m_pViewport->Render(m_Character->Primitives(1));
-	//m_pViewport->Render(m_Character->CollisionBodies(0)->Primitives(0));
+	m_pViewport->Render(m_Character);
 	m_pWorldData->AddThing(m_Character);
 
-	m_Cylinder = new CCylinderPrimitive();
+	/*m_Cylinder = new CCylinderPrimitive();
 	m_Cylinder->RenderType = RenderType_Opaque;
 	m_Cylinder->Translation = TVector3(5,5,5);
 	m_Cylinder->TM._41 = 5;
 	m_Cylinder->TM._42 = 2.5;
-	m_Cylinder->TM._43 = 5;
+	m_Cylinder->TM._43 = 5;*/
 	//m_pViewport->Render(m_Cylinder);
 	
 	m_pCamera->m_Subject = m_Character;

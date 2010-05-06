@@ -1,13 +1,13 @@
 #include "StdAfx.h"
-#include "BCollisionBody.h"
+#include "BComponent.h"
 #include "BPrimitive.h"
 
-BCollisionBody::BCollisionBody(BThing* InOwner)
+BComponent::BComponent(BThing* InOwner)
 :	Owner(InOwner)
 {
 }
 
-BCollisionBody::~BCollisionBody()
+BComponent::~BComponent()
 {
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{

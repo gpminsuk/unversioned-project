@@ -12,7 +12,7 @@
 class CDirectXDriver : public BDriver
 {
 public:
-	CDirectXDriver(TWindowInfo *Window);
+	CDirectXDriver(struct TWindowsInfo *Window);
 	virtual ~CDirectXDriver();
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_pDevice; }
 
@@ -55,6 +55,8 @@ public:
 
 	////////////////////////////////////////////////////// RenderState //////////////////////////////////////////////////
 	virtual void SetFillMode(EFillMode FM);
+	virtual void SetCullMode(ECullMode& CullMode);
+
 	virtual void SetStencilState(TStencilState& StencilState);
 	virtual void SetDepthState(TDepthState& DepthState);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +66,7 @@ public:
 	LPDIRECT3DDEVICE9	m_pDevice;
 	LPDIRECT3D9			m_pD3D;
 private:
-	TWindowInfo*		m_pWindow;
+	TWindowsInfo*		m_pWindow;
 
 	IDirect3DVertexDeclaration9* m_Declarations[VertexType_End];
 };

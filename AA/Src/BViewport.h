@@ -2,7 +2,7 @@
 
 #include "TDataTypes.h"
 
-class BPrimitive;
+class BThing;
 class BLight;
 
 enum E_SceneType
@@ -36,7 +36,7 @@ public:
 	unsigned long VisibleScenes;
 
 	void Clear();
-	void Render(BPrimitive* pTemplate);
+	void Render(BThing* pThing);
 	
 	void SortTemplates();
 private:

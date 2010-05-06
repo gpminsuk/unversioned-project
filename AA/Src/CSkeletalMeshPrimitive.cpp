@@ -127,13 +127,14 @@ void TSkeletalMesh::CalcBoneMatrices()
 void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame)
 {
 	BoneTM.SetIdentity();
-	//if(AnimationBoneSequenceRef)
+	if(AnimationBoneSequenceRef)
 	{
-		//BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));
-		//BoneTM.Translate(AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
-		//BoneTM.Scale(BoneRef->Scale);
+		static float a= 0.01f;
+		BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));
+		BoneTM.Translate(AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
+		BoneTM.Scale(BoneRef->Scale);
 	}
-	//else
+	else
 	{
 		BoneTM.Rotate(BoneRef->Rotation);
 		BoneTM.Translate(BoneRef->Translation);
@@ -242,7 +243,7 @@ TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pV
 	}
 	for(unsigned int i=0;i<ChildBones.Size();++i)
 	{
-		//InBoneTM *= BoneTM;
+		InBoneTM *= BoneTM;
 		pVertices = ChildBones(i)->FillStaticVertexBuffer_Recursive(pVertices, InBoneTM);
 	}
 	return pVertices;

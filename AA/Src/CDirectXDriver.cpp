@@ -63,7 +63,14 @@ DWORD GCompareFunction[] =
 	D3DCMP_ALWAYS,
 };
 
-CDirectXDriver::CDirectXDriver(TWindowInfo* Window)
+DWORD GCullMode[] =
+{
+	D3DCULL_NONE,
+	D3DCULL_CW,
+	D3DCULL_CCW
+};
+
+CDirectXDriver::CDirectXDriver(TWindowsInfo* Window)
 :	m_pWindow(Window)
 {
 	BackBuffer = new RDXRenderTarget();
@@ -132,10 +139,18 @@ bool CDirectXDriver::CreateDriver()
 		return false;
 	}
 
+	CurrentCullMode = CullMode_CCW;
+	CurrentDepthState = TDepthState(true, CompareFunc_LessEqual);
+	CurrentStencilState = TStencilState();
+	CurrentFillMode = FillMode_Solid;
+
 	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-	m_pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+	SetDepthState(CurrentDepthState);
+	SetStencilState(CurrentStencilState);
+	SetCullMode(CurrentCullMode);
+	SetFillMode(CurrentFillMode);
+
 	return true;
 }
 
@@ -607,5 +622,13 @@ void CDirectXDriver::SetDepthState(TDepthState& DepthState)
 		{
 			GetDevice()->SetRenderState(D3DRS_ZFUNC, CurrentDepthState.DepthTest = DepthState.DepthTest);
 		}
+	}
+}
+
+void CDirectXDriver::SetCullMode(ECullMode& CullMode)
+{
+	if(CurrentCullMode != CullMode)
+	{
+		GetDevice()->SetRenderState(D3DRS_CULLMODE, CullMode);
 	}
 }

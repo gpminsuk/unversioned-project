@@ -11,12 +11,14 @@ public:
 	BThing(void);
 	virtual ~BThing(void);
 
-	TArray<class BPrimitive*> Primitives;
+	TArray<class BComponent*> Components;
 	TBounds PrimitiveBounds;
 	TArray<class BCollisionBody*> CollisionBodies;
 	TBounds CollisionBodyBounds;
 
 	TVector3 m_Location;
+
+	virtual TArray<class BPrimitive*> GetPrimitives();
 
 	virtual void Tick(unsigned long dTime) = 0;
 	virtual void PhysicsTick(unsigned long dTime) = 0;

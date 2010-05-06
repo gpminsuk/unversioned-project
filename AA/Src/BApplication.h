@@ -3,6 +3,21 @@
 class BRenderer;
 class UWorld;
 
+enum EPlatform
+{
+	Platform_Windows_x86
+};
+
+struct TApplicationInfo
+{
+public:
+	TApplicationInfo() :
+	  Platform(Platform_Windows_x86)
+	  {}
+
+	EPlatform Platform;
+};
+
 class BApplication
 {
 public:
@@ -18,7 +33,7 @@ public:
 
 	virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
 
-	virtual bool CreateApp() = 0;
+	virtual bool CreateApp(TApplicationInfo& Info) = 0;
 	virtual void Do() = 0;
 	virtual bool DestroyApp() = 0;
 };

@@ -263,7 +263,7 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			{
 				for(unsigned int j=0;j<SizeY;++j)
 				{
-					Primitive->pLODIndices[(i*SizeX + j)*2 + 0] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 1, (i*SizeX + j)*4 + 2);
+					Primitive->pLODIndices[(i*SizeX + j)*2 + 0] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 2, (i*SizeX + j)*4 + 3);
 					Primitive->pLODIndices[(i*SizeX + j)*2 + 1] = TIndex16((i*SizeX + j)*4 + 0, (i*SizeX + j)*4 + 3, (i*SizeX + j)*4 + 1);
 				}
 			}

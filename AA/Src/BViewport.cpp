@@ -5,8 +5,9 @@
 #include <algorithm>
 
 #include "BDriver.h"
-#include "BPrimitive.h"
+#include "BThing.h"
 #include "BLineBatcher.h"
+#include "BPrimitive.h"
 
 BViewport::BViewport(void)
 :	VisibleScenes(Scene_World|Scene_Collision) // TODO
@@ -21,36 +22,41 @@ void BViewport::SortTemplates()
 {
 }
 
-void BViewport::Render(BPrimitive* pTemplate)
+void BViewport::Render(BThing* pThing)
 {
-	switch(pTemplate->RenderType)
+	TArray<BPrimitive*> pTemplates = pThing->GetPrimitives();
+	for(unsigned int i=0;i<pTemplates.Size();++i)
 	{
-	case RenderType_Opaque:
+		BPrimitive* pTemplate = pTemplates(i);
+		switch(pTemplate->RenderType)
 		{
-			m_OpaquePrimitives.AddItem(pTemplate);
-			m_Batches.m_pTemplates.AddItem(pTemplate);
-			BPrimitive* Prim = pTemplate;
-			Prim->Render(&m_Batches);
-			m_Batches.RenderType = PrimitiveType_TriangleList;
+		case RenderType_Opaque:
+			{
+				m_OpaquePrimitives.AddItem(pTemplate);
+				m_Batches.m_pTemplates.AddItem(pTemplate);
+				BPrimitive* Prim = pTemplate;
+				Prim->Render(&m_Batches);
+				m_Batches.RenderType = PrimitiveType_TriangleList;
+			}
+			break;
+		case RenderType_Line:
+			{
+				m_LineBatch.m_pTemplates.AddItem(pTemplate);
+				BPrimitive* Prim = pTemplate;
+				Prim->Render(&m_LineBatch);
+				m_LineBatch.RenderType = PrimitiveType_LineList;
+			}
+			break;
+		case RenderType_Particle:
+			{
+				m_ParticleBatch.m_pTemplates.AddItem(pTemplate);
+				BPrimitive* Prim = pTemplate;
+				Prim->Render(&m_ParticleBatch);
+				m_ParticleBatch.RenderType = PrimitiveType_TriangleList;
+			}
+			break;
 		}
-		break;
-	case RenderType_Line:
-		{
-			m_LineBatch.m_pTemplates.AddItem(pTemplate);
-			BPrimitive* Prim = pTemplate;
-			Prim->Render(&m_LineBatch);
-			m_LineBatch.RenderType = PrimitiveType_LineList;
-		}
-		break;
-	case RenderType_Particle:
-		{
-			m_ParticleBatch.m_pTemplates.AddItem(pTemplate);
-			BPrimitive* Prim = pTemplate;
-			Prim->Render(&m_ParticleBatch);
-			m_ParticleBatch.RenderType = PrimitiveType_TriangleList;
-		}
-		break;
-	}
+	}	
 }
 
 void BViewport::Clear()

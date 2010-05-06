@@ -2,7 +2,7 @@
 #include "CCharacter.h"
 
 #include "CBoxPrimitive.h"
-#include "CSkeletalMeshPrimitive.h"
+#include "CSkeletalMeshComponent.h"
 
 #include "CCylinderCollisionBody.h"
 
@@ -23,10 +23,8 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(0), RSkeletalMeshTable::SkeletalMeshes(0), RAnimationSequenceTable::Sequences(0));
-	CBoxPrimitive* CharacterPrimitive = new CBoxPrimitive();
-	Primitives.AddItem(SkeletalMeshPrimitive);
-	Primitives.AddItem(CharacterPrimitive);
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(this);
+	Components.AddItem(SkeletalMeshComponent);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CharacterCollisionBody);
@@ -69,17 +67,7 @@ void CCharacter::PhysicsTick(unsigned long dTime)
 }
 
 void CCharacter::UpdateTransform()
-{
-	for(unsigned int i=0;i<1;++i)
-	{
-		Primitives(i)->Translation = m_Location;
-		Primitives(i)->TM._41 = m_Location.x;
-		Primitives(i)->TM._42 = m_Location.y;
-		Primitives(i)->TM._43 = m_Location.z;
-		Primitives(i)->TM._11 = 10.0f;
-		Primitives(i)->TM._22 = 10.0f;
-		Primitives(i)->TM._33 = 10.0f;
-	}
+{	
 	for(unsigned int i=0;i<CollisionBodies(0)->Primitives.Size();++i)
 	{
 		CollisionBodies(0)->Primitives(i)->Translation = m_Location;

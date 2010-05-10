@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "UXMLParser.h"
+
+#include "BRenderer.h"
+
 #include "CWindowApp.h"
+#include "CDirectXDriver.h"
+
+#include "UWorld.h"
 
 UXMLParser::UXMLParser()
 {
@@ -30,16 +36,8 @@ void UXMLParser::StartElement(void *UserData, const char *Name, const char **Att
 		Element.Attributes.AddItem(Attribute);
 	}
 	Element.Parent = Parser->ParentElement;
-	if(Parser->ParentElement)
-	{
-		Parser->ParentElement->ChildElements.AddItem(Element);
-		Parser->ParentElement = &Parser->ParentElement->ChildElements.EndItem();		
-	}
-	else
-	{
-		Parser->Elements.AddItem(Element);
-		Parser->ParentElement = &Parser->Elements.EndItem();
-	}	
+	Parser->ParentElement->ChildElements.AddItem(Element);
+	Parser->ParentElement = &Parser->ParentElement->ChildElements.EndItem();			
 }
 
 void UXMLParser::EndElement(void *UserData, const char *Name)
@@ -55,7 +53,7 @@ bool UXMLParser::ReadXMLFile(char* FileName)
 	if(FilePointer)
 	{
 		Parser = XML_ParserCreate(NULL);
-		ParentElement = NULL;
+		ParentElement = &Root;
 		char buf[BUFSIZ];
 		int Done;
 		XML_SetUserData(Parser, this);
@@ -77,6 +75,11 @@ bool UXMLParser::ReadXMLFile(char* FileName)
 	return false;
 }
 
+bool UXMLParser::GetValue(char* Path, TString& Ret)
+{
+	return Root.GetValue(Path, Ret);
+}
+
 /////////////////////////////////// Application Config Parser ///////////////////////////////////
 
 UXMLApplicationParser::UXMLApplicationParser()
@@ -90,27 +93,62 @@ UXMLApplicationParser::~UXMLApplicationParser()
 }
 
 void UXMLApplicationParser::Parse()
-{
-	for(unsigned int i=0;i<Elements.Size();++i)
+{	
+	TXMLElement Application;
+	if(Root.GetChildElement("Application", Application))
 	{
-		TXMLElement& Element = Elements(i);
-		if(Element.IsElementName("Application") && Element.HasAttribute("Platform","Windows_x86"))
+		BApplication *app = 0;
+		if(Application.HasAttribute("Platform","Windows_x86"))
 		{
 			TWindowsInfo Info;
-			TXMLElement& ApplicationElement = Element;
-			if(Element.GetChildElement("Resolution", ApplicationElement))
+			TString Value;
+			if(Application.GetValue("Resolution.Width", Value))
 			{
-				TString Value;
-				Element.GetAttributeValue("Width", Value);
 				Info.m_wWidth = Value.ToInt();
-				Element.GetAttributeValue("Height", Value);
+			}
+			if(Application.GetValue("Resolution.Height", Value))
+			{
 				Info.m_wHeight = Value.ToInt();
 			}
-			BApplication *app = new CWindowApp();
-			if(app->CreateApp(Info))
-				app->Do();
+			app = new CWindowApp();
+			if(!app->CreateApp(Info))
+			{
+				app->DestroyApp();
+				app = 0;
+			}
+		}
+		TXMLElement Renderer;
+		if(Application.GetChildElement("Renderer", Renderer))
+		{
+			TRendererInfo Info;
+			TXMLElement Driver;
+			if(Renderer.GetChildElement("Driver", Driver))
+			{
+				if(Driver.HasAttribute("Platform", "DirectX"))
+				{
+					CWindowApp* WindowsApp = static_cast<CWindowApp*>(app);
+					if(WindowsApp)
+					{
+						GDriver = new CDirectXDriver(&WindowsApp->m_WindowInfo);
+						GDriver->CreateDriver();
+					}
+				}			
+			}
+			TString Value;
+			app->m_pRenderer = new BRenderer(app);
+		}
+		TXMLElement World;
+		if(Application.GetChildElement("World", World))
+		{
+			app->m_pWorld = new UWorld(app->m_pRenderer);
+		}
+
+		if(app)
+		{
+			app->Initialize();
+			app->Do();
 			app->DestroyApp();
 			delete app;
 		}
-	}	
+	}
 }

@@ -6,7 +6,6 @@
 #include "UWorld.h"
 
 #include "CWindowApp.h"
-#include "CDirectXDriver.h"
 
 #include "RResourceManager.h"
 
@@ -14,6 +13,26 @@
 CWindowApp	*GApp = 0;
 SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
+
+void CWindowApp::Initialize()
+{
+	RResourceManager::LoadResources();
+
+	if(m_pRenderer)
+	{
+		bRenderThreadQuit = false;
+		m_pRenderer->Start();
+	}
+	else
+	{
+		bRenderThreadQuit = true;
+	}
+
+	if(m_pWorld)
+	{
+		m_pWorld->InitializeWorld();
+	}
+}
 
 bool CWindowApp::CreateApp(TApplicationInfo& Info)
 {
@@ -60,20 +79,6 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info)
 	ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
 	UpdateWindow(m_WindowInfo.m_hWnd);
 
-	GDriver = new CDirectXDriver(&m_WindowInfo);
-	if(!GDriver->CreateDriver())
-		return false;
-
-	RResourceManager::LoadResources();
-
-	m_pRenderer = new BRenderer();		
-	m_pWorld = new UWorld(m_pRenderer);
-
-	m_pRenderer->SetApplication(this);
-	m_pRenderer->Start();
-	m_pWorld->InitializeWorld();
-
-
 	m_MouseMap.bLButtonDown = 0;
 	m_MouseMap.bRButtonDown = 0;
 	m_MouseMap.bMButtonDown = 0;
@@ -91,9 +96,6 @@ bool CWindowApp::DestroyApp()
 	m_pRenderer = 0;
 
 	RResourceManager::ReleaseAllResources();
-
-	delete GDriver;
-	GDriver = 0;
 	return true;
 }
 
@@ -259,7 +261,7 @@ void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		KeyEventTranslator(Message, wParam, lParam);
 		break;
-	}
+	}	
 }
 
 LRESULT CALLBACK CWindowApp::Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)

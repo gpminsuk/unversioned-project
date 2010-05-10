@@ -49,6 +49,7 @@ public:
 	void KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 
 	virtual void SetMousePos(float X, float Y, bool isRatio = false);
+	virtual void Initialize();
 };
 
 extern SYSTEM_INFO GSystemInformation;

@@ -13,10 +13,11 @@
 #include "BPrimitive.h"
 #include "BLineBatcher.h"
 
-BRenderer::BRenderer(void)
+BRenderer::BRenderer(BApplication *App)
 :	m_fFPS(0),
 	m_iFTimeIdx(0),
-	m_nViewportCount(0)
+	m_nViewportCount(0),
+	m_pApp(App)
 {
 	for(int i=0;i<FPS_COUNTER_NUMBER;++i)
 		m_dFrameTime[i] = 0;
@@ -47,6 +48,9 @@ BRenderer::~BRenderer()
 	delete m_DrawLinePass;
 	delete m_OpaqueBasePass;
 	delete m_BaseRTRenderPass;
+
+	delete GDriver;
+	GDriver = 0;
 }
 
 void BRenderer::AddViewport(BViewport* pViewport)

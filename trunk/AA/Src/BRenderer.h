@@ -14,10 +14,16 @@ class RPrimitiveBuffer;
 class BTextureBuffer;
 class BApplication;
 
+struct TRendererInfo
+{
+public:
+	TRendererInfo() {}
+};
+
 class BRenderer : public AThread
 {
 public:
-	BRenderer();
+	BRenderer(BApplication *App);
 	~BRenderer();
 
 	bool Initialize();
@@ -32,8 +38,6 @@ public:
 
 	void AddViewport(BViewport* pViewport);
 	void FetchViewports();
-
-	inline void SetApplication(BApplication *App) { m_pApp = App; }
 protected:
 	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;

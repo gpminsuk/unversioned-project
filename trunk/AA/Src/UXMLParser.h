@@ -23,6 +23,11 @@ struct TXMLAttribute
 		}
 		return false;
 	}
+
+	TString& GetValue()
+	{
+		return AttributeValue;
+	}
 };
 
 struct TXMLElement
@@ -76,6 +81,39 @@ struct TXMLElement
 		}
 		return false;
 	}	
+
+	bool GetValue(char* Path, TString& Ret)
+	{
+		char* RestPath = strchr(Path, '.');
+		if(RestPath)
+		{
+			char ElementName[1024];
+			memcpy(ElementName, Path, (RestPath - Path));
+			ElementName[(RestPath - Path)] = '\0';
+			for(unsigned int i=0;i<ChildElements.Size();++i)
+			{
+				TXMLElement& Element = ChildElements(i);
+				if(Element.ElementName == ElementName)
+				{
+					Element.GetValue(RestPath + 1, Ret);
+					return true;
+				}
+			}
+		}
+		else
+		{
+			for(unsigned int i=0;i<Attributes.Size();++i)
+			{
+				TXMLAttribute& Attribute = Attributes(i);
+				if(Attribute.AttributeName == Path)
+				{
+					Ret = Attribute.GetValue();
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 };
 
 class UXMLParser
@@ -88,8 +126,9 @@ public:
 	static void StartElement(void *UserData, const char *Name, const char **Atts);
 
 	bool ReadXMLFile(char* FileName);
+	bool GetValue(char* Path, TString& Ret);
 
-	TArray<TXMLElement> Elements;
+	TXMLElement Root;
 	TXMLElement* ParentElement;
 
 	XML_Parser Parser;

@@ -36,4 +36,5 @@ public:
 	virtual bool CreateApp(TApplicationInfo& Info) = 0;
 	virtual void Do() = 0;
 	virtual bool DestroyApp() = 0;
+	virtual void Initialize() = 0;
 };

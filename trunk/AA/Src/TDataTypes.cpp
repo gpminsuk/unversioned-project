@@ -4,6 +4,8 @@
 
 #include "BPrimitive.h"
 
+TMatrix TMatrix::Identity;
+
 int TBatch::GetNumIndices()
 {
 	int NumIndices = 0;

@@ -87,7 +87,7 @@ void TSkeletalMesh::UpdatePrimitive()
 {
 	delete pBuffer;
 
-	CurrentFrame+=20;
+	CurrentFrame+=2;
 	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame)
 	{
 		CurrentFrame = 0;
@@ -124,25 +124,76 @@ void TSkeletalMesh::CalcBoneMatrices()
 	RootBone->CalcBoneMatrices_Recursive(CurrentFrame);
 }
 
-void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame)
-{
+void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame, const TMatrix& ParentTM)
+{	
 	BoneTM.SetIdentity();
 	if(AnimationBoneSequenceRef)
 	{
-		static float a= 0.01f;
-		BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));
-		BoneTM.Translate(AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
-		BoneTM.Scale(BoneRef->Scale);
+		/*if(BoneRef->BoneName.Str[0] == 'B' && 
+			BoneRef->BoneName.Str[1] == 'i' && 
+			BoneRef->BoneName.Str[2] == 'p' &&
+			BoneRef->BoneName.Str[3] == '0' && 
+			BoneRef->BoneName.Str[4] == '1' && 
+			BoneRef->BoneName.Str[5] == ' ' &&
+			BoneRef->BoneName.Str[6] == 'L' && 
+			BoneRef->BoneName.Str[7] == ' ' && 
+			BoneRef->BoneName.Str[8] == 'U'
+			)*/
+		// AnimationBoneSequenceRef->GetPosKey(CurrentFrame)
+		// AnimationBoneSequenceRef->GetRotKey(CurrentFrame)		
+		//BoneTM = BoneRef->TM;
+		static int frame = 500;
+		TQuaternion Quat = AnimationBoneSequenceRef->GetRotKey(CurrentFrame);
+		if(Quat != TQuaternion())
+		{
+			BoneTM.Rotate(Quat);//BoneTM = BoneRef->TM;
+		}
+		else
+		{
+			BoneTM = BoneRef->TM;
+		}
+		/*TMatrix AnimationMat(TVector3(), AnimationBoneSequenceRef->GetRotKey(CurrentFrame), TVector3(1,1,1));
+		if(BoneRef->BoneName.Str[0] == 'B' && 
+			BoneRef->BoneName.Str[1] == 'i' && 
+			BoneRef->BoneName.Str[2] == 'p' &&
+			BoneRef->BoneName.Str[3] == '0' && 
+			BoneRef->BoneName.Str[4] == '1' && 
+			BoneRef->BoneName.Str[5] == ' ' &&
+			BoneRef->BoneName.Str[6] == 'P' && 
+			BoneRef->BoneName.Str[7] == 'o' && 
+			BoneRef->BoneName.Str[8] == 'n'
+			)
+			BoneTM = BoneRef->TM * AnimationMat;
+		else
+			BoneTM = BoneRef->TM * AnimationMat;*/
+		TVector3 Pos = AnimationBoneSequenceRef->GetPosKey(CurrentFrame);
+		if(Pos != TVector3(0,0,0))
+		{
+			BoneTM._41 = Pos.x;
+			BoneTM._42 = Pos.y;
+			BoneTM._43 = Pos.z;
+		}
+		else
+		{
+			BoneTM._41 = BoneRef->TM._41;
+			BoneTM._42 = BoneRef->TM._42;
+			BoneTM._43 = BoneRef->TM._43;
+		}
+		//BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));TQuaternion(TVector3(1,0,0),a)
+		//BoneTM.Translate(BoneRef->Translation + AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
+		//BoneTM.Scale(BoneRef->Scale);
 	}
 	else
 	{
-		BoneTM.Rotate(BoneRef->Rotation);
-		BoneTM.Translate(BoneRef->Translation);
-		BoneTM.Scale(BoneRef->Scale);
+		BoneTM = BoneRef->TM;
+		//BoneTM.Rotate(BoneRef->Rotation);
+		//BoneTM.Translate(BoneRef->Translation);
+		//BoneTM.Scale(BoneRef->Scale);
 	}
+	BoneTM = BoneTM * ParentTM;
 	for(unsigned int i=0;i<ChildBones.Size();++i)
 	{
-		ChildBones(i)->CalcBoneMatrices_Recursive(CurrentFrame);
+		ChildBones(i)->CalcBoneMatrices_Recursive(CurrentFrame, BoneTM);
 	}
 }
 
@@ -222,7 +273,7 @@ unsigned int TSkeletalMesh::TBone::NumTotalIndices_Recursive()
 	return NumIndices;
 }
 
-TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix InBoneTM)
+TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pVertices)
 {
 	for(unsigned int i=0;i<SubMesheRefs.Size();++i)
 	{
@@ -231,6 +282,11 @@ TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pV
 		if(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p')
 			continue;
 #endif
+		//if(!(SubMesh->BoneName.Str[0] == 'B' && SubMesh->BoneName.Str[1] == 'i' && SubMesh->BoneName.Str[2] == 'p'))
+		//	continue;
+		//if(!(SubMesh->BoneName.Str[0] == 'p' && SubMesh->BoneName.Str[1] == 'o' && SubMesh->BoneName.Str[2] == 'n'))
+		//	continue;
+
 		for(unsigned int j=0;j<SubMesh->pVB->nVertices;++j)
 		{
 			RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(SubMesh->pVB->pVertices);
@@ -243,8 +299,7 @@ TSkeletalMesh::VD* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(VD* pV
 	}
 	for(unsigned int i=0;i<ChildBones.Size();++i)
 	{
-		InBoneTM *= BoneTM;
-		pVertices = ChildBones(i)->FillStaticVertexBuffer_Recursive(pVertices, InBoneTM);
+		pVertices = ChildBones(i)->FillStaticVertexBuffer_Recursive(pVertices);
 	}
 	return pVertices;
 }

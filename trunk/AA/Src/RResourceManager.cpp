@@ -336,6 +336,8 @@ void LoadASEFile(char* fn)
 		if(!strcmp(string, "*GEOMOBJECT"))
 		{
 			RBoneHierarchy::RBone *Bone = NULL;
+			TVector3 BoneWorldLocation;
+			TQuaternion BoneWorldRotation;
 			while(1)
 			{
 				fgets(line, 1024, fp);
@@ -364,7 +366,8 @@ void LoadASEFile(char* fn)
 				if(!strcmp(string, "*NODE_TM"))
 				{
 					Bone = new RBoneHierarchy::RBone();
-					TVector3 Inherit_Pos, Inherit_Rot, RotAxis;
+					TMatrix BoneTM;
+					TVector3 Axis;
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -380,44 +383,50 @@ void LoadASEFile(char* fn)
 							continue;
 						}
 						
+						if(!strcmp(string, "*TM_ROW0"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneTM._11, &BoneTM._12, &BoneTM._13);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW1"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneTM._21, &BoneTM._22, &BoneTM._23);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW2"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneTM._31, &BoneTM._32, &BoneTM._33);
+							continue;
+						}
+
+						if(!strcmp(string, "*TM_ROW3"))
+						{
+							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneTM._41, &BoneTM._42, &BoneTM._43);
+							continue;
+						}
+
 						if(!strcmp(string, "*TM_ROTAXIS"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &RotAxis.x, &RotAxis.y, &RotAxis.z);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &Axis.x, &Axis.y, &Axis.z);
 							continue;
 						}
 
 						if(!strcmp(string, "*TM_ROTANGLE"))
 						{
-							float Theta;
-							sscanf_s(line, "%s%f",string, 1024, &Theta);
-							Bone->Rotation = TQuaternion(RotAxis, Theta);
-							continue;
-						}
-
-						if(!strcmp(string, "*TM_SCALE"))
-						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Scale.x, &Bone->Scale.y, &Bone->Scale.z);
+							float Angle;
+							sscanf_s(line, "%s%f",string, 1024, &Angle);
+							BoneWorldRotation = TQuaternion(Axis, Angle);
 							continue;
 						}
 
 						if(!strcmp(string, "*TM_POS"))
 						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Bone->Translation.x, &Bone->Translation.y, &Bone->Translation.z);
+							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneWorldLocation.x, &BoneWorldLocation.y, &BoneWorldLocation.z);
 							continue;
 						}
-
-						if(!strcmp(string, "*INHERIT_POS"))
-						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Inherit_Pos.x, &Inherit_Pos.y, &Inherit_Pos.z);
-							continue;
-						}
-
-						if(!strcmp(string, "*INHERIT_ROT"))
-						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Inherit_Rot.x, &Inherit_Rot.y, &Inherit_Rot.z);
-							continue;
-						}
-
+						
 						if(!strcmp(string, "}"))
 						{
 							break;
@@ -431,6 +440,19 @@ void LoadASEFile(char* fn)
 					{
 						BoneHierarchy->AddBone(Bone, ParentNodeName);
 					}
+					RBoneHierarchy::RBone* ItBone = Bone->Parent;
+					TArray<RBoneHierarchy::RBone*> BoneStack;
+					while(ItBone)
+					{
+						BoneStack.AddItem(ItBone);
+						ItBone = ItBone->Parent;
+					}
+					for(int i=(int)BoneStack.Size()-1;i>=0;--i)
+					{
+						BoneTM = BoneTM * BoneStack(i)->InvTM;
+					}
+					Bone->TM = BoneTM;
+					Bone->InvTM = BoneTM.Inverse();
 					continue;
 				}
 
@@ -618,7 +640,7 @@ void LoadASEFile(char* fn)
 
 							RSkeletalSubMesh::VD *Vertex = reinterpret_cast<RSkeletalSubMesh::VD*>(pVB->pVertices);
 							TMatrix InvWorld = BoneHierarchy->GetBoneMatrix(Bone);
-							InvWorld = InvWorld.Inverse();
+							InvWorld.Inverse();
 							for(int i=0;i<nASEIndices;++i)
 							{
 								Vertex[i*3 + 0].Pos = InvWorld.TransformVector3(pASEVertices[pASEIndices[i]._1]);
@@ -683,7 +705,7 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*TM_ANIMATION"))
 				{
-					RAnimationBoneSequence* Seq = new RAnimationBoneSequence(Bone->Translation, Bone->Rotation);
+					RAnimationBoneSequence* Seq = new RAnimationBoneSequence(BoneWorldLocation, BoneWorldRotation, AnimationSequence);
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -737,12 +759,21 @@ void LoadASEFile(char* fn)
 
 								if(!strcmp(string, "*CONTROL_ROT_SAMPLE"))
 								{
-									sscanf_s(line,"%s%f%f%f%f%f", string, 1024, &Time, &Rot.v.x, &Rot.v.y, &Rot.v.z, &Rot.w);
+									TVector3 Axis;
+									float Angle;
+									sscanf_s(line,"%s%f%f%f%f%f", string, 1024, &Time, &Axis.x, &Axis.y, &Axis.z, &Angle);
 									RAnimationBoneSequence::ROTKEY Key;
-									Rot.Normalize();
-									Key.Rot = Rot;
+									Key.Rot = TQuaternion(Axis, Angle);
 									Key.Time = Time;
-									Seq->RotKeys.AddItem(Key);
+									if(Seq->RotKeys.Size() == 0)
+									{
+										Seq->RotKeys.AddItem(Key);
+									}
+									else
+									{
+										Key.Rot = Key.Rot * Seq->RotKeys((int)(Seq->RotKeys.Size()-1)).Rot;
+										Seq->RotKeys.AddItem(Key);
+									}
 									continue;
 								}
 

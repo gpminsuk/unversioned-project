@@ -228,101 +228,111 @@ public:
 class TQuaternion
 {
 public:
-	TQuaternion() : v(), w(1) {}
-	TQuaternion(float x1, float y1, float z1, float w1) : v(x1, y1, z1), w(w1) {}
-	TQuaternion(const TQuaternion& _v) : v(_v.v), w(_v.w) {}
-	TQuaternion(TVector3 Axis, float theta) : v(Axis.x*SINE(theta/2.0f),(Axis.y*SINE(theta/2.0f)),(Axis.z*SINE(theta/2.0f))), w(COSINE(theta/2.0f)) {}
+	TQuaternion() : x(0), y(0), z(0), w(1) {}
+	TQuaternion(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+	TQuaternion(const TQuaternion& _v) : x(_v.x), y(_v.y), z(_v.z), w(_v.w) {}
+	TQuaternion(TVector3 Axis, float theta) : x(Axis.x*SINE(theta/2.0f)), y(Axis.y*SINE(theta/2.0f)), z(Axis.z*SINE(theta/2.0f)), w(COSINE(theta/2.0f)) {}
 
 	void Rotate(TVector3 Axis, float theta)
 	{
 		TQuaternion Temp(Axis, theta);
 		*this *= Temp;
-		//Normalize();
-	}
-
-	TVector3 TransformVector3D(TVector3& _v)
-	{
-		return (v^(v^_v))*2.0f + ((v^_v)*w*2.0f + _v);
 	}
 
 	TQuaternion& Normalize()
 	{
 		float Squared = SQRT(SizeSquared());
-		v=v/Squared;
-		w=w/Squared;
+		x/=Squared;
+		y/=Squared;
+		z/=Squared;
+		w/=Squared;
 		return *this;
 	}
 
 	float SizeSquared()
 	{
-		return v.SizeSquared() + w*w;
+		return x*x + y*y + z*z + w*w;
 	}
 
 	void Initialize()
 	{
-		v.x=0.0f; v.y=0.0f; v.z=0.0f; w=1.0f;
+		x=0.0f; y=0.0f; z=0.0f; w=1.0f;
 	}
 
 	TQuaternion& operator*=(TQuaternion& q)
 	{
-		float tmpw = w*q.w - (v|q.v);
-		v = (v*q.w) + (q.v*w) + (v^q.v);
-		w = tmpw;
+		float Dx =  x*q.w + y*q.z - z*q.y + w*q.x;
+		float Dy = -x*q.z + y*q.w + z*q.x + w*q.y;
+		float Dz =  x*q.y - y*q.x + z*q.w + w*q.z;
+		float Dw = -x*q.x - y*q.y - z*q.z + w*q.w;
+
+		x = Dx; y = Dy; z = Dz; w = Dw;
 		return *this;
 	}
 
 	TQuaternion operator*(TQuaternion& q)
 	{
-		float tmpw = w*q.w - (v|q.v);
-		v = (v*q.w) + (q.v*w) + (v^q.v);
-		w = tmpw;
-		return TQuaternion(v,w);
+		TQuaternion Ret;
+		float Dx =  x*q.w + y*q.z - z*q.y + w*q.x;
+		float Dy = -x*q.z + y*q.w + z*q.x + w*q.y;
+		float Dz =  x*q.y - y*q.x + z*q.w + w*q.z;
+		float Dw = -x*q.x - y*q.y - z*q.z + w*q.w;
+
+		Ret.x = Dx; Ret.y = Dy; Ret.z = Dz; Ret.w = Dw;
+		return Ret;
 	}
 
 	TQuaternion operator*(const float& f)
 	{
 		TQuaternion Ret;
-		Ret.v.x *= f;
-		Ret.v.y *= f;
-		Ret.v.z *= f;
-		Ret.w *= f;
+		Ret.x = x * f;
+		Ret.y = y * f;
+		Ret.z = z * f;
+		Ret.w = w * f;
 		return Ret;
 	}
 
 	TQuaternion operator/(const float& f)
 	{
 		TQuaternion Ret;
-		Ret.v.x /= f;
-		Ret.v.y /= f;
-		Ret.v.z /= f;
-		Ret.w /= f;
+		Ret.x = x / f;
+		Ret.y = y / f;
+		Ret.z = z / f;
+		Ret.w = w / f;
 		return Ret;
 	}
 
 	TQuaternion operator+(TQuaternion& q)
 	{
 		TQuaternion Ret;
-		Ret.v.x += q.v.x;
-		Ret.v.y += q.v.y;
-		Ret.v.z += q.v.z;
-		Ret.w += q.w;
+		Ret.x = x + q.x;
+		Ret.y = y + q.y;
+		Ret.z = z + q.z;
+		Ret.w = w + q.w;
 		return Ret;
 	}
+
+	bool operator!= (TQuaternion& q) { return (x != q.x || y != q.y || z != q.z || w != q.w); }
 	
 	static TQuaternion Slerp(TQuaternion a, TQuaternion b, float t)
 	{
-		float Pi = ARCCOSINE(a.v.x*b.v.x + a.v.y*b.v.y + a.v.z*b.v.z + a.w*b.w);
-		TQuaternion res = (a*(SINE(Pi*(1-t))) + b*(SINE(Pi*t)))/SINE(Pi);
+		float Pi = ARCCOSINE(a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w);
+		TQuaternion res = a*(SINE(Pi*(1.0f-t))/SINE(Pi)) + b*(SINE(Pi*t)/SINE(Pi));
+		res.Normalize();
 		return res;
 	}
 
-	TVector3 v;
+	float x;
+	float y;
+	float z;
 	float w;
 };
 
 class TMatrix
 {
 public:
+
+	static TMatrix Identity;
 
 	float _11, _12, _13, _14;
 	float _21, _22, _23, _24;
@@ -339,11 +349,15 @@ public:
 
 	TMatrix(TVector3 Translation, TQuaternion Rotation, TVector3 Scale)
 	{
-		_11 = 1.0f*Scale.x;	_12 = 0.0f;			_13 = 0.0f;			_14 = 0.0f;
-		_21 = 0.0f;			_22 = 1.0f*Scale.y; _23 = 0.0f;			_24 = 0.0f;
-		_31 = 0.0f;			_32 = 0.0f;			_33 = 1.0f*Scale.z; _34 = 0.0f;
-		_41 = Translation.x;_42 = Translation.y;_43 = Translation.z;_44 = 1.0f;
+		SetIdentity();
 		Rotate(Rotation);
+		_11 *= Scale.x;
+		_22 *= Scale.y;
+		_33 *= Scale.z;
+		_41 = Translation.x;
+		_42 = Translation.y;
+		_43 = Translation.z;
+		_44 = 1.0f;
 	}
 
 	TMatrix(TVector3 Translation, TQuaternion Rotation, float Scale)
@@ -375,7 +389,7 @@ public:
 		Res._11 = _11 * M._11 + _12 * M._21 + _13 * M._31 + _14 * M._41;
 		Res._12 = _11 * M._12 + _12 * M._22 + _13 * M._32 + _14 * M._42;
 		Res._13 = _11 * M._13 + _12 * M._23 + _13 * M._33 + _14 * M._43;
-		Res._13 = _11 * M._14 + _12 * M._24 + _13 * M._34 + _14 * M._44;
+		Res._14 = _11 * M._14 + _12 * M._24 + _13 * M._34 + _14 * M._44;
 
 		Res._21 = _21 * M._11 + _22 * M._21 + _23 * M._31 + _24 * M._41;
 		Res._22 = _21 * M._12 + _22 * M._22 + _23 * M._32 + _24 * M._42;
@@ -394,13 +408,13 @@ public:
 		return (*this = Res);
 	}
 
-	TMatrix operator*(TMatrix& M)
+	TMatrix operator*(const TMatrix& M)
 	{
 		TMatrix Res;
 		Res._11 = _11 * M._11 + _12 * M._21 + _13 * M._31 + _14 * M._41;
 		Res._12 = _11 * M._12 + _12 * M._22 + _13 * M._32 + _14 * M._42;
 		Res._13 = _11 * M._13 + _12 * M._23 + _13 * M._33 + _14 * M._43;
-		Res._13 = _11 * M._14 + _12 * M._24 + _13 * M._34 + _14 * M._44;
+		Res._14 = _11 * M._14 + _12 * M._24 + _13 * M._34 + _14 * M._44;
 
 		Res._21 = _21 * M._11 + _22 * M._21 + _23 * M._31 + _24 * M._41;
 		Res._22 = _21 * M._12 + _22 * M._22 + _23 * M._32 + _24 * M._42;
@@ -428,9 +442,126 @@ public:
 		return *this;
 	}
 
-	TMatrix& Inverse()
+	inline float Determinant() const
 	{
+		return	_11 * (
+			_22 * (_33 * _44 - _34 * _43) -
+			_32 * (_23 * _44 - _24 * _43) +
+			_42 * (_23 * _34 - _24 * _33)
+			) -
+			_21 * (
+			_12 * (_33 * _44 - _34 * _43) -
+			_32 * (_13 * _44 - _14 * _43) +
+			_42 * (_13 * _34 - _14 * _33)
+			) +
+			_31 * (
+			_12 * (_23 * _44 - _24 * _43) -
+			_22 * (_13 * _44 - _14 * _43) +
+			_42 * (_13 * _24 - _14 * _23)
+			) -
+			_41 * (
+			_12 * (_23 * _34 - _24 * _33) -
+			_22 * (_13 * _34 - _14 * _33) +
+			_32 * (_13 * _24 - _14 * _23)
+			);
+	}
+
+	TMatrix& Inverse()
+	{	
 		TMatrix Result;
+		const float	Det = Determinant();
+
+		if(Det == 0.0f)
+			return TMatrix::Identity;
+
+		const float	RDet = 1.0f / Det;
+
+		Result._11 = RDet * (
+			_22 * (_33 * _44 - _34 * _43) -
+			_32 * (_23 * _44 - _24 * _43) +
+			_42 * (_23 * _34 - _24 * _33)
+			);
+		Result._12 = -RDet * (
+			_12 * (_33 * _44 - _34 * _43) -
+			_32 * (_13 * _44 - _14 * _43) +
+			_42 * (_13 * _34 - _14 * _33)
+			);
+		Result._13 = RDet * (
+			_12 * (_23 * _44 - _24 * _43) -
+			_22 * (_13 * _44 - _14 * _43) +
+			_42 * (_13 * _24 - _14 * _23)
+			);
+		Result._14 = -RDet * (
+			_12 * (_23 * _34 - _24 * _33) -
+			_22 * (_13 * _34 - _14 * _33) +
+			_32 * (_13 * _24 - _14 * _23)
+			);
+
+		Result._21 = -RDet * (
+			_21 * (_33 * _44 - _34 * _43) -
+			_31 * (_23 * _44 - _24 * _43) +
+			_41 * (_23 * _34 - _24 * _33)
+			);
+		Result._22 = RDet * (
+			_11 * (_33 * _44 - _34 * _43) -
+			_31 * (_13 * _44 - _14 * _43) +
+			_41 * (_13 * _34 - _14 * _33)
+			);
+		Result._23 = -RDet * (
+			_11 * (_23 * _44 - _24 * _43) -
+			_21 * (_13 * _44 - _14 * _43) +
+			_41 * (_13 * _24 - _14 * _23)
+			);
+		Result._24 = RDet * (
+			_11 * (_23 * _34 - _24 * _33) -
+			_21 * (_13 * _34 - _14 * _33) +
+			_31 * (_13 * _24 - _14 * _23)
+			);
+
+		Result._31 = RDet * (
+			_21 * (_32 * _44 - _34 * _42) -
+			_31 * (_22 * _44 - _24 * _42) +
+			_41 * (_22 * _34 - _24 * _32)
+			);
+		Result._32 = -RDet * (
+			_11 * (_32 * _44 - _34 * _42) -
+			_31 * (_12 * _44 - _14 * _42) +
+			_41 * (_12 * _34 - _14 * _32)
+			);
+		Result._33 = RDet * (
+			_11 * (_22 * _44 - _24 * _42) -
+			_21 * (_12 * _44 - _14 * _42) +
+			_41 * (_12 * _24 - _14 * _22)
+			);
+		Result._34 = -RDet * (
+			_11 * (_22 * _34 - _24 * _32) -
+			_21 * (_12 * _34 - _14 * _32) +
+			_31 * (_12 * _24 - _14 * _22)
+			);
+
+		Result._41 = -RDet * (
+			_21 * (_32 * _43 - _33 * _42) -
+			_31 * (_22 * _43 - _23 * _42) +
+			_41 * (_22 * _33 - _23 * _32)
+			);
+		Result._42 = RDet * (
+			_11 * (_32 * _43 - _33 * _42) -
+			_31 * (_12 * _43 - _13 * _42) +
+			_41 * (_12 * _33 - _13 * _32)
+			);
+		Result._43 = -RDet * (
+			_11 * (_22 * _43 - _23 * _42) -
+			_21 * (_12 * _43 - _13 * _42) +
+			_41 * (_12 * _23 - _13 * _22)
+			);
+		Result._44 = RDet * (
+			_11 * (_22 * _33 - _23 * _32) -
+			_21 * (_12 * _33 - _13 * _32) +
+			_31 * (_12 * _23 - _13 * _22)
+			);
+
+		return (*this = Result);
+		/*TMatrix Result;
 		TMatrix Tmp;
 		Tmp._11	= _33 * _44 - _34 * _43;
 		Tmp._12	= _23 * _44 - _24 * _43;
@@ -456,6 +587,10 @@ public:
 		Det[3]		= _12*Tmp._41 - _22*Tmp._42 + _32*Tmp._43;
 
 		float Determinant = _11*Det[0] - _21*Det[1] + _31*Det[2] - _41*Det[3];
+
+		if(Determinant == 0.0f)
+			return TMatrix::Identity;
+
 		const float	RDet = 1.0f / Determinant;
 
 		Result._11 =  RDet * Det[0];
@@ -507,7 +642,7 @@ public:
 			_31 * (_12 * _23 - _13 * _22)
 			);
 		*this = Result;
-		return *this;
+		return *this;*/
 	}
 
 	TMatrix& Translate(TVector3 Transform)
@@ -528,9 +663,24 @@ public:
 
 	TMatrix& Rotate(TQuaternion Rotation)
 	{
-		const float x2 = Rotation.v.x + Rotation.v.x;	
-		const float y2 = Rotation.v.y + Rotation.v.y;  
-		const float z2 = Rotation.v.z + Rotation.v.z;
+		TMatrix RotationMat;
+		RotationMat._11 = 1.0f - (2.0f*Rotation.y*Rotation.y + 2.0f*Rotation.z*Rotation.z);
+		RotationMat._12 =		 (2.0f*Rotation.x*Rotation.y - 2.0f*Rotation.z*Rotation.w);
+		RotationMat._13 =		 (2.0f*Rotation.x*Rotation.z + 2.0f*Rotation.y*Rotation.w);
+
+		RotationMat._21 =		 (2.0f*Rotation.x*Rotation.y + 2.0f*Rotation.z*Rotation.w);
+		RotationMat._22 = 1.0f - (2.0f*Rotation.x*Rotation.x + 2.0f*Rotation.z*Rotation.z);
+		RotationMat._23 =		 (2.0f*Rotation.y*Rotation.z - 2.0f*Rotation.x*Rotation.w);
+
+		RotationMat._31 =		 (2.0f*Rotation.x*Rotation.z - 2.0f*Rotation.y*Rotation.w);
+		RotationMat._32 =		 (2.0f*Rotation.y*Rotation.z + 2.0f*Rotation.x*Rotation.w);
+		RotationMat._33 = 1.0f - (2.0f*Rotation.x*Rotation.x + 2.0f*Rotation.y*Rotation.y);
+
+
+		*this *= RotationMat;
+		/*const float x2 = Rotation.x + Rotation.x;	
+		const float y2 = Rotation.y + Rotation.y;  
+		const float z2 = Rotation.z + Rotation.z;
 		{
 			const float xx2 = Rotation.v.x * x2;
 			const float yy2 = Rotation.v.y * y2;			
@@ -560,7 +710,7 @@ public:
 
 			_31 = (xz2 + wy2);
 			_13 = (xz2 - wy2);
-		}
+		}*/
 		return *this;
 	}
 };

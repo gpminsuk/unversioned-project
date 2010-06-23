@@ -33,13 +33,13 @@ public:
 
 		TArray<TBone*> ChildBones;
 
-		VD* FillStaticVertexBuffer_Recursive(VD* pVertices, TMatrix BoneTM = TMatrix());
+		VD* FillStaticVertexBuffer_Recursive(VD* pVertices);
 		ID* FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex);
 
 		unsigned int NumTotalVertices_Recursive();
 		unsigned int NumTotalIndices_Recursive();
 
-		void CalcBoneMatrices_Recursive(unsigned int CurrentFrame);
+		void CalcBoneMatrices_Recursive(unsigned int CurrentFrame, const TMatrix& ParentTM = TMatrix::Identity);
 	};
 
 	virtual void UpdatePrimitive();

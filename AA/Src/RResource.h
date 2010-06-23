@@ -215,19 +215,39 @@ public:
 	virtual bool Release() = 0;
 };
 
+class RAnimationSequence
+{
+public:
+	~RAnimationSequence()
+	{
+		// TODO
+		//for(unsigned int i = 0;i<AnimationBoneSequences.Size();++i)
+		//	delete AnimationBoneSequences(i);
+		//AnimationBoneSequences.Clear(true);
+	}
+
+	TArray<class RAnimationBoneSequence*> AnimationBoneSequences;
+
+	unsigned int StartFrame;
+	unsigned int EndFrame;
+	unsigned int TickPerFrame;
+	unsigned int FrameSpeed;
+};
+
 class RAnimationBoneSequence
 {
 public:
-	RAnimationBoneSequence(TVector3 StartPos, TQuaternion StartRot)
+	RAnimationBoneSequence(TVector3 Location, TQuaternion Rotation, RAnimationSequence* Seq)
 	{
 		POSKEY Pos;
-		Pos.Pos = StartPos;
+		Pos.Pos = Location;
 		Pos.Time = 0.0f;
 		ROTKEY Rot;
-		Rot.Rot = StartRot;
+		Rot.Rot = TQuaternion();
 		Rot.Time = 0.0f;
 		PosKeys.AddItem(Pos);
 		RotKeys.AddItem(Rot);
+		AnimSequenceRef = Seq;
 	}
 
 	TString				BoneName;
@@ -246,6 +266,7 @@ public:
 
 	TArray<POSKEY>	PosKeys;
 	TArray<ROTKEY>	RotKeys;
+	RAnimationSequence* AnimSequenceRef;
 
 	TVector3 GetPosKey(unsigned int InFrame)
 	{
@@ -253,7 +274,11 @@ public:
 		{
 			return TVector3(0,0,0);
 		}
-		unsigned int Idx = 1;
+		if(InFrame == 0)
+		{
+			return PosKeys(0).Pos;
+		}
+		int Idx = -1;
 		for(unsigned int i=0;i<PosKeys.Size();++i)
 		{
 			POSKEY& PosKey = PosKeys(i);
@@ -263,8 +288,14 @@ public:
 				break;
 			}
 		}
-		float t = (InFrame - PosKeys(Idx-1).Time)/(PosKeys(Idx).Time - PosKeys(Idx-1).Time);
-		return (PosKeys(Idx-1).Pos*t + PosKeys(Idx).Pos*(1 - t));
+		if(Idx == -1)
+		{
+			Idx = (int)PosKeys.Size() - 1;
+			float t = 1.0f - (InFrame - PosKeys(Idx).Time)/(AnimSequenceRef->EndFrame*AnimSequenceRef->TickPerFrame - PosKeys(Idx).Time);
+			return (PosKeys(Idx).Pos*t + PosKeys(0).Pos*(1.0f - t));
+		}
+		float t = 1.0f - (InFrame - PosKeys(Idx-1).Time)/(PosKeys(Idx).Time - PosKeys(Idx-1).Time);
+		return (PosKeys(Idx-1).Pos*t + PosKeys(Idx).Pos*(1.0f - t));
 	}
 
 	TQuaternion GetRotKey(unsigned int InFrame)
@@ -273,7 +304,11 @@ public:
 		{
 			return TQuaternion();
 		}
-		unsigned int Idx = 1;
+		if(InFrame == 0)
+		{
+			return RotKeys(0).Rot;
+		}
+		int Idx = -1;
 		for(unsigned int i=0;i<RotKeys.Size();++i)
 		{
 			ROTKEY& RotKey = RotKeys(i);
@@ -283,28 +318,15 @@ public:
 				break;
 			}
 		}
-		float t = (InFrame - RotKeys(Idx-1).Time)/(RotKeys(Idx).Time - RotKeys(Idx-1).Time);
-		TQuaternion Ret = TQuaternion::Slerp(RotKeys(Idx-1).Rot, RotKeys(Idx).Rot, t);
-		return Ret;
+		if(Idx == -1)
+		{
+			Idx = (int)PosKeys.Size() - 1;
+			float t = 1.0f - (InFrame - RotKeys(Idx).Time)/(AnimSequenceRef->EndFrame*AnimSequenceRef->TickPerFrame - RotKeys(Idx).Time);
+			return TQuaternion::Slerp(RotKeys(Idx).Rot, RotKeys(0).Rot, t);
+		}
+		float t = 1.0f - (InFrame - RotKeys(Idx-1).Time)/(RotKeys(Idx).Time - RotKeys(Idx-1).Time);
+		return TQuaternion::Slerp(RotKeys(Idx-1).Rot, RotKeys(Idx).Rot, t);
 	}
-};
-
-class RAnimationSequence
-{
-public:
-	~RAnimationSequence()
-	{
-		for(unsigned int i = 0;i<AnimationBoneSequences.Size();++i)
-			delete AnimationBoneSequences(i);
-		AnimationBoneSequences.Clear(true);
-	}
-
-	TArray<RAnimationBoneSequence*> AnimationBoneSequences;
-
-	unsigned int StartFrame;
-	unsigned int EndFrame;
-	unsigned int TickPerFrame;
-	unsigned int FrameSpeed;
 };
 
 class RAnimationSequenceTable
@@ -379,43 +401,23 @@ public:
 			}			
 		}
 
-		bool GetBoneMatrix_Recursive(RBone* Bone, TMatrix& InBoneTM)
-		{
-			TMatrix BoneTM(Translation, Rotation, Scale);
-			if(this == Bone)
-			{
-				InBoneTM = BoneTM;
-				return true;
-			}
-			else
-			{
-				for(unsigned int i=0;i<ChildBones.Size();++i)
-				{
-					TMatrix TempBoneTM = InBoneTM;
-					if(ChildBones(i)->GetBoneMatrix_Recursive(Bone, TempBoneTM))
-					{
-						InBoneTM = TempBoneTM;
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
 		TString BoneName;
 		RBone *Parent;
 		TArray<RBone*> ChildBones;
 
-		TQuaternion Rotation;
-		TVector3 Translation;
-		TVector3 Scale;
+		TMatrix TM;
+		TMatrix InvTM;
 	};
 
 	TMatrix GetBoneMatrix(RBone* Bone)
 	{
 		TMatrix Ret;
 		Ret.SetIdentity();
-		RootBone->GetBoneMatrix_Recursive(Bone, Ret);
+		while(Bone)
+		{
+			Ret = Ret * Bone->TM;
+			Bone = Bone->Parent;
+		}
 		return Ret;
 	}
 

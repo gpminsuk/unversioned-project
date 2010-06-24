@@ -1,6 +1,7 @@
 #pragma once
 
 class BRenderer;
+class BViewport;
 class UWorld;
 
 enum EPlatform
@@ -25,6 +26,7 @@ public:
 	virtual ~BApplication();
 
 	BRenderer *m_pRenderer;
+	BViewport *m_pViewport;
 
 	UWorld*	m_pWorld;
 

@@ -9,6 +9,7 @@
 class AObject;
 
 class BRenderer;
+class BThing;
 
 class CCamera;
 class CCameraViewport;
@@ -81,10 +82,12 @@ public:
 class UWorld
 {
 public:
-	UWorld(BRenderer* R = NULL);
+	UWorld();
 	~UWorld(void);
 
 	inline void SetRenderer(BRenderer* R) { m_pRenderer = R; }
+	inline void AddViewport(BViewport* V) { Viewports.AddItem(V); }
+	inline void RemoveViewport(BViewport* V) { Viewports.DeleteItemByVal(V); }
 
 	bool InitializeWorld();
 	bool DestroyWorld();
@@ -93,9 +96,8 @@ public:
 
 	TWorldStructure* m_pWorldData;
 
-	CCameraViewport* m_pViewport;
-	CCamera* m_pCamera;
 	BRenderer* m_pRenderer;
+	TArray<BViewport*> Viewports;
 
 	class CCylinderPrimitive* m_Cylinder;
 
@@ -109,6 +111,9 @@ public:
 	virtual void InputChar();
 
 	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
+
+private:
+	void AddThing(BThing* Thing);
 };
 
 extern UWorld* GWorld;

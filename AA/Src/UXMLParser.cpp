@@ -4,6 +4,7 @@
 #include "BRenderer.h"
 
 #include "CWindowApp.h"
+#include "CCameraViewport.h"
 #include "CDirectXDriver.h"
 
 #include "UWorld.h"
@@ -100,7 +101,7 @@ void UXMLApplicationParser::Parse()
 		BApplication *app = 0;
 		if(Application.HasAttribute("Platform","Windows_x86"))
 		{
-			TWindowsInfo Info;
+			TWindowInfo Info;
 			TString Value;
 			if(Application.GetValue("Resolution.Width", Value))
 			{
@@ -129,7 +130,12 @@ void UXMLApplicationParser::Parse()
 					CWindowApp* WindowsApp = static_cast<CWindowApp*>(app);
 					if(WindowsApp)
 					{
-						GDriver = new CDirectXDriver(&WindowsApp->m_WindowInfo);
+						TWindowInfo& WindowInfo = (TWindowInfo&)WindowsApp->m_WindowInfo;
+						TDXWindowInfo DXWindowInfo;
+						DXWindowInfo.m_hWnd = WindowInfo.m_hWnd;
+						DXWindowInfo.m_wHeight = WindowInfo.m_wHeight;
+						DXWindowInfo.m_wWidth = WindowInfo.m_wWidth;
+						GDriver = new CDirectXDriver(DXWindowInfo);
 						GDriver->CreateDriver();
 					}
 				}			
@@ -140,7 +146,10 @@ void UXMLApplicationParser::Parse()
 		TXMLElement World;
 		if(Application.GetChildElement("World", World))
 		{
-			app->m_pWorld = new UWorld(app->m_pRenderer);
+			app->m_pWorld = new UWorld();
+			app->m_pViewport = new CCameraViewport();
+			app->m_pRenderer->AddViewport(app->m_pViewport);
+			app->m_pWorld->AddViewport(app->m_pViewport);
 		}
 
 		if(app)

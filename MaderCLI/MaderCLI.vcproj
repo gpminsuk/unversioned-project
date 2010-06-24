@@ -19,10 +19,11 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			ManagedExtensions="1"
+			BuildLogFile="$(IntDir)\BuildLog\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,8 +43,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
+				ObjectFile="$(IntDir)\Obj\"
+				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -58,8 +62,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit)"
+				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
+				AdditionalDependencies="..\Intermediate\Debug\AA\Obj\*"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
+				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				TargetMachine="1"
@@ -69,6 +78,9 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\Menifest\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\Menifest\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\Menifest\mt.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -94,6 +106,7 @@
 			CharacterSet="1"
 			ManagedExtensions="1"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\BuildLog\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -117,6 +130,8 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\$(IntDir).pch"
+				ObjectFile="$(IntDir)\Obj\"
+				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -134,7 +149,8 @@
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
 				AdditionalDependencies="..\Intermediate\Release\AA\Obj\*"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\External\freetype-2.3.7\objs"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
+				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				EntryPointSymbol=""
@@ -145,6 +161,9 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\Menifest\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\Menifest\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\Menifest\mt.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

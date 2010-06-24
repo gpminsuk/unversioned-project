@@ -1,10 +1,16 @@
 #pragma once
 
-#include "TWindowInfo.h"
-
 #include "BDriver.h"
 #include <d3d9.h>
 #include <d3dx9effect.h>
+#include <windows.h>
+
+struct TDXWindowInfo
+{
+	HWND m_hWnd;
+	int m_wWidth;
+	int m_wHeight;
+};
 
 #pragma comment(lib, "..\\d3dx9.lib")
 #pragma comment(lib, "d3d9.lib")
@@ -12,7 +18,7 @@
 class CDirectXDriver : public BDriver
 {
 public:
-	CDirectXDriver(struct TWindowsInfo *Window);
+	CDirectXDriver(TDXWindowInfo Window);
 	virtual ~CDirectXDriver();
 	inline LPDIRECT3DDEVICE9 GetDevice() { return m_pDevice; }
 
@@ -66,7 +72,7 @@ public:
 	LPDIRECT3DDEVICE9	m_pDevice;
 	LPDIRECT3D9			m_pD3D;
 private:
-	TWindowsInfo*		m_pWindow;
+	TDXWindowInfo		m_pWindow;
 
 	IDirect3DVertexDeclaration9* m_Declarations[VertexType_End];
 };

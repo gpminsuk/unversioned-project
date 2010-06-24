@@ -1,11 +1,10 @@
 #include "StdAfx.h"
 #include "CTerrainComponent.h"
 #include "CTerrainPrimitive.h" 
-#include "CCamera.h"
+#include "BCamera.h"
 
-CTerrainComponent::CTerrainComponent(BThing* InOwner, CCamera* Camera)
-:	BComponent(InOwner), 
-	CurrentCamera(Camera)	
+CTerrainComponent::CTerrainComponent(BThing* InOwner)
+:	BComponent(InOwner)	
 {
 	CTerrainPrimitive* TerrainPrimitive = new CTerrainPrimitive();
 	Primitives.AddItem(TerrainPrimitive);
@@ -20,10 +19,5 @@ void CTerrainComponent::UpdateComponent()
 {
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		CTerrainPrimitive* Prim = dynamic_cast<CTerrainPrimitive*>(Primitives(i));
-		if(Prim && CurrentCamera)
-		{
-			Prim->UpdateTerrainPrimitive(CurrentCamera->m_Location);
-		}
 	}
 }

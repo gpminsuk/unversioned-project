@@ -11,17 +11,14 @@
 
 #include "CCameraViewport.h"
 #include "CTerrain.h"
-#include "CCamera.h"
+#include "BCamera.h"
 #include "CCharacter.h"
 #include "CEmitter.h"
 #include "CCylinderPrimitive.h"
 
 UWorld* GWorld;
 
-UWorld::UWorld(BRenderer* R)
-: m_pRenderer(R),
-	m_pViewport(0),
-	m_pCamera(0)
+UWorld::UWorld()
 {
 	GWorld = this;
 }
@@ -39,9 +36,17 @@ UWorld::~UWorld()
 
 void UWorld::Tick(DWORD dTime)
 {
-	m_pViewport->UpdateCameraViewport();
-
 	m_pWorldData->Tick(dTime);
+}
+
+void UWorld::AddThing(BThing* Thing)
+{
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->Render(Thing);
+	}
+	m_pWorldData->AddThing(Thing);
 }
 
 bool UWorld::InitializeWorld()
@@ -50,23 +55,12 @@ bool UWorld::InitializeWorld()
 
 	m_pWorldData = new TWorldOctree();
 
-	m_pViewport = new CCameraViewport();
-
-	m_pRenderer->AddViewport(m_pViewport);
-
-	m_pCamera = new CCamera();
-
-	m_pViewport->AddCamera(m_pCamera);
-	m_pViewport->SetCurrentCamera(0);
-
-	m_Terrain = new CTerrain(m_pCamera);
-	m_pViewport->Render(m_Terrain);
-	m_pWorldData->AddThing(m_Terrain);
+	m_Terrain = new CTerrain();
+	AddThing(m_Terrain);
 
 	m_Character = new CCharacter();
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
-	m_pViewport->Render(m_Character);
-	m_pWorldData->AddThing(m_Character);
+	AddThing(m_Character);
 
 	/*m_Cylinder = new CCylinderPrimitive();
 	m_Cylinder->RenderType = RenderType_Opaque;
@@ -75,35 +69,26 @@ bool UWorld::InitializeWorld()
 	m_Cylinder->TM._42 = 2.5;
 	m_Cylinder->TM._43 = 5;*/
 	//m_pViewport->Render(m_Cylinder);
-	
-	m_pCamera->m_Subject = m_Character;
 	return TRUE;
 }
 
 bool UWorld::DestroyWorld()
 {
-	delete m_pViewport;
-	m_pViewport = 0;
-	delete m_pCamera;
-	m_pCamera = 0;
 	return TRUE;
 }
 
 void UWorld::InputChar()
 {
-	m_pViewport->InputChar();
 	m_pWorldData->InputChar();
 }
 
 void UWorld::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-	m_pViewport->InputKey(Event, Param);
 	m_pWorldData->InputKey(Event, Param);
 }
 
 void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 {
-	m_pViewport->InputMouse(Event, Param);
 	m_pWorldData->InputMouse(Event, Param);
 }
 

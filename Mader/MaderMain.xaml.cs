@@ -75,7 +75,6 @@ namespace Mader
         {
             m_Backend = Backend;
             
-            Show();
             m_Backend.CreateMaderApp();
 
             MaterialExpressionControl Ctrl = new MaterialExpressionControl(5, 3);

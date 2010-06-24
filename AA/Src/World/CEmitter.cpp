@@ -4,7 +4,7 @@
 #include "CParticlePrimitive.h"
 
 #include "UWorld.h"
-#include "CCamera.h"
+#include "BCamera.h"
 
 CEmitter::CEmitter()
 :	ParticleIndex(0),

@@ -13,10 +13,10 @@ struct UMouseMap
 	unsigned char bMButtonDown:1;
 };
 
-struct TWindowsInfo : public TApplicationInfo
+struct TWindowInfo : public TApplicationInfo
 {
 public:
-	TWindowsInfo() :
+	TWindowInfo() :
 		m_wWidth(800),
 		m_wHeight(600)
 	{
@@ -33,10 +33,12 @@ public:
 class CWindowApp : public BApplication
 {
 public:
-	TWindowsInfo m_WindowInfo;
+	TWindowInfo m_WindowInfo;
 
 	UMouseMap m_MouseMap;
 	TIntPoint m_MousePt;
+
+	static CWindowApp* StaticThis;
 
 	static LRESULT CALLBACK Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
@@ -53,4 +55,3 @@ public:
 };
 
 extern SYSTEM_INFO GSystemInformation;
-extern CWindowApp* GApp;

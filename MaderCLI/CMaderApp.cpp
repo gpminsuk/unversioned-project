@@ -8,41 +8,41 @@
 #include "..\AA\Src\World\UWorld.h"
 #undef GENERIC
 
-bool CMaderApp::CreateMaderApp()
+CMaderApp::CMaderApp()
 {
-	GDriver = new CDirectXDriver(&WindowInfo);
-	if(!GDriver->CreateDriver())
-		return false;
 
-	RResourceManager::LoadResources();
+}
 
-	m_pRenderer = new BRenderer();		
+bool CMaderApp::CreateApp(TApplicationInfo& Info)
+{
+	m_WindowInfo = (TCSharpWindowInfo&)Info;
 
-	m_pRenderer->SetApplication(this);
+	TDXWindowInfo DXWindowInfo;
+	DXWindowInfo.m_hWnd = m_WindowInfo.m_hWnd;
+	DXWindowInfo.m_wHeight = m_WindowInfo.m_wHeight;
+	DXWindowInfo.m_wWidth = m_WindowInfo.m_wWidth;
 
-	m_pWorld = new UWorld(m_pRenderer);
-	m_pWorld->InitializeWorld();
+	//GDriver = new CDirectXDriver(DXWindowInfo);
+	//if(!GDriver->CreateDriver())
+	//	return false;
 
-	m_pRenderer->Start();
+	//RResourceManager::LoadResources();
+
+	//m_pRenderer = new BRenderer(this);
+
+	//m_pWorld = new UWorld();
+	//m_pWorld->InitializeWorld();
+
+	//m_pRenderer->Start();
 	return true;
 }
 
 void CMaderApp::Do()
 {
 	MSG msg;
+
 	while(!bQuit)
 	{
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if(msg.message == WM_QUIT)
-				break;
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else
-		{
-			m_pWorld->Tick(0);
-			// TODI : Do World Tick
-		}
+		Sleep(1000);	
 	}
 }

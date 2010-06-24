@@ -323,10 +323,9 @@ public:
 
 	~RAnimationSequence()
 	{
-		// TODO
-		//for(unsigned int i = 0;i<AnimationBoneSequences.Size();++i)
-		//	delete AnimationBoneSequences(i);
-		//AnimationBoneSequences.Clear(true);
+		for(unsigned int i = 0;i<AnimationBoneSequences.Size();++i)
+			delete AnimationBoneSequences(i);
+		AnimationBoneSequences.Clear(true);
 	}
 
 	TArray<RBoneSequence*> AnimationBoneSequences;

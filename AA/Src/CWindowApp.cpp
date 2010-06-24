@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "BRenderer.h"
+#include "BViewport.h"
 
 #include "InputDefine.h"
 
@@ -10,7 +11,7 @@
 #include "RResourceManager.h"
 
 
-CWindowApp	*GApp = 0;
+CWindowApp*	CWindowApp::StaticThis = 0;
 SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
@@ -36,10 +37,10 @@ void CWindowApp::Initialize()
 
 bool CWindowApp::CreateApp(TApplicationInfo& Info)
 {
-	m_WindowInfo = (TWindowsInfo&)Info;
+	m_WindowInfo = (TWindowInfo&)Info;
 	GetSystemInfo(&GSystemInformation);
 
-	GApp = this;
+	StaticThis = this;
 
 	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
 	WNDCLASSEX wcex;
@@ -117,6 +118,7 @@ void CWindowApp::Do()
 		}
 		else
 		{
+			m_pViewport->UpdateViewport();
 			m_pWorld->Tick(0);
 			// TODO : Do World Tick
 		}
@@ -172,49 +174,54 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
 		return;
 	m_MousePt.x = Param.X;
 	m_MousePt.y = Param.Y;
+	EMouse_Event Event;
 	switch(Message)
 	{
 	case WM_LBUTTONDBLCLK:
-		m_pWorld->InputMouse(MOUSE_LeftButtonDblClk, Param);
+		Event = MOUSE_LeftButtonDblClk;
 		break;
 	case WM_RBUTTONDBLCLK:
-		m_pWorld->InputMouse(MOUSE_RightButtonDblClk, Param);
+		Event = MOUSE_RightButtonDblClk;
 		break;
 	case WM_MBUTTONDBLCLK:
-		m_pWorld->InputMouse(MOUSE_MiddleButtonDblClk, Param);
+		Event = MOUSE_MiddleButtonDblClk;
 		break;
 	case WM_LBUTTONDOWN:
 		m_MouseMap.bLButtonDown = true;
-		m_pWorld->InputMouse(MOUSE_LeftButtonDown, Param);
+		Event = MOUSE_LeftButtonDown;
 		break;
 	case WM_RBUTTONDOWN:
 		m_MouseMap.bRButtonDown = true;
-		m_pWorld->InputMouse(MOUSE_RightButtonDown, Param);
+		Event = MOUSE_RightButtonDown;
 		break;
 	case WM_MBUTTONDOWN:
 		m_MouseMap.bMButtonDown = true;
-		m_pWorld->InputMouse(MOUSE_MiddleButtonDown, Param);
+		Event = MOUSE_MiddleButtonDown;
 		break;
 	case WM_LBUTTONUP:
 		m_MouseMap.bLButtonDown = false;
-		m_pWorld->InputMouse(MOUSE_LeftButtonUp, Param);
+		Event = MOUSE_LeftButtonUp;
 		break;
 	case WM_RBUTTONUP:
 		m_MouseMap.bRButtonDown = false;
-		m_pWorld->InputMouse(MOUSE_RightButtonUp, Param);
+		Event = MOUSE_RightButtonUp;
 		break;
 	case WM_MBUTTONUP:
 		m_MouseMap.bMButtonDown = false;
-		m_pWorld->InputMouse(MOUSE_MiddleButtonUp, Param);
+		Event = MOUSE_MiddleButtonUp;
 		break;
 	case WM_MOUSEWHEEL:
 		Param.delta = HIWORD(wParam);
-		m_pWorld->InputMouse(MOUSE_Wheel, Param);
+		Event = MOUSE_Wheel;
 		break;
 	case WM_MOUSEMOVE:
-		m_pWorld->InputMouse(MOUSE_Move, Param);
+		Event = MOUSE_Move;
 		break;
+	default:
+		return;
 	}
+	m_pWorld->InputMouse(Event, Param);
+	m_pViewport->InputMouse(Event, Param);
 }
 
 void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
@@ -227,17 +234,20 @@ void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 	Param.bRShiftDown = ::GetKeyState(VK_RSHIFT);
 	Param.bLShiftDown = ::GetKeyState(VK_LSHIFT);
 	Param.Key = (unsigned short)wParam;	
+	EKey_Event Event;
 	switch(Message)
 	{
 	case WM_KEYDOWN:
 		GKeyMap[Param.Key] = 0x01;
-		m_pWorld->InputKey(KEY_Down, Param);
+		Event = KEY_Down;
 		break;
 	case WM_KEYUP:
 		GKeyMap[Param.Key] = 0x00;
-		m_pWorld->InputKey(KEY_Up, Param);
+		Event = KEY_Up;
 		break;
 	}
+	m_pWorld->InputKey(Event, Param);
+	m_pViewport->InputKey(Event, Param);
 }
 
 void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
@@ -272,8 +282,8 @@ LRESULT CALLBACK CWindowApp::Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM
 		PostQuitMessage(0);
 		break;
 	default:
-		if(GApp)
-			GApp->MessageTranslator(Message, wParam, lParam);
+		if(StaticThis)
+			StaticThis->MessageTranslator(Message, wParam, lParam);
 		return DefWindowProc(hWnd, Message, wParam, lParam);
 	}
 	return 0;

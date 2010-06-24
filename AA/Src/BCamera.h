@@ -12,11 +12,11 @@ enum ECamera_Mode
 	Free_Mode1,	
 };
 
-class CCamera
+class BCamera
 {
 public:
-	CCamera(void);
-	virtual ~CCamera(void);
+	BCamera(void);
+	virtual ~BCamera(void);
 
 	class BThing*	m_Subject;
 

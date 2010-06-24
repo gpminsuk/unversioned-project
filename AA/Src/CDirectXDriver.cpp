@@ -70,7 +70,7 @@ DWORD GCullMode[] =
 	D3DCULL_CCW
 };
 
-CDirectXDriver::CDirectXDriver(TWindowsInfo* Window)
+CDirectXDriver::CDirectXDriver(TDXWindowInfo Window)
 :	m_pWindow(Window)
 {
 	BackBuffer = new RDXRenderTarget();
@@ -100,8 +100,8 @@ bool CDirectXDriver::CreateDriver()
 
 	Parameters.Windowed = true;
 	Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	Parameters.BackBufferWidth = m_pWindow->m_wWidth;
-	Parameters.BackBufferHeight = m_pWindow->m_wHeight;
+	Parameters.BackBufferWidth = m_pWindow.m_wWidth;
+	Parameters.BackBufferHeight = m_pWindow.m_wHeight;
 	Parameters.BackBufferCount = 1;
 	Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
 
@@ -114,7 +114,7 @@ bool CDirectXDriver::CreateDriver()
 	if((hResult = m_pD3D->CreateDevice(
 		D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
-		m_pWindow->m_hWnd,
+		m_pWindow.m_hWnd,
 		//D3DCREATE_HARDWARE_VERTEXPROCESSING,
 		D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 		&Parameters,

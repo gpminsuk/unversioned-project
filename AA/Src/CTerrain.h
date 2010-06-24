@@ -4,10 +4,8 @@
 class CTerrain : public BThing
 {
 public:
-	CTerrain(class CCamera* Camera);
+	CTerrain();
 	virtual ~CTerrain(void);
-
-	CCamera* m_pCamera;
 
 	virtual void Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);

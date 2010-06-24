@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include "CCamera.h"
+#include "BCamera.h"
 #include "CWindowApp.h"
 
 #include "BThing.h"
 
-CCamera::CCamera(void)
+BCamera::BCamera(void)
 :	m_CameraMode(Free_Mode),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
@@ -20,11 +20,11 @@ CCamera::CCamera(void)
 	//m_CameraMode = First_Person;
 }
 
-CCamera::~CCamera(void)
+BCamera::~BCamera(void)
 {
 }
 
-void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
+void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 {
 	m_bIsUpdated = true;
 	switch(m_CameraMode)
@@ -39,7 +39,6 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 					if(m_Pi + dY < (MATH_PI/2.0f) && (m_Pi + dY) > -(MATH_PI/2.0f))
 						m_Pi += dY;
 					m_Theta += dX;
-					GApp->SetMousePos(0.5f, 0.5f, true);
 				}
 				break;
 			}
@@ -78,7 +77,6 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 					if(m_Pi + dY < (MATH_PI/2.0f) && (m_Pi + dY) > -(MATH_PI/2.0f))
 						m_Pi += dY;
 					m_Theta += dX;
-					GApp->SetMousePos(0.5f, 0.5f, true);
 				}
 				break;
 			}
@@ -87,7 +85,7 @@ void CCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 	}
 }
 
-void CCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param)
+void BCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
 	switch(m_CameraMode)
 	{
@@ -99,7 +97,7 @@ void CCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 	}
 }
 
-void CCamera::Tick(unsigned long  dTime)
+void BCamera::Tick(unsigned long  dTime)
 {
 	switch(m_CameraMode)
 	{
@@ -152,7 +150,7 @@ void CCamera::Tick(unsigned long  dTime)
 	m_bIsUpdated = false;
 }
 
-bool CCamera::ShouldUpdate()
+bool BCamera::ShouldUpdate()
 {
 	switch(m_CameraMode)
 	{

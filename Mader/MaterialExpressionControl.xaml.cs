@@ -51,10 +51,10 @@ namespace Mader
                 Connector.VerticalAlignment = VerticalAlignment.Top;
                 MaterialExpressionGrid.Children.Add(Connector);
             }
-            PreviewImage.Lock();
-            PreviewImage.SetBackBuffer(D3DResourceType.IDirect3DSurface9, MaderMain.m_Backend.GetBackBuffer());
-            PreviewImage.AddDirtyRect(new Int32Rect(0, 0, PreviewImage.PixelWidth, PreviewImage.PixelHeight));
-            PreviewImage.Unlock();
+            //PreviewImage.Lock();
+            //PreviewImage.SetBackBuffer(D3DResourceType.IDirect3DSurface9, MaderMain.m_Backend.GetBackBuffer());
+            //PreviewImage.AddDirtyRect(new Int32Rect(0, 0, PreviewImage.PixelWidth, PreviewImage.PixelHeight));
+            //PreviewImage.Unlock();
         }
 
         public void CompositionTarget_Rendering(object Sender, EventArgs e)

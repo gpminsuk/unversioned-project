@@ -258,6 +258,8 @@ public:
 	{
 		x=0.0f; y=0.0f; z=0.0f; w=1.0f;
 	}
+	
+	TQuaternion operator- () { return TQuaternion(-x,-y,-z,-w); }
 
 	TQuaternion& operator*=(TQuaternion& q)
 	{
@@ -316,7 +318,13 @@ public:
 	
 	static TQuaternion Slerp(TQuaternion a, TQuaternion b, float t)
 	{
-		float Pi = ARCCOSINE(a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w);
+		float CosinePi = a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w;
+		if(CosinePi < 0.0f)
+		{
+			CosinePi = -CosinePi;
+			b = -b;
+		}
+		float Pi = ARCCOSINE(CosinePi);
 		TQuaternion res = a*(SINE(Pi*(1.0f-t))/SINE(Pi)) + b*(SINE(Pi*t)/SINE(Pi));
 		res.Normalize();
 		return res;

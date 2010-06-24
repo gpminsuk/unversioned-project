@@ -87,7 +87,7 @@ void TSkeletalMesh::UpdatePrimitive()
 {
 	delete pBuffer;
 
-	CurrentFrame+=2;
+	CurrentFrame+=10;
 	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame)
 	{
 		CurrentFrame = 0;
@@ -129,43 +129,16 @@ void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame,
 	BoneTM.SetIdentity();
 	if(AnimationBoneSequenceRef)
 	{
-		/*if(BoneRef->BoneName.Str[0] == 'B' && 
-			BoneRef->BoneName.Str[1] == 'i' && 
-			BoneRef->BoneName.Str[2] == 'p' &&
-			BoneRef->BoneName.Str[3] == '0' && 
-			BoneRef->BoneName.Str[4] == '1' && 
-			BoneRef->BoneName.Str[5] == ' ' &&
-			BoneRef->BoneName.Str[6] == 'L' && 
-			BoneRef->BoneName.Str[7] == ' ' && 
-			BoneRef->BoneName.Str[8] == 'U'
-			)*/
-		// AnimationBoneSequenceRef->GetPosKey(CurrentFrame)
-		// AnimationBoneSequenceRef->GetRotKey(CurrentFrame)		
-		//BoneTM = BoneRef->TM;
 		static int frame = 500;
 		TQuaternion Quat = AnimationBoneSequenceRef->GetRotKey(CurrentFrame);
 		if(Quat != TQuaternion())
 		{
-			BoneTM.Rotate(Quat);//BoneTM = BoneRef->TM;
+			BoneTM.Rotate(Quat);
 		}
 		else
 		{
 			BoneTM = BoneRef->TM;
 		}
-		/*TMatrix AnimationMat(TVector3(), AnimationBoneSequenceRef->GetRotKey(CurrentFrame), TVector3(1,1,1));
-		if(BoneRef->BoneName.Str[0] == 'B' && 
-			BoneRef->BoneName.Str[1] == 'i' && 
-			BoneRef->BoneName.Str[2] == 'p' &&
-			BoneRef->BoneName.Str[3] == '0' && 
-			BoneRef->BoneName.Str[4] == '1' && 
-			BoneRef->BoneName.Str[5] == ' ' &&
-			BoneRef->BoneName.Str[6] == 'P' && 
-			BoneRef->BoneName.Str[7] == 'o' && 
-			BoneRef->BoneName.Str[8] == 'n'
-			)
-			BoneTM = BoneRef->TM * AnimationMat;
-		else
-			BoneTM = BoneRef->TM * AnimationMat;*/
 		TVector3 Pos = AnimationBoneSequenceRef->GetPosKey(CurrentFrame);
 		if(Pos != TVector3(0,0,0))
 		{
@@ -179,16 +152,10 @@ void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame,
 			BoneTM._42 = BoneRef->TM._42;
 			BoneTM._43 = BoneRef->TM._43;
 		}
-		//BoneTM.Rotate(AnimationBoneSequenceRef->GetRotKey(CurrentFrame));TQuaternion(TVector3(1,0,0),a)
-		//BoneTM.Translate(BoneRef->Translation + AnimationBoneSequenceRef->GetPosKey(CurrentFrame));
-		//BoneTM.Scale(BoneRef->Scale);
 	}
 	else
 	{
 		BoneTM = BoneRef->TM;
-		//BoneTM.Rotate(BoneRef->Rotation);
-		//BoneTM.Translate(BoneRef->Translation);
-		//BoneTM.Scale(BoneRef->Scale);
 	}
 	BoneTM = BoneTM * ParentTM;
 	for(unsigned int i=0;i<ChildBones.Size();++i)

@@ -336,8 +336,6 @@ void LoadASEFile(char* fn)
 		if(!strcmp(string, "*GEOMOBJECT"))
 		{
 			RBoneHierarchy::RBone *Bone = NULL;
-			TVector3 BoneWorldLocation;
-			TQuaternion BoneWorldRotation;
 			while(1)
 			{
 				fgets(line, 1024, fp);
@@ -367,7 +365,6 @@ void LoadASEFile(char* fn)
 				{
 					Bone = new RBoneHierarchy::RBone();
 					TMatrix BoneTM;
-					TVector3 Axis;
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -404,26 +401,6 @@ void LoadASEFile(char* fn)
 						if(!strcmp(string, "*TM_ROW3"))
 						{
 							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneTM._41, &BoneTM._42, &BoneTM._43);
-							continue;
-						}
-
-						if(!strcmp(string, "*TM_ROTAXIS"))
-						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &Axis.x, &Axis.y, &Axis.z);
-							continue;
-						}
-
-						if(!strcmp(string, "*TM_ROTANGLE"))
-						{
-							float Angle;
-							sscanf_s(line, "%s%f",string, 1024, &Angle);
-							BoneWorldRotation = TQuaternion(Axis, Angle);
-							continue;
-						}
-
-						if(!strcmp(string, "*TM_POS"))
-						{
-							sscanf_s(line, "%s%f%f%f",string, 1024, &BoneWorldLocation.x, &BoneWorldLocation.y, &BoneWorldLocation.z);
 							continue;
 						}
 						
@@ -705,7 +682,7 @@ void LoadASEFile(char* fn)
 
 				if(!strcmp(string, "*TM_ANIMATION"))
 				{
-					RAnimationBoneSequence* Seq = new RAnimationBoneSequence(BoneWorldLocation, BoneWorldRotation, AnimationSequence);
+					RAnimationBoneSequence* Seq = new RAnimationBoneSequence(AnimationSequence);
 					while(1)
 					{
 						fgets(line, 1024, fp);
@@ -771,7 +748,7 @@ void LoadASEFile(char* fn)
 									}
 									else
 									{
-										Key.Rot = Key.Rot * Seq->RotKeys((int)(Seq->RotKeys.Size()-1)).Rot;
+										Key.Rot = Seq->RotKeys((int)(Seq->RotKeys.Size()-1)).Rot * Key.Rot;
 										Seq->RotKeys.AddItem(Key);
 									}
 									continue;

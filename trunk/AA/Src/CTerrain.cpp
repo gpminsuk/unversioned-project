@@ -4,13 +4,11 @@
 
 #include "CHeightFieldCollisionBody.h"
 
-#include "CCamera.h"
+#include "BCamera.h"
 
-CTerrain::CTerrain(CCamera* Camera)
+CTerrain::CTerrain()
 {
-	m_pCamera = Camera;
-
-	CTerrainComponent* TerrainComponent = new CTerrainComponent(this, m_pCamera);
+	CTerrainComponent* TerrainComponent = new CTerrainComponent(this);
 	Components.AddItem(TerrainComponent);
 
 	CHeightFieldCollisionBody* TerrainCollisionBody = new CHeightFieldCollisionBody(this);

@@ -6,10 +6,8 @@
 class CTerrainComponent : public BComponent
 {
 public:
-	CTerrainComponent(class BThing* InOwner, class CCamera* Camera);
+	CTerrainComponent(class BThing* InOwner);
 	virtual ~CTerrainComponent();
-
-	class CCamera* CurrentCamera;
 
 	virtual void UpdateComponent();
 };

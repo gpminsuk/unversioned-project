@@ -139,9 +139,8 @@ void BRenderer::FetchViewports()
 	if(Count > 0)
 	{
 		for(int i=0;i<Count;++i)
-		{
-			BViewport *vp = new BViewport;
-			m_RendererViewport.AddItem(vp);
+		{			
+			m_RendererViewport.AddItem(m_Viewports(i));
 		}
 	}
 	else

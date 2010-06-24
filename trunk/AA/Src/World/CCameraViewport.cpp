@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "CCameraViewport.h"
-#include "CCamera.h"
+#include "BCamera.h"
 
 //임시코드
 #include <d3d9.h>
@@ -8,34 +8,35 @@
 
 #include "CWindowApp.h"
 
-extern CWindowApp	*GApp;
-
-CCameraViewport::CCameraViewport(void)
-: m_curCameraIdx(-1)
+CCameraViewport::CCameraViewport()
 {
-	m_Width = GApp->m_WindowInfo.m_wWidth;
-	m_Height = GApp->m_WindowInfo.m_wHeight;
+	m_pCamera = new BCamera();
+	m_Width = 800;
+	m_Height = 600;
 }
 
 CCameraViewport::~CCameraViewport(void)
 {
 }
 
-void CCameraViewport::UpdateCameraViewport()
+TVector3 CCameraViewport::GetViewportOrigin()
 {
-	CCamera* CurCamera = GetCurrentCamera();
-	if(CurCamera && CurCamera->ShouldUpdate() || true)
+	return m_pCamera->m_Location;
+}
+
+void CCameraViewport::UpdateViewport()
+{
+	if(m_pCamera && m_pCamera->ShouldUpdate() || true)
 	{
-		CurCamera->Tick(0);
+		m_pCamera->Tick(0);
 		//임시코드
-		D3DXMatrixLookAtLH((D3DXMATRIXA16*)&m_ViewMatrix, (D3DXVECTOR3*)&CurCamera->m_Location, (D3DXVECTOR3*)&CurCamera->m_LookAt, (D3DXVECTOR3*)&CurCamera->m_Up);
+		D3DXMatrixLookAtLH((D3DXMATRIXA16*)&m_ViewMatrix, (D3DXVECTOR3*)&m_pCamera->m_Location, (D3DXVECTOR3*)&m_pCamera->m_LookAt, (D3DXVECTOR3*)&m_pCamera->m_Up);
 	}
 }
 
 void CCameraViewport::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 {
-	CCamera* CurCamera = GetCurrentCamera();
-	CurCamera->InputMouse(Event, Param);
+	m_pCamera->InputMouse(Event, Param);
 }
 
 void CCameraViewport::InputChar()
@@ -45,6 +46,5 @@ void CCameraViewport::InputChar()
 
 void CCameraViewport::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-	CCamera* CurCamera = GetCurrentCamera();
-	CurCamera->InputKey(Event, Param);
+	m_pCamera->InputKey(Event, Param);
 }

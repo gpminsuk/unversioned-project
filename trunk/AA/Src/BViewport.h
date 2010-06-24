@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TDataTypes.h"
+#include "InputDefine.h"
 
 class BThing;
 class BLight;
@@ -39,6 +40,12 @@ public:
 	void Render(BThing* pThing);
 	
 	void SortTemplates();
+
+	virtual void UpdateViewport() = 0;
+	virtual TVector3 GetViewportOrigin() = 0;
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) = 0;
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) = 0;
+	virtual void InputChar() = 0;
 private:
 
 	static int PrimitiveCompare(BPrimitive* tb1, BPrimitive* tb2);

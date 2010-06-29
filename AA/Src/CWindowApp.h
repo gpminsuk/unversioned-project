@@ -44,6 +44,7 @@ public:
 
 	bool CreateApp(TApplicationInfo& Info);
 	void Do();
+	void Tick(unsigned long Time);
 	bool DestroyApp();
 
 	void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);

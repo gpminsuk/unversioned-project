@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using System.Collections;
 
 namespace Mader
@@ -23,6 +24,7 @@ namespace Mader
     {
         static public IMaderMainInterface m_Backend;
         private DirectXHost m_DirectXHost;
+        private DispatcherTimer GameLoop;
         private float m_Scale;
         private Point m_Translation;
         private Point m_PrevMousePos;
@@ -74,7 +76,13 @@ namespace Mader
         public void Initialize(IMaderMainInterface Backend)
         {
             m_Backend = Backend;
-            
+
+            GameLoop = new DispatcherTimer { Interval = TimeSpan.Zero };
+            GameLoop.Tick += Idle;
+            GameLoop.Start();
+
+            Show();
+
             m_Backend.CreateMaderApp();
 
             MaterialExpressionControl Ctrl = new MaterialExpressionControl(5, 3);
@@ -86,6 +94,11 @@ namespace Mader
             ExpressionControl.MouseWheel += new MouseWheelEventHandler(ExpressionControl_MouseWheel);
             ExpressionControl.MouseMove += new MouseEventHandler(ExpressionControl_MouseMove);
             ExpressionControl.MouseRightButtonDown += new MouseButtonEventHandler(ExpressionControl_MouseRightButtonDown);
+        }
+
+        void Idle(object Sender, EventArgs e)
+        {
+            m_Backend.Tick();
         }
 
         public IntPtr GetHwnd()

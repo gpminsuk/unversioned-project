@@ -45,8 +45,11 @@ public:
 		{
 		case WM_DESTROY:
 		case WM_QUIT:
+			PostQuitMessage(0);
 			m_Application->bQuit = true;
 			break;
+		default:
+			m_Application->MessageTranslator(msg, (DWORD)wParam.ToPointer(), (DWORD)lParam.ToPointer());
 		}
 
 		return (IntPtr)RetVal;
@@ -57,11 +60,18 @@ public:
 	{
 		MainWindow = gcnew Mader::MaderMain();
 		MainWindow->Initialize(this);
-		MainWindow->Show();
+		
+		Application^ MyApp = gcnew Application();
+		MyApp->Run(MainWindow);
 	}
 
 	~MaderMainCLI()
 	{
 		delete MainWindow;
+	}
+
+	virtual void Tick()
+	{
+		m_Application->Tick(0);
 	}
 };

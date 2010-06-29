@@ -156,7 +156,7 @@ void BRenderer::FetchViewports()
 		*m_RendererViewport[i] = *m_Viewports[i];
 	}
 
-	LineBatcher->Lines = GLineBatcher->Lines;
+	//LineBatcher->Lines = GLineBatcher->Lines;
 }
 
 void BRenderer::ThreadSetup()

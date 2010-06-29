@@ -118,13 +118,18 @@ void CWindowApp::Do()
 		}
 		else
 		{
-			m_pViewport->UpdateViewport();
-			m_pWorld->Tick(0);
-			// TODO : Do World Tick
+			// TODO
+			Tick(0);
 		}
 		//Sleep(1);
 	}
 	while(!bRenderThreadQuit);
+}
+
+void CWindowApp::Tick(unsigned long Time)
+{
+	m_pViewport->UpdateViewport();
+	m_pWorld->Tick(0);
 }
 
 void CWindowApp::SetMousePos(float X, float Y, bool isRatio)

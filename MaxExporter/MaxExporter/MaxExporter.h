@@ -19,4 +19,7 @@ public:
 	unsigned int	Version();				
 	void			ShowAbout(HWND hWnd);	
 	int				DoExport(const TCHAR *name,ExpInterface *ei,Interface *i, BOOL suppressPrompts, DWORD options);
+
+private:
+	TriObject*		GetTriObjectFromNode(INode *node, TimeValue t, int &deleteIt);
 };

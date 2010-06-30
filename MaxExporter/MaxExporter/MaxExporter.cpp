@@ -68,11 +68,34 @@ int	MaxExporter::DoExport(const TCHAR *name,ExpInterface *ei,Interface *i, BOOL 
 		for(int i=0;i<NumOfChildren;++i)
 		{
 			CurNode = Node->GetChildNode(i);
-			fprintf(fp, "%s\n", CurNode->GetName());
-		}
+			TSTR cName;
+			CurNode->GetClassName(cName);
+			fprintf(fp, "%s, %s\n", CurNode->GetName(), cName);
+		}		
 		fclose(fp);
 	}	
 	return 0;
+}
+
+TriObject *MaxExporter::GetTriObjectFromNode(INode *node, TimeValue t, int &deleteIt)
+{
+	deleteIt = FALSE;
+	Object *obj = node->EvalWorldState(t).obj;
+
+	if (obj->CanConvertToType(Class_ID(TRIOBJ_CLASS_ID, 0)))
+	{
+		TriObject *tri = (TriObject *) obj->ConvertToType(t,
+			Class_ID(TRIOBJ_CLASS_ID, 0));
+		// Note that the TriObject should only be deleted
+		// if the pointer to it is not equal to the object
+		// pointer that called ConvertToType()
+		if (obj != tri) deleteIt = TRUE;
+		return tri;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 HINSTANCE hInstance;

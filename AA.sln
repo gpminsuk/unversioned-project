@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MaderCLI", "MaderCLI\MaderC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mader", "Mader\Mader.csproj", "{D65ABCCD-09CB-4DA9-9532-9833B45110DA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AA", "AA\AA.vcproj", "{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unique", "Unique\Unique.vcproj", "{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,11 +46,11 @@ Global
 		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.Build.0 = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Any CPU.ActiveCfg = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Any CPU.ActiveCfg = Release|Win32
 		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.ActiveCfg = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.Build.0 = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.ActiveCfg = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

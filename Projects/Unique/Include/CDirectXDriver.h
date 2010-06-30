@@ -12,7 +12,7 @@ struct TDXWindowInfo
 	int m_wHeight;
 };
 
-#pragma comment(lib, "..\\d3dx9.lib")
+#pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "d3d9.lib")
 
 class CDirectXDriver : public BDriver

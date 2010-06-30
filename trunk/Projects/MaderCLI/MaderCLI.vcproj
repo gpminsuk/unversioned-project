@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include;..\Unique\Include"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				ObjectFile="$(IntDir)\Obj\"
@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="libcmt.lib"
@@ -124,14 +124,22 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include;..\Unique\Include"
+				Optimization="2"
+				InlineFunctionExpansion="0"
+				EnableIntrinsicFunctions="false"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG"
-				RuntimeLibrary="2"
+				ExceptionHandling="2"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="true"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\$(IntDir).pch"
 				ObjectFile="$(IntDir)\Obj\"
 				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
+				WarnAsError="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -146,11 +154,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
+				AdditionalDependencies="uniquecore.lib uniqueUI.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
+				LinkTimeCodeGeneration="1"
 				EntryPointSymbol=""
 				TargetMachine="1"
 			/>

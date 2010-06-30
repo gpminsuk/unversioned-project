@@ -59,6 +59,11 @@ void BViewport::Render(BThing* pThing)
 	}	
 }
 
+void BViewport::RenderUIPane(BUIPane* pUIPane)
+{
+	m_UIPanes.AddItem(pUIPane);
+}
+
 void BViewport::Clear()
 {
 }

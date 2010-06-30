@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="..\..\Binaries\$(ConfigurationName)\"
 			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="2"
 			>
 			<Tool
@@ -40,9 +40,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=".\Include;..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -56,15 +58,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="true"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -74,9 +71,6 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -109,8 +103,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\Include"
-				RuntimeLibrary="2"
+				AdditionalIncludeDirectories=".\Include;..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -154,8 +149,24 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Src\stdafx.cpp"
+				RelativePath=".\Src\CUIButton.cpp"
 				>
+			</File>
+			<File
+				RelativePath=".\Src\CUILabel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -172,7 +183,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Include\stdafx.h"
+				RelativePath=".\Include\CUIButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CUILabel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 		</Filter>

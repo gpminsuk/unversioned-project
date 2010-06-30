@@ -5,6 +5,7 @@
 
 class BThing;
 class BLight;
+class BUIPane;
 
 enum E_SceneType
 {
@@ -20,6 +21,7 @@ public:
 
 	void operator =(BViewport& vp);
 
+	TArray<BUIPane*> m_UIPanes;
 	TArray<BPrimitive*> m_OpaquePrimitives;
 	TArray<BPrimitive*> m_TranslucentPrimitives;
 	TArray<BLight*>		m_Lights;
@@ -38,6 +40,7 @@ public:
 
 	void Clear();
 	void Render(BThing* pThing);
+	void RenderUIPane(BUIPane* pUIPane);
 	
 	void SortTemplates();
 

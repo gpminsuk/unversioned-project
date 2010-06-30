@@ -7,7 +7,7 @@
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
 #include "BDrawLinePass.h"
-#include "BDrawFontPass.h"
+#include "BDrawUIPass.h"
 #include "BParticleRenderPass.h"
 
 #include "BPrimitive.h"
@@ -27,7 +27,7 @@ BRenderer::BRenderer(BApplication *App)
 	m_OpaqueBasePass = new BOpaqueBasePass();
 	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
 	m_DrawLinePass = new BDrawLinePass();
-	m_DrawFontPass = new BDrawFontPass();
+	m_DrawFontPass = new BDrawUIPass();
 	m_ParticleRenderPass = new BParticleRenderPass();
 
 	LineBatcher = new BLineBatcher();
@@ -127,7 +127,7 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	m_DrawLinePass->EndPass();
 
 	m_DrawFontPass->BeginPass(Viewport);
-	m_DrawFontPass->DrawPrimitive(FPS_COUNTER_NUMBER*1000.0f/m_fFPS);
+	m_DrawFontPass->DrawPrimitive();
 	m_DrawFontPass->EndPass();
 	return true;
 }

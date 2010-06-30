@@ -277,7 +277,7 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 {
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
-	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("../Resources/texture.bmp"), &TB->m_pTexture)))
+	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("..\\..\\Resources\\texture.bmp"), &TB->m_pTexture)))
 	{
 		delete TB;
 		return 0;
@@ -359,7 +359,7 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	WCHAR FN[256];
 	
 	//sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
-	wsprintf(FN, TEXT("..\\Shaders\\Vertex%s"), pShader->m_FileName);
+	wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
@@ -374,7 +374,7 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pCode = NULL;
 
 	//sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
-	wsprintf(FN, TEXT("..\\Shaders\\Pixel%s"), pShader->m_FileName);
+	wsprintf(FN, TEXT("..\\..\\Shaders\\Pixel%s"), pShader->m_FileName);
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)

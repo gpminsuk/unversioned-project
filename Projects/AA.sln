@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MaderCLI", "MaderCLI\MaderC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mader", "Mader\Mader.csproj", "{D65ABCCD-09CB-4DA9-9532-9833B45110DA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unique", "Unique\Unique.vcproj", "{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{B1AF4C7A-88E1-440B-BD9A-303BD64921D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tool", "Tool", "{47F30D5C-A6DC-4361-A56B-0FF18D09192D}"
@@ -27,6 +25,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A966B2AE-5F27-408A-92DF-4467C321C7A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueUI", "UniqueUI\UniqueUI.vcproj", "{BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniqueCore", "UniqueCore\UniqueCore.vcproj", "{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62} = {BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,16 +61,6 @@ Global
 		{D65ABCCD-09CB-4DA9-9532-9833B45110DA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D65ABCCD-09CB-4DA9-9532-9833B45110DA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D65ABCCD-09CB-4DA9-9532-9833B45110DA}.Release|Win32.ActiveCfg = Release|Any CPU
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.Build.0 = Debug|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Any CPU.ActiveCfg = Release|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.ActiveCfg = Release|Win32
-		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.Build.0 = Release|Win32
 		{04B2D4DF-69E8-425B-8314-DE0C67EF256D}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{04B2D4DF-69E8-425B-8314-DE0C67EF256D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{04B2D4DF-69E8-425B-8314-DE0C67EF256D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
@@ -88,6 +81,16 @@ Global
 		{BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62}.Release|Win32.ActiveCfg = Release|Win32
 		{BCB4121F-D3E5-4D47-8E8E-B947EA0CFE62}.Release|Win32.Build.0 = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Debug|Win32.Build.0 = Debug|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.ActiveCfg = Release|Win32
+		{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

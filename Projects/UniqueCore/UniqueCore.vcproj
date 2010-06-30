@@ -110,11 +110,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
 				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\$(IntDir).pch"
+				AssemblerOutput="0"
 				ObjectFile="$(IntDir)\Obj\"
 				ProgramDataBaseFileName="$(IntDir)\PDB\vc90.pdb"
 				WarningLevel="3"
@@ -213,6 +215,26 @@
 				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 				UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 				>
+				<File
+					RelativePath=".\stdafx.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"
+						/>
+					</FileConfiguration>
+				</File>
 				<Filter
 					Name="A"
 					>
@@ -221,7 +243,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\AObject.h"
+						RelativePath=".\Include\AObject.h"
 						>
 					</File>
 					<File
@@ -229,7 +251,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\AThread.h"
+						RelativePath=".\Include\AThread.h"
 						>
 					</File>
 				</Filter>
@@ -241,7 +263,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BApplication.h"
+						RelativePath=".\Include\BApplication.h"
 						>
 					</File>
 					<File
@@ -249,7 +271,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BCamera.h"
+						RelativePath=".\Include\BCamera.h"
 						>
 					</File>
 					<File
@@ -257,7 +279,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BDriver.h"
+						RelativePath=".\Include\BDriver.h"
 						>
 					</File>
 					<File
@@ -265,7 +287,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BLight.h"
+						RelativePath=".\Include\BLight.h"
 						>
 					</File>
 					<File
@@ -273,7 +295,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BMaterialBase.h"
+						RelativePath=".\Include\BMaterialBase.h"
 						>
 					</File>
 					<File
@@ -281,7 +303,15 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BRenderer.h"
+						RelativePath=".\Include\BRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\BUIPane.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\BUIPane.h"
 						>
 					</File>
 					<File
@@ -289,26 +319,26 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BViewport.h"
+						RelativePath=".\Include\BViewport.h"
 						>
 					</File>
 					<Filter
 						Name="ShaderPass"
 						>
 						<File
-							RelativePath=".\Src\BDrawFontPass.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\Src\BDrawFontPass.h"
-							>
-						</File>
-						<File
 							RelativePath=".\Src\BDrawLinePass.cpp"
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BDrawLinePass.h"
+							RelativePath=".\Include\BDrawLinePass.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BDrawUIPass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\BDrawUIPass.h"
 							>
 						</File>
 						<File
@@ -316,7 +346,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BOpaqueBasePass.h"
+							RelativePath=".\Include\BOpaqueBasePass.h"
 							>
 						</File>
 						<File
@@ -324,7 +354,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BParticleRenderPass.h"
+							RelativePath=".\Include\BParticleRenderPass.h"
 							>
 						</File>
 						<File
@@ -332,7 +362,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BRTRenderPass.h"
+							RelativePath=".\Include\BRTRenderPass.h"
 							>
 						</File>
 					</Filter>
@@ -344,7 +374,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BLineBatcher.h"
+							RelativePath=".\Include\BLineBatcher.h"
 							>
 						</File>
 						<File
@@ -352,7 +382,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\BPrimitive.h"
+							RelativePath=".\Include\BPrimitive.h"
 							>
 						</File>
 					</Filter>
@@ -365,7 +395,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\CDirectionalLight.h"
+						RelativePath=".\Include\CDirectionalLight.h"
 						>
 					</File>
 					<File
@@ -373,7 +403,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\CDirectXDriver.h"
+						RelativePath=".\Include\CDirectXDriver.h"
 						>
 					</File>
 					<File
@@ -381,7 +411,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\CPointLight.h"
+						RelativePath=".\Include\CPointLight.h"
 						>
 					</File>
 					<File
@@ -389,7 +419,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\CWindowApp.h"
+						RelativePath=".\Include\CWindowApp.h"
 						>
 					</File>
 					<Filter
@@ -400,7 +430,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CBoxPrimitive.h"
+							RelativePath=".\Include\CBoxPrimitive.h"
 							>
 						</File>
 						<File
@@ -408,7 +438,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CCylinderPrimitive.h"
+							RelativePath=".\Include\CCylinderPrimitive.h"
 							>
 						</File>
 						<File
@@ -416,7 +446,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CMeshPrimitive.h"
+							RelativePath=".\Include\CMeshPrimitive.h"
 							>
 						</File>
 						<File
@@ -424,7 +454,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CParticlePrimitive.h"
+							RelativePath=".\Include\CParticlePrimitive.h"
 							>
 						</File>
 						<File
@@ -432,7 +462,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CPlanePrimitive.h"
+							RelativePath=".\Include\CPlanePrimitive.h"
 							>
 						</File>
 						<File
@@ -440,7 +470,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CSkeletalMeshPrimitive.h"
+							RelativePath=".\Include\CSkeletalMeshPrimitive.h"
 							>
 						</File>
 						<File
@@ -448,7 +478,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Src\CTerrainPrimitive.h"
+							RelativePath=".\Include\CTerrainPrimitive.h"
 							>
 						</File>
 					</Filter>
@@ -461,7 +491,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\RDXResource.h"
+						RelativePath=".\Include\RDXResource.h"
 						>
 					</File>
 					<File
@@ -469,15 +499,24 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\RResource.h"
+						RelativePath=".\Include\RResource.h"
 						>
 					</File>
 					<File
 						RelativePath=".\Src\RResourceManager.cpp"
 						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ExpandAttributedSource="false"
+								AssemblerOutput="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
-						RelativePath=".\Src\RResourceManager.h"
+						RelativePath=".\Include\RResourceManager.h"
 						>
 					</File>
 				</Filter>
@@ -485,7 +524,7 @@
 					Name="Templates"
 					>
 					<File
-						RelativePath=".\Src\InputDefine.h"
+						RelativePath=".\Include\InputDefine.h"
 						>
 					</File>
 					<File
@@ -493,11 +532,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\TDataTypes.h"
+						RelativePath=".\Include\TDataTypes.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\TWindowInfo.h"
+						RelativePath=".\Include\TWindowInfo.h"
 						>
 					</File>
 				</Filter>
@@ -676,28 +715,7 @@
 			</Filter>
 		</Filter>
 		<File
-			RelativePath=".\Src\stdafx.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-					PrecompiledHeaderFile=".\$(IntDir)_$(TargetName).pch"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\Include\stdafx.h"
+			RelativePath=".\stdafx.h"
 			>
 		</File>
 	</Files>

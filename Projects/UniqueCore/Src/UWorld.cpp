@@ -16,6 +16,8 @@
 #include "CEmitter.h"
 #include "CCylinderPrimitive.h"
 
+#include "..\..\UniqueUI\Include\CUILabel.h"
+
 UWorld* GWorld;
 
 UWorld::UWorld()
@@ -62,6 +64,13 @@ bool UWorld::InitializeWorld()
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
 	AddThing(m_Character);
 
+	m_Label = new CUILabel();
+	sprintf_s(m_Label->Text.Str, 1024, "FPSFPSFPS");
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->RenderUIPane(m_Label);
+	}
 	/*m_Cylinder = new CCylinderPrimitive();
 	m_Cylinder->RenderType = RenderType_Opaque;
 	m_Cylinder->Translation = TVector3(5,5,5);

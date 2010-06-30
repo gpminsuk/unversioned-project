@@ -1,8 +1,8 @@
 #include "TDataTypes.h"
 
-#include "xmlparse.h"
+#include "expat.h"
 
-#pragma comment(lib,"xmlparse.lib")
+#pragma comment(lib,"libexpat.lib")
 
 struct TXMLAttribute
 {

@@ -558,6 +558,7 @@ void LoadASEFile(const char* fn)
 	fclose(fp);
 }
 
+
 RResourceManager::RResourceManager(void)
 {
 }

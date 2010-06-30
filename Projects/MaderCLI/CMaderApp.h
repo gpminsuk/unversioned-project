@@ -28,7 +28,7 @@ public:
 	  int m_wHeight;
 };
 
-class CMaderApp : public BApplication
+class CMaderApp : public BApplication 
 {
 public:
 	CMaderApp();

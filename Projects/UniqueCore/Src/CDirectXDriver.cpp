@@ -346,12 +346,12 @@ bool CDirectXDriver::EndScene()
 }
 
 bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
-{	
+{
 	RDirectXShader *pDXShader = dynamic_cast<RDirectXShader*>(pShader);
 	if(!pDXShader)
 		return false;
 	HRESULT hr;
-
+ 
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
 	DWORD dwShaderFlags = 0;

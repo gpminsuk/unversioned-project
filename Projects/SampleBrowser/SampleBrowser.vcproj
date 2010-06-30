@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\Binaries\$(ConfigurationName)\"
+			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -40,10 +40,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Unique\Include"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;.\Include;..\External\expat\include"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -58,7 +59,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
@@ -87,8 +89,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\Binaries\$(ConfigurationName)\"
+			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -112,7 +114,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Unique\Include"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;.\Include;..\External\expat\include"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -131,7 +133,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/SUBSYSTEM:WINDOWS /NODEFAULTLIB:library"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
@@ -170,16 +172,24 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\SampleBrowser.cpp"
+				RelativePath=".\Src\SampleBrowser.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SampleBrowserApp.cpp"
+				RelativePath=".\Src\SampleBrowserApp.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>
@@ -196,7 +206,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\SampleBrowserApp.h"
+				RelativePath=".\Include\SampleBrowserApp.h"
 				>
 			</File>
 			<File

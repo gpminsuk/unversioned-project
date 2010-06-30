@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CMaderApp.h"
-#include "..\Unique\Src\CDirectXDriver.h"
-#include "..\Unique\Src\BRenderer.h"
+#include "CDirectXDriver.h"
+#include "BRenderer.h"
 
 #using <System.Windows.Forms.dll>
 

@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include"
+				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include;..\Unique\Include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"

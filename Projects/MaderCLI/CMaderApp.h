@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\Unique\Src\TDataTypes.h"
-#include "..\Unique\Src\TWindowInfo.h"
-#include "..\Unique\Src\BApplication.h"
+#include "TDataTypes.h"
+#include "TWindowInfo.h"
+#include "BApplication.h"
 
 struct UMouseMap
 {

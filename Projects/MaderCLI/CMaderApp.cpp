@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 #include "CMaderApp.h"
-#include "..\Unique\Src\BRenderer.h"
-#include "..\Unique\Src\BViewport.h"
-#include "..\Unique\Src\CDirectXDriver.h"
-#include "..\Unique\Src\World\CCameraViewport.h"
-#include "..\Unique\Src\RResourceManager.h"
+#include "BRenderer.h"
+#include "BViewport.h"
+#include "CDirectXDriver.h"
+#include "CCameraViewport.h"
+#include "RResourceManager.h"
 
 #define generic GENERIC
-#include "..\Unique\Src\World\UWorld.h"
+#include "UWorld.h"
 #undef GENERIC
 
 CMaderApp::CMaderApp()
@@ -56,8 +56,6 @@ bool CMaderApp::CreateApp(TApplicationInfo& Info)
 
 void CMaderApp::Do()
 {
-	MSG msg;
-
 	while(!bQuit)
 	{
 		Sleep(1000);	

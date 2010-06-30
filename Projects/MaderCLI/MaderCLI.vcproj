@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;"
+				AdditionalIncludeDirectories="..\AA\Src\;..\AA\Src\World\;..\External\freetype-2.3.7\include;..\Unique\Include"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				ObjectFile="$(IntDir)\Obj\"
@@ -63,7 +63,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
-				AdditionalDependencies="..\Intermediate\Debug\AA\Obj\*"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"

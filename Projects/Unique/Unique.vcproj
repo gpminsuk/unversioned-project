@@ -130,7 +130,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Src\World;.\Src"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -553,11 +553,11 @@
 					Name="CollisionBody"
 					>
 					<File
-						RelativePath=".\Src\World\BCollisionBody.cpp"
+						RelativePath=".\Src\BCollisionBody.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\BCollisionBody.h"
+						RelativePath=".\Include\BCollisionBody.h"
 						>
 					</File>
 				</Filter>
@@ -565,11 +565,11 @@
 					Name="Component"
 					>
 					<File
-						RelativePath=".\Src\World\BComponent.cpp"
+						RelativePath=".\Src\BComponent.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\BComponent.h"
+						RelativePath=".\Include\BComponent.h"
 						>
 					</File>
 				</Filter>
@@ -577,11 +577,11 @@
 					Name="Thing"
 					>
 					<File
-						RelativePath=".\Src\World\BThing.cpp"
+						RelativePath=".\Src\BThing.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\BThing.h"
+						RelativePath=".\Include\BThing.h"
 						>
 					</File>
 				</Filter>
@@ -593,19 +593,19 @@
 					Name="CollisionBody"
 					>
 					<File
-						RelativePath=".\Src\World\CCylinderCollisionBody.cpp"
+						RelativePath=".\Src\CCylinderCollisionBody.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CCylinderCollisionBody.h"
+						RelativePath=".\Include\CCylinderCollisionBody.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CHeightFieldCollisionBody.cpp"
+						RelativePath=".\Src\CHeightFieldCollisionBody.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CHeightFieldCollisionBody.h"
+						RelativePath=".\Include\CHeightFieldCollisionBody.h"
 						>
 					</File>
 				</Filter>
@@ -613,27 +613,27 @@
 					Name="Thing"
 					>
 					<File
-						RelativePath=".\Src\World\CCameraViewport.cpp"
+						RelativePath=".\Src\CCameraViewport.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CCameraViewport.h"
+						RelativePath=".\Include\CCameraViewport.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CCharacter.cpp"
+						RelativePath=".\Src\CCharacter.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CCharacter.h"
+						RelativePath=".\Include\CCharacter.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CEmitter.cpp"
+						RelativePath=".\Src\CEmitter.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CEmitter.h"
+						RelativePath=".\Include\CEmitter.h"
 						>
 					</File>
 					<File
@@ -641,7 +641,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\CTerrain.h"
+						RelativePath=".\Include\CTerrain.h"
 						>
 					</File>
 				</Filter>
@@ -649,19 +649,19 @@
 					Name="Components"
 					>
 					<File
-						RelativePath=".\Src\World\CSkeletalMeshComponent.cpp"
+						RelativePath=".\Src\CSkeletalMeshComponent.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CSkeletalMeshComponent.h"
+						RelativePath=".\Include\CSkeletalMeshComponent.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CTerrainComponent.cpp"
+						RelativePath=".\Src\CTerrainComponent.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Src\World\CTerrainComponent.h"
+						RelativePath=".\Include\CTerrainComponent.h"
 						>
 					</File>
 				</Filter>
@@ -670,11 +670,7 @@
 				Name="U"
 				>
 				<File
-					RelativePath=".\Src\World\UWorld.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Src\World\UWorld.h"
+					RelativePath=".\Src\UWorld.cpp"
 					>
 				</File>
 			</Filter>

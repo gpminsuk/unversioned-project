@@ -107,7 +107,7 @@
 			Name="Release|Win32"
 			OutputDirectory="..\..\Binaries\$(ConfigurationName)\$(ProjectName)"
 			IntermediateDirectory="..\Intermediate\$(ConfigurationName)\$(ProjectName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			CharacterSet="1"
 			DeleteExtensionsOnClean=".\Obj\*.obj;.\Obj;*.ilk;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.pgc;*.pgd;*.meta;$(TargetPath)"
 			WholeProgramOptimization="1"
@@ -151,25 +151,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
-				ManifestFile="$(IntDir)\Manifest\$(TargetFileName).intermediate.manifest"
-				IgnoreDefaultLibraryNames="libcmt.lib"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)\PDB\$(TargetFileName)_$(TargetName).pdb"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -179,9 +164,6 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

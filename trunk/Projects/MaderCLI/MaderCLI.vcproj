@@ -147,7 +147,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
-				AdditionalDependencies="..\Intermediate\Release\AA\Obj\*"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"

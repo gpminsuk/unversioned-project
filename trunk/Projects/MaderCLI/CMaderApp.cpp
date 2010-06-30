@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 #include "CMaderApp.h"
-#include "..\AA\Src\BRenderer.h"
-#include "..\AA\Src\BViewport.h"
-#include "..\AA\Src\CDirectXDriver.h"
-#include "..\AA\Src\World\CCameraViewport.h"
-#include "..\AA\Src\RResourceManager.h"
+#include "..\Unique\Src\BRenderer.h"
+#include "..\Unique\Src\BViewport.h"
+#include "..\Unique\Src\CDirectXDriver.h"
+#include "..\Unique\Src\World\CCameraViewport.h"
+#include "..\Unique\Src\RResourceManager.h"
 
 #define generic GENERIC
-#include "..\AA\Src\World\UWorld.h"
+#include "..\Unique\Src\World\UWorld.h"
 #undef GENERIC
 
 CMaderApp::CMaderApp()

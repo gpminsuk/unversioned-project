@@ -24,8 +24,6 @@ namespace Mader
     /// </summary>
     public partial class MaterialExpressionControl : UserControl
     {
-        private TimeSpan _lastRender;
-
         public MaterialExpressionControl(int nNumInput, int nNumOutput)
         {
             InitializeComponent();

@@ -6,6 +6,7 @@
 
 #include "BDriver.h"
 #include "BThing.h"
+#include "BComponent.h"
 #include "BLineBatcher.h"
 #include "BPrimitive.h"
 
@@ -20,6 +21,26 @@ BViewport::~BViewport(void)
 
 void BViewport::SortTemplates()
 {
+}
+
+void BViewport::Render(BComponent* pComponent)
+{
+	TArray<BPrimitive*> pTemplates = pComponent->Primitives;
+	for(unsigned int i=0;i<pTemplates.Size();++i)
+	{
+		BPrimitive* pTemplate = pTemplates(i);
+		switch(pTemplate->RenderType)
+		{
+		case RenderType_UI:
+			{
+				m_UIPrimitives.AddItem(pTemplate);
+				m_UIBatches.m_pTemplates.AddItem(pTemplate);
+				m_Batches.RenderType = PrimitiveType_TriangleList;
+				pTemplate->Render(&m_Batches);
+			}
+			break;
+		}
+	}	
 }
 
 void BViewport::Render(BThing* pThing)
@@ -57,11 +78,6 @@ void BViewport::Render(BThing* pThing)
 			break;
 		}
 	}	
-}
-
-void BViewport::RenderUIPane(BUIPane* pUIPane)
-{
-	m_UIPanes.AddItem(pUIPane);
 }
 
 void BViewport::Clear()

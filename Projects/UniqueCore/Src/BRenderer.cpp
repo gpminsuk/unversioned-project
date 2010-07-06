@@ -11,6 +11,7 @@
 #include "BParticleRenderPass.h"
 
 #include "BPrimitive.h"
+#include "BSynchronizer.h"
 #include "BLineBatcher.h"
 
 BRenderer::BRenderer(BApplication *App)
@@ -35,14 +36,7 @@ BRenderer::BRenderer(BApplication *App)
 
 BRenderer::~BRenderer()
 {
-	delete LineBatcher;
-
-	for(UINT i=0;i<m_RendererViewport.Size();++i)
-	{
-		delete m_RendererViewport(0);
-		m_RendererViewport.DeleteItem(0);
-	}
-	
+	delete LineBatcher;	
 	delete m_ParticleRenderPass;
 	delete m_DrawFontPass;
 	delete m_DrawLinePass;
@@ -71,8 +65,10 @@ bool BRenderer::Destroy()
 
 bool BRenderer::Render()
 {
-	for(UINT i=0;i<m_RendererViewport.Size();++i)
-		RenderViewport(m_RendererViewport[i]);	
+	for(UINT i=0;i<m_Viewports.Size();++i)
+	{
+		RenderViewport(m_Viewports[i]);	
+	}
 	return true;
 }
 
@@ -127,36 +123,42 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	m_DrawLinePass->EndPass();
 
 	m_DrawFontPass->BeginPass(Viewport);
-	m_DrawFontPass->DrawPrimitive();
+	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_UIBatches);
+	if(m_pBuffer)
+	{
+		GDriver->SetRenderTarget(0, m_OpaqueBasePass->m_RenderTargets(0));
+		m_DrawFontPass->DrawPrimitive();
+
+		m_pBuffer->Release();
+		delete m_pBuffer;
+	}
 	m_DrawFontPass->EndPass();
 	return true;
 }
 
 
-void BRenderer::FetchViewports()
+void BRenderer::SyncThread()
 {
-	int Count = (UINT)(m_Viewports.Size() - m_RendererViewport.Size());
-	if(Count > 0)
+	for(UINT i=0;i<m_Viewports.Size();++i)
 	{
-		for(int i=0;i<Count;++i)
-		{			
-			m_RendererViewport.AddItem(m_Viewports(i));
-		}
-	}
-	else
-	{
-		for(int i=0;i>Count;--i)
+		BViewport* Viewport = m_Viewports[i];
+		BPrimitive* Primitive;
+		for(UINT i=0;i<Viewport->m_OpaquePrimitives.Size();++i)
 		{
-			delete m_RendererViewport((int)(m_RendererViewport.Size()-1));
-			m_RendererViewport.DeleteItem((UINT)(m_RendererViewport.Size()-1));
+			Primitive = Viewport->m_OpaquePrimitives[i];
+			Primitive->RenderThreadSyncronizer->SyncData();
 		}
-	}
-	for(UINT i=0;i<m_RendererViewport.Size();++i)
-	{
-		*m_RendererViewport[i] = *m_Viewports[i];
-	}
-
-	//LineBatcher->Lines = GLineBatcher->Lines;
+		for(UINT i=0;i<Viewport->m_TranslucentPrimitives.Size();++i)
+		{
+			Primitive = Viewport->m_TranslucentPrimitives[i];
+			Primitive->RenderThreadSyncronizer->SyncData();
+		}
+		for(UINT i=0;i<Viewport->m_UIPrimitives.Size();++i)
+		{
+			Primitive = Viewport->m_UIPrimitives[i];
+			Primitive->RenderThreadSyncronizer->SyncData();
+		}
+	}	
 }
 
 void BRenderer::ThreadSetup()
@@ -172,7 +174,7 @@ void BRenderer::ThreadExecute()
 	int AccumulatedCount = 0;
 	while(!m_pApp->bQuit)
 	{
-		FetchViewports();
+		SyncThread();
 
 		if(GDriver->BeginScene())
 		{

@@ -2,8 +2,7 @@
 #include "BComponent.h"
 #include "BPrimitive.h"
 
-BComponent::BComponent(BThing* InOwner)
-:	Owner(InOwner)
+BComponent::BComponent()
 {
 }
 

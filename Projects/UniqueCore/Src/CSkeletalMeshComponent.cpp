@@ -2,8 +2,7 @@
 #include "CSkeletalMeshComponent.h"
 #include "CSkeletalMeshPrimitive.h" 
 
-CSkeletalMeshComponent::CSkeletalMeshComponent(BThing* InOwner)
-:	BComponent(InOwner)
+CSkeletalMeshComponent::CSkeletalMeshComponent()
 {
 	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(0), RSkeletalMeshTable::SkeletalMeshes(0), RAnimationSequenceTable::Sequences(0));
 	Primitives.AddItem(SkeletalMeshPrimitive);	

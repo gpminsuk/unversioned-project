@@ -106,7 +106,7 @@ public:
 
 	class CTerrain *m_Terrain;
 
-	class CUILabel *m_Label;
+	class CUIButtonComponent *m_Button;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

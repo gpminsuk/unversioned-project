@@ -6,7 +6,7 @@
 class CSkeletalMeshComponent : public BComponent
 {
 public:
-	CSkeletalMeshComponent(class BThing* InOwner);
+	CSkeletalMeshComponent();
 	virtual ~CSkeletalMeshComponent();
 
 	virtual void UpdateComponent();

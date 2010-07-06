@@ -307,11 +307,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Src\BUIPane.cpp"
+						RelativePath=".\Src\BSynchronizer.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Include\BUIPane.h"
+						RelativePath=".\Include\BSynchronizer.h"
 						>
 					</File>
 					<File

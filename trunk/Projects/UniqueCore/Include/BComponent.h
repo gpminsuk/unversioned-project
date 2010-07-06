@@ -2,15 +2,17 @@
 
 #include "TDataTypes.h"
 
+class BSynchronizer;
+
 class BComponent
 {
 public:
-	BComponent(class BThing* InOwner);
+	BComponent();
 	virtual ~BComponent();
 
-	TArray<class BPrimitive*> Primitives;
+	BSynchronizer* Syncronizer;
 
-	class BThing* Owner;
+	TArray<class BPrimitive*> Primitives;
 
 	virtual void UpdateComponent() = 0;
 };

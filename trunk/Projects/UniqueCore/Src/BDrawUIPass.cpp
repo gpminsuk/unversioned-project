@@ -6,7 +6,6 @@
 #include "BDriver.h"
 #include "BViewport.h"
 #include "BRenderer.h"
-#include "BUIPane.h"
 
 #include "UFreeTypeDrawer.h"
 
@@ -38,11 +37,6 @@ void BDrawUIPass::EndPass()
 
 void BDrawUIPass::DrawPrimitive()
 {
-	for(unsigned int i=0;i<m_Viewport->m_UIPanes.Size();++i)
-	{
-		BUIPane* Pane = m_Viewport->m_UIPanes(i);
-		Pane->DrawUI(RTextureBufferTable::TextureBuffers(1));
-	}
 	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
 
 	struct VD

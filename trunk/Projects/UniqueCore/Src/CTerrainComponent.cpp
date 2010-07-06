@@ -3,8 +3,7 @@
 #include "CTerrainPrimitive.h" 
 #include "BCamera.h"
 
-CTerrainComponent::CTerrainComponent(BThing* InOwner)
-:	BComponent(InOwner)	
+CTerrainComponent::CTerrainComponent()
 {
 	CTerrainPrimitive* TerrainPrimitive = new CTerrainPrimitive();
 	Primitives.AddItem(TerrainPrimitive);

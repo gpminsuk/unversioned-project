@@ -16,7 +16,7 @@
 #include "CEmitter.h"
 #include "CCylinderPrimitive.h"
 
-#include "..\..\UniqueUI\Include\CUILabel.h"
+#include "..\..\UniqueUI\Include\CUIButton.h"
 
 UWorld* GWorld;
 
@@ -29,11 +29,12 @@ UWorld::~UWorld()
 {
 	//delete m_Emitter;
 //	delete m_Cylinder;
-	delete m_Terrain;
-	delete m_Character;
-	delete m_pWorldData;
+	//delete m_Terrain;
+	//delete m_Character;
+	//delete m_pWorldData;
+	delete m_Button;
 
-	delete GLineBatcher;
+	//delete GLineBatcher;
 }
 
 void UWorld::Tick(DWORD dTime)
@@ -53,7 +54,7 @@ void UWorld::AddThing(BThing* Thing)
 
 bool UWorld::InitializeWorld()
 {
-	GLineBatcher = new BLineBatcher();
+	/*GLineBatcher = new BLineBatcher();
 
 	m_pWorldData = new TWorldOctree();
 
@@ -62,14 +63,13 @@ bool UWorld::InitializeWorld()
 
 	m_Character = new CCharacter();
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
-	AddThing(m_Character);
+	AddThing(m_Character);*/
 
-	m_Label = new CUILabel();
-	sprintf_s(m_Label->Text.Str, 1024, "FPSFPSFPS");
+	m_Button = new CUIButtonComponent();
 	for(unsigned int i=0;i<Viewports.Size();++i)
 	{
 		BViewport* Viewport = Viewports(i);
-		Viewport->RenderUIPane(m_Label);
+		Viewport->Render(m_Button);
 	}
 	/*m_Cylinder = new CCylinderPrimitive();
 	m_Cylinder->RenderType = RenderType_Opaque;

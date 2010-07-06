@@ -4,8 +4,8 @@
 #include "InputDefine.h"
 
 class BThing;
+class BComponent;
 class BLight;
-class BUIPane;
 
 enum E_SceneType
 {
@@ -21,12 +21,13 @@ public:
 
 	void operator =(BViewport& vp);
 
-	TArray<BUIPane*> m_UIPanes;
 	TArray<BPrimitive*> m_OpaquePrimitives;
 	TArray<BPrimitive*> m_TranslucentPrimitives;
+	TArray<BPrimitive*>	m_UIPrimitives;
 	TArray<BLight*>		m_Lights;
 
 	TBatch m_Batches;
+	TBatch m_UIBatches;
 	TBatch m_LineBatch;
 	TBatch m_ParticleBatch;
 
@@ -39,8 +40,8 @@ public:
 	unsigned long VisibleScenes;
 
 	void Clear();
+	void Render(BComponent* pComponent);
 	void Render(BThing* pThing);
-	void RenderUIPane(BUIPane* pUIPane);
 	
 	void SortTemplates();
 

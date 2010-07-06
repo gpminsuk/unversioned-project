@@ -8,7 +8,7 @@
 
 CTerrain::CTerrain()
 {
-	CTerrainComponent* TerrainComponent = new CTerrainComponent(this);
+	CTerrainComponent* TerrainComponent = new CTerrainComponent();
 	Components.AddItem(TerrainComponent);
 
 	CHeightFieldCollisionBody* TerrainCollisionBody = new CHeightFieldCollisionBody(this);

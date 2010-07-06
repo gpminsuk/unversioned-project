@@ -3,6 +3,10 @@
 #include "AObject.h"
 
 #include "TDataTypes.h"
+#include "RResource.h"
+#include "UFreeTypeDrawer.h"
+
+class BSynchronizer;
 
 enum ERenderType
 {
@@ -10,6 +14,7 @@ enum ERenderType
 	RenderType_Translucent,
 	RenderType_Particle,
 	RenderType_Line,
+	RenderType_UI,
 };
 
 class TPrimitive
@@ -26,7 +31,8 @@ public:
 class BPrimitive : public AObject
 {
 public:
-	BPrimitive();
+	BPrimitive() {}
+	BPrimitive(BSynchronizer** Synchronizer);
 	virtual ~BPrimitive(void);
 
 	TVector3 Translation;
@@ -48,8 +54,11 @@ public:
 
 	enum ERenderType RenderType;
 
+	BSynchronizer* RenderThreadSyncronizer;
+
 	virtual void UpdatePrimitive() {}
 
+	virtual void InitializeSynchronizer(BSynchronizer** Synchronizer) {}
 	virtual void Render(TBatch *Batch) = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;

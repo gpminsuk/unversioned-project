@@ -37,16 +37,15 @@ public:
 	void ThreadDestroy();
 
 	void AddViewport(BViewport* pViewport);
-	void FetchViewports();
+	void SyncThread();
 protected:
-	TArray<BViewport*> m_RendererViewport;
 	TArray<BViewport*> m_Viewports;
 	class BLineBatcher* LineBatcher;
 
 	class BOpaqueBasePass*	m_OpaqueBasePass;
 	class BRTRenderPass*	m_BaseRTRenderPass;
 	class BDrawLinePass*	m_DrawLinePass;	
-	class BDrawUIPass*	m_DrawFontPass;
+	class BDrawUIPass*		m_DrawFontPass;
 	class BParticleRenderPass* m_ParticleRenderPass;
 
 	BApplication* m_pApp;

@@ -6,7 +6,7 @@
 class CTerrainComponent : public BComponent
 {
 public:
-	CTerrainComponent(class BThing* InOwner);
+	CTerrainComponent();
 	virtual ~CTerrainComponent();
 
 	virtual void UpdateComponent();

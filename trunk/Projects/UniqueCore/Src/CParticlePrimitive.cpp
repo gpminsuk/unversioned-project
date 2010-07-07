@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 
 #include "RResource.h"
+#include "BRenderingBatch.h"
 
 #include "CParticlePrimitive.h"
 
@@ -131,7 +132,7 @@ void CParticlePrimitive::DestroyParticlePrimitive()
 	Primitives.Clear();
 }
 
-void CParticlePrimitive::Render(TBatch *Batch)
+void CParticlePrimitive::Render(BRenderingBatch *Batch)
 {
 	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
 	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;

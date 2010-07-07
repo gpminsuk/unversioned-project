@@ -4,16 +4,20 @@
 
 #include "RResource.h"
 
-BPrimitive::BPrimitive(BSynchronizer** Synchronizer)
-: RenderThreadSyncronizer(0)
+BPrimitive::BPrimitive()
+: Syncronizer(0)
 {
-	InitializeSynchronizer(Synchronizer);
 }
 
 BPrimitive::~BPrimitive(void)
 {
 	Primitives.Clear();
-	delete RenderThreadSyncronizer;
+	delete Syncronizer;
+}
+
+void BPrimitive::Syncronize()
+{
+	Syncronizer->RecieveData(this);
 }
 
 TPrimitive::TPrimitive()

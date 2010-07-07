@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "CSkeletalMeshPrimitive.h"
+#include "BRenderingBatch.h"
 
 #define TEST_BIP_EXCLUDED
 
@@ -27,7 +28,7 @@ void CSkeletalMeshPrimitive::UpdatePrimitive()
 	}
 }
 
-void CSkeletalMeshPrimitive::Render(TBatch *Batch)
+void CSkeletalMeshPrimitive::Render(BRenderingBatch *Batch)
 {
 	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
 	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;

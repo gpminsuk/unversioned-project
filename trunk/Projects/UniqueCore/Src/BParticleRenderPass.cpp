@@ -3,6 +3,7 @@
 #include "RResource.h"
 
 #include "BParticleRenderPass.h"
+#include "BRenderingBatch.h"
 #include "BDriver.h"
 #include "BViewport.h"
 
@@ -31,7 +32,7 @@ void BParticleRenderPass::EndPass()
 	pShader->EndShader();
 }
 
-void BParticleRenderPass::DrawPrimitive(TBatch *Batch)
+void BParticleRenderPass::DrawPrimitive(BRenderingBatch *Batch)
 {
 	GDriver->DrawIndexedPrimitive(Batch->RenderType, Batch->nVertices, Batch->GetNumIndices());
 }

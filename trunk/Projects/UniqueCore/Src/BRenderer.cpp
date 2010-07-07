@@ -9,6 +9,7 @@
 #include "BDrawLinePass.h"
 #include "BDrawUIPass.h"
 #include "BParticleRenderPass.h"
+#include "BRenderingBatch.h"
 
 #include "BPrimitive.h"
 #include "BSynchronizer.h"
@@ -74,65 +75,7 @@ bool BRenderer::Render()
 
 bool BRenderer::RenderViewport(BViewport* Viewport)
 {
-	Viewport->SortTemplates();
-	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_Batches);
-
-	m_OpaqueBasePass->BeginPass(Viewport);
-	if(m_pBuffer)
-	{
-		GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
-		m_OpaqueBasePass->DrawPrimitive(&Viewport->m_Batches);
-		GDriver->SetTexture(0, NULL);
-
-		m_pBuffer->Release();
-		delete m_pBuffer;
-	}
-
-
-	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_LineBatch);
-	if(m_pBuffer)
-	{
-		m_OpaqueBasePass->DrawPrimitive(&Viewport->m_LineBatch);
-
-		m_pBuffer->Release();
-		delete m_pBuffer;
-	}
-
-	m_OpaqueBasePass->EndPass();
-
-	m_ParticleRenderPass->BeginPass(Viewport);
-
-	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_ParticleBatch);
-	if(m_pBuffer)
-	{
-		GDriver->SetRenderTarget(0, m_OpaqueBasePass->m_RenderTargets(0));
-		m_ParticleRenderPass->DrawPrimitive(&Viewport->m_ParticleBatch);
-
-		m_pBuffer->Release();
-		delete m_pBuffer;
-	}
-
-	m_ParticleRenderPass->EndPass();
-
-	m_BaseRTRenderPass->BeginPass(Viewport);
-	m_BaseRTRenderPass->DrawPrimitive();
-	m_BaseRTRenderPass->EndPass();
-	
-	m_DrawLinePass->BeginPass(Viewport);
-	m_DrawLinePass->DrawPrimitive(LineBatcher);
-	m_DrawLinePass->EndPass();
-
-	m_DrawFontPass->BeginPass(Viewport);
-	m_pBuffer = GDriver->CreatePrimitiveBuffer(&Viewport->m_UIBatches);
-	if(m_pBuffer)
-	{
-		GDriver->SetRenderTarget(0, m_OpaqueBasePass->m_RenderTargets(0));
-		m_DrawFontPass->DrawPrimitive();
-
-		m_pBuffer->Release();
-		delete m_pBuffer;
-	}
-	m_DrawFontPass->EndPass();
+	Viewport->RenderingBatches->RenderBatch();
 	return true;
 }
 
@@ -141,23 +84,7 @@ void BRenderer::SyncThread()
 {
 	for(UINT i=0;i<m_Viewports.Size();++i)
 	{
-		BViewport* Viewport = m_Viewports[i];
-		BPrimitive* Primitive;
-		for(UINT i=0;i<Viewport->m_OpaquePrimitives.Size();++i)
-		{
-			Primitive = Viewport->m_OpaquePrimitives[i];
-			Primitive->RenderThreadSyncronizer->SyncData();
-		}
-		for(UINT i=0;i<Viewport->m_TranslucentPrimitives.Size();++i)
-		{
-			Primitive = Viewport->m_TranslucentPrimitives[i];
-			Primitive->RenderThreadSyncronizer->SyncData();
-		}
-		for(UINT i=0;i<Viewport->m_UIPrimitives.Size();++i)
-		{
-			Primitive = Viewport->m_UIPrimitives[i];
-			Primitive->RenderThreadSyncronizer->SyncData();
-		}
+		m_Viewports(i)->RenderingBatches->Syncronize();
 	}	
 }
 

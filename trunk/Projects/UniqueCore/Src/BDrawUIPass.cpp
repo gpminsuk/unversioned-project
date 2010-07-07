@@ -6,6 +6,7 @@
 #include "BDriver.h"
 #include "BViewport.h"
 #include "BRenderer.h"
+#include "BRenderingBatch.h"
 
 #include "UFreeTypeDrawer.h"
 
@@ -35,11 +36,18 @@ void BDrawUIPass::EndPass()
 	pShader->EndShader();
 }
 
-void BDrawUIPass::DrawPrimitive()
+void BDrawUIPass::DrawPrimitive(BRenderingBatch *Batch)
 {
-	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
+	TString Str;
+	sprintf_s(Str.Str, 1024, "FPSFPS");
+	GFontDrawer->DrawString(TString(Str), RTextureBufferTable::TextureBuffers(1));
 
-	struct VD
+	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
+	if(Batch->RenderType == PrimitiveType_LineList)
+		GDriver->DrawPrimitive(Batch->RenderType, Batch->nVertices/2);
+	else
+		GDriver->DrawIndexedPrimitive(Batch->RenderType, Batch->nVertices, Batch->GetNumIndices());
+/*	struct VD
 	{
 		TVector3 Pos;
 		TVector2 UV;
@@ -74,5 +82,5 @@ void BDrawUIPass::DrawPrimitive()
 	Indices[0] = TIndex16(0, 1, 2);
 	Indices[1] = TIndex16(1, 3, 2);
 
-	GDriver->DrawIndexedPrimitiveUP(PrimitiveType_TriangleList, 4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));
+	GDriver->DrawIndexedPrimitiveUP(PrimitiveType_TriangleList, 4, 2, Indices, sizeof(TIndex16)/3, Vertices, sizeof(VD));*/
 }

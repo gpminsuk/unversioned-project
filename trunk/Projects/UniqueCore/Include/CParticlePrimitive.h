@@ -27,7 +27,7 @@ public:
 	void DestroyParticlePrimitive();
 	void UpdateParticlePrimitive(TArray<TParticleInstance*> DataSet, TVector3 CameraPosition);
 
-	virtual void Render(TBatch *Batch);
+	virtual void Render(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();

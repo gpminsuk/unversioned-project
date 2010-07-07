@@ -2,13 +2,15 @@
 
 #include "TDataTypes.h"
 
+class BRenderingBatch;
+
 class BOpaqueBasePass
 {
 public:
 	BOpaqueBasePass();
 	~BOpaqueBasePass();
 
-	void DrawPrimitive(TBatch *Batch);
+	void DrawPrimitive(BRenderingBatch *Batch);
 
 	void BeginPass(BViewport* Viewport);
 	void EndPass();

@@ -2,6 +2,7 @@
 
 #include "BViewport.h"
 #include "BPrimitive.h"
+#include "BRenderingBatch.h"
 
 #include "CDirectXDriver.h"
 #include "CWindowApp.h"
@@ -181,9 +182,9 @@ bool CDirectXDriver::SetTexture(int nStage, RTextureBuffer* pTexture)
 	return true;
 }
 
-RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
+RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* pBatch)
 {
-	if(!pBatch->m_pTemplates.Size())
+	if(!pBatch->Primitives.Size())
 		return false;
 	RDXDynamicPrimitiveBuffer* PB = new RDXDynamicPrimitiveBuffer();
 	RDXVideoMemoryVertexBuffer* VB = dynamic_cast<RDXVideoMemoryVertexBuffer*>(PB->m_pVB);
@@ -206,6 +207,8 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		{
 		case D3DERR_OUTOFVIDEOMEMORY:
 			return false;
+		default:
+			return false;
 		}
 	}
 	void *pData;
@@ -218,14 +221,16 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		{
 		case D3DERR_INVALIDCALL:
 			break;
+		default:
+			return false;
 		}
 	}
 	else
 	{
 		char* pcData = static_cast<char*>(pData);
-		for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
+		for(int i=0;i<(int)pBatch->Primitives.Size();++i)
 		{
-			BPrimitive* Prim = pBatch->m_pTemplates(i);
+			BPrimitive* Prim = pBatch->Primitives(i);
 			Prim->FillDynamicVertexBuffer(&pcData);
 		}
 		VB->VB->Unlock();
@@ -257,9 +262,9 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(TBatch* pBatch)
 		{
 			TIndex16* pcData = static_cast<TIndex16*>(pData);
 			unsigned short BaseIdx = 0;
-			for(int i=0;i<(int)pBatch->m_pTemplates.Size();++i)
+			for(int i=0;i<(int)pBatch->Primitives.Size();++i)
 			{
-				BPrimitive* Prim = pBatch->m_pTemplates(i);
+				BPrimitive* Prim = pBatch->Primitives(i);
 				Prim->FillDynamicIndexBuffer(&pcData, &BaseIdx);
 			}
 			IB->IB->Unlock();

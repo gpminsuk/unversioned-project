@@ -1,20 +1,28 @@
 #include "StdAfx.h"
+#include "AThread.h"
 #include "BSynchronizer.h"
 
 BSynchronizer::BSynchronizer()
-:	PreviousSync(0)
+:	SyncData(0)
 {
+	CriticalSection = new ACriticalSection();
 }
 
 BSynchronizer::~BSynchronizer(void)
 {
+	delete CriticalSection;
 }
 
-void BSynchronizer::Syncronize(BSynchronizer* Sync)
+void BSynchronizer::RecieveData(BPrimitive* Primitive)
 {
-	if(PreviousSync)
-	{
-		delete PreviousSync;
-	}
-	PreviousSync = Sync;
+	CriticalSection->Lock();
+	SyncData->GetData(Primitive);
+	CriticalSection->Unlock();
+}
+
+void BSynchronizer::SendData(BComponent* Component)
+{
+	CriticalSection->Lock();
+	SyncData->SetData(Component);
+	CriticalSection->Unlock();
 }

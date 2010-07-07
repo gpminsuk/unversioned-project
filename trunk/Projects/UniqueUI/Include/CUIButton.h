@@ -10,13 +10,17 @@ class CUIButtonComponent;
 class CUIButtonSyncronizer : public BSynchronizer
 {
 public:
+	CUIButtonSyncronizer();
+};
+
+class CUIButtonSyncronizeData : public BSynchronizeData
+{
+public:
 	int	Width;
 	int Height;
 
-	CUIButtonSyncronizer& operator=(const CUIButtonSyncronizer& Sync);
-
-	virtual void Syncronize(BSynchronizer* Sync);
-	virtual void SyncData();
+	virtual void GetData(BPrimitive* Primitive);
+	virtual void SetData(BComponent* Component);
 };
 
 class TUIButtonPrimitive : public TPrimitive
@@ -28,11 +32,14 @@ public:
 class CUIButtonPrimitive : public BPrimitive
 {
 public:
-	CUIButtonPrimitive(BSynchronizer** RenderThreadData);
+	int Width;
+	int Height;
+
+	CUIButtonPrimitive();
 	~CUIButtonPrimitive(void);
 
-	virtual void InitializeSynchronizer(BSynchronizer** Synchronizer);
-	virtual void Render(TBatch *Batch);
+	virtual BSynchronizer* CreateSynchronizer();
+	virtual void Render(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();

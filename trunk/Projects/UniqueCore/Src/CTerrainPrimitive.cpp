@@ -3,6 +3,7 @@
 #include "RResource.h"
 
 #include "CTerrainPrimitive.h"
+#include "BRenderingBatch.h"
 
 TTerrainPrimitive::TTerrainPrimitive()
 : pLODIndices(0),
@@ -32,7 +33,7 @@ TTerrainPrimitive::~TTerrainPrimitive()
 	delete pLODIndices;
 }
 
-void CTerrainPrimitive::Render(TBatch *Batch)
+void CTerrainPrimitive::Render(BRenderingBatch *Batch)
 {
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{

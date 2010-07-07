@@ -49,7 +49,6 @@ protected:
 	class BParticleRenderPass* m_ParticleRenderPass;
 
 	BApplication* m_pApp;
-	RDynamicPrimitiveBuffer* m_pBuffer;
 	int m_nViewportCount;
 
 	DWORD m_dFrameTime[FPS_COUNTER_NUMBER];

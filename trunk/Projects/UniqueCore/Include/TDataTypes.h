@@ -744,20 +744,6 @@ public:
 	TBoundingSphere Sphere;
 };
 
-class TBatch
-{
-public:
-	TBatch() : nVertices(0), nVertexStride(0) {}
-	TArray<class BPrimitive*> m_pTemplates;
-
-	int nVertices;
-	int nVertexStride;
-
-	enum EPrimitiveType RenderType;
-
-	int GetNumIndices();
-	void IndexTessellate();
-};
 /*
 template <typename T>
 class TArray

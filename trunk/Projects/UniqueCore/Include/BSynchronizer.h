@@ -2,6 +2,14 @@
 
 class BPrimitive;
 class BComponent;
+class ACriticalSection;
+
+class BSynchronizeData
+{
+public:
+	virtual void SetData(BComponent* Component) = 0;
+	virtual void GetData(BPrimitive* Primitive) = 0;
+};
 
 class BSynchronizer
 {
@@ -9,8 +17,9 @@ public:
 	BSynchronizer();
 	~BSynchronizer();
 
-	BSynchronizer* PreviousSync;
+	ACriticalSection* CriticalSection;
+	BSynchronizeData* SyncData;
 
-	virtual void Syncronize(BSynchronizer* Sync);
-	virtual void SyncData() = 0;
+	void SendData(BComponent* Component);
+	void RecieveData(BPrimitive* Primitive);
 };

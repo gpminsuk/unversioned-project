@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "CCylinderPrimitive.h"
+#include "BRenderingBatch.h"
 
 #include "RResource.h"
 
@@ -128,7 +129,7 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 	}	
 }
 
-void CCylinderPrimitive::Render(TBatch *Batch)
+void CCylinderPrimitive::Render(BRenderingBatch *Batch)
 {
 	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
 	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;

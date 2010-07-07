@@ -3,6 +3,7 @@
 #include "RResource.h"
 
 #include "BOpaqueBasePass.h"
+#include "BRenderingBatch.h"
 #include "BDriver.h"
 
 BOpaqueBasePass::BOpaqueBasePass()
@@ -40,7 +41,7 @@ void BOpaqueBasePass::EndPass()
 	pShader->EndShader();
 }
 
-void BOpaqueBasePass::DrawPrimitive(TBatch *Batch)
+void BOpaqueBasePass::DrawPrimitive(BRenderingBatch *Batch)
 {
 	if(Batch->RenderType == PrimitiveType_LineList)
 		GDriver->DrawPrimitive(Batch->RenderType, Batch->nVertices/2);

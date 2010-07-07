@@ -4,7 +4,7 @@
 
 class BViewport;
 class BPrimitive;
-class TBatch;
+class BRenderingBatchManager;
 
 enum ETextureUsage
 {
@@ -153,7 +153,7 @@ public:
 
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture) = 0;
 
-	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(TBatch* pBatch) = 0;
+	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(BRenderingBatchManager* pBatch) = 0;
 	virtual RTextureBuffer* CreateTextureBuffer() = 0;
 
 	virtual bool BeginScene() = 0;

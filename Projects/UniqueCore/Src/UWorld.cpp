@@ -31,7 +31,7 @@ UWorld::~UWorld()
 //	delete m_Cylinder;
 	//delete m_Terrain;
 	//delete m_Character;
-	//delete m_pWorldData;
+	delete m_pWorldData;
 	delete m_Button;
 
 	//delete GLineBatcher;
@@ -54,10 +54,10 @@ void UWorld::AddThing(BThing* Thing)
 
 bool UWorld::InitializeWorld()
 {
-	/*GLineBatcher = new BLineBatcher();
+	GLineBatcher = new BLineBatcher();
 
 	m_pWorldData = new TWorldOctree();
-
+/*
 	m_Terrain = new CTerrain();
 	AddThing(m_Terrain);
 

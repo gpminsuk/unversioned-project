@@ -103,7 +103,7 @@ public:
 	bool DestroyTerrainPrimitive();
 	void UpdateTerrainPrimitive(TVector3 _LODOrigin);
 
-	virtual void Render(TBatch *Batch);
+	virtual void Render(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual void IndexTessellate();
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);

@@ -2,13 +2,15 @@
 
 #include "TDataTypes.h"
 
+class BRenderingBatch;
+
 class BDrawUIPass
 {
 public:
 	BDrawUIPass();
 	~BDrawUIPass();
 
-	void DrawPrimitive();
+	void DrawPrimitive(BRenderingBatch *Batch);
 
 	void BeginPass(class BViewport* Viewport);
 	void EndPass();

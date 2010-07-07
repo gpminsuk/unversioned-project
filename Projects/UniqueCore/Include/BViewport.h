@@ -6,8 +6,9 @@
 class BThing;
 class BComponent;
 class BLight;
+class BRenderingBatchManager;
 
-enum E_SceneType
+enum ESceneFlag
 {
 	Scene_World			= 1 << 0,
 	Scene_Collision		= 1 << 1,
@@ -21,15 +22,8 @@ public:
 
 	void operator =(BViewport& vp);
 
-	TArray<BPrimitive*> m_OpaquePrimitives;
-	TArray<BPrimitive*> m_TranslucentPrimitives;
-	TArray<BPrimitive*>	m_UIPrimitives;
+	BRenderingBatchManager* RenderingBatches;
 	TArray<BLight*>		m_Lights;
-
-	TBatch m_Batches;
-	TBatch m_UIBatches;
-	TBatch m_LineBatch;
-	TBatch m_ParticleBatch;
 
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;
@@ -50,7 +44,4 @@ public:
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) = 0;
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) = 0;
 	virtual void InputChar() = 0;
-private:
-
-	static int PrimitiveCompare(BPrimitive* tb1, BPrimitive* tb2);
 };

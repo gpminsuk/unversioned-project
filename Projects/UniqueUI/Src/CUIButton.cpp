@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CUIButton.h"
+#include "BRenderingBatch.h"
 
 TUIButtonPrimitive::TUIButtonPrimitive()
 {
@@ -32,29 +33,32 @@ TUIButtonPrimitive::TUIButtonPrimitive()
 	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
 
 	Vertex[0].Pos =  TVector3(-1.0f,-1.0f,0.0f);
-	Vertex[0].UV  =  TVector2(0.0f,0.0f);
+	Vertex[0].UV  =  TVector2(0.0f,1.0f);
 	Vertex[1].Pos =  TVector3( 1.0f,-1.0f,0.0f);
-	Vertex[1].UV  =  TVector2(1.0f,0.0f);
+	Vertex[1].UV  =  TVector2(1.0f,1.0f);
 	Vertex[2].Pos =  TVector3( 1.0f, 1.0f,0.0f);
-	Vertex[2].UV  =  TVector2(1.0f,1.0f);
+	Vertex[2].UV  =  TVector2(1.0f,0.0f);
 	Vertex[3].Pos =  TVector3(-1.0f,-1.0f,0.0f);
-	Vertex[3].UV  =  TVector2(0.0f,0.0f);
+	Vertex[3].UV  =  TVector2(0.0f,1.0f);
 	Vertex[4].Pos =  TVector3( 1.0f, 1.0f,0.0f);
-	Vertex[4].UV  =  TVector2(1.0f,1.0f);
+	Vertex[4].UV  =  TVector2(1.0f,0.0f);
 	Vertex[5].Pos =  TVector3(-1.0f, 1.0f,0.0f);
-	Vertex[5].UV  =  TVector2(1.0f,0.0f);
+	Vertex[5].UV  =  TVector2(0.0f,0.0f);
 
 	pIB->nIndices = 2;
 	pIB->pIndices = new TIndex16[pIB->nIndices];
 
 	TIndex16 *Index = reinterpret_cast<TIndex16*>(pIB->pIndices);
 
-	Index[0] = TIndex16(0,1,2);
-	Index[1] = TIndex16(2,1,3);
+	Index[0] = TIndex16(0,2,1);
+	Index[1] = TIndex16(3,5,4);
 }
 
-CUIButtonPrimitive::CUIButtonPrimitive(BSynchronizer** RenderThreadData)
-:	BPrimitive(RenderThreadData)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+CUIButtonPrimitive::CUIButtonPrimitive()
 {
 	RenderType = RenderType_UI;
 
@@ -66,7 +70,7 @@ CUIButtonPrimitive::~CUIButtonPrimitive(void)
 {
 }
 
-void CUIButtonPrimitive::Render(TBatch *Batch)
+void CUIButtonPrimitive::Render(BRenderingBatch *Batch)
 {
 	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
 	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
@@ -105,39 +109,25 @@ unsigned int CUIButtonPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsign
 	return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 
-void CUIButtonPrimitive::InitializeSynchronizer(BSynchronizer** Synchronizer)
+BSynchronizer* CUIButtonPrimitive::CreateSynchronizer()
 {
-	RenderThreadSyncronizer = new CUIButtonSyncronizer();
-	*Synchronizer = RenderThreadSyncronizer;
+	Syncronizer = new CUIButtonSyncronizer();
+	return Syncronizer;
 }
 
-void CUIButtonSyncronizer::Syncronize(BSynchronizer* Sync)
-{
-	BSynchronizer::Syncronize(Sync);
-	CUIButtonSyncronizer* ThisSync = reinterpret_cast<CUIButtonSyncronizer*>(Sync);
-	if(ThisSync)
-	{
-		Height = ThisSync->Height;
-		Width = ThisSync->Width;
-	}
-}
-
-CUIButtonSyncronizer& CUIButtonSyncronizer::operator =(const CUIButtonSyncronizer& Sync)
-{
-	Width = Sync.Width;
-	Height = Sync.Height;
-	return *this;
-}
-
-void CUIButtonSyncronizer::SyncData()
-{
-	*this = (CUIButtonSyncronizer&)*PreviousSync;
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 CUIButtonComponent::CUIButtonComponent()
+:	Width(100),
+	Height(100)
 {
-	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive(&Syncronizer);
+	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive();
 	Primitives.AddItem(ButtonPrimitive);
+
+	SyncronizerRef = ButtonPrimitive->CreateSynchronizer();
+	SendSyncData();
 }
 
 CUIButtonComponent::~CUIButtonComponent()
@@ -146,9 +136,39 @@ CUIButtonComponent::~CUIButtonComponent()
 }
 
 void CUIButtonComponent::UpdateComponent()
+{	
+	SendSyncData();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+CUIButtonSyncronizer::CUIButtonSyncronizer()
 {
-	CUIButtonSyncronizer* SyncData = new CUIButtonSyncronizer();
-	SyncData->Width = Width;
-	SyncData->Height = Height;
-	Syncronizer->Syncronize(SyncData);
+	SyncData = new CUIButtonSyncronizeData();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CUIButtonSyncronizeData::SetData(BComponent* Component)
+{
+	CUIButtonComponent* ButtonComponent = reinterpret_cast<CUIButtonComponent*>(Component);
+	if(ButtonComponent)
+	{
+		Width = ButtonComponent->Width;
+		Height = ButtonComponent->Height;
+	}
+}
+
+void CUIButtonSyncronizeData::GetData(BPrimitive* Primitive)
+{
+	CUIButtonPrimitive* ButtonPrimitive = reinterpret_cast<CUIButtonPrimitive*>(Primitive);
+	if(ButtonPrimitive)
+	{
+		Width = ButtonPrimitive->Width;
+		Height = ButtonPrimitive->Height;
+	}
 }

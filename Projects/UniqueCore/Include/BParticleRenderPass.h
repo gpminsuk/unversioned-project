@@ -2,13 +2,15 @@
 
 #include "TDataTypes.h"
 
+class BRenderingBatch;
+
 class BParticleRenderPass
 {
 public:
 	BParticleRenderPass();
 	~BParticleRenderPass();
 
-	void DrawPrimitive(TBatch *Batch);
+	void DrawPrimitive(BRenderingBatch *Batch);
 
 	void BeginPass(class BViewport* Viewport);
 	void EndPass();

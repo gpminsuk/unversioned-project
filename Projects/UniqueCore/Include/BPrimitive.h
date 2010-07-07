@@ -7,6 +7,7 @@
 #include "UFreeTypeDrawer.h"
 
 class BSynchronizer;
+class BRenderingBatch;
 
 enum ERenderType
 {
@@ -31,8 +32,7 @@ public:
 class BPrimitive : public AObject
 {
 public:
-	BPrimitive() {}
-	BPrimitive(BSynchronizer** Synchronizer);
+	BPrimitive();
 	virtual ~BPrimitive(void);
 
 	TVector3 Translation;
@@ -44,22 +44,23 @@ public:
 	TArray<TPrimitive*> Primitives;
 	unsigned int NumIndices;
 
-	struct TBatchInfo
+	struct BRenderingBatchInfo
 	{
 		short BatchNum;
 		short SlotNum;
 	};
 
-	TBatchInfo BatchInfo;
+	BRenderingBatchInfo BatchInfo;
 
 	enum ERenderType RenderType;
 
-	BSynchronizer* RenderThreadSyncronizer;
+	BSynchronizer* Syncronizer;
 
 	virtual void UpdatePrimitive() {}
 
-	virtual void InitializeSynchronizer(BSynchronizer** Synchronizer) {}
-	virtual void Render(TBatch *Batch) = 0;
+	virtual void Syncronize();
+	virtual BSynchronizer* CreateSynchronizer() { return NULL; }
+	virtual void Render(BRenderingBatch *Batch) = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

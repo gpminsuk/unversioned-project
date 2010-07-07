@@ -1,9 +1,10 @@
 #include "StdAfx.h"
 #include "BComponent.h"
 #include "BPrimitive.h"
+#include "BSynchronizer.h"
 
 BComponent::BComponent()
-{
+{	
 }
 
 BComponent::~BComponent()
@@ -13,4 +14,9 @@ BComponent::~BComponent()
 		delete Primitives(i);
 	}
 	Primitives.Clear();
+}
+
+void BComponent::SendSyncData()
+{
+	SyncronizerRef->SendData(this);
 }

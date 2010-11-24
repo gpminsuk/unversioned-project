@@ -5,6 +5,7 @@
 #include "BDriver.h"
 
 #include "BOpaqueBasePass.h"
+#include "BDrawUIPass.h"
 
 BRenderingBatch::BRenderingBatch()
 :	nVertices(0),
@@ -39,12 +40,17 @@ void BRenderingBatch::RenderBatch(BViewport* Viewport)
 	PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);	
 	if(PrimitiveBuffer)
 	{
-		switch(RenderingPassType)
+		switch(RenderType)
 		{
-		case RenderingPass_Opaque:
+		case RenderType_Opaque:
 			GOpaqueBasePass->BeginPass(Viewport);
 			GOpaqueBasePass->DrawPrimitive(this);
 			GOpaqueBasePass->EndPass();
+			break;
+		case RenderType_UI:
+			GDrawFontPass->BeginPass(Viewport);
+			GDrawFontPass->DrawPrimitive(this);
+			GDrawFontPass->EndPass();
 			break;
 		}
 		PrimitiveBuffer->Release();
@@ -77,20 +83,6 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 
 void BRenderingBatchManager::Syncronize()
 {
-	static BRenderingBatch* Batch = 0;
-	if(!Batch)
-	{
-		Batch = new BRenderingBatch();
-		Batch->RenderingPassType =  RenderingPass_Opaque;
-		Batch->RenderType =  PrimitiveType_TriangleList;
-		for(unsigned int i=0;i<RenderPrimitives.Size();++i)
-		{
-			RenderPrimitives(i)->Render(Batch);			
-		}
-		RenderingBatches.AddItem(Batch);
-	}
-	Batch->Primitives.Clear();
-	Batch->Primitives = RenderPrimitives;
 	for(unsigned int i=0;i<RenderingBatches.Size();++i)
 	{
 		BRenderingBatch* Batch = RenderingBatches(i);
@@ -100,7 +92,19 @@ void BRenderingBatchManager::Syncronize()
 
 void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 {
-	RenderPrimitives.AddItem(Primitive);
-	if(RenderingBatches.Size())
-		Primitive->Render(RenderingBatches(0));
+	for(unsigned int i=0;i<RenderingBatches.Size();++i)
+	{
+		BRenderingBatch* Batch = RenderingBatches(i);
+		if(Batch->nVertexStride == Primitive->GetVertexStride())
+		{
+			Primitive->Render(Batch);
+			return;
+		}
+	}
+	BRenderingBatch* Batch = new BRenderingBatch();
+	Batch->RenderType =  Primitive->RenderType;
+	Batch->PrimitiveType =  PrimitiveType_TriangleList;
+	RenderingBatches.AddItem(Batch);
+	Primitive->Render(Batch);
+	Batch->Primitives.AddItem(Primitive);
 }

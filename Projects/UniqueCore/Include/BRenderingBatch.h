@@ -5,15 +5,6 @@
 
 class BPrimitive;
 
-enum ERenderingPass
-{
-	RenderingPass_Opaque = 0,
-	RenderingPass_Line,
-	RenderingPass_UI,
-	RenderingPass_Particle,
-	RenderingPass_RenderTarget
-};
-
 class BRenderingBatch
 {
 public:
@@ -24,8 +15,8 @@ public:
 
 	TArray<BPrimitive*> Primitives;
 
-	enum EPrimitiveType RenderType;
-	ERenderingPass RenderingPassType;
+	enum EPrimitiveType PrimitiveType;
+	enum ERenderType RenderType;
 
 	BRenderingBatch();
 	~BRenderingBatch();
@@ -44,7 +35,6 @@ public:
 	~BRenderingBatchManager();
 
 	TArray<BRenderingBatch*> RenderingBatches;
-	TArray<BPrimitive*> RenderPrimitives;
 
 	void AddPrimitive(BPrimitive* Component);
 	void RenderBatches(BViewport* Viewport);

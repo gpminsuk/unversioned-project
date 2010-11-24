@@ -54,6 +54,8 @@ public:
 
 	enum ERenderType RenderType;
 
+	unsigned int GetVertexStride() { return Primitives(0)->pBuffer->m_pVB->nVertexStride; }
+
 	virtual void UpdatePrimitive() {}
 
 	virtual void Render(BRenderingBatch *Batch) = 0;

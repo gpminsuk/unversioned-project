@@ -43,10 +43,10 @@ void BDrawUIPass::DrawPrimitive(BRenderingBatch *Batch)
 	GFontDrawer->DrawString(TString(Str), RTextureBufferTable::TextureBuffers(1));
 
 	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
-	if(Batch->RenderType == PrimitiveType_LineList)
-		GDriver->DrawPrimitive(Batch->RenderType, Batch->nVertices/2);
+	if(Batch->PrimitiveType == PrimitiveType_LineList)
+		GDriver->DrawPrimitive(Batch->PrimitiveType, Batch->nVertices/2);
 	else
-		GDriver->DrawIndexedPrimitive(Batch->RenderType, Batch->nVertices, Batch->GetNumIndices());
+		GDriver->DrawIndexedPrimitive(Batch->PrimitiveType, Batch->nVertices, Batch->GetNumIndices());
 /*	struct VD
 	{
 		TVector3 Pos;

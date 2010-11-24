@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\..\External\Expat\lib"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

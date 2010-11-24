@@ -65,12 +65,12 @@ bool UWorld::InitializeWorld()
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
 	AddThing(m_Character);*/
 
-	/*m_Button = new CUIButtonComponent();
+	m_Button = new CUIButtonComponent();
 	for(unsigned int i=0;i<Viewports.Size();++i)
 	{
 		BViewport* Viewport = Viewports(i);
 		Viewport->Render(m_Button);
-	}*/
+	}
 	/*m_Cylinder = new CCylinderPrimitive();
 	m_Cylinder->RenderType = RenderType_Opaque;
 	m_Cylinder->Translation = TVector3(5,5,5);

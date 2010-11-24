@@ -32,7 +32,7 @@ UWorld::~UWorld()
 	//delete m_Terrain;
 	//delete m_Character;
 	delete m_pWorldData;
-	delete m_Button;
+	//delete m_Button;
 
 	//delete GLineBatcher;
 }

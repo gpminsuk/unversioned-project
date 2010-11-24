@@ -109,12 +109,26 @@ unsigned int CUIButtonPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsign
 	return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 
-BSynchronizer* CUIButtonPrimitive::CreateSynchronizer()
+
+void CUIButtonPrimitive::SetSyncData()
 {
-	Syncronizer = new CUIButtonSyncronizer();
-	return Syncronizer;
+	CUIButtonPrimitiveSD* ButtonSD = reinterpret_cast<CUIButtonPrimitiveSD*>(SyncData);
+	if(ButtonSD)
+	{
+		ButtonSD->Width = Width;
+		ButtonSD->Width = Height;
+	}
 }
 
+void CUIButtonPrimitive::GetSyncData()
+{
+	CUIButtonPrimitiveSD* ButtonSD = reinterpret_cast<CUIButtonPrimitiveSD*>(SyncData);
+	if(ButtonSD)
+	{
+		Width = ButtonSD->Width;
+		Height = ButtonSD->Height;
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,9 +139,6 @@ CUIButtonComponent::CUIButtonComponent()
 {
 	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive();
 	Primitives.AddItem(ButtonPrimitive);
-
-	SyncronizerRef = ButtonPrimitive->CreateSynchronizer();
-	SendSyncData();
 }
 
 CUIButtonComponent::~CUIButtonComponent()
@@ -136,39 +147,5 @@ CUIButtonComponent::~CUIButtonComponent()
 }
 
 void CUIButtonComponent::UpdateComponent()
-{	
-	SendSyncData();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-CUIButtonSyncronizer::CUIButtonSyncronizer()
 {
-	SyncData = new CUIButtonSyncronizeData();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void CUIButtonSyncronizeData::SetData(BComponent* Component)
-{
-	CUIButtonComponent* ButtonComponent = reinterpret_cast<CUIButtonComponent*>(Component);
-	if(ButtonComponent)
-	{
-		Width = ButtonComponent->Width;
-		Height = ButtonComponent->Height;
-	}
-}
-
-void CUIButtonSyncronizeData::GetData(BPrimitive* Primitive)
-{
-	CUIButtonPrimitive* ButtonPrimitive = reinterpret_cast<CUIButtonPrimitive*>(Primitive);
-	if(ButtonPrimitive)
-	{
-		Width = ButtonPrimitive->Width;
-		Height = ButtonPrimitive->Height;
-	}
 }

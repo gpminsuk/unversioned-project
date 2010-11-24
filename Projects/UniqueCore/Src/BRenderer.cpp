@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BRenderer.h"
 #include "BViewport.h"
-#include "BApplication.h"
+#include "AApplication.h"
 #include "BDriver.h"
 
 #include "BOpaqueBasePass.h"
@@ -12,25 +12,30 @@
 #include "BRenderingBatch.h"
 
 #include "BPrimitive.h"
-#include "BSynchronizer.h"
 #include "BLineBatcher.h"
 
-BRenderer::BRenderer(BApplication *App)
+BOpaqueBasePass*		GOpaqueBasePass;
+BRTRenderPass*			GBaseRTRenderPass;
+BDrawLinePass*			GDrawLinePass;	
+BDrawUIPass*			GDrawFontPass;
+BParticleRenderPass*	GParticleRenderPass;
+
+BRenderer::BRenderer(AApplication *App)
 :	m_fFPS(0),
 	m_iFTimeIdx(0),
 	m_nViewportCount(0),
-	m_pApp(App)
+	AThread(App)
 {
 	for(int i=0;i<FPS_COUNTER_NUMBER;++i)
 		m_dFrameTime[i] = 0;
 
 	m_nViewportCount = 1;
 
-	m_OpaqueBasePass = new BOpaqueBasePass();
-	m_BaseRTRenderPass = new BRTRenderPass(m_OpaqueBasePass->m_RenderTargets(0));
-	m_DrawLinePass = new BDrawLinePass();
-	m_DrawFontPass = new BDrawUIPass();
-	m_ParticleRenderPass = new BParticleRenderPass();
+	GOpaqueBasePass = new BOpaqueBasePass();
+	GBaseRTRenderPass = new BRTRenderPass(GOpaqueBasePass->m_RenderTargets(0));
+	GDrawLinePass = new BDrawLinePass();
+	GDrawFontPass = new BDrawUIPass();
+	GParticleRenderPass = new BParticleRenderPass();
 
 	LineBatcher = new BLineBatcher();
 }
@@ -38,11 +43,11 @@ BRenderer::BRenderer(BApplication *App)
 BRenderer::~BRenderer()
 {
 	delete LineBatcher;	
-	delete m_ParticleRenderPass;
-	delete m_DrawFontPass;
-	delete m_DrawLinePass;
-	delete m_OpaqueBasePass;
-	delete m_BaseRTRenderPass;
+	delete GParticleRenderPass;
+	delete GDrawFontPass;
+	delete GDrawLinePass;
+	delete GOpaqueBasePass;
+	delete GBaseRTRenderPass;
 
 	delete GDriver;
 	GDriver = 0;
@@ -75,22 +80,32 @@ bool BRenderer::Render()
 
 bool BRenderer::RenderViewport(BViewport* Viewport)
 {
-	Viewport->RenderingBatches->RenderBatch();
+	Viewport->BatchManager->RenderBatches(Viewport);
+
+	GBaseRTRenderPass->BeginPass(Viewport);
+	GBaseRTRenderPass->DrawPrimitive();
+	GBaseRTRenderPass->EndPass();
 	return true;
 }
 
-
-void BRenderer::SyncThread()
+bool BRenderer::Syncronize()
 {
 	for(UINT i=0;i<m_Viewports.Size();++i)
 	{
-		m_Viewports(i)->RenderingBatches->Syncronize();
-	}	
+		SyncronizeViewport(m_Viewports[i]);	
+	}
+	return true;
+}
+
+bool BRenderer::SyncronizeViewport(BViewport* Viewport)
+{
+	Viewport->BatchManager->Syncronize();
+	return true;
 }
 
 void BRenderer::ThreadSetup()
 {
-	if(!Initialize()) m_pApp->bQuit = true;
+	if(!Initialize()) Application->bQuit = true;
 }
 
 void BRenderer::ThreadExecute()
@@ -99,9 +114,9 @@ void BRenderer::ThreadExecute()
 	int ddd = 0;
 	int Count = 0;
 	int AccumulatedCount = 0;
-	while(!m_pApp->bQuit)
+	while(!Application->bQuit)
 	{
-		SyncThread();
+		Syncronize();
 
 		if(GDriver->BeginScene())
 		{
@@ -123,5 +138,5 @@ void BRenderer::ThreadExecute()
 void BRenderer::ThreadDestroy()
 {
 	Destroy();
-	m_pApp->bRenderThreadQuit = true;
+	Application->bRenderThreadQuit = true;
 }

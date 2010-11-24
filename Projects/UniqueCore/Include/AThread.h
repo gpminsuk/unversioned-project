@@ -4,8 +4,13 @@
  */
 #pragma once
 
+#include "TDataTypes.h"
+#include "AObject.h"
+
 #include <process.h>
 #include <windows.h>
+
+class AApplication;
 
 class ACriticalSection
 {
@@ -37,12 +42,12 @@ public:
 	}
 };
 
-class AThread
+class AThread : public AObject
 {
 public:
-	AThread(void);
+	AThread(AApplication* App);
 	virtual ~AThread(void);
-	
+		
 	void Start();
 protected:
 	void Run();
@@ -50,11 +55,14 @@ protected:
 	virtual void ThreadSetup() = 0;
 	virtual void ThreadExecute() = 0;
 	virtual void ThreadDestroy() = 0;
+	void GetThreadSync();
+	void SetThreadSync();
 
 protected:
 	HANDLE hThread;
 	unsigned int threadID;
 
 public:
-	ACriticalSection *CriticalSection;
+	AApplication* Application;
+	TArray<AObject*> Objects;
 };

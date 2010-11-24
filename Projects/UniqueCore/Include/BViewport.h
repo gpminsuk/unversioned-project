@@ -22,7 +22,7 @@ public:
 
 	void operator =(BViewport& vp);
 
-	BRenderingBatchManager* RenderingBatches;
+	BRenderingBatchManager* BatchManager;
 	TArray<BLight*>		m_Lights;
 
 	TMatrix m_ViewMatrix;

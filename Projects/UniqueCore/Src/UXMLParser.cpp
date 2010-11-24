@@ -98,7 +98,7 @@ void UXMLApplicationParser::Parse()
 	TXMLElement Application;
 	if(Root.GetChildElement("Application", Application))
 	{
-		BApplication *app = 0;
+		AApplication *app = 0;
 		if(Application.HasAttribute("Platform","Windows_x86"))
 		{
 			TWindowInfo Info;

@@ -32,6 +32,8 @@ public:
 
 	int GetNumIndices();
 	void IndexTessellate();
+
+	void RenderBatch(BViewport* Viewport);
 	void Syncronize();
 };
 
@@ -42,7 +44,9 @@ public:
 	~BRenderingBatchManager();
 
 	TArray<BRenderingBatch*> RenderingBatches;
+	TArray<BPrimitive*> RenderPrimitives;
 
-	void RenderBatch();
+	void AddPrimitive(BPrimitive* Component);
+	void RenderBatches(BViewport* Viewport);
 	void Syncronize();
 };

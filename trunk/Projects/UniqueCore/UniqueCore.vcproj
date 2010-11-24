@@ -69,6 +69,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -137,7 +138,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="freetype237MT.lib"
 				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;"
 			/>
 			<Tool
@@ -310,43 +310,43 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
-					RelativePath="..\Shaders\PixelFontShader.fx"
+					RelativePath="..\..\Shaders\PixelFontShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\PixelLineShader.fx"
+					RelativePath="..\..\Shaders\PixelLineShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\PixelParticleShader.fx"
+					RelativePath="..\..\Shaders\PixelParticleShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\PixelRTShader.fx"
+					RelativePath="..\..\Shaders\PixelRTShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\PixelShader.fx"
+					RelativePath="..\..\Shaders\PixelShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\VertexFontShader.fx"
+					RelativePath="..\..\Shaders\VertexFontShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\VertexLineShader.fx"
+					RelativePath="..\..\Shaders\VertexLineShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\VertexParticleShader.fx"
+					RelativePath="..\..\Shaders\VertexParticleShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\VertexRTShader.fx"
+					RelativePath="..\..\Shaders\VertexRTShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\Shaders\VertexShader.fx"
+					RelativePath="..\..\Shaders\VertexShader.fx"
 					>
 				</File>
 				<File
@@ -898,7 +898,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Src\UXMLParser.h"
+					RelativePath=".\Include\UXMLParser.h"
 					>
 				</File>
 				<Filter

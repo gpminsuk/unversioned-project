@@ -34,5 +34,5 @@ void BParticleRenderPass::EndPass()
 
 void BParticleRenderPass::DrawPrimitive(BRenderingBatch *Batch)
 {
-	GDriver->DrawIndexedPrimitive(Batch->RenderType, Batch->nVertices, Batch->GetNumIndices());
+	GDriver->DrawIndexedPrimitive(Batch->PrimitiveType, Batch->nVertices, Batch->GetNumIndices());
 }

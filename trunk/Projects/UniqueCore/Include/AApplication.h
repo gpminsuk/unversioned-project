@@ -1,5 +1,7 @@
 #pragma once
 
+class ASystemInfo;
+
 class BRenderer;
 class BViewport;
 class UWorld;
@@ -19,11 +21,13 @@ public:
 	EPlatform Platform;
 };
 
-class BApplication
+class AApplication
 {
 public:
-	BApplication(void);
-	virtual ~BApplication();
+	AApplication(void);
+	virtual ~AApplication();
+
+	ASystemInfo* SystemInfo;
 
 	BRenderer *m_pRenderer;
 	BViewport *m_pViewport;

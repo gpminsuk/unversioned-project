@@ -10,3 +10,16 @@ AObject::AObject(void)
 AObject::~AObject(void)
 {
 }
+
+bool AObject::Tick()
+{
+	return true;
+}
+
+void AObject::GetSyncData()
+{
+}
+
+void AObject::SetSyncData()
+{
+}

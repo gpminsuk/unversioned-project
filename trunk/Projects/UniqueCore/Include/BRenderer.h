@@ -12,7 +12,7 @@
 class BViewport;
 class RPrimitiveBuffer;
 class BTextureBuffer;
-class BApplication;
+class AApplication;
 
 struct TRendererInfo
 {
@@ -23,7 +23,7 @@ public:
 class BRenderer : public AThread
 {
 public:
-	BRenderer(BApplication *App);
+	BRenderer(AApplication *App);
 	~BRenderer();
 
 	bool Initialize();
@@ -32,26 +32,27 @@ public:
 	bool RenderViewport(BViewport* Viewport);
 	void RenderLines(BViewport* Viewport);
 
+	bool Syncronize();
+	bool SyncronizeViewport(BViewport* Viewport);
+
 	void ThreadSetup();
 	void ThreadExecute();
 	void ThreadDestroy();
 
 	void AddViewport(BViewport* pViewport);
-	void SyncThread();
 protected:
 	TArray<BViewport*> m_Viewports;
 	class BLineBatcher* LineBatcher;
-
-	class BOpaqueBasePass*	m_OpaqueBasePass;
-	class BRTRenderPass*	m_BaseRTRenderPass;
-	class BDrawLinePass*	m_DrawLinePass;	
-	class BDrawUIPass*		m_DrawFontPass;
-	class BParticleRenderPass* m_ParticleRenderPass;
-
-	BApplication* m_pApp;
 	int m_nViewportCount;
 
 	DWORD m_dFrameTime[FPS_COUNTER_NUMBER];
 	int m_iFTimeIdx;
 	DWORD m_fFPS;
 };
+
+extern class BOpaqueBasePass*		GOpaqueBasePass;
+extern class BRTRenderPass*		GBaseRTRenderPass;
+extern class BDrawLinePass*		GDrawLinePass;	
+extern class BDrawUIPass*			GDrawFontPass;
+extern class BParticleRenderPass*	GParticleRenderPass;
+

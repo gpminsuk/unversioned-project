@@ -2,7 +2,7 @@
 
 #include "TDataTypes.h"
 #include "TWindowInfo.h"
-#include "BApplication.h"
+#include "AApplication.h"
 
 struct UMouseMap
 {
@@ -28,7 +28,7 @@ public:
 	  int m_wHeight;
 };
 
-class CMaderApp : public BApplication 
+class CMaderApp : public AApplication 
 {
 public:
 	CMaderApp();

@@ -3,7 +3,6 @@
 #include "TDataTypes.h"
 #include "BPrimitive.h"
 #include "BComponent.h"
-#include "BSynchronizer.h"
 
 class CUILabelPane : public BPrimitive
 {
@@ -14,11 +13,6 @@ public:
 };
 
 class CUILabelComponent : public BComponent
-{
-public:
-};
-
-class CUILableSyncronizer : public BSynchronizer
 {
 public:
 };

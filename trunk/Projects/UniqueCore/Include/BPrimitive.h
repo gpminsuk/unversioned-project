@@ -54,12 +54,8 @@ public:
 
 	enum ERenderType RenderType;
 
-	BSynchronizer* Syncronizer;
-
 	virtual void UpdatePrimitive() {}
 
-	virtual void Syncronize();
-	virtual BSynchronizer* CreateSynchronizer() { return NULL; }
 	virtual void Render(BRenderingBatch *Batch) = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;

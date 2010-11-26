@@ -10,6 +10,7 @@ enum ECamera_Mode
 	Thrid_Person,
 	Free_Mode,	
 	Free_Mode1,	
+	QuarterView_Mode,
 };
 
 class BCamera

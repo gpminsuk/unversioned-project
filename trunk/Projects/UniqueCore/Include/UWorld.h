@@ -89,8 +89,8 @@ public:
 	inline void AddViewport(BViewport* V) { Viewports.AddItem(V); }
 	inline void RemoveViewport(BViewport* V) { Viewports.DeleteItemByVal(V); }
 
-	bool InitializeWorld();
-	bool DestroyWorld();
+	virtual bool InitializeWorld();
+	virtual bool DestroyWorld();
 
 	virtual void Tick(DWORD dTime);
 
@@ -114,7 +114,7 @@ public:
 
 	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
 
-private:
+protected:
 	void AddThing(BThing* Thing);
 };
 

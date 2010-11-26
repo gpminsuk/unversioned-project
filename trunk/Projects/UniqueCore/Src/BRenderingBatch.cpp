@@ -42,16 +42,15 @@ void BRenderingBatch::RenderBatch(BViewport* Viewport)
 	{
 		switch(RenderType)
 		{
+		case RenderType_Line:
 		case RenderType_Opaque:
-			GOpaqueBasePass->BeginPass(Viewport);
 			GOpaqueBasePass->DrawPrimitive(this);
-			GOpaqueBasePass->EndPass();
 			break;
-		case RenderType_UI:
+		/*case RenderType_UI:
 			GDrawFontPass->BeginPass(Viewport);
 			GDrawFontPass->DrawPrimitive(this);
 			GDrawFontPass->EndPass();
-			break;
+			break;*/
 		}
 		PrimitiveBuffer->Release();
 		delete PrimitiveBuffer;
@@ -74,11 +73,13 @@ BRenderingBatchManager::~BRenderingBatchManager()
 
 void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 {
+	GOpaqueBasePass->BeginPass(Viewport);
 	for(unsigned int i=0;i<RenderingBatches.Size();++i)
 	{
 		BRenderingBatch* Batch = RenderingBatches(i);
 		Batch->RenderBatch(Viewport);
 	}
+	GOpaqueBasePass->EndPass();
 }
 
 void BRenderingBatchManager::Syncronize()
@@ -98,12 +99,20 @@ void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 		if(Batch->nVertexStride == Primitive->GetVertexStride())
 		{
 			Primitive->Render(Batch);
+			Batch->Primitives.AddItem(Primitive);
 			return;
 		}
 	}
 	BRenderingBatch* Batch = new BRenderingBatch();
 	Batch->RenderType =  Primitive->RenderType;
-	Batch->PrimitiveType =  PrimitiveType_TriangleList;
+	if(Primitive->RenderType == RenderType_Line)
+	{
+		Batch->PrimitiveType =  PrimitiveType_LineList;
+	}
+	else
+	{
+		Batch->PrimitiveType =  PrimitiveType_TriangleList;
+	}
 	RenderingBatches.AddItem(Batch);
 	Primitive->Render(Batch);
 	Batch->Primitives.AddItem(Primitive);

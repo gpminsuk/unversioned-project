@@ -5,7 +5,7 @@
 #include "BThing.h"
 
 BCamera::BCamera(void)
-:	m_CameraMode(Free_Mode),
+:	m_CameraMode(QuarterView_Mode),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
 	m_Distance(10.0f),
@@ -13,8 +13,8 @@ BCamera::BCamera(void)
 	m_Theta(0),
 	m_Subject(0)
 {
-	m_Location.x = 10;
-	m_Location.y = 5;
+	m_Location.x = -40;
+	m_Location.y = 40;
 	m_Location.z = 10;
 
 	//m_CameraMode = First_Person;
@@ -144,6 +144,13 @@ void BCamera::Tick(unsigned long  dTime)
 			m_LookAt.y = SINE(m_Pi)*m_Distance;
 
 			m_LookAt += m_Location;
+		}
+		break;
+	case QuarterView_Mode:
+		{
+			m_LookAt = m_Location;
+			m_LookAt.y  = 0.0f;
+			m_LookAt.x += m_Location.y;
 		}
 		break;
 	}

@@ -1,7 +1,5 @@
 #include "stdafx.h"
-
 #include "BPrimitive.h"
-
 #include "CTank.h"
 #include "CBoxComponent.h"
 
@@ -17,26 +15,53 @@ CTank::~CTank()
 
 }
 
+void CTank::StartTurn()
+{
+	IsInTurn = true;
+	TurnTimeLeft = 5000;
+}
+
+void CTank::EndTurn()
+{
+	IsInTurn = false;
+	Opponent->StartTurn();
+}
+
 void CTank::Fire()
 {
+	
+}
 
+void CTank::SetOpponent(CTank* InOpponent)
+{
+	Opponent = InOpponent;
 }
 
 void CTank::Tick(unsigned long dTime)
 {
 	if(IsInTurn)
 	{
+		TurnTimeLeft -= dTime;
+		if(TurnTimeLeft <= 0)
+		{
+			EndTurn();
+		}
 		if(GKeyMap[VK_LEFT])
 		{
-			m_Location.x += 0.01f;
+			m_Location.x += 0.01f * dTime;
 			UpdateTransform();
 		}
 		if(GKeyMap[VK_RIGHT])
 		{
-			m_Location.x -= 0.01f;
+			m_Location.x -= 0.01f * dTime;
 			UpdateTransform();
 		}
-	}	
+	}
+}
+
+void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
+{
+	
 }
 
 void CTank::PhysicsTick(unsigned long dTime)

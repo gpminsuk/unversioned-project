@@ -104,6 +104,7 @@ void CWindowApp::Do()
 {
 	MSG msg;
 	int Count = 0;
+	DWORD PrevTime = timeGetTime();
 	while(!bQuit)
 	{
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -117,9 +118,12 @@ void CWindowApp::Do()
 			DispatchMessage(&msg);			
 		}
 		else
-		{
-			// TODO
-			Tick(0);
+		{			
+			if((timeGetTime() - PrevTime) > 16)
+			{
+				Tick(timeGetTime() - PrevTime);
+				PrevTime = timeGetTime();
+			}
 		}
 		//Sleep(1);
 	}
@@ -129,7 +133,7 @@ void CWindowApp::Do()
 void CWindowApp::Tick(unsigned long Time)
 {
 	m_pViewport->UpdateViewport();
-	m_pWorld->Tick(0);
+	m_pWorld->Tick(Time);
 }
 
 void CWindowApp::SetMousePos(float X, float Y, bool isRatio)

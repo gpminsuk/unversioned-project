@@ -1,10 +1,11 @@
 #pragma once
 
+#include "AObject.h"
 #include "TDataTypes.h"
 
 class BSynchronizer;
 
-class BComponent
+class BComponent : public AObject
 {
 public:
 	BComponent();

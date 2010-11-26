@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\UniqueCore\Include;.\Include;..\External\expat\include"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\UniqueCore\Include;.\Include;..\External\expat\include"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -324,6 +324,18 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Src\CTank.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\MyWorld.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\MyXMLParser.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\SampleBrowser.cpp"
 				>
 			</File>
@@ -374,6 +386,18 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Include\CTank.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\MyWorld.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\MyXMLParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Include\SampleBrowserApp.h"
 				>
 			</File>
@@ -388,6 +412,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

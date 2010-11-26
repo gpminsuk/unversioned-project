@@ -849,6 +849,14 @@
 					Name="Components"
 					>
 					<File
+						RelativePath=".\Src\CBoxComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\CBoxComponent.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\CSkeletalMeshComponent.cpp"
 						>
 					</File>
@@ -911,6 +919,10 @@
 				</Filter>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 		<File
 			RelativePath=".\stdafx.h"
 			>

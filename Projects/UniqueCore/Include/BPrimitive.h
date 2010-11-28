@@ -58,7 +58,8 @@ public:
 
 	virtual void UpdatePrimitive() {}
 
-	virtual void Render(BRenderingBatch *Batch) = 0;
+	virtual void Render(BRenderingBatch *Batch);
+	virtual void RemoveRender(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

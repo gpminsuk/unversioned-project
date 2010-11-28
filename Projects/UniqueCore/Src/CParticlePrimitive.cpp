@@ -132,12 +132,6 @@ void CParticlePrimitive::DestroyParticlePrimitive()
 	Primitives.Clear();
 }
 
-void CParticlePrimitive::Render(BRenderingBatch *Batch)
-{
-	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
-	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
-}
-
 unsigned int CParticlePrimitive::GetNumIndices()
 {	
 	return CurrentParticleCount*2;

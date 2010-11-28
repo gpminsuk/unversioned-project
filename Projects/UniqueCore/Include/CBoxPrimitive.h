@@ -14,7 +14,6 @@ public:
 	CBoxPrimitive(void);
 	~CBoxPrimitive(void);
 
-	virtual void Render(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();

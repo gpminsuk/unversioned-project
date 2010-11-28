@@ -116,6 +116,7 @@ public:
 
 protected:
 	void AddThing(BThing* Thing);
+	void RemoveThing(BThing* Thing);
 };
 
 extern UWorld* GWorld;

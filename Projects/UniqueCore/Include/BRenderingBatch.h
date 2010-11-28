@@ -37,6 +37,7 @@ public:
 	TArray<BRenderingBatch*> RenderingBatches;
 
 	void AddPrimitive(BPrimitive* Component);
+	void RemovePrimitive(BPrimitive* Component);
 	void RenderBatches(BViewport* Viewport);
 	void Syncronize();
 };

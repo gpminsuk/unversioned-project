@@ -129,12 +129,6 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 	}	
 }
 
-void CCylinderPrimitive::Render(BRenderingBatch *Batch)
-{
-	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
-	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
-}
-
 unsigned int CCylinderPrimitive::GetNumIndices()
 {
 	return Primitives(0)->pBuffer->m_pIB->nIndices;

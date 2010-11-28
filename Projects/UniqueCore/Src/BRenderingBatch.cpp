@@ -91,6 +91,20 @@ void BRenderingBatchManager::Syncronize()
 	}
 }
 
+void BRenderingBatchManager::RemovePrimitive(BPrimitive* Primitive)
+{
+	for(unsigned int i=0;i<RenderingBatches.Size();++i)
+	{
+		BRenderingBatch* Batch = RenderingBatches(i);
+		if(Batch->nVertexStride == Primitive->GetVertexStride())
+		{
+			Primitive->RemoveRender(Batch);
+			Batch->Primitives.DeleteItemByVal(Primitive);
+			return;
+		}
+	}
+}
+
 void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 {
 	for(unsigned int i=0;i<RenderingBatches.Size();++i)

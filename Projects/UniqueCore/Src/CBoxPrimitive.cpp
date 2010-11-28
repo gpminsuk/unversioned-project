@@ -123,12 +123,6 @@ TBoxPrimitive::TBoxPrimitive()
 	Index[10] = TIndex16(20,22,23);	Index[11] = TIndex16(20,23,21);*/
 }
 
-void CBoxPrimitive::Render(BRenderingBatch *Batch)
-{
-	Batch->nVertexStride = Primitives(0)->pBuffer->m_pVB->nVertexStride;
-	Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
-}
-
 unsigned int CBoxPrimitive::GetNumIndices()
 {
 	return Primitives(0)->pBuffer->m_pIB->nIndices;

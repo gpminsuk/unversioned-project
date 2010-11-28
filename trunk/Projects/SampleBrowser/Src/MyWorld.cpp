@@ -2,7 +2,6 @@
 #include "MyWorld.h"
 
 #include "CTank.h"
-#include "CMissile.h"
 #include "CTerrain.h"
 
 UMyWorld::UMyWorld()
@@ -19,7 +18,7 @@ bool UMyWorld::DestroyWorld()
 {
 	delete Tank[0];
 	delete Tank[1];
-	delete Missile;
+	//delete Missile;
 
 	delete Terrain;
 	return true;
@@ -34,7 +33,7 @@ bool UMyWorld::InitializeWorld()
 
 	Tank[0] = new CTank();
 	Tank[1] = new CTank();
-	Missile = new CMissile();
+	//Missile = new CMissile();
 
 	Tank[0]->m_Location = TVector3(10, 0, 10);
 	Tank[0]->UpdateTransform();
@@ -42,8 +41,8 @@ bool UMyWorld::InitializeWorld()
 	Tank[1]->m_Location = TVector3(0, 0, 0);
 	Tank[1]->UpdateTransform();
 
-	Missile->m_Location = Tank[1]->m_Location;
-	Missile->UpdateTransform();
+	//Missile->m_Location = Tank[1]->m_Location;
+	//Missile->UpdateTransform();
 	
 	Tank[0]->SetOpponent(Tank[1]);
 	Tank[1]->SetOpponent(Tank[0]);
@@ -52,6 +51,7 @@ bool UMyWorld::InitializeWorld()
 
 	AddThing(Tank[0]);
 	AddThing(Tank[1]);
+	RemoveThing(Tank[0]);
 	//AddThing(Missile);
 	return true;
 }

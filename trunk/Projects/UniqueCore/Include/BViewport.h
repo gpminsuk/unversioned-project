@@ -36,6 +36,8 @@ public:
 	void Clear();
 	void Render(BComponent* pComponent);
 	void Render(BThing* pThing);
+	void RemoveRender(BComponent* pComponent);
+	void RemoveRender(BThing* pThing);
 	
 	void SortTemplates();
 

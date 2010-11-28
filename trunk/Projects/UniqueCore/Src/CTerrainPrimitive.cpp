@@ -33,19 +33,6 @@ TTerrainPrimitive::~TTerrainPrimitive()
 	delete pLODIndices;
 }
 
-void CTerrainPrimitive::Render(BRenderingBatch *Batch)
-{
-	for(unsigned int i=0;i<Primitives.Size();++i)
-	{
-		TTerrainPrimitive* Prim = dynamic_cast<TTerrainPrimitive*>(Primitives(i));
-		if(Prim)
-		{
-			Batch->nVertexStride = Prim->pBuffer->m_pVB->nVertexStride;
-			Batch->nVertices += Prim->pBuffer->m_pVB->nVertices;
-		}		
-	}	
-}
-
 unsigned int CTerrainPrimitive::GetNumIndices()
 {
 	unsigned int Ret = 0;

@@ -42,6 +42,16 @@ void UWorld::Tick(DWORD dTime)
 	m_pWorldData->Tick(dTime);
 }
 
+void UWorld::RemoveThing(BThing* Thing)
+{
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->RemoveRender(Thing);
+	}
+	m_pWorldData->RemoveThing(Thing);
+}
+
 void UWorld::AddThing(BThing* Thing)
 {
 	for(unsigned int i=0;i<Viewports.Size();++i)

@@ -227,7 +227,24 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
 	}
 	else
 	{
+		int  heapstatus;
 		char* pcData = static_cast<char*>(pData);
+		heapstatus = _heapchk();
+		switch( heapstatus )
+		{
+		case _HEAPOK:
+			printf(" OK - heap is fine\n" );
+			break;
+		case _HEAPEMPTY:
+			printf(" OK - heap is empty\n" );
+			break;
+		case _HEAPBADBEGIN:
+			printf( "ERROR - bad start of heap\n" );
+			break;
+		case _HEAPBADNODE:
+			printf( "ERROR - bad node in heap\n" );
+			break;
+		}
 		for(int i=0;i<(int)pBatch->Primitives.Size();++i)
 		{
 			BPrimitive* Prim = pBatch->Primitives(i);
@@ -237,7 +254,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
 	}
 
 	hr = m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->nVertexStride);
-	if(hr != D3D_OK)
+	if(hr != D3D_OK)n
 		return false;
 
 	pBatch->IndexTessellate();
@@ -282,7 +299,7 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 {
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
-	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("..\\..\\Resources\\texture.bmp"), &TB->m_pTexture)))
+	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("..\\..\\Resources\\tank01.png"), &TB->m_pTexture)))
 	{
 		delete TB;
 		return 0;

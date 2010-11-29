@@ -2,12 +2,15 @@
 #include "BPrimitive.h"
 #include "CTank.h"
 #include "CBoxComponent.h"
+#include "CSkeletalMeshComponent.h"
 
 CTank::CTank() :
 	IsInTurn(false)
 {
 	CBoxComponent* BoxComponent = new CBoxComponent();
 	Components.AddItem(BoxComponent);
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	Components.AddItem(SkeletalMeshComponent);
 }
 
 CTank::~CTank()
@@ -71,11 +74,14 @@ void CTank::PhysicsTick(unsigned long dTime)
 
 void CTank::UpdateTransform()
 {
-	for(unsigned int i=0;i<Components(0)->Primitives.Size();++i)
+	for(unsigned int i=0;i<Components.Size();++i)
 	{
-		Components(0)->Primitives(i)->Translation = m_Location;
-		Components(0)->Primitives(i)->TM._41 = m_Location.x;
-		Components(0)->Primitives(i)->TM._42 = m_Location.y;
-		Components(0)->Primitives(i)->TM._43 = m_Location.z;
-	}
+		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
+		{
+			Components(i)->Primitives(j)->Translation = m_Location;
+			Components(i)->Primitives(j)->TM._41 = m_Location.x;
+			Components(i)->Primitives(j)->TM._42 = m_Location.y;
+			Components(i)->Primitives(j)->TM._43 = m_Location.z;
+		}
+	}	
 }

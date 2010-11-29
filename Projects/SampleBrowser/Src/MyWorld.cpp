@@ -38,7 +38,7 @@ bool UMyWorld::InitializeWorld()
 	Tank[0]->m_Location = TVector3(10, 0, 10);
 	Tank[0]->UpdateTransform();
 
-	Tank[1]->m_Location = TVector3(0, 0, 0);
+	Tank[1]->m_Location = TVector3(50, 0, 50);
 	Tank[1]->UpdateTransform();
 
 	//Missile->m_Location = Tank[1]->m_Location;

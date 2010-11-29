@@ -43,6 +43,7 @@ void BOpaqueBasePass::EndPass()
 
 void BOpaqueBasePass::DrawPrimitive(BRenderingBatch *Batch)
 {
+	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(0));
 	if(Batch->PrimitiveType == PrimitiveType_LineList)
 		GDriver->DrawPrimitive(Batch->PrimitiveType, Batch->nVertices/2);
 	else

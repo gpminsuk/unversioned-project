@@ -148,9 +148,18 @@ void BCamera::Tick(unsigned long  dTime)
 		break;
 	case QuarterView_Mode:
 		{
-			m_LookAt = m_Location;
-			m_LookAt.y  = 0.0f;
-			m_LookAt.x += m_Location.y;
+			if(m_Subject)
+			{
+				m_LookAt = m_Subject->m_Location;				
+			}
+			else
+			{
+				m_LookAt = TVector3(40.0f,0.0f,10.0f);
+			}			
+
+			m_Location = m_LookAt;
+			m_Location.x -= 40.0f;
+			m_Location.y += 40.0f;
 		}
 		break;
 	}

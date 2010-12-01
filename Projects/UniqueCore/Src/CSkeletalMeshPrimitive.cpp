@@ -9,7 +9,7 @@ CSkeletalMeshPrimitive::CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, 
 	RenderType = RenderType_Opaque;
 
 	SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy, InSkeletalMesh, InAnimationSequence);
-
+	UpdatePrimitive();
 	Primitives.AddItem(SkeletalMeshTemplate);
 }
 

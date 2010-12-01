@@ -44,8 +44,8 @@ void BRTRenderPass::DrawPrimitive()
 	float OffsetX = 0.5f/m_RenderTarget->m_SizeX;
 	float OffsetY = 0.5f/m_RenderTarget->m_SizeY;
 
-	Vertices[0].Pos = TVector3(-0.5f, -1.0f, 0.0f);
-	Vertices[1].Pos = TVector3(-0.5f,  1.0f, 0.0f);
+	Vertices[0].Pos = TVector3(-1.0f, -1.0f, 0.0f);
+	Vertices[1].Pos = TVector3(-1.0f,  1.0f, 0.0f);
 	Vertices[2].Pos = TVector3( 1.0f, -1.0f, 0.0f);
 	Vertices[3].Pos = TVector3( 1.0f,  1.0f, 0.0f);
 

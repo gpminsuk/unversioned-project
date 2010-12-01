@@ -1,5 +1,5 @@
 texture Texture0;
-float3 EyeVecto2r : register(c0);
+float3 EyeVector : register(c0);
 
 sampler samp = sampler_state
 {
@@ -16,9 +16,9 @@ void PS(float2 TexCoord : TEXCOORD0,
 {
 	float4 DiffuseColor = tex2D(samp, TexCoord);
 	float4 Ambient = {0.1f,0.1f,0.1f,0.1f};
-	float3 LightPosition = {6,2.5,6};
-	float LightRadius = 20.0f;
-	float LightBrightness = 1.4f;
+	float3 LightPosition = {20,2.5,20};
+	float LightRadius = 400.0f;
+	float LightBrightness = 3.4f;
 	
 	float3 LightVector = (LightPosition - PixelPosition);
 	float Distance = length(LightVector);

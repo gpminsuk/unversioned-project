@@ -10,6 +10,7 @@
 #include "BLineBatcher.h"
 #include "BPrimitive.h"
 #include "BRenderingBatch.h"
+#include "BCollisionBody.h"
 
 BViewport::BViewport(void)
 :	VisibleScenes(Scene_World|Scene_Collision) // TODO
@@ -44,6 +45,14 @@ void BViewport::RemoveRender(BThing* pThing)
 			BatchManager->RemovePrimitive(pComponent->Primitives(j));
 		}
 	}
+	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
+	{
+		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
+		{
+			BatchManager->RemovePrimitive(pCollisionBody->Primitives(j));
+		}
+	}
 }
 
 void BViewport::Render(BComponent* pComponent)
@@ -62,6 +71,14 @@ void BViewport::Render(BThing* pThing)
 		for(unsigned int j=0;j<pComponent->Primitives.Size();++j)
 		{
 			BatchManager->AddPrimitive(pComponent->Primitives(j));
+		}
+	}
+	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
+	{
+		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
+		{
+			BatchManager->AddPrimitive(pCollisionBody->Primitives(j));
 		}
 	}
 }

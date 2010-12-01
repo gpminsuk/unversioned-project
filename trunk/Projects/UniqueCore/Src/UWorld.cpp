@@ -257,7 +257,13 @@ THitInfo TWorldOctree::LineCheck(BThing* SourceThing, TVector3& Start, TVector3&
 	for(unsigned int i = 0;i<CollisionBodyRootNode->Objects.Size();++i)
 	{
 		if(CollisionBodyRootNode->Objects(i) !=  SourceThing)
+		{
 			HitInfo.HitPosition = CollisionBodyRootNode->Objects(i)->LineCheck(Start, End, Extent);
+			if(HitInfo.HitPosition != TVector3(0,0,0))
+			{
+				return HitInfo;
+			}
+		}
 	}
 	return HitInfo;
 }

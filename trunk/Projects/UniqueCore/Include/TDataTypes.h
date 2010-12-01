@@ -358,10 +358,10 @@ public:
 	TMatrix(TVector3 Translation, TQuaternion Rotation, TVector3 Scale)
 	{
 		SetIdentity();
-		Rotate(Rotation);
 		_11 *= Scale.x;
 		_22 *= Scale.y;
 		_33 *= Scale.z;
+		Rotate(Rotation);
 		_41 = Translation.x;
 		_42 = Translation.y;
 		_43 = Translation.z;
@@ -370,7 +370,7 @@ public:
 
 	TMatrix(TVector3 Translation, TQuaternion Rotation, float Scale)
 	{
-		TMatrix(Translation, Rotation, TVector3(Scale, Scale, Scale));
+		*this =	TMatrix(Translation, Rotation, TVector3(Scale, Scale, Scale));
 	}
 
 	TVector3 TransformVector3(TVector3 In)

@@ -186,6 +186,12 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
 {
 	if(!pBatch->Primitives.Size())
 		return false;
+
+	for(int i=0;i<(int)pBatch->Primitives.Size();++i)
+	{
+		BPrimitive* Prim = pBatch->Primitives(i);
+		Prim->UpdatePrimitive();
+	}
 	RDXDynamicPrimitiveBuffer* PB = new RDXDynamicPrimitiveBuffer();
 	RDXVideoMemoryVertexBuffer* VB = dynamic_cast<RDXVideoMemoryVertexBuffer*>(PB->m_pVB);
 	RDXVideoMemoryIndexBuffer* IB = dynamic_cast<RDXVideoMemoryIndexBuffer*>(PB->m_pIB);
@@ -227,34 +233,17 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
 	}
 	else
 	{
-		int  heapstatus;
 		char* pcData = static_cast<char*>(pData);
-		heapstatus = _heapchk();
-		switch( heapstatus )
-		{
-		case _HEAPOK:
-			printf(" OK - heap is fine\n" );
-			break;
-		case _HEAPEMPTY:
-			printf(" OK - heap is empty\n" );
-			break;
-		case _HEAPBADBEGIN:
-			printf( "ERROR - bad start of heap\n" );
-			break;
-		case _HEAPBADNODE:
-			printf( "ERROR - bad node in heap\n" );
-			break;
-		}
 		for(int i=0;i<(int)pBatch->Primitives.Size();++i)
 		{
 			BPrimitive* Prim = pBatch->Primitives(i);
-			Prim->FillDynamicVertexBuffer(&pcData);
+ 			Prim->FillDynamicVertexBuffer(&pcData);
 		}
 		VB->VB->Unlock();
 	}
 
 	hr = m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->nVertexStride);
-	if(hr != D3D_OK)n
+	if(hr != D3D_OK)
 		return false;
 
 	pBatch->IndexTessellate();

@@ -110,7 +110,7 @@ void TSkeletalMesh::UpdatePrimitive()
 {
 	if(IsPlaying)
 	{
-		CurrentFrame+=10;
+		CurrentFrame+=100;
 	}
 	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame && IsLooping)
 	{

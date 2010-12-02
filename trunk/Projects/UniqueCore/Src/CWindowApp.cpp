@@ -126,11 +126,12 @@ void CWindowApp::Do()
 			{
 				Tick(timeGetTime() - PrevTime);
 				PrevTime = timeGetTime();
-			}
+				m_pRenderer->ThreadExecute();
+			}			
 		}
 		//Sleep(1);
 	}
-	while(!bRenderThreadQuit);
+	//while(!bRenderThreadQuit);
 }
 
 void CWindowApp::Tick(unsigned long Time)

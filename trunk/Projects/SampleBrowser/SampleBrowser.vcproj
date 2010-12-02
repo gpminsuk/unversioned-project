@@ -333,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\CTankManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\MyWorld.cpp"
 				>
 			</File>
@@ -392,6 +396,14 @@
 			>
 			<File
 				RelativePath=".\Include\CMissile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CTank.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CTankManager.h"
 				>
 			</File>
 			<File

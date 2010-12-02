@@ -116,8 +116,8 @@ void BRenderer::ThreadExecute()
 	int ddd = 0;
 	int Count = 0;
 	int AccumulatedCount = 0;
-	while(!Application->bQuit)
-	{
+	//while(!Application->bQuit)
+	//{
 		Syncronize();
 
 		if(GDriver->BeginScene())
@@ -134,8 +134,8 @@ void BRenderer::ThreadExecute()
 			dTime = timeGetTime();
 		}
 		if(++m_iFTimeIdx >= FPS_COUNTER_NUMBER) m_iFTimeIdx = 0;
-		Sleep(1);
-	}
+	//	Sleep(1);
+	//}
 	
 }
 

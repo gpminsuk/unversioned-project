@@ -28,7 +28,7 @@ void BOpaqueBasePass::BeginPass(BViewport* Viewport)
 	for(unsigned int i=0;i<m_RenderTargets.Size();++i)
 		GDriver->SetRenderTarget(i, m_RenderTargets(i));
 
-	GDriver->Clear(true, 0x00000000);
+	GDriver->Clear(true, 0x00000000, true, 1.0f);
 	pShader->BeginShader();
 	pShader->SetParameter(Viewport);	
 

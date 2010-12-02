@@ -10,4 +10,7 @@ public:
 	virtual ~CSkeletalMeshComponent();
 
 	virtual void UpdateComponent();
+
+	void PlayAnimation(int StartTime, bool Loop);
+	void StopAnimation();
 };

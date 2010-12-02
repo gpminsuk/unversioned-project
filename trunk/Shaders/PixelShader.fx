@@ -16,14 +16,14 @@ void PS(float2 TexCoord : TEXCOORD0,
 {
 	float4 DiffuseColor = tex2D(samp, TexCoord);
 	float4 Ambient = {0.1f,0.1f,0.1f,0.1f};
-	float3 LightPosition = {20,2.5,20};
-	float LightRadius = 400.0f;
-	float LightBrightness = 3.4f;
+	float3 LightPosition = {15,15,15};
+	float LightRadius = 100.0f;
+	float LightBrightness = 1.0f;
 	
 	float3 LightVector = (LightPosition - PixelPosition);
 	float Distance = length(LightVector);
 	LightVector = normalize(LightVector);
-	float4 Diffuse = (saturate(dot(LightVector,Normal))*DiffuseColor*LightBrightness*((LightRadius-Distance)/LightRadius));
+	float4 Diffuse = (saturate(dot(LightVector,Normal))*LightBrightness*((LightRadius-Distance)/LightRadius));
 	
 	float3 EyePosition = {6,3,6};
 	float SpecularPower = 10;
@@ -42,5 +42,7 @@ void PS(float2 TexCoord : TEXCOORD0,
 		OutColor = Ambient;
 	else
 		OutColor = Specular + Diffuse + Ambient;
-	OutColor = float4(TexCoord.x, TexCoord.y, 1, 1);
+	//OutColor = float4(Distance/LightRadius,Distance/LightRadius,Distance/LightRadius,1);
+	OutColor = Diffuse + Ambient;
+	//OutColor = float4(TexCoord.x, TexCoord.y, 1, 1);
 }

@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\UniqueCore\Include;.\Include;..\External\expat\include"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\UniqueCore\Include;.\Include;..\External\expat\include;&quot;..\External\vld-10\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,8 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/NODEFAULTLIB:libcd.lib &#x0D;&#x0A;&#x0D;&#x0A;"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib;..\External\WaveIO\x64"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib;..\External\WaveIO\x64;&quot;..\External\vld-10\&quot;"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

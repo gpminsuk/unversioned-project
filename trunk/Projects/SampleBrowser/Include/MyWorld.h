@@ -2,6 +2,8 @@
 
 #include "UWorld.h"
 
+#pragma comment(lib, "vld.lib")
+
 class UMyWorld : public UWorld
 {
 public:

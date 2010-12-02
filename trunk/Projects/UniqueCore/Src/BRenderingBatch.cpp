@@ -15,6 +15,7 @@ BRenderingBatch::BRenderingBatch()
 
 BRenderingBatch::~BRenderingBatch()
 {
+	Primitives.Clear(true);
 }
 
 int BRenderingBatch::GetNumIndices()
@@ -68,7 +69,11 @@ BRenderingBatchManager::BRenderingBatchManager()
 
 BRenderingBatchManager::~BRenderingBatchManager()
 {
-
+	for(unsigned int i=0;i<RenderingBatches.Size();++i)
+	{
+		BRenderingBatch* Batch = RenderingBatches(i);
+		delete Batch;
+	}
 }
 
 void BRenderingBatchManager::RenderBatches(BViewport* Viewport)

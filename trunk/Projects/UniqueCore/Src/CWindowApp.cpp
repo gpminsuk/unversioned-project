@@ -96,6 +96,9 @@ bool CWindowApp::DestroyApp()
 	delete m_pRenderer;
 	m_pRenderer = 0;
 
+	delete m_pViewport;
+	m_pViewport = 0;
+
 	RResourceManager::ReleaseAllResources();
 	return true;
 }

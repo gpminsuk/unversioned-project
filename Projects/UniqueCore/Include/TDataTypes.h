@@ -315,7 +315,13 @@ public:
 	}
 
 	bool operator!= (TQuaternion& q) { return (x != q.x || y != q.y || z != q.z || w != q.w); }
-	
+
+	static TQuaternion Lerp(TQuaternion a, TQuaternion b, float t) 
+	{ 
+		return (a*(1.0f-t) + b*t); 
+	}
+
+
 	static TQuaternion Slerp(TQuaternion a, TQuaternion b, float t)
 	{
 		float CosinePi = a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w;
@@ -325,8 +331,17 @@ public:
 			b = -b;
 		}
 		float Pi = ARCCOSINE(CosinePi);
-		TQuaternion res = a*(SINE(Pi*(1.0f-t))/SINE(Pi)) + b*(SINE(Pi*t)/SINE(Pi));
-		res.Normalize();
+		TQuaternion res;
+		if(Pi <= 1.0f)
+		{
+			res = a*(SINE(Pi*(1.0f-t))/SINE(Pi)) + b*(SINE(Pi*t)/SINE(Pi));
+			res.Normalize();
+		}
+		else
+		{
+			res = Lerp(a, b, t);
+			res.Normalize();
+		}
 		return res;
 	}
 

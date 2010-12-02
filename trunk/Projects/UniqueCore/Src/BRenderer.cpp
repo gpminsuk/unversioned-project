@@ -134,7 +134,9 @@ void BRenderer::ThreadExecute()
 			dTime = timeGetTime();
 		}
 		if(++m_iFTimeIdx >= FPS_COUNTER_NUMBER) m_iFTimeIdx = 0;
+		Sleep(1);
 	}
+	
 }
 
 void BRenderer::ThreadDestroy()

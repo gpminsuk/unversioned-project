@@ -208,9 +208,9 @@ void LoadASEFile(const char* fn)
 					}
 					if(!strcmp(ParentNodeName.Str, ""))
 					{
-						BoneHierarchy->RootBone = Bone;
+						BoneHierarchy->RootBone.AddItem(Bone);
 					}
-					else if(BoneHierarchy->RootBone)
+					else if(BoneHierarchy->RootBone.Size())
 					{
 						BoneHierarchy->AddBone(Bone, ParentNodeName);
 					}
@@ -618,7 +618,7 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
-	LoadASEFile("..\\..\\Resources\\tank2.ase");
+	LoadASEFile("..\\..\\Resources\\char.ASE");
 	return true;
 }
 

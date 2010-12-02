@@ -2,7 +2,7 @@
 
 #include "BSoundDriver.h"
 
-#pragma comment(lib, "WaveIO.lib")
+//#pragma comment(lib, "WaveIO.lib")
 
 class CWaveIODriver : public BSoundDriver
 {

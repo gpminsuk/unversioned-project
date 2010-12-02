@@ -433,25 +433,27 @@ public:
 	{
 		if(ParentName == "")
 		{
-			RootBone = Bone;
+			RootBone.AddItem(Bone);
 		}
 		else
 		{
-			RootBone->AddBone_Recursive(Bone, ParentName);
+			RootBone(0)->AddBone_Recursive(Bone, ParentName);
 		}
 	}
 
 	RBoneHierarchy()
-		: RootBone(0)
 	{
 	}
 
 	~RBoneHierarchy()
 	{
-		delete RootBone;
+		for(unsigned int i=0;i<RootBone.Size();++i)
+		{
+			delete RootBone(i);
+		}
 	}
 
-	RBone *RootBone;
+	TArray<RBone*> RootBone;
 };
 
 class RBoneHierarchyTable

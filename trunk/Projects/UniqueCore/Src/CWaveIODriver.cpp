@@ -8,14 +8,14 @@
 
 CWaveIODriver::CWaveIODriver()
 {
-	Player = new CWavePlayer();
+	//Player = new CWavePlayer();
 	Reader = 0;
 }
 
 CWaveIODriver::~CWaveIODriver()
 {
-	delete Reader;
-	delete Player;
+	//delete Reader;
+	//delete Player;
 }
 
 bool CWaveIODriver::CreateSoundDriver()
@@ -36,14 +36,14 @@ bool CWaveIODriver::PlayWAVSound()
 
 bool CWaveIODriver::LoadSound(TString Filename)
 {
-	CWaveReader * ptemp = 0;
-	ptemp = new CWaveReader(Filename.Str);
-	Player->Close();
+	//CWaveReader * ptemp = 0;
+	//ptemp = new CWaveReader(Filename.Str);
+	//Player->Close();
 	if(Reader){
-		Reader->Close();
+		//Reader->Close();
 		delete Reader;
 	}
-	Reader = ptemp;
-	Player->Open(Reader);
+	//Reader = ptemp;
+	//Player->Open(Reader);
 	return true;
 }

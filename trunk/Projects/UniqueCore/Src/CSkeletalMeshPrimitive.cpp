@@ -8,14 +8,20 @@ CSkeletalMeshPrimitive::CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, 
 {
 	RenderType = RenderType_Opaque;
 
-	SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy, InSkeletalMesh, InAnimationSequence);
-	UpdatePrimitive();
-	Primitives.AddItem(SkeletalMeshTemplate);
+	for(unsigned int i=0;i<InBoneHierarchy->RootBone.Size();++i)
+	{
+		SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy->RootBone(i), InSkeletalMesh, InAnimationSequence);
+		UpdatePrimitive();
+		Primitives.AddItem(SkeletalMeshTemplate);
+	}
 }
 
 CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void)
 {
-	delete SkeletalMeshTemplate;
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		delete Primitives(i); 
+	}
 }
 
 void CSkeletalMeshPrimitive::UpdatePrimitive()
@@ -30,33 +36,39 @@ void CSkeletalMeshPrimitive::UpdatePrimitive()
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 {
-	UpdatePrimitive();
-	TPrimitive* Primitive = Primitives(0);
-	memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices, 
-		Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride);
-	for(unsigned int k=0;k<Primitive->pBuffer->m_pVB->nVertices;++k)
+	unsigned int nVerticies = 0;
+	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])));
-	}
-	*pData += Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride;
-	return Primitive->pBuffer->m_pVB->nVertices;
+		TPrimitive* Primitive = Primitives(i);
+		memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices, 
+			Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride);
+		for(unsigned int k=0;k<Primitive->pBuffer->m_pVB->nVertices;++k)
+		{
+			*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])) = TM.TransformVector3(*((TVector3*)&((*pData)[k*Primitive->pBuffer->m_pVB->nVertexStride])));
+		}
+		*pData += Primitive->pBuffer->m_pVB->nVertices * Primitive->pBuffer->m_pVB->nVertexStride;
+		nVerticies += Primitive->pBuffer->m_pVB->nVertices;
+	}	
+	return nVerticies;
 }
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
-	TPrimitive* Primitive = Primitives(0);
-	for(unsigned int k=0;k<GetNumIndices();++k)
+	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
-		TIndex16 tmpIndex;
-		tmpIndex._1 = Primitive->pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
-		tmpIndex._2 = Primitive->pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
-		tmpIndex._3 = Primitive->pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
-		(*pData)[k] = tmpIndex;
+		TPrimitive* Primitive = Primitives(i);
+		for(unsigned int k=0;k<Primitive->pBuffer->m_pIB->nIndices;++k)
+		{
+			TIndex16 tmpIndex;
+			tmpIndex._1 = Primitive->pBuffer->m_pIB->pIndices[k]._1 + *BaseIndex;
+			tmpIndex._2 = Primitive->pBuffer->m_pIB->pIndices[k]._2 + *BaseIndex;
+			tmpIndex._3 = Primitive->pBuffer->m_pIB->pIndices[k]._3 + *BaseIndex;
+			(*pData)[k] = tmpIndex;
+		}
+		*BaseIndex += Primitive->pBuffer->m_pVB->nVertices;
+		*pData += Primitive->pBuffer->m_pIB->nIndices;
 	}
-	*BaseIndex += Primitive->pBuffer->m_pVB->nVertices;
-	*pData += GetNumIndices();
-
-	return Primitive->pBuffer->m_pVB->nVertices;
+	return 0;
 }
 
 unsigned int CSkeletalMeshPrimitive::GetNumIndices()
@@ -64,7 +76,7 @@ unsigned int CSkeletalMeshPrimitive::GetNumIndices()
 	return NumIndices;
 }
 
-TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+TSkeletalMesh::TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
 :	CurrentFrame(0),
 	AnimationSequenceRef(InAnimationSequence)
 {
@@ -77,7 +89,7 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InS
 	pBuffer->m_pVB = pVB;
 	pBuffer->m_pIB = pIB;
 
-	RootBone = new TBone(InBoneHierarchy->RootBone, InSkeletalMesh, InAnimationSequence);	
+	RootBone = new TBone(InBone, InSkeletalMesh, InAnimationSequence);	
 
 	UpdatePrimitive();
 }

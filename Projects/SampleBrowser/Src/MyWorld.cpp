@@ -3,6 +3,7 @@
 
 #include "CTank.h"
 #include "CTerrain.h"
+#include "CTankManager.h"
 #include "CMissile.h"
 #include "CCameraViewport.h"
 #include "BCamera.h"
@@ -20,10 +21,6 @@ UMyWorld::~UMyWorld()
 
 bool UMyWorld::DestroyWorld()
 {
-	delete Tank[0];
-	delete Tank[1];
-	delete Missile;
-
 	delete Terrain;
 	return true;
 }
@@ -33,28 +30,21 @@ bool UMyWorld::InitializeWorld()
 	m_pWorldData = new TWorldOctree();
 
 	Terrain = new CTerrain();
+	Terrain->m_Location = TVector3(0.0f, 0.0f, 100.0f);
 	AddThing(Terrain);
 
-	Tank[0] = new CTank();
-	Tank[1] = new CTank();
-	Missile = new CMissile();
+	m_pVirtualTank = new CTank(TVector3(1.0f, 0.0f, 0.0f), 1.5707963f, 1.0f);
+	m_pVirtualTank->m_Location = TVector3(-10.0f, 0.0f, 0.0f);
 
-	Tank[0]->m_Location = TVector3(10, 0, 10);
-	Tank[0]->UpdateTransform();
-
-	Tank[1]->m_Location = TVector3(50, 0, 50);
-	Tank[1]->UpdateTransform();
-	
-	Tank[0]->SetOpponent(Tank[1]);
-	Tank[1]->SetOpponent(Tank[0]);
-
-	Tank[0]->StartTurn();
+	m_pTankManager = new CTankManager();
+	m_pTankManager->InitializeTank(TVector3(0.0f, 0.0f, 10.0f), TVector3(0.0f, 0.0f, -10.0f));
+	m_pTankManager->SetStartTank(0);
 
 	CCameraViewport* Viewport = (CCameraViewport*)Viewports(0);
-	Viewport->m_pCamera->m_Subject = Tank[0];
+	Viewport->m_pCamera->m_Subject = m_pVirtualTank;
+	Viewport->m_pCamera->m_Location = TVector3(0.0f, 0.0f, 0.0f);
 
-	AddThing(Tank[0]);
-	AddThing(Tank[1]);
-	AddThing(Missile);
+	AddThing(m_pTankManager->GetTank(0));
+	AddThing(m_pTankManager->GetTank(1));
 	return true;
 }

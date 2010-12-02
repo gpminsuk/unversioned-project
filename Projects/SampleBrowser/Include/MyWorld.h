@@ -11,8 +11,8 @@ public:
 	~UMyWorld();
 
 	class CTerrain* Terrain;
-	class CTank* Tank[2];
-	class CMissile* Missile;
+	class CTank* m_pVirtualTank;
+	class CTankManager* m_pTankManager;
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();

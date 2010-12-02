@@ -43,6 +43,6 @@ void PS(float2 TexCoord : TEXCOORD0,
 	else
 		OutColor = Specular + Diffuse + Ambient;
 	//OutColor = float4(Distance/LightRadius,Distance/LightRadius,Distance/LightRadius,1);
-	OutColor = Diffuse + Ambient;
-	//OutColor = float4(TexCoord.x, TexCoord.y, 1, 1);
+	//OutColor = Diffuse + Ambient;
+	OutColor = float4(TexCoord.x, TexCoord.y, 1, 1);
 }

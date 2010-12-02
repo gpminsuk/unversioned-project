@@ -8,11 +8,9 @@
 CTank::CTank() :
 	IsInTurn(false)
 {
+	//CBoxComponent* box = new CBoxComponent();
+	//Components.AddItem(box);
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
-	for(int i=0;i<SkeletalMeshComponent->Primitives.Size();++i)
-	{
-		SkeletalMeshComponent->Primitives(i)->Translation = TVector3(0.0f,1.0f,-4.3f);
-	}
 	Components.AddItem(SkeletalMeshComponent);
 }
 
@@ -55,12 +53,12 @@ void CTank::Tick(unsigned long dTime)
 		}
 		if(GKeyMap[VK_LEFT])
 		{
-			m_Location.x += 0.01f * dTime;
+			m_Location.z += 0.01f * dTime;
 			UpdateTransform();
 		}
 		if(GKeyMap[VK_RIGHT])
 		{
-			m_Location.x -= 0.01f * dTime;
+			m_Location.z -= 0.01f * dTime;
 			UpdateTransform();
 		}
 	}
@@ -76,14 +74,43 @@ void CTank::PhysicsTick(unsigned long dTime)
 
 }
 
+bool CTank::SetSize(float i_fSize)
+{
+	m_fSize = i_fSize;
+	return true;
+}
+
+bool CTank::SetRadian(float i_fRadian)
+{
+	m_fRadian = i_fRadian;
+	return true;
+}
+
+bool CTank::SetRotationCylinder(TVector3 rot)
+{
+	m_vecRotationCylinder = rot;
+	return true;
+}
+CTank::CTank(TVector3 _rot, float _radian, float _size) :
+	IsInTurn(false)
+{
+	//CBoxComponent* box = new CBoxComponent();
+	//Components.AddItem(box);
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	Components.AddItem(SkeletalMeshComponent);
+	SetSize(_size);
+	SetRadian(_radian);
+	SetRotationCylinder(_rot);
+}
 void CTank::UpdateTransform()
 {
 	for(unsigned int i=0;i<Components.Size();++i)
 	{
 		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
 		{
-			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z) + Components(i)->Primitives(j)->Translation,
-				TQuaternion(TVector3(1.0f,0.0f,0.0f),1.570796325f), 0.1f);
+			Components(i)->Primitives(j)->Translation = m_Location;
+			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),
+				TQuaternion(m_vecRotationCylinder, m_fRadian), m_fSize);
 			//Components(i)->Primitives(j)->TM._41 = m_Location.x;
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;

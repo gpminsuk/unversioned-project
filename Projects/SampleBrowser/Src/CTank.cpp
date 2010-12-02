@@ -3,14 +3,17 @@
 #include "CTank.h"
 #include "CBoxComponent.h"
 #include "CSkeletalMeshComponent.h"
+#include "CWaveIODriver.h"
 
 CTank::CTank() :
 	IsInTurn(false)
 {
-	CBoxComponent* BoxComponent = new CBoxComponent();
-	Components.AddItem(BoxComponent);
-	//CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
-	//Components.AddItem(SkeletalMeshComponent);
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	for(int i=0;i<SkeletalMeshComponent->Primitives.Size();++i)
+	{
+		SkeletalMeshComponent->Primitives(i)->Translation = TVector3(0.0f,1.0f,-4.3f);
+	}
+	Components.AddItem(SkeletalMeshComponent);
 }
 
 CTank::~CTank()
@@ -20,6 +23,7 @@ CTank::~CTank()
 
 void CTank::StartTurn()
 {
+	GSoundDriver->PlayWAVSound();
 	IsInTurn = true;
 	TurnTimeLeft = 5000;
 }
@@ -78,9 +82,8 @@ void CTank::UpdateTransform()
 	{
 		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
 		{
-			Components(i)->Primitives(j)->Translation = m_Location;
-			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),
-				TQuaternion(TVector3(1.0f,0.0f,0.0f),1.570796325f), 1.0f);
+			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z) + Components(i)->Primitives(j)->Translation,
+				TQuaternion(TVector3(1.0f,0.0f,0.0f),1.570796325f), 0.1f);
 			//Components(i)->Primitives(j)->TM._41 = m_Location.x;
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;

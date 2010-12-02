@@ -3,6 +3,7 @@
 #include "BViewport.h"
 #include "AApplication.h"
 #include "BDriver.h"
+#include "BSoundDriver.h"
 
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
@@ -50,6 +51,7 @@ BRenderer::~BRenderer()
 	delete GBaseRTRenderPass;
 
 	delete GDriver;
+	delete GSoundDriver;
 	GDriver = 0;
 }
 

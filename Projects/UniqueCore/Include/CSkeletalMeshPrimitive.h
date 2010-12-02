@@ -48,6 +48,8 @@ public:
 	TBone* RootBone;
 	RAnimationSequence* AnimationSequenceRef;
 	unsigned int CurrentFrame;
+	bool IsPlaying;
+	bool IsLooping;
 };
 
 class CSkeletalMeshPrimitive : public CMeshPrimitive

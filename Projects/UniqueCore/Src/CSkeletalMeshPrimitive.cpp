@@ -68,6 +68,15 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InS
 :	CurrentFrame(0),
 	AnimationSequenceRef(InAnimationSequence)
 {
+	pBuffer = new RStaticPrimitiveBuffer();
+
+	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
+	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
+	pBuffer->m_pVB = pVB;
+	pBuffer->m_pIB = pIB;
+
 	RootBone = new TBone(InBoneHierarchy->RootBone, InSkeletalMesh, InAnimationSequence);	
 
 	UpdatePrimitive();
@@ -80,24 +89,19 @@ TSkeletalMesh::~TSkeletalMesh()
 
 void TSkeletalMesh::UpdatePrimitive()
 {
-	delete pBuffer;
-
-	CurrentFrame+=10;
-	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame)
+	if(IsPlaying)
+	{
+		CurrentFrame+=10;
+	}
+	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame && IsLooping)
 	{
 		CurrentFrame = 0;
 	}
 
 	CalcBoneMatrices();
 
-	pBuffer = new RStaticPrimitiveBuffer();
-
-	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
-	pBuffer->m_pVB = pVB;
-	pBuffer->m_pIB = pIB;
+	RSystemMemoryVertexBuffer *pVB = pBuffer->m_pVB;
+	RSystemMemoryIndexBuffer *pIB = pBuffer->m_pIB;
 
 	pVB->nVertexStride = sizeof(VD);
 	pVB->nVertices = RootBone->NumTotalVertices_Recursive();

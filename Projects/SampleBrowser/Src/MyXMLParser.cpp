@@ -6,6 +6,7 @@
 #include "CWindowApp.h"
 #include "CCameraViewport.h"
 #include "CDirectXDriver.h"
+#include "CWaveIODriver.h"
 
 #include "MyWorld.h"
 
@@ -63,6 +64,11 @@ void MyXMLParser::Parse()
 						DXWindowInfo.m_wWidth = WindowInfo.m_wWidth;
 						GDriver = new CDirectXDriver(DXWindowInfo);
 						GDriver->CreateDriver();
+						GSoundDriver = new CWaveIODriver();
+						TString FN;
+						FN = "..\\..\\Resources\\tada.wav";
+						GSoundDriver->LoadSound(FN);
+						GSoundDriver->PlayWAVSound();
 					}
 				}			
 			}

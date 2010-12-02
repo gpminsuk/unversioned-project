@@ -114,7 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include;..\External\WaveIO\Include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -139,7 +139,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="libexpat.lib freetype243MT.lib"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs\x64&quot;;..\External\Expat\lib\x64"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs\x64&quot;;..\External\Expat\lib\x64;..\External\WaveIO\x64"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -475,6 +475,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Src\BSoundDriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\BSoundDriver.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\BViewport.cpp"
 						>
 					</File>
@@ -595,11 +603,27 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Src\CDirectXSoundDriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\CDirectXSoundDriver.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Src\CPointLight.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\Include\CPointLight.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Src\CWaveIODriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\CWaveIODriver.h"
 						>
 					</File>
 					<File

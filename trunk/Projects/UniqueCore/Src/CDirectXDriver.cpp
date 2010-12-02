@@ -140,17 +140,20 @@ bool CDirectXDriver::CreateDriver()
 		return false;
 	}
 
-	CurrentCullMode = CullMode_CCW;
+	/*CurrentCullMode = CullMode_CCW;
 	CurrentDepthState = TDepthState(true, CompareFunc_LessEqual);
 	CurrentStencilState = TStencilState();
 	CurrentFillMode = FillMode_Solid;
 
 	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+	GetDevice()->SetRenderState(D3DRS_ZWRITEENABLE, CurrentDepthState.EnableDepthWrite);
+	GetDevice()->SetRenderState(D3DRS_ZFUNC, GCompareFunction[CurrentDepthState.DepthTest]);
+	GetDevice()->SetRenderState(D3DRS_CULLMODE, GCullMode[CurrentCullMode]);
 
 	SetDepthState(CurrentDepthState);
 	SetStencilState(CurrentStencilState);
 	SetCullMode(CurrentCullMode);
-	SetFillMode(CurrentFillMode);
+	SetFillMode(CurrentFillMode);*/
 
 	return true;
 }
@@ -288,7 +291,7 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer()
 {
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
-	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("..\\..\\Resources\\tank01.png"), &TB->m_pTexture)))
+	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, TEXT("..\\..\\Resources\\Gross.jpg"), &TB->m_pTexture)))
 	{
 		delete TB;
 		return 0;

@@ -248,18 +248,18 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
 
 	pBatch->IndexTessellate();
 
-	int NumIndices = pBatch->GetNumIndices();
-	if(NumIndices)
+	IB->nIndices = pBatch->GetNumIndices();
+	if(IB->nIndices)
 	{
 		hr = m_pDevice->CreateIndexBuffer(
-			NumIndices*sizeof(TIndex16),
+			IB->nIndices*sizeof(TIndex16),
 			D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
 			D3DFMT_INDEX16,
 			D3DPOOL_DEFAULT,
 			&IB->IB,
 			NULL);
 
-		hr = IB->IB->Lock(0, NumIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
+		hr = IB->IB->Lock(0, IB->nIndices*sizeof(TIndex16), (void**)&pData, D3DLOCK_DISCARD);
 		if(hr != D3D_OK)
 		{
 			return false;

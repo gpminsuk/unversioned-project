@@ -16,7 +16,7 @@ public:
 
 	typedef TIndex16 ID;
 
-	TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
+	TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
 	~TSkeletalMesh();
 
 	class TBone

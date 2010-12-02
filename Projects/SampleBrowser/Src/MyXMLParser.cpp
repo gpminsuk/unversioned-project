@@ -65,10 +65,10 @@ void MyXMLParser::Parse()
 						GDriver = new CDirectXDriver(DXWindowInfo);
 						GDriver->CreateDriver();
 						GSoundDriver = new CWaveIODriver();
-						TString FN;
-						FN = "..\\..\\Resources\\tada.wav";
-						GSoundDriver->LoadSound(FN);
-						GSoundDriver->PlayWAVSound();
+						//TString FN;
+						//FN = "..\\..\\Resources\\tada.wav";
+						//GSoundDriver->LoadSound(FN);
+						//GSoundDriver->PlayWAVSound();
 					}
 				}			
 			}

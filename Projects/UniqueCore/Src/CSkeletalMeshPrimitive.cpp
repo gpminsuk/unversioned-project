@@ -80,6 +80,8 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSke
 :	CurrentFrame(0),
 	AnimationSequenceRef(InAnimationSequence)
 {
+	RootBone = new TBone(InBone, InSkeletalMesh, InAnimationSequence);	
+
 	pBuffer = new RStaticPrimitiveBuffer();
 
 	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
@@ -89,7 +91,12 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSke
 	pBuffer->m_pVB = pVB;
 	pBuffer->m_pIB = pIB;
 
-	RootBone = new TBone(InBone, InSkeletalMesh, InAnimationSequence);	
+	pVB->nVertexStride = sizeof(VD);
+	pVB->nVertices = RootBone->NumTotalVertices_Recursive();
+	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
+
+	pIB->nIndices = RootBone->NumTotalIndices_Recursive();
+	pIB->pIndices = new ID[pIB->nIndices];
 
 	UpdatePrimitive();
 }
@@ -115,16 +122,9 @@ void TSkeletalMesh::UpdatePrimitive()
 	RSystemMemoryVertexBuffer *pVB = pBuffer->m_pVB;
 	RSystemMemoryIndexBuffer *pIB = pBuffer->m_pIB;
 
-	pVB->nVertexStride = sizeof(VD);
-	pVB->nVertices = RootBone->NumTotalVertices_Recursive();
-	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
-
 	VD *pVertex = reinterpret_cast<VD*>(pVB->pVertices);
 
 	RootBone->FillStaticVertexBuffer_Recursive(pVertex);
-
-	pIB->nIndices = RootBone->NumTotalIndices_Recursive();
-	pIB->pIndices = new ID[pIB->nIndices];
 
 	unsigned short BaseIndex = 0;
 	RootBone->FillStaticIndexBuffer_Recursive(pIB->pIndices, &BaseIndex);

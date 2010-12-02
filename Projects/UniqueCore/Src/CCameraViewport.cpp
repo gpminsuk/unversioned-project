@@ -17,6 +17,7 @@ CCameraViewport::CCameraViewport()
 
 CCameraViewport::~CCameraViewport(void)
 {
+	delete m_pCamera;
 }
 
 TVector3 CCameraViewport::GetViewportOrigin()

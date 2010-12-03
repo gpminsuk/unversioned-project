@@ -571,7 +571,9 @@ RResourceManager::~RResourceManager(void)
 bool RResourceManager::LoadResources()
 {
 	//////////////////////////////////// Texture Loading
-	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer();
+	TString Filename;
+	Filename = "..\\..\\Resources\\Gross.jpg";
+	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 	
 	pTexBuffer = GDriver->CreateFontBuffer(128,32);
@@ -620,6 +622,7 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
 	LoadASEFile("..\\..\\Resources\\hr1.ASE");
+	LoadASEFile("..\\..\\Resources\\tank2.ASE");
 	return true;
 }
 

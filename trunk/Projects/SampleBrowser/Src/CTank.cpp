@@ -10,7 +10,7 @@ CTank::CTank() :
 {
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(0);
 	Components.AddItem(SkeletalMeshComponent);
 }
 
@@ -91,12 +91,12 @@ bool CTank::SetRotationCylinder(TVector3 rot)
 	m_vecRotationCylinder = rot;
 	return true;
 }
-CTank::CTank(TVector3 _rot, float _radian, float _size) :
+CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
 	IsInTurn(false)
 {
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
 	Components.AddItem(SkeletalMeshComponent);
 	SetSize(_size);
 	SetRadian(_radian);

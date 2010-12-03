@@ -154,7 +154,7 @@ public:
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture) = 0;
 
 	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(BRenderingBatch* pBatch) = 0;
-	virtual RTextureBuffer* CreateTextureBuffer() = 0;
+	virtual RTextureBuffer* CreateTextureBuffer(const TString& Str) = 0;
 
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;

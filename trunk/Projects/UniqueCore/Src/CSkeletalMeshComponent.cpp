@@ -2,9 +2,9 @@
 #include "CSkeletalMeshComponent.h"
 #include "CSkeletalMeshPrimitive.h" 
 
-CSkeletalMeshComponent::CSkeletalMeshComponent()
+CSkeletalMeshComponent::CSkeletalMeshComponent(int i)
 {
-	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(0), RSkeletalMeshTable::SkeletalMeshes(0), RAnimationSequenceTable::Sequences(0));
+	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i));
 	Primitives.AddItem(SkeletalMeshPrimitive);	
 }
 

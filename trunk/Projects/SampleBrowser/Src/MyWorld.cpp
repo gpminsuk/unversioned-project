@@ -34,7 +34,7 @@ bool UMyWorld::InitializeWorld()
 	Terrain->m_Location = TVector3(0.0f, 0.0f, 100.0f);
 	AddThing(Terrain);
 
-	m_pVirtualTank = new CTank(TVector3(1.0f, 0.0f, 0.0f), -1.5707963f, 1.0f);
+	m_pVirtualTank = new CTank(TVector3(1.0f, 0.0f, 0.0f), -1.5707963f, 1.0f, 0);
 	m_pVirtualTank->m_Location = TVector3(-10.0f, 0.0f, 0.0f);
 
 	m_pTankManager = new CTankManager();

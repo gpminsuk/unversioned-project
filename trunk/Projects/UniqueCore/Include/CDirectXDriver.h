@@ -37,7 +37,7 @@ public:
 	virtual bool SetTexture(int nStage, RTextureBuffer* pTexture);
 
 	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(BRenderingBatch* pBatch);
-	virtual RTextureBuffer* CreateTextureBuffer();
+	virtual RTextureBuffer* CreateTextureBuffer(const TString& Str);
 
 	virtual bool BeginScene();
 	virtual bool EndScene();

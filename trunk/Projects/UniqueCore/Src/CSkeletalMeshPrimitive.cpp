@@ -138,35 +138,15 @@ void TSkeletalMesh::CalcBoneMatrices()
 void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame, const TMatrix& ParentTM)
 {	
 	BoneTM.SetIdentity();
+	BoneTM = BoneRef->TM;
 	if(AnimationBoneSequenceRef)
 	{
-		static int frame = 500;
-		TQuaternion Quat = AnimationBoneSequenceRef->GetRotKey(CurrentFrame);
-		if(Quat != TQuaternion())
-		{
-			BoneTM.Rotate(Quat);
-		}
-		else
-		{
-			BoneTM = BoneRef->TM;
-		}
+		TQuaternion Quat = AnimationBoneSequenceRef->GetRotKey(CurrentFrame);		
+		BoneTM.Rotate(Quat);
 		TVector3 Pos = AnimationBoneSequenceRef->GetPosKey(CurrentFrame);
-		if(Pos != TVector3(0,0,0))
-		{
-			BoneTM._41 = Pos.x;
-			BoneTM._42 = Pos.y;
-			BoneTM._43 = Pos.z;
-		}
-		else
-		{
-			BoneTM._41 = BoneRef->TM._41;
-			BoneTM._42 = BoneRef->TM._42;
-			BoneTM._43 = BoneRef->TM._43;
-		}
-	}
-	else
-	{
-		BoneTM = BoneRef->TM;
+		BoneTM._41 += Pos.x;
+		BoneTM._42 += Pos.y;
+		BoneTM._43 += Pos.z;
 	}
 	BoneTM = BoneTM * ParentTM;
 	for(unsigned int i=0;i<ChildBones.Size();++i)

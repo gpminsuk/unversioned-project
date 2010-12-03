@@ -516,11 +516,12 @@ void LoadASEFile(const char* fn)
 									Key.Time = Time;
 									if(Seq->RotKeys.Size() == 0)
 									{
+										Key.Rot = TQuaternion();
 										Seq->RotKeys.AddItem(Key);
 									}
 									else
 									{
-										Key.Rot = Seq->RotKeys((int)(Seq->RotKeys.Size()-1)).Rot * Key.Rot;
+										//Key.Rot = Seq->RotKeys((int)(Seq->RotKeys.Size()-1)).Rot * Key.Rot;
 										Seq->RotKeys.AddItem(Key);
 									}
 									continue;

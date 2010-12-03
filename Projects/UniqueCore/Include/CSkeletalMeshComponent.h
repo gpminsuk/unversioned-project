@@ -6,7 +6,7 @@
 class CSkeletalMeshComponent : public BComponent
 {
 public:
-	CSkeletalMeshComponent();
+	CSkeletalMeshComponent(int i);
 	virtual ~CSkeletalMeshComponent();
 
 	virtual void UpdateComponent();

@@ -23,7 +23,7 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(0);
 	Components.AddItem(SkeletalMeshComponent);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);

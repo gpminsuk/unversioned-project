@@ -11,7 +11,7 @@ private:
 
 public:
 	CTank();
-	CTank(TVector3 _rot, float _radian, float _size);
+	CTank(TVector3 _rot, float _radian, float _size, int i);
 	~CTank();
 	
 	bool SetSize(float i_fSize);

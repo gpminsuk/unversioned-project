@@ -108,9 +108,11 @@ void CTank::UpdateTransform()
 	{
 		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
 		{
+			TQuaternion Rot(m_vecRotationCylinder, m_fRadian);
+			Rot.Rotate(TVector3(0,-1,0),m_fRadian);
 			Components(i)->Primitives(j)->Translation = m_Location;
 			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),
-				TQuaternion(m_vecRotationCylinder, m_fRadian), m_fSize);
+				Rot, m_fSize);
 			//Components(i)->Primitives(j)->TM._41 = m_Location.x;
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;

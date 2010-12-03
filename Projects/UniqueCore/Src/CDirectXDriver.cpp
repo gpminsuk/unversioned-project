@@ -292,7 +292,8 @@ RTextureBuffer* CDirectXDriver::CreateTextureBuffer(const TString& Str)
 	RDXTextureBuffer* TB = new RDXTextureBuffer();
 
 	TCHAR Chr[1024];
-	wsprintf(Chr, TEXT("%s"), Str.Str);
+	MultiByteToWideChar(CP_ACP,0,Str.Str,1024,Chr,1024);
+	//wsprintf(Chr, TEXT("%s"), Str.Str);
 	if(FAILED(D3DXCreateTextureFromFile(m_pDevice, Chr, &TB->m_pTexture)))
 	{
 		delete TB;

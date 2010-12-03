@@ -1,10 +1,12 @@
 #include "StdAfx.h"
 #include "CSkeletalMeshComponent.h"
 #include "CSkeletalMeshPrimitive.h" 
+#include "BDriver.h"
 
 CSkeletalMeshComponent::CSkeletalMeshComponent(int i)
 {
-	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i));
+	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i), 
+		RTextureBufferTable::TextureBuffers(i));
 	Primitives.AddItem(SkeletalMeshPrimitive);	
 }
 

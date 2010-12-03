@@ -112,7 +112,8 @@ void BRenderingBatchManager::RemovePrimitive(BPrimitive* Primitive)
 
 void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 {
-	for(unsigned int i=0;i<RenderingBatches.Size();++i)
+	// TODO
+	/*for(unsigned int i=0;i<RenderingBatches.Size();++i)
 	{
 		BRenderingBatch* Batch = RenderingBatches(i);
 		if(Batch->nVertexStride == Primitive->GetVertexStride())
@@ -121,7 +122,7 @@ void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 			Batch->Primitives.AddItem(Primitive);
 			return;
 		}
-	}
+	}*/
 	BRenderingBatch* Batch = new BRenderingBatch();
 	Batch->RenderType =  Primitive->RenderType;
 	if(Primitive->RenderType == RenderType_Line)

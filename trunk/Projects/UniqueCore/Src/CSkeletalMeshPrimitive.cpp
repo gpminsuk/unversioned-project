@@ -1,13 +1,15 @@
 #include "StdAfx.h"
 #include "CSkeletalMeshPrimitive.h"
 #include "BRenderingBatch.h"
+#include "BDriver.h"
 
 #define TEST_BIP_EXCLUDED
 
-CSkeletalMeshPrimitive::CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+CSkeletalMeshPrimitive::CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence, RTextureBuffer* InTexture)
 {
 	RenderType = RenderType_Opaque;
 
+	Texture = InTexture;
 	for(unsigned int i=0;i<InBoneHierarchy->RootBone.Size();++i)
 	{
 		SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy->RootBone(i), InSkeletalMesh, InAnimationSequence);
@@ -54,6 +56,8 @@ unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
+	GDriver->SetTexture(0, Texture);
+
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
 		TPrimitive* Primitive = Primitives(i);

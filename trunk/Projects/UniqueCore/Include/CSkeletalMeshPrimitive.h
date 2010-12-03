@@ -55,10 +55,11 @@ public:
 class CSkeletalMeshPrimitive : public CMeshPrimitive
 {
 public:
-	CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence);
+	CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence, RTextureBuffer* InTexture);
 	~CSkeletalMeshPrimitive(void);
 
 	TSkeletalMesh* SkeletalMeshTemplate;
+	RTextureBuffer* Texture;
 
 	virtual void UpdatePrimitive();
 

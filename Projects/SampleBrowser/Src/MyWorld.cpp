@@ -7,7 +7,7 @@
 #include "CMissile.h"
 #include "CCameraViewport.h"
 #include "BCamera.h"
-#include "vld.h"
+//#include "vld.h"
 
 UMyWorld::UMyWorld()
 {

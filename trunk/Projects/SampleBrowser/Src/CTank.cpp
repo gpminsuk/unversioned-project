@@ -6,7 +6,7 @@
 #include "CWaveIODriver.h"
 
 CTank::CTank() :
-	IsInTurn(false)
+	IsInTurn(false), m_nGage(0)
 {
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
@@ -61,6 +61,10 @@ void CTank::Tick(unsigned long dTime)
 			m_Location.z -= 0.01f * dTime;
 			UpdateTransform();
 		}
+		if(GKeyMap[VK_SPACE] && m_nGage < 100)
+		{
+			m_nGage+=5;
+		}
 	}
 }
 
@@ -92,15 +96,27 @@ bool CTank::SetRotationCylinder(TVector3 rot)
 	return true;
 }
 CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
-	IsInTurn(false)
+	IsInTurn(false), m_nGage(0)
 {
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
 	Components.AddItem(SkeletalMeshComponent);
 	SetSize(_size);
+	SetQuaternion(_rot, _radian);
+}
+
+bool CTank::SetQuaternion(TQuaternion _rot)
+{
+	m_qRot = _rot;
+	return true;
+}
+bool CTank::SetQuaternion(TVector3 _vecRotationCylinder, float _radian)
+{
+	SetRotationCylinder(_vecRotationCylinder);
 	SetRadian(_radian);
-	SetRotationCylinder(_rot);
+	m_qRot.Rotate(m_vecRotationCylinder, m_fRadian);
+	return true;
 }
 void CTank::UpdateTransform()
 {
@@ -108,11 +124,9 @@ void CTank::UpdateTransform()
 	{
 		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
 		{
-			TQuaternion Rot(m_vecRotationCylinder, m_fRadian);
-			Rot.Rotate(TVector3(0,-1,0),m_fRadian);
 			Components(i)->Primitives(j)->Translation = m_Location;
 			Components(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),
-				Rot, m_fSize);
+				m_qRot, m_fSize);
 			//Components(i)->Primitives(j)->TM._41 = m_Location.x;
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;

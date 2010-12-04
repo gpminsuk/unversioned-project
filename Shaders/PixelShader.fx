@@ -16,9 +16,9 @@ void PS(float2 TexCoord : TEXCOORD0,
 {
 	float4 DiffuseColor = tex2D(samp, TexCoord);
 	float4 Ambient = {0.8f,0.8f,0.8f,1.0f};
-	float3 LightPosition = {15,15,15};
-	float LightRadius = 100.0f;
-	float LightBrightness = 1.0f;
+	float3 LightPosition = {0.0f, 400.0f, 25.0f};
+	float LightRadius = 1000.0f;
+	float LightBrightness = 0.8f;
 	
 	float3 LightVector = (LightPosition - PixelPosition);
 	float Distance = length(LightVector);

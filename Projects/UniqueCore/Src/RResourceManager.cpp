@@ -621,7 +621,7 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
-	LoadASEFile("..\\..\\Resources\\hr1.ASE");
+	LoadASEFile("..\\..\\Resources\\hr.ASE");
 	LoadASEFile("..\\..\\Resources\\tank2.ASE");
 	return true;
 }

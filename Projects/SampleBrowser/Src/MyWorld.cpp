@@ -31,21 +31,26 @@ bool UMyWorld::InitializeWorld()
 	
 	//배경
 	Terrain = new CTerrain();
-	Terrain->m_Location = TVector3(0.0f, 0.0f, 100.0f);
 	AddThing(Terrain);
+	/*
+	pixelshader.fx
+	LightPosition이 라이트위치
+	LightRadius가 빛반경
+	LightBrightness가 밝기
+	*/
 
-	m_pVirtualTank = new CTank(TVector3(1.0f, 0.0f, 0.0f), -1.5707963f, 1.0f, 0);
-	m_pVirtualTank->m_Location = TVector3(-10.0f, 0.0f, 0.0f);
+	m_pVirtualTank = new CTank(TVector3(0.0f, 0.0f, 0.0f), 0, 0.5f, 0);
+	m_pVirtualTank->m_Location = TVector3(10.0f, 0.0f, 25.0f);
 
 	m_pTankManager = new CTankManager();
-	m_pTankManager->InitializeTank(TVector3(0.0f, 0.0f, 10.0f), TVector3(0.0f, 0.0f, -10.0f));
+	m_pTankManager->InitializeTank(TVector3(5.0f, 10.0f, 45.0f), TVector3(5.0f, 10.0f, 10.0f));
 	m_pTankManager->SetStartTank(0);
 
 	CCameraViewport* Viewport = (CCameraViewport*)Viewports(0);
 	Viewport->m_pCamera->m_Subject = m_pVirtualTank;
-	Viewport->m_pCamera->m_Location = TVector3(0.0f, 0.0f, 0.0f);
 
 	AddThing(m_pTankManager->GetTank(0));
 	AddThing(m_pTankManager->GetTank(1));
+	//AddThing(m_pTankManager->GetGo(0));
 	return true;
 }

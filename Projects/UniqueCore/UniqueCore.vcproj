@@ -948,6 +948,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ClassDiagram2.cd"
+			>
+		</File>
+		<File
 			RelativePath=".\stdafx.h"
 			>
 		</File>

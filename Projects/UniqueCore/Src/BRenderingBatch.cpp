@@ -101,10 +101,12 @@ void BRenderingBatchManager::RemovePrimitive(BPrimitive* Primitive)
 	for(unsigned int i=0;i<RenderingBatches.Size();++i)
 	{
 		BRenderingBatch* Batch = RenderingBatches(i);
-		if(Batch->nVertexStride == Primitive->GetVertexStride())
+		if(Batch->Primitives(0) == Primitive)
 		{
 			Primitive->RemoveRender(Batch);
 			Batch->Primitives.DeleteItemByVal(Primitive);
+			RenderingBatches.DeleteItem(i);
+			delete Batch;
 			return;
 		}
 	}

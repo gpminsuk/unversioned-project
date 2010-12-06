@@ -160,11 +160,23 @@ public:
 	TVector2(float x1, float y1) : x(x1), y(y1) {}
 	TVector2(const TVector2& v) : x(v.x), y(v.y) {}
 
+	TVector2 operator- (TVector2& v) { return TVector2(x-v.x,y-v.y); }
+
 	TVector2& operator-= (TVector2& v) { x -= v.x; y -= v.y; return *this; }
 	TVector2& operator*= (TVector2& v) { x *= v.x; y *= v.y; return *this; }
 
 	TVector2& operator-= (float f) { x -= f; y -= f; return *this; }
 	TVector2& operator*= (float f) { x *= f; y *= f; return *this; }
+
+	float SizeSquared()
+	{
+		return x*x+y*y;
+	}
+
+	float Size()
+	{
+		return SQRT(SizeSquared());
+	}
 
 	float x;
 	float y;

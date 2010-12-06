@@ -1,0 +1,55 @@
+  Mader.g.resources - Embedded, ContainedInManifestFile, 
+Assembly Mader, Version=1.0.*, Culture=고정 언어(고정 국가): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=SHA1, flags=None
+Assembly PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=SHA1, flags=None
+Assembly WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=SHA1, flags=None
+Assembly PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=SHA1, flags=None
+Assembly System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=SHA1, flags=None
+Class Mader.NativeConsts: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class Mader.NativeMethods: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class Mader.MaderMain: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Window
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Fields:
+    Mader.IMaderMainInterface m_Backend : Public, Static
+  Methods:
+    Initialize(IMaderMainInterface): PrivateScope, Public, HideBySig
+    GetHwnd(): PrivateScope, Public, HideBySig
+    SetHwndSourceHook(): PrivateScope, Public, HideBySig
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class Mader.MaterialExpressionControl: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.UserControl
+    Void .ctor(Int32, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    CompositionTarget_Rendering(Object, EventArgs): PrivateScope, Public, HideBySig
+    SetTransform(Point, Single): PrivateScope, Public, HideBySig
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class Mader.HRESULT: AutoLayout, AnsiClass, Class, Public, Abstract, Sealed, BeforeFieldInit
+  Methods:
+    Check(Int32): PrivateScope, Public, Static, HideBySig, HasSecurity
+Class Mader.MaterialConnector: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.UserControl
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Interface Mader.IMaderMainInterface: AutoLayout, AnsiClass, Class, Public, ClassSemanticsMask, Abstract
+  Methods:
+    Test(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    Tick(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    CreateMaderApp(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    GetBackBuffer(): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract
+    HandleMessages(IntPtr, Int32, IntPtr, IntPtr, Boolean&): PrivateScope, Public, Virtual, HideBySig, VtableLayoutMask, Abstract

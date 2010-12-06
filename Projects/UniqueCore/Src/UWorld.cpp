@@ -126,6 +126,11 @@ TWorldOctreeNode::TWorldOctreeNode()
 		Children[i] = 0;
 }
 
+void TWorldOctreeNode::RemoveThing(class BThing* Thing)
+{
+	Objects.DeleteItemByVal(Thing);
+}
+
 void TWorldOctreeNode::AddThing(class BThing* Thing)
 {
 	int Min, Max;
@@ -266,6 +271,19 @@ THitInfo TWorldOctree::LineCheck(BThing* SourceThing, TVector3& Start, TVector3&
 		}
 	}
 	return HitInfo;
+}
+
+void TWorldOctree::RemoveCollisionBody(BThing* Thing)
+{
+	if(CollisionBodyRootNode)
+	{
+		CollisionBodyRootNode->RemoveThing(Thing);
+	}
+	else
+	{
+		CollisionBodyRootNode = new TWorldOctreeNode();
+		CollisionBodyRootNode->Objects.DeleteItemByVal(Thing);
+	}
 }
 
 void TWorldOctree::AddCollisionBody(BThing* Thing)

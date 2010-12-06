@@ -65,8 +65,11 @@ public:
 
 	void DeleteItemByVal(T Item)
 	{
-		mArray.erase(find(mArray.begin(), mArray.end(), Item));
-		
+		std::vector<T>::iterator it = find(mArray.begin(), mArray.end(), Item);
+		if(it == mArray.end())
+			return;
+
+		mArray.erase(it);		
 	}
 
 	size_t Size()

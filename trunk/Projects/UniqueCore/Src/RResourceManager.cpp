@@ -575,6 +575,19 @@ bool RResourceManager::LoadResources()
 	Filename = "..\\..\\Resources\\Gross.jpg";
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\arrow.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\terrain.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\ball.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
 	
 	pTexBuffer = GDriver->CreateFontBuffer(128,32);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
@@ -622,7 +635,9 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
 	LoadASEFile("..\\..\\Resources\\hr.ASE");
-	LoadASEFile("..\\..\\Resources\\tank2.ASE");
+	LoadASEFile("..\\..\\Resources\\arrow.ASE");
+	LoadASEFile("..\\..\\Resources\\terrain.ASE");
+	LoadASEFile("..\\..\\Resources\\ball.ASE");
 	return true;
 }
 

@@ -4,19 +4,32 @@
 #include "CBoxComponent.h"
 #include "CSkeletalMeshComponent.h"
 #include "CWaveIODriver.h"
+#include "UWorld.h"
+#include "MyWorld.h"
+#include "CCylinderCollisionBody.h"
+#include "CMissile.h"
+
+extern UWorld* GWorld;
 
 CTank::CTank() :
-	IsInTurn(false), m_nGage(0)
+	IsInTurn(false), m_nGage(0) , m_fDirection(1.f)
 {
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(0);
 	Components.AddItem(SkeletalMeshComponent);
+
+	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CylinderCollisionBody);
 }
 
 CTank::~CTank()
 {
-
+	//for(auto it = vecMissile.begin();it != vecMissile.end();++it)
+	//{
+	//	delete it;
+	//}
+	//vecMissile.clear();
 }
 
 void CTank::StartTurn()
@@ -34,7 +47,13 @@ void CTank::EndTurn()
 
 void CTank::Fire()
 {
-	
+	//CMissile* Missile = new CMissile;
+	//Missile->Init((float)m_nGage,m_fAngle);
+	//GWorld->AddThing(Missile);
+	//vecMissile.push_back(Missile);
+
+	CMissile* Missile = (CMissile*)((UMyWorld*)GWorld)->AddMissile((float)m_nGage,m_fAngle,m_Location,m_fDirection);
+	Missile->Owner = this;
 }
 
 void CTank::SetOpponent(CTank* InOpponent)
@@ -71,6 +90,17 @@ void CTank::Tick(unsigned long dTime)
 void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
 	
+	if(Event == KEY_Up)
+	{
+		if(Param.Key == VK_SPACE)
+		{
+			if(IsInTurn)
+			{
+				Fire();
+			}
+		}
+	}
+	
 }
 
 void CTank::PhysicsTick(unsigned long dTime)
@@ -102,6 +132,9 @@ CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
 	//Components.AddItem(box);
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
 	Components.AddItem(SkeletalMeshComponent);
+
+	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CylinderCollisionBody);
 	SetSize(_size);
 	SetQuaternion(_rot, _radian);
 }

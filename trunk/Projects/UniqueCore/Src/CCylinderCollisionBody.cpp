@@ -7,7 +7,8 @@
 #include "CCylinderPrimitive.h"
 
 CCylinderCollisionBody::CCylinderCollisionBody(BThing* InOwner)
-:	BCollisionBody(InOwner)
+:	BCollisionBody(InOwner),
+	Radius(1.0f)
 {
 	CCylinderPrimitive *CylinderPrimitive = new CCylinderPrimitive();
 	Primitives.AddItem(CylinderPrimitive);
@@ -24,5 +25,11 @@ CCylinderCollisionBody::~CCylinderCollisionBody()
 
 TVector3 CCylinderCollisionBody::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent)
 {
-	return TVector3(Owner->m_Location.x, 0, Owner->m_Location.z);
+	float DistStart = (Start - Owner->m_Location).Size();
+	float DistEnd = (End - Owner->m_Location).Size();
+	if(DistStart < Radius || DistEnd < Radius)
+	{
+		return Owner->m_Location;
+	}
+	return TVector3(0.0f,0.0f,0.0f);
 }

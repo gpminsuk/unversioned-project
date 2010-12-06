@@ -60,6 +60,8 @@ public:
 
 	virtual void AddCollisionBody(class BThing* Thing);
 	virtual void AddPrimitive(class BThing* Thing);
+
+	virtual void RemoveCollisionBody(class BThing* Thing);
 };
 
 class TWorldOctreeNode
@@ -77,6 +79,7 @@ public:
 	TWorldOctreeNode* Children[8];
 
 	void AddThing(class BThing* Thing);
+	void RemoveThing(class BThing* Thing);
 };
 
 class UWorld

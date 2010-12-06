@@ -8,6 +8,7 @@ public:
 	virtual ~CCylinderCollisionBody();	
 
 	float Radius;
+	float Height;
 
 	virtual TVector3 LineCheck(TVector3& Start, TVector3& End, TVector3& Extent);
 };

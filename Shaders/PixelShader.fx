@@ -15,15 +15,15 @@ void PS(float2 TexCoord : TEXCOORD0,
 		out float4 OutColor : COLOR0)
 {
 	float4 DiffuseColor = tex2D(samp, TexCoord);
-	float4 Ambient = {0.8f,0.8f,0.8f,1.0f};
-	float3 LightPosition = {0.0f, 400.0f, 25.0f};
-	float LightRadius = 1000.0f;
-	float LightBrightness = 0.8f;
+	float4 Ambient = {0.1f,0.1f,0.1f,1.0f};
+	float3 LightPosition = {20.0f, 10.0f, 20.0f};
+	float LightRadius = 100.0f;
+	float LightBrightness = 1.0f;
 	
 	float3 LightVector = (LightPosition - PixelPosition);
 	float Distance = length(LightVector);
 	LightVector = normalize(LightVector);
-	float4 Diffuse = (saturate(dot(LightVector,Normal))*DiffuseColor*LightBrightness*((LightRadius-Distance)/LightRadius));
+	float4 Diffuse = (DiffuseColor*LightBrightness*((LightRadius-Distance)/LightRadius));
 	
 	float3 EyePosition = {6,3,6};
 	float SpecularPower = 10;

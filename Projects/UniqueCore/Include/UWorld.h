@@ -116,10 +116,10 @@ public:
 	virtual void InputChar();
 
 	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
-
-protected:
 	void AddThing(BThing* Thing);
 	void RemoveThing(BThing* Thing);
+protected:
+	
 };
 
 extern UWorld* GWorld;

@@ -6,19 +6,21 @@
 #include "CSkeletalMeshComponent.h"
 #include "UWorld.h"
 
-CMissile::CMissile() :
+extern UWorld* GWorld;
+
+CMissile::CMissile(TVector3 _m_Location) :
 m_fPastTime(0) , m_fDirection(1.f)
 {
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(3);
 	Components.AddItem(SkeletalMeshComponent);
 
-	m_Location = TVector3(10.0f, 10.0f, 10.0f);
+	m_Location = _m_Location;
 	UpdateTransform();
 }
 
 CMissile::~CMissile()
 {
-
+	
 }
 
 void CMissile::Tick(unsigned long dTime)
@@ -28,7 +30,7 @@ void CMissile::Tick(unsigned long dTime)
 
 void CMissile::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-
+	
 }
 
 void CMissile::PhysicsTick(unsigned long dTime)
@@ -37,27 +39,29 @@ void CMissile::PhysicsTick(unsigned long dTime)
 
 	TVector3 Loc = m_Location;
 	//float t = dTime/100.f;
-	float fSpeed = 3.0f;
+	float fSpeed = 3.0f * 10;
 
 	//Loc.y  = 0.5f - (float)(t*t*9.8/2.0f);
-	float fG = ((m_fPastTime * m_fPastTime) * 9.8f) / 2.0f;
+	float fG = ((m_fPastTime * m_fPastTime) * 7.9f) / 2.0f;
 
 	Loc.y = m_vecStartPos.y + (fSpeed * m_fPastTime) * 0.5f - fG;
-	Loc.z = m_vecStartPos.z + ((m_fPastTime * 5.f) * m_fDirection);
+	Loc.z = m_vecStartPos.z + ((m_fPastTime * 7.f) * m_fDirection);
 
 	TVector3 Hit = GWorld->LineCheck(Owner, m_Location, Loc).HitPosition;
 
-	//if(Hit != TVector3(0,0,0))
-	//	m_Location = Hit;
-	//else
-	//	m_Location = Loc;
+	if(Hit != TVector3(0,0,0))
+		m_Location = Hit;
+
+	else
+		m_Location = Loc;
+
+	UpdateTransform();
 
 	//미사일과 탱그 충돌 일어남
 	//미사일 터트리고 상대 탱크 HP 감소
 
 
-	m_Location = Loc;
-	UpdateTransform();	
+	
 }
 
 void CMissile::UpdateTransform()

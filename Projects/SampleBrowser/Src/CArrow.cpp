@@ -27,60 +27,11 @@ CArrow::~CArrow()
 
 void CArrow::Tick(unsigned long dTime)
 {
-	for(int i=0;i<MAX;++i)
-	{
-		if(m_pTank[i]->IsInTurn)
-		{
-			m_Location = m_pTank[i]->m_Location;
-		}
-	}
-	//m_Location = m_pTank[0]->m_Location;
 	UpdateTransform();
 }
 
 void CArrow::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-	if(Event == KEY_Down)
-	{
-		if(Param.Key == VK_UP)
-		{	
-			if(m_fAccAngle >= 1.75)
-				return;
-
-			m_fRadian = 0.038f;
-			m_fAccAngle += 0.038f;
-
-			for(int i=0;i<MAX;++i)
-			{
-				if(m_pTank[i]->IsInTurn)
-				{
-					m_pTank[i]->m_fAngle = m_fAccAngle;
-				}
-			}
-
-			SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), m_fRadian);
-			UpdateTransform();
-		}
-		else if(Param.Key == VK_DOWN)
-		{
-			if(m_fAccAngle <= 0)
-				return;
-
-			m_fRadian = -0.038f;
-			m_fAccAngle -= 0.038f;
-
-			for(int i=0;i<MAX;++i)
-			{
-				if(m_pTank[i]->IsInTurn)
-				{
-					m_pTank[i]->m_fAngle = m_fAccAngle;
-				}
-			}
-
-			SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), m_fRadian);
-			UpdateTransform();
-		}
-	}	
 }
 
 void CArrow::PhysicsTick(unsigned long dTime)
@@ -97,16 +48,6 @@ void CArrow::PhysicsTick(unsigned long dTime)
 	UpdateTransform();
 	*/
 }
-
-
-void CArrow::SetTank(CTank* pTank,int nIndex)
-{
-	if(nIndex >= MAX)
-		return;
-
-	m_pTank[nIndex] = pTank;
-}
-
 bool CArrow::SetQuaternion(TQuaternion _rot)
 {
 	m_qRot = _rot;

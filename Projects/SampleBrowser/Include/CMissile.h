@@ -5,7 +5,7 @@
 class CMissile : public BThing
 {
 public:
-	CMissile();
+	CMissile(TVector3 _m_Location);
 	~CMissile();
 
 	bool IsInTurn;

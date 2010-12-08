@@ -13,9 +13,9 @@ BCamera::BCamera(void)
 	m_Theta(0),
 	m_Subject(0)
 {
-	m_Location.x = -40;
-	m_Location.y = 40;
-	m_Location.z = 10;
+	m_Location.x = 10;
+	m_Location.y = 0;
+	m_Location.z = 25;
 
 	//m_CameraMode = First_Person;
 }
@@ -158,7 +158,7 @@ void BCamera::Tick(unsigned long  dTime)
 			}			
 
 			m_Location = m_LookAt;
-			m_Location.x -= 40.0f;
+			m_Location.x -= 60.0f;
 			m_Location.y += 40.0f;
 		}
 		break;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BThing.h"
-#include "CTank.h"
+
 
 class CArrow : public BThing
 {
@@ -25,7 +25,6 @@ public:
 	virtual void UpdateTransform();
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 
-	void SetTank(CTank* pTank,int nIndex);
 	bool SetQuaternion(TQuaternion _rot);
 	bool SetQuaternion(TVector3 _vecRotationCylinder, float _radian);
 
@@ -33,8 +32,6 @@ public:
 	bool SetRadian(float i_fRadian);
 	bool SetRotationCylinder(TVector3 rot);
 
-
-	CTank*	m_pTank[MAX];
 	float m_fAccAngle;
 
 	//float m_fAngle;

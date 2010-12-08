@@ -2,6 +2,7 @@
 
 #include "BThing.h"
 #include "CMissile.h"
+#include "CArrow.h"
 
 class CTank : public BThing
 {
@@ -9,7 +10,7 @@ private:
 	TVector3 m_vecRotationCylinder;
 	float m_fRadian;
 	float m_fSize;
-	TQuaternion m_qRot;
+	
 
 public:
 	CTank();
@@ -28,6 +29,9 @@ public:
 	float m_fAngle;
 
 	CTank* Opponent;
+    CMissile* m_Missile;
+	CArrow* m_Arrow;
+	TQuaternion m_qRot;
 
 	virtual void Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);
@@ -39,7 +43,6 @@ public:
 	void EndTurn();
 	void SetOpponent(CTank* InOpponent);
 
-	std::vector<CMissile*> vecMissile;
 
 	float m_fDirection;
 };

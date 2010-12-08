@@ -86,6 +86,7 @@ void MyXMLParser::Parse()
 
 		if(app)
 		{
+			
 			app->Initialize();
 			app->Do();
 			app->DestroyApp();

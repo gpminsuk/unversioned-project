@@ -8,6 +8,7 @@
 #include "MyWorld.h"
 #include "CCylinderCollisionBody.h"
 #include "CMissile.h"
+#include "CArrow.h"
 
 extern UWorld* GWorld;
 
@@ -21,39 +22,74 @@ CTank::CTank() :
 
 	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CylinderCollisionBody);
+
+	
+}
+
+CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
+IsInTurn(false), m_nGage(0)
+{
+	//CBoxComponent* box = new CBoxComponent();
+	//Components.AddItem(box);
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
+	Components.AddItem(SkeletalMeshComponent);
+
+	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CylinderCollisionBody);
+	
+	m_Arrow = new CArrow();
+	m_Arrow->m_Location = m_Location;
+	m_Arrow->m_Location.y += 20;
+	m_Arrow->SetSize(0.0f);
+	m_Arrow->SetQuaternion(TVector3(0.0f, 0.0f, 1.0f),180/360.0f*3.141592f);
+	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), 260/360.0f*3.141592f);
+	m_Arrow->UpdateTransform();
+	
+	SetSize(_size);
+	SetQuaternion(_rot, _radian);
+
+	m_Missile = new CMissile(m_Location);
+	m_Missile->Owner = this;
+
 }
 
 CTank::~CTank()
 {
+
 	//for(auto it = vecMissile.begin();it != vecMissile.end();++it)
 	//{
 	//	delete it;
 	//}
 	//vecMissile.clear();
+
 }
 
 void CTank::StartTurn()
 {
-	GSoundDriver->PlayWAVSound();
+	//GSoundDriver->PlayWAVSound();
 	IsInTurn = true;
-	TurnTimeLeft = 5000;
-}
+	m_Arrow->SetSize(0.03f);
+} 
 
 void CTank::EndTurn()
 {
 	IsInTurn = false;
+	GWorld->RemoveThing(m_Missile);
+	m_Missile->m_vecStartPos=m_Location;
+	m_Missile->m_Location=m_Location;
+	m_Missile->UpdateTransform();
 	Opponent->StartTurn();
+	m_Arrow->SetSize(0.00f);
+	
 }
 
 void CTank::Fire()
 {
-	//CMissile* Missile = new CMissile;
-	//Missile->Init((float)m_nGage,m_fAngle);
-	//GWorld->AddThing(Missile);
-	//vecMissile.push_back(Missile);
+	
+	m_Missile->Init(5.0f,10.0f,m_Location,m_fDirection);
 
-	CMissile* Missile = (CMissile*)((UMyWorld*)GWorld)->AddMissile((float)m_nGage,m_fAngle,m_Location,m_fDirection);
-	Missile->Owner = this;
+	GWorld->AddThing(m_Missile);
+
 }
 
 void CTank::SetOpponent(CTank* InOpponent)
@@ -63,49 +99,59 @@ void CTank::SetOpponent(CTank* InOpponent)
 
 void CTank::Tick(unsigned long dTime)
 {
+	m_Arrow->m_Location = m_Location;
+	m_Arrow->m_Location.y += 3;
+	m_Arrow->m_Location.z += m_fDirection*1;
+
 	if(IsInTurn)
-	{
-		TurnTimeLeft -= dTime;
-		if(TurnTimeLeft <= 0)
-		{
-			EndTurn();
-		}
+	{	
 		if(GKeyMap[VK_LEFT])
 		{
-			m_Location.z += 0.01f * dTime;
+			m_Location.z += 0.20f;
 			UpdateTransform();
 		}
 		if(GKeyMap[VK_RIGHT])
 		{
-			m_Location.z -= 0.01f * dTime;
+			m_Location.z -= 0.20f;
 			UpdateTransform();
 		}
-		if(GKeyMap[VK_SPACE] && m_nGage < 100)
+		if(GKeyMap[VK_UP])
+		{
+			m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), 0.05f*m_fDirection);
+			UpdateTransform();
+		}
+		if(GKeyMap[VK_DOWN])
+		{
+			m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), -0.05f*m_fDirection);
+			UpdateTransform();
+		}
+		/*if(GKeyMap[VK_SPACE])
 		{
 			m_nGage+=5;
-		}
+					
+		}*/
 	}
 }
 
 void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-	
+
 	if(Event == KEY_Up)
 	{
-		if(Param.Key == VK_SPACE)
+		if(IsInTurn)
 		{
-			if(IsInTurn)
+			if(Param.Key == VK_SPACE)
 			{
-				Fire();
+				Fire();		
 			}
 		}
 	}
+
 	
 }
-
 void CTank::PhysicsTick(unsigned long dTime)
 {
-
+	
 }
 
 bool CTank::SetSize(float i_fSize)
@@ -125,19 +171,8 @@ bool CTank::SetRotationCylinder(TVector3 rot)
 	m_vecRotationCylinder = rot;
 	return true;
 }
-CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
-	IsInTurn(false), m_nGage(0)
-{
-	//CBoxComponent* box = new CBoxComponent();
-	//Components.AddItem(box);
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
-	Components.AddItem(SkeletalMeshComponent);
 
-	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
-	CollisionBodies.AddItem(CylinderCollisionBody);
-	SetSize(_size);
-	SetQuaternion(_rot, _radian);
-}
+
 
 bool CTank::SetQuaternion(TQuaternion _rot)
 {
@@ -149,6 +184,12 @@ bool CTank::SetQuaternion(TVector3 _vecRotationCylinder, float _radian)
 	SetRotationCylinder(_vecRotationCylinder);
 	SetRadian(_radian);
 	m_qRot.Rotate(m_vecRotationCylinder, m_fRadian);
+
+	m_Arrow->SetRotationCylinder(_vecRotationCylinder);
+	m_Arrow->SetRadian(_radian);
+	m_Arrow->m_qRot.Rotate(m_vecRotationCylinder, m_fRadian);
+
+
 	return true;
 }
 void CTank::UpdateTransform()
@@ -164,5 +205,6 @@ void CTank::UpdateTransform()
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;
 		}
-	}	
+	}
+	
 }

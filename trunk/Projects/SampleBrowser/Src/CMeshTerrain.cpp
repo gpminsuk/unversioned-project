@@ -57,6 +57,11 @@ CMeshTerrain::CMeshTerrain(TVector3 _rot, float _radian, float _size, int i)
 	Components.AddItem(SkeletalMeshComponent);
 	SetSize(_size);
 	SetQuaternion(_rot, _radian);
+	SetQuaternion(TVector3(0.0f, 0.0f, 1.0f),1.57f);
+	SetQuaternion(TVector3(1.0f, 0.0f, 0.0f),1.57f);
+	SetQuaternion(TVector3(0.0f, 1.0f, 0.0f),1.57f);
+	m_Location.z += 30;
+	m_Location.y += 7.5;
 }
 
 bool CMeshTerrain::SetQuaternion(TQuaternion _rot)

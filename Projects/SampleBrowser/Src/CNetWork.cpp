@@ -38,7 +38,7 @@ void CNetWork::InitializeNet()
 
 char* CNetWork::NetRecv()
 {
-	recvn(m_socket,msg,11,0);
+	recvn(m_socket,msg,12,0);
 	return msg;
 }
 int CNetWork::recvn(SOCKET s, char *buf, int len, int flags)
@@ -68,8 +68,8 @@ int CNetWork::Netsend(char i,char j, char q,float angle,float power)
 	mymsg.angle=angle;
 	mymsg.power=power;
 
-	memcpy(sendmsg,&mymsg,11);
+	memcpy(sendmsg,(char *)&mymsg,12);
 
-	send(m_socket,sendmsg,11,0);
+	send(m_socket,sendmsg,12,0);
 	return 0;
 }

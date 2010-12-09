@@ -9,6 +9,8 @@
 #include "CMissile.h"
 #include "CArrow.h"
 #include "CNetWork.h"
+#include "CCameraViewport.h"
+#include "BCamera.h"
 
 extern UWorld* GWorld;
 
@@ -45,6 +47,7 @@ IsInTurn(false), m_nGage(0)
 	m_Arrow->UpdateTransform();
 	m_Arrow->m_initRot=m_Arrow->m_qRot;
 	m_FireAngle = 0.0f;
+	m_nGage = 0.0f;
 	
 	SetSize(_size);
 	SetQuaternion(_rot, _radian);
@@ -61,8 +64,9 @@ void CTank::Init()
 {
 	m_Arrow->m_qRot=m_Arrow->m_initRot;
 	m_FireAngle = 0.0f;
+	m_nGage=0.0f;
 	m_Arrow->SetSize(0.03f);
-	m_nGage=0;
+	
 }
 
 void CTank::StartTurn()
@@ -75,18 +79,23 @@ void CTank::StartTurn()
 void CTank::EndTurn()
 {
 	IsInTurn = false;
-	GWorld->RemoveThing(m_Missile);
+	//MyWorld->RemoveThing(m_Missile);
 	m_Missile->m_vecStartPos=m_Location;
 	m_Missile->UpdateTransform();
-	Opponent->StartTurn();
-	m_Arrow->SetSize(0.00f);
+	m_Arrow->SetSize(0.00f);	
 }
 
 void CTank::Fire(float _m_nGage,float _m_FireAngle)
 {
 	m_Missile->m_Location=m_Location;
 	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
-	GWorld->AddThing(m_Missile);
+	MyWorld->AddThing(m_Missile);
+	MyWorld->Viewport->m_pCamera->m_Location.x+=250;
+	MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
+	
+	
+	EndTurn();
+	Opponent->StartTurn();
 }
 
 void CTank::SetOpponent(CTank* InOpponent)
@@ -96,13 +105,13 @@ void CTank::SetOpponent(CTank* InOpponent)
 
 void CTank::Forword()
 {
-	m_Location.z += 0.3f*m_fDirection;
+	m_Location.z += 0.3f;
 	UpdateTransform();
 }
 
 void CTank::Backword()
 {
-	m_Location.z -= 0.3f*m_fDirection;
+	m_Location.z -= 0.3f;
 	UpdateTransform();
 }
 
@@ -163,12 +172,19 @@ void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 
 	if(Event == KEY_Up)
 	{
-		if(MyWorld->NetworkID==MyWorld->Sequence)
+		if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
 		{
 			if(Param.Key == VK_SPACE)
 			{
+				MyWorld->m_Network->Netsend(2,0,MyWorld->Sequence,m_FireAngle,m_nGage);	
 				Fire(m_nGage,m_FireAngle);
-				MyWorld->m_Network->Netsend(1,10,(char)MyWorld->Sequence,m_FireAngle,m_nGage);
+				MyWorld->m_Network->Netsend(1,3-MyWorld->NetworkID,0,0.0,0.0);
+				MyWorld->m_Network->Netsend(1,4,0,0.0,0.0);
+				
+				if(MyWorld->Sequence == 0)
+					MyWorld->Sequence = 1;
+				else
+					MyWorld->Sequence = 0;				
 			}
 		}
 	}

@@ -21,7 +21,7 @@ UMyWorld::UMyWorld()
 	NetworkID = 3;
 	Sequence = 5;
 	m_Network = new CNetWork();
-	m_Network->InitializeNet();
+	
 }
 
 UMyWorld::~UMyWorld()
@@ -37,6 +37,7 @@ bool UMyWorld::DestroyWorld()
 }
 bool UMyWorld::InitializeWorld()
 {
+	m_Network->InitializeNet();
 	GWorld = this;
 	m_pWorldData = new TWorldOctree();
 	UILabel = new CUIButtonComponent(4);
@@ -66,7 +67,7 @@ bool UMyWorld::InitializeWorld()
 	m_pTankManager = new CTankManager(this);
 	m_pTankManager->InitializeTank(TVector3(5.0f, 10.0f, 80.0f), TVector3(5.0f, 10.0f, -60.0f));
 	
-	CCameraViewport* Viewport = (CCameraViewport*)Viewports(0);
+	Viewport = (CCameraViewport*)Viewports(0);
 
 	Viewport->m_pCamera->m_Subject=m_pTerrain[1];
 
@@ -79,6 +80,11 @@ bool UMyWorld::InitializeWorld()
 	AddThing(m_pTankManager->GetTank(1));
 	AddThing(m_pTankManager->GetTank(1)->m_Arrow);
 
+	//m_pTankManager->GetTank(0)->Init();
+	//m_pTankManager->GetTank(1)->Init();
+
+	
+
 
 
 
@@ -88,7 +94,7 @@ bool UMyWorld::InitializeWorld()
 void UMyWorld::Tick(DWORD dTime)
 {
 	char *temp = m_Network->NetRecv();
-	memcpy(&strmsg,temp,11);
+	memcpy((char *)&strmsg,temp,12);
 	switch(strmsg.i)
 	{
 	case 0:
@@ -104,74 +110,34 @@ void UMyWorld::Tick(DWORD dTime)
 		case 1:
 			NetworkID = 1;
 			break;
-		case 2:
+		case 2:	
 			Sequence = 0;
 			break;
 		case 3:
 			Sequence = 1;
 			break;
 		case 4:
-			m_pTankManager->GetTank(0)->StartTurn();
+			m_pTankManager->GetTank(Sequence)->StartTurn();
 			break;
 		case 5:
-			m_pTankManager->GetTank(1)->StartTurn();
+			m_pTankManager->GetTank(Sequence)->EndTurn();
 			break;
 		case 6:
-			switch(strmsg.q)
-			{
-			case 0:
-				m_pTankManager->GetTank(0)->Forword();
-				break;
-			case 1:
-				m_pTankManager->GetTank(1)->Forword();
-				break;
-			}
+			m_pTankManager->GetTank(Sequence)->Forword();
 			break;
 		case 7:
-			switch(strmsg.q)
-			{
-			case 0:
-				m_pTankManager->GetTank(0)->Backword();
-				break;
-			case 1:
-				m_pTankManager->GetTank(1)->Backword();
-				break;
-			}
+			m_pTankManager->GetTank(Sequence)->Backword();
 			break;
 		case 8:
-			switch(strmsg.q)
-			{
-			case 0:
-				m_pTankManager->GetTank(0)->ArrowUp();
-				break;
-			case 1:
-				m_pTankManager->GetTank(1)->ArrowUp();
-				break;
-			}
+			m_pTankManager->GetTank(Sequence)->ArrowUp();
 			break;
 		case 9:
-			switch(strmsg.q)
-			{
-			case 0:
-				m_pTankManager->GetTank(0)->ArrowDown();
-				break;
-			case 1:
-				m_pTankManager->GetTank(1)->ArrowDown();
-				break;
-			}
-			break;
-		case 10:
-			switch(strmsg.q)
-			{
-			case 0:
-				m_pTankManager->GetTank(0)->Fire(strmsg.power,strmsg.angle);
-				break;
-			case 1:
-				m_pTankManager->GetTank(1)->Fire(strmsg.power,strmsg.angle);
-				break;
-			}
+			m_pTankManager->GetTank(Sequence)->ArrowDown();
 			break;
 		}
+		break;
+	case 2:
+		m_pTankManager->GetTank(strmsg.q)->Fire(strmsg.power,strmsg.angle);
 		break;
 	}
 	temp[0]=0;//무시 메세지를 만들기위행

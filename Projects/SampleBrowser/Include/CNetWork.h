@@ -9,8 +9,8 @@ public:
 	~CNetWork();
 	
 	SOCKET m_socket;
-	char msg[11];
-	char sendmsg[11];
+	char msg[12];
+	char sendmsg[12];
 
 	myMSG mymsg;
 	

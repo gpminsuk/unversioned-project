@@ -9,7 +9,6 @@ public:
 	~CMissile();
 
 	bool IsInTurn;
-	long TurnTimeLeft;
 
 	virtual void Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);
@@ -19,10 +18,10 @@ public:
 
 	BThing* Owner;
 
-	float m_fAngle;
-	float m_fPower;
-
-	float m_fPastTime;
 	TVector3 m_vecStartPos;
 	float m_fDirection;
+	float m_fPastTime;
+
+	float m_dy;
+	float m_dz;
 };

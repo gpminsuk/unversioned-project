@@ -13,6 +13,7 @@ public:
 	float m_fRadian;
 	float m_fSize;
 	TQuaternion m_qRot;
+	TQuaternion m_initRot;
 
 
 	enum

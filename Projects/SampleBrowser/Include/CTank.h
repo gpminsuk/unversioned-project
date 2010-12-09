@@ -25,8 +25,9 @@ public:
 
 	bool IsInTurn;
 	long TurnTimeLeft;
-	int m_nGage;
-	float m_fAngle;
+	float m_nGage;
+	int m_NetWorkID;
+	float m_FireAngle;
 
 	CTank* Opponent;
     CMissile* m_Missile;
@@ -42,6 +43,12 @@ public:
 	void StartTurn();
 	void EndTurn();
 	void SetOpponent(CTank* InOpponent);
+
+	void Init();
+	void Forword();
+	void Backword();
+	void ArrowUp();
+	void ArrowDown();
 
 
 	float m_fDirection;

@@ -8,14 +8,16 @@
 
 CWaveIODriver::CWaveIODriver()
 {
-	//Player = new CWavePlayer();
-	Reader = 0;
+	Player = new CWavePlayer();
 }
 
 CWaveIODriver::~CWaveIODriver()
 {
-	//delete Reader;
-	//delete Player;
+	for(unsigned int i=0;i<Readers.Size();++i)
+	{
+		delete Readers(i);
+	}
+	delete Player;
 }
 
 bool CWaveIODriver::CreateSoundDriver()
@@ -28,22 +30,18 @@ bool CWaveIODriver::DestroySoundDriver()
 	return true;
 }
 
-bool CWaveIODriver::PlayWAVSound()
+bool CWaveIODriver::PlayWAVSound(int Index)
 {
-	//Player->Start();
+	Player->Open(Readers(Index));
+	Player->Start();
+	Player->Close();
 	return true;
 }
 
 bool CWaveIODriver::LoadSound(TString Filename)
 {
-	//CWaveReader * ptemp = 0;
-	//ptemp = new CWaveReader(Filename.Str);
-	//Player->Close();
-	if(Reader){
-		//Reader->Close();
-		delete Reader;
-	}
-	//Reader = ptemp;
-	//Player->Open(Reader);
+	CWaveReader * ptemp = 0;
+	ptemp = new CWaveReader(Filename.Str);
+	Readers.AddItem(ptemp);
 	return true;
 }

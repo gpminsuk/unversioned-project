@@ -1,9 +1,8 @@
 #pragma once
 
-#include "TDataTypes.h"
 #include "BSoundDriver.h"
 
-#pragma comment(lib, "WaveIO.lib")
+//#pragma comment(lib, "WaveIO.lib")
 
 class CWaveIODriver : public BSoundDriver
 {
@@ -15,8 +14,8 @@ public:
 	virtual bool DestroySoundDriver();
 
 	virtual bool LoadSound(TString Filename);
-	virtual bool PlayWAVSound(int Index);
+	virtual bool PlayWAVSound();
 
 	class CWavePlayer* Player;
-	TArray<class CWaveReader*> Readers;
+	class CWaveReader* Reader;
 };

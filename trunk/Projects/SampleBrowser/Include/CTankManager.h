@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BThing.h"
+#include "MyWorld.h"
 
 class CTankManager
 {
@@ -12,11 +13,13 @@ private:
 
 public:
 	CTankManager();
+	CTankManager(UMyWorld *world);
 	~CTankManager();
 
 	bool SetTimer(int i_nTimer);
 	CTank* GetTank(int _idx);
 	
+	UMyWorld *Myworld;
 	
 	bool SetStartTank(int _idx);
 

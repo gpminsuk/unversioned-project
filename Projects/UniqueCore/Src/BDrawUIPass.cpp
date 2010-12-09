@@ -38,11 +38,6 @@ void BDrawUIPass::EndPass()
 
 void BDrawUIPass::DrawPrimitive(BRenderingBatch *Batch)
 {
-	TString Str;
-	sprintf_s(Str.Str, 1024, "FPSFPS");
-	GFontDrawer->DrawString(TString(Str), RTextureBufferTable::TextureBuffers(1));
-
-	GDriver->SetTexture(0, RTextureBufferTable::TextureBuffers(1));
 	if(Batch->PrimitiveType == PrimitiveType_LineList)
 		GDriver->DrawPrimitive(Batch->PrimitiveType, Batch->nVertices/2);
 	else

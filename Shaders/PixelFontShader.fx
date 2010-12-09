@@ -14,6 +14,5 @@ void PS(float4 Color : COLOR0,
 		float2 TexCoord : TEXCOORD0,
 		out float4 OutColor : COLOR0)
 {
-	//OutColor = tex2D(samp, TexCoord);
-	OutColor = float4(1,0,0,1);
+	OutColor = tex2D(samp, TexCoord);
 }

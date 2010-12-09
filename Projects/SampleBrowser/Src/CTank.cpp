@@ -223,6 +223,5 @@ void CTank::UpdateTransform()
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;
 		}
-	}
-	
+	}	
 }

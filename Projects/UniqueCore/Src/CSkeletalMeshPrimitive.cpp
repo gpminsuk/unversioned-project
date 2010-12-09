@@ -38,6 +38,8 @@ void CSkeletalMeshPrimitive::UpdatePrimitive()
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 {
+	GDriver->SetTexture(0, Texture);
+
 	unsigned int nVerticies = 0;
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
@@ -56,8 +58,6 @@ unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData)
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex)
 {
-	GDriver->SetTexture(0, Texture);
-
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
 		TPrimitive* Primitive = Primitives(i);

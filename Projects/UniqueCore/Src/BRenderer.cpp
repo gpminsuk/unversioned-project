@@ -87,6 +87,17 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 	GBaseRTRenderPass->BeginPass(Viewport);
 	GBaseRTRenderPass->DrawPrimitive();
 	GBaseRTRenderPass->EndPass();
+
+	GDrawFontPass->BeginPass(Viewport);
+	for(unsigned int i=0;i<Viewport->BatchManager->RenderingBatches.Size();++i)
+	{
+		BRenderingBatch* Batch = Viewport->BatchManager->RenderingBatches(i);
+		if(Batch->RenderType == RenderType_UI)
+		{
+			Batch->RenderBatch(Viewport);
+		}
+	}
+	GDrawFontPass->EndPass();
 	return true;
 }
 

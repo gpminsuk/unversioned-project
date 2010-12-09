@@ -9,6 +9,8 @@
 #include "BCamera.h"
 #include "CMeshTerrain.h"
 
+#include "..\..\UniqueUI\Include\CUIButton.h"
+
 //#include "vld.h"
 
 extern UWorld* GWorld;
@@ -25,12 +27,19 @@ UMyWorld::~UMyWorld()
 bool UMyWorld::DestroyWorld()
 {
 //	delete Terrain;
+	delete UILabel;
 	return true;
 }
 bool UMyWorld::InitializeWorld()
 {
 	GWorld = this;
 	m_pWorldData = new TWorldOctree();
+	UILabel = new CUIButtonComponent(4);
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->Render(UILabel);
+	}
 	//¹è°æ
 	//Terrain = new CTerrain();
 	//AddThing(Terrain);

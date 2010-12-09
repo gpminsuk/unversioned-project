@@ -25,7 +25,9 @@ public:
 	int Width;
 	int Height;
 
-	CUIButtonPrimitive();
+	RTextureBuffer* Texture;
+
+	CUIButtonPrimitive(RTextureBuffer* InTexture);
 	~CUIButtonPrimitive(void);
 
 	virtual void GetSyncData();
@@ -42,8 +44,10 @@ class CUIButtonComponent : public BComponent
 public:
 	int Width;
 	int Height;
+	int PosX;
+	int PosY;
 
-	CUIButtonComponent();
+	CUIButtonComponent(int TexIndex, int x=0, int y=0, int width=100, int height=100);
 	~CUIButtonComponent();
 
 	virtual void UpdateComponent();

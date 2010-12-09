@@ -20,12 +20,11 @@ m_fPastTime(0) , m_fDirection(1.f)
 
 CMissile::~CMissile()
 {
-	
 }
 
 void CMissile::Tick(unsigned long dTime)
 {
-
+	
 }
 
 void CMissile::InputKey(EKey_Event Event, TKeyInput_Param& Param)
@@ -35,33 +34,34 @@ void CMissile::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 
 void CMissile::PhysicsTick(unsigned long dTime)
 {	
-	m_fPastTime += dTime/100.f;
 
 	TVector3 Loc = m_Location;
+	Loc.x=0.0f;
 	//float t = dTime/100.f;
-	float fSpeed = 3.0f * 10;
-
 	//Loc.y  = 0.5f - (float)(t*t*9.8/2.0f);
-	float fG = ((m_fPastTime * m_fPastTime) * 7.9f) / 2.0f;
+	const float fG = 0.05f;
+	
+ 	if(m_dy>0)
+ 		m_dy -= fG;
+ 	else
+ 		m_dy -= 2.0f*fG;
 
-	Loc.y = m_vecStartPos.y + (fSpeed * m_fPastTime) * 0.5f - fG;
-	Loc.z = m_vecStartPos.z + ((m_fPastTime * 7.f) * m_fDirection);
+	m_dy*=dTime/(unsigned long)20;
+	m_dz*=dTime/(unsigned long)20;
 
+	Loc.z += m_dz;
+	Loc.y += m_dy;
+	
 	TVector3 Hit = GWorld->LineCheck(Owner, m_Location, Loc).HitPosition;
 
 	if(Hit != TVector3(0,0,0))
 		m_Location = Hit;
-
 	else
 		m_Location = Loc;
-
 	UpdateTransform();
-
-	//미사일과 탱그 충돌 일어남
-	//미사일 터트리고 상대 탱크 HP 감소
-
-
 	
+	//미사일과 탱그 충돌 일어남
+	//미사일 터트리고 상대 탱크 HP 감소	
 }
 
 void CMissile::UpdateTransform()
@@ -76,8 +76,6 @@ void CMissile::UpdateTransform()
 		Components(i)->Primitives(i)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),
 			TQuaternion(TVector3(1.0f,0.0f,0.0f),0.f), 0.02f);
 	}
-	
-
 	for(unsigned int i=0;i<CollisionBodies.Size();++i)
 	{
 		for(unsigned int j=0;j<Components(i)->Primitives.Size();++j)
@@ -87,7 +85,6 @@ void CMissile::UpdateTransform()
 				TQuaternion(TVector3(1.0f,0.0f,0.0f),0.f), 0.02f);
 		}
 	}
-	
 	CollisionBodyBounds.Box.Extent = TVector3(5.0f,5.0f,5.0f);
 	CollisionBodyBounds.Position = m_Location;
 	CollisionBodyBounds.Sphere.Radius = 5.0f;	
@@ -95,9 +92,8 @@ void CMissile::UpdateTransform()
 
 void CMissile::Init(float fPower,float fAngle,TVector3& vecStartPosition,float fDirection)
 {
-	m_fAngle = fAngle;
-	m_fPower = fPower;
-
-	m_vecStartPos = vecStartPosition;
+	m_dz=cos(fAngle*3.141592f/180.0f)*fPower*fDirection*30.0f;
+	m_dy=sin(fAngle*3.141592f/180.0f)*fPower*30.0f;
+ 	m_vecStartPos = vecStartPosition;
 	m_fDirection = fDirection;
 }

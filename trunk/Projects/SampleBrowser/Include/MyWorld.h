@@ -12,8 +12,8 @@ public:
 
 	class CTerrain*		Terrain;
 	class CTankManager* m_pTankManager;
-	class CMeshTerrain* m_pTerrain;
-
+	class CMeshTerrain* m_pTerrain[2];
+	class NetWork* m_Network;
 	int NetworkID;
 
 	virtual bool InitializeWorld();

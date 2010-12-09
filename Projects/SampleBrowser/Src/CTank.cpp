@@ -5,10 +5,10 @@
 #include "CSkeletalMeshComponent.h"
 #include "CWaveIODriver.h"
 #include "UWorld.h"
-#include "MyWorld.h"
 #include "CCylinderCollisionBody.h"
 #include "CMissile.h"
 #include "CArrow.h"
+#include "CNetWork.h"
 
 extern UWorld* GWorld;
 
@@ -24,9 +24,10 @@ CTank::CTank() :
 	CollisionBodies.AddItem(CylinderCollisionBody);
 }
 
-CTank::CTank(TVector3 _rot, float _radian, float _size, int i) :
+CTank::CTank(UMyWorld *world,TVector3 _rot, float _radian, float _size, int i) :
 IsInTurn(false), m_nGage(0)
 {
+	MyWorld=world;
 	//CBoxComponent* box = new CBoxComponent();
 	//Components.AddItem(box);
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(i);
@@ -81,10 +82,10 @@ void CTank::EndTurn()
 	m_Arrow->SetSize(0.00f);
 }
 
-void CTank::Fire()
+void CTank::Fire(float _m_nGage,float _m_FireAngle)
 {
 	m_Missile->m_Location=m_Location;
-	m_Missile->Init(m_nGage,m_FireAngle,m_Location,m_fDirection);
+	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
 	GWorld->AddThing(m_Missile);
 }
 
@@ -128,28 +129,31 @@ void CTank::Tick(unsigned long dTime)
 	m_Arrow->m_Location.y += 3;
 	//m_Arrow->m_Location.z += m_fDirection*1;
 
-	if(IsInTurn)
+	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
 	{	
 		if(GKeyMap[VK_LEFT])
 		{
 			Forword();
+			MyWorld->m_Network->Netsend(1,6,(char)MyWorld->Sequence,0.0,0.0);	
 		}
 		if(GKeyMap[VK_RIGHT])
 		{
 			Backword();
+			MyWorld->m_Network->Netsend(1,7,(char)MyWorld->Sequence,0.0,0.0);	
 		}
 		if(GKeyMap[VK_UP])
 		{
 			ArrowUp();
+			MyWorld->m_Network->Netsend(1,8,(char)MyWorld->Sequence,0.0,0.0);	
 		}
 		if(GKeyMap[VK_DOWN])
 		{
 			ArrowDown();
+			MyWorld->m_Network->Netsend(1,9,(char)MyWorld->Sequence,0.0,0.0);	
 		}
 		if(GKeyMap[VK_SPACE])
 		{
-			m_nGage+=0.005f;
-					
+			m_nGage+=0.005f;		
 		}
 	}
 }
@@ -159,11 +163,12 @@ void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 
 	if(Event == KEY_Up)
 	{
-		if(IsInTurn)
+		if(MyWorld->NetworkID==MyWorld->Sequence)
 		{
 			if(Param.Key == VK_SPACE)
 			{
-				Fire();		
+				Fire(m_nGage,m_FireAngle);
+				MyWorld->m_Network->Netsend(1,10,(char)MyWorld->Sequence,m_FireAngle,m_nGage);
 			}
 		}
 	}

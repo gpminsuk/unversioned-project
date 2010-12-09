@@ -3,6 +3,7 @@
 #include "BThing.h"
 #include "CMissile.h"
 #include "CArrow.h"
+#include "MyWorld.h"
 
 class CTank : public BThing
 {
@@ -14,7 +15,7 @@ private:
 
 public:
 	CTank();
-	CTank(TVector3 _rot, float _radian, float _size, int i);
+	CTank(UMyWorld *world,TVector3 _rot, float _radian, float _size, int i);
 	~CTank();
 	
 	bool SetQuaternion(TQuaternion _rot);
@@ -22,6 +23,10 @@ public:
 	bool SetSize(float i_fSize);
 	bool SetRadian(float i_fRadian);
 	bool SetRotationCylinder(TVector3 rot);
+
+
+	UMyWorld *MyWorld;
+
 
 	bool IsInTurn;
 	long TurnTimeLeft;
@@ -39,7 +44,7 @@ public:
 	virtual void UpdateTransform();
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 
-	void Fire();
+	void Fire(float _m_nGage,float _m_FireAngle);
 	void StartTurn();
 	void EndTurn();
 	void SetOpponent(CTank* InOpponent);

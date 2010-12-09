@@ -4,6 +4,15 @@
 
 #pragma comment(lib, "vld.lib")
 
+struct myMSG
+{
+	char i;
+	char j;
+	char q;
+	float angle;
+	float power;
+};
+
 class UMyWorld : public UWorld
 {
 public:
@@ -14,8 +23,11 @@ public:
 	class CTerrain*		Terrain;
 	class CTankManager* m_pTankManager;
 	class CMeshTerrain* m_pTerrain[2];
-	class NetWork* m_Network;
+	class CNetWork* m_Network;
+
 	int NetworkID;
+	int Sequence;
+	myMSG strmsg;
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();

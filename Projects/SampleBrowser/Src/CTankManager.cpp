@@ -3,7 +3,6 @@
 #include "CTankManager.h"
 #include "CTank.h"
 #include "CMissile.h"
-
 #include "CArrow.h"
 
 CTankManager::CTankManager() : m_nTimer(0) {}

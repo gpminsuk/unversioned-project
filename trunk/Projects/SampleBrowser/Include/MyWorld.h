@@ -10,6 +10,7 @@ public:
 	UMyWorld();
 	~UMyWorld();
 
+	class CUIButtonComponent*	UILabel;
 	class CTerrain*		Terrain;
 	class CTankManager* m_pTankManager;
 	class CMeshTerrain* m_pTerrain[2];

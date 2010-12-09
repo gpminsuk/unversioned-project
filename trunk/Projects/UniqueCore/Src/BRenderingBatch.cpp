@@ -47,11 +47,9 @@ void BRenderingBatch::RenderBatch(BViewport* Viewport)
 		case RenderType_Opaque:
 			GOpaqueBasePass->DrawPrimitive(this);
 			break;
-		/*case RenderType_UI:
-			GDrawFontPass->BeginPass(Viewport);
+		case RenderType_UI:
 			GDrawFontPass->DrawPrimitive(this);
-			GDrawFontPass->EndPass();
-			break;*/
+			break;
 		}
 		PrimitiveBuffer->Release();
 		delete PrimitiveBuffer;
@@ -82,7 +80,11 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 	for(unsigned int i=0;i<RenderingBatches.Size();++i)
 	{
 		BRenderingBatch* Batch = RenderingBatches(i);
-		Batch->RenderBatch(Viewport);
+		if(Batch->RenderType == RenderType_Opaque ||
+			Batch->RenderType == RenderType_Line)
+		{
+			Batch->RenderBatch(Viewport);
+		}
 	}
 	GOpaqueBasePass->EndPass();
 }
@@ -129,11 +131,11 @@ void BRenderingBatchManager::AddPrimitive(BPrimitive* Primitive)
 	Batch->RenderType =  Primitive->RenderType;
 	if(Primitive->RenderType == RenderType_Line)
 	{
-		Batch->PrimitiveType =  PrimitiveType_LineList;
+		Batch->PrimitiveType = PrimitiveType_LineList;
 	}
 	else
 	{
-		Batch->PrimitiveType =  PrimitiveType_TriangleList;
+		Batch->PrimitiveType = PrimitiveType_TriangleList;
 	}
 	RenderingBatches.AddItem(Batch);
 	Primitive->Render(Batch);

@@ -588,6 +588,10 @@ bool RResourceManager::LoadResources()
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
+	Filename = "..\\..\\Resources\\ball.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
 	
 	pTexBuffer = GDriver->CreateFontBuffer(128,32);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CUIButton.h"
 #include "BRenderingBatch.h"
+#include "BDriver.h"
 
 TUIButtonPrimitive::TUIButtonPrimitive()
 {
@@ -58,9 +59,11 @@ TUIButtonPrimitive::TUIButtonPrimitive()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-CUIButtonPrimitive::CUIButtonPrimitive()
+CUIButtonPrimitive::CUIButtonPrimitive(RTextureBuffer* InTexture)
 {
 	RenderType = RenderType_UI;
+
+	Texture = InTexture;
 
 	TUIButtonPrimitive* ButtonPrimitive = new TUIButtonPrimitive();
 	Primitives.AddItem(ButtonPrimitive);
@@ -83,6 +86,8 @@ unsigned int CUIButtonPrimitive::GetNumIndices()
 
 unsigned int CUIButtonPrimitive::FillDynamicVertexBuffer(char** pData)
 {
+	GDriver->SetTexture(0, Texture);
+
 	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 
 		Primitives(0)->pBuffer->m_pVB->nVertices * Primitives(0)->pBuffer->m_pVB->nVertexStride);
 	for(unsigned int k=0;k<Primitives(0)->pBuffer->m_pVB->nVertices;++k)
@@ -133,12 +138,22 @@ void CUIButtonPrimitive::GetSyncData()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-CUIButtonComponent::CUIButtonComponent()
-:	Width(100),
-	Height(100)
+CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, int height)
+:	Width(width),
+	Height(height),
+	PosX(x),
+	PosY(y)
 {
-	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive();
+	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive(RTextureBufferTable::TextureBuffers(TexIndex));
 	Primitives.AddItem(ButtonPrimitive);
+	INT WinSizeX = 800;
+	INT WinSizeY = 600;
+	for(unsigned int i=0;i<ButtonPrimitive->Primitives.Size();++i)
+	{
+		Primitives(i)->Translation = TVector3((PosX / (float)WinSizeX)*2.0f-1.0f, ((WinSizeY - PosY) / (float)WinSizeY)*2.0f-1.0f, 0.0f);
+		Primitives(i)->TM = TMatrix(TVector3((PosX / (float)WinSizeX)*2.0f-1.0f, ((WinSizeY - PosY)/ (float)WinSizeY)*2.0f-1.0f, 0.0f),
+			TQuaternion(), TVector3((Width/(float)WinSizeX), (Height/(float)WinSizeY), 0.0f));
+	}
 }
 
 CUIButtonComponent::~CUIButtonComponent()

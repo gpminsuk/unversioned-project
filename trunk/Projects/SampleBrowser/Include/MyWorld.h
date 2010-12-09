@@ -9,6 +9,7 @@ struct myMSG
 	char i;
 	char j;
 	char q;
+	char p;
 	float angle;
 	float power;
 };
@@ -18,6 +19,8 @@ class UMyWorld : public UWorld
 public:
 	UMyWorld();
 	~UMyWorld();
+	
+	CCameraViewport* Viewport;
 
 	class CUIButtonComponent*	UILabel;
 	class CTerrain*		Terrain;

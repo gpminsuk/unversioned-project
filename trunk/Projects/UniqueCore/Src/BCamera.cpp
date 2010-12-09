@@ -50,17 +50,16 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 			{
 			case MOUSE_Move:
 				{
-					if(Param.bRButtonDown)
-					{
-						if(m_Pi + (-Param.dY/300.0f) < (MATH_PI/2.0f) && (m_Pi + -Param.dY/300.0f) > 0.0f)
-							m_Pi += -Param.dY/300.0f;
-						m_Theta += -Param.dX/300.0f;
-					}					
+					
+					if(m_Pi + (-Param.dY/100.0f) < (MATH_PI/2.0f) && (m_Pi + -Param.dY/100.0f) > 0.0f)
+						m_Pi += -Param.dY/100.0f;
+					m_Theta += -Param.dX/100.0f;
+									
 				}
 				break;
 			case MOUSE_Wheel:
 				{
-					m_Distance += Param.delta/MOUSE_WHEEL_DELTA;
+					m_Distance += Param.delta/MOUSE_WHEEL_DELTA*10.0f;
 				}
 				break;
 			}
@@ -158,7 +157,7 @@ void BCamera::Tick(unsigned long  dTime)
 			}			
 
 			m_Location = m_LookAt;
-			m_Location.x -= 200.0f;
+			m_Location.x -= 250.0f;
 			m_Location.y += 40.0f;
 			m_Location.z += 50.0f;
 		}

@@ -46,9 +46,6 @@ void CMissile::PhysicsTick(unsigned long dTime)
  	else
  		m_dy -= 2.0f*fG;
 
-	m_dy*=dTime/(unsigned long)20;
-	m_dz*=dTime/(unsigned long)20;
-
 	Loc.z += m_dz;
 	Loc.y += m_dy;
 	

@@ -8,9 +8,9 @@
 #include "CCylinderCollisionBody.h"
 #include "CMissile.h"
 #include "CArrow.h"
-#include "CNetWork.h"
 #include "CCameraViewport.h"
 #include "BCamera.h"
+#include "CNetWork.h"
 
 extern UWorld* GWorld;
 
@@ -79,7 +79,6 @@ void CTank::StartTurn()
 void CTank::EndTurn()
 {
 	IsInTurn = false;
-	//MyWorld->RemoveThing(m_Missile);
 	m_Missile->m_vecStartPos=m_Location;
 	m_Missile->UpdateTransform();
 	m_Arrow->SetSize(0.00f);	
@@ -90,10 +89,7 @@ void CTank::Fire(float _m_nGage,float _m_FireAngle)
 	m_Missile->m_Location=m_Location;
 	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
 	MyWorld->AddThing(m_Missile);
-	MyWorld->Viewport->m_pCamera->m_Location.x+=250;
 	MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
-	
-	
 	EndTurn();
 	Opponent->StartTurn();
 }
@@ -137,7 +133,11 @@ void CTank::Tick(unsigned long dTime)
 	m_Arrow->m_Location = m_Location;
 	m_Arrow->m_Location.y += 3;
 	//m_Arrow->m_Location.z += m_fDirection*1;
-
+	if(m_Missile->m_Location.y<-100.0f)
+	{
+		m_Missile->m_Location=Opponent->m_Location;
+		MyWorld->RemoveThing(m_Missile);
+	}
 	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
 	{	
 		if(GKeyMap[VK_LEFT])

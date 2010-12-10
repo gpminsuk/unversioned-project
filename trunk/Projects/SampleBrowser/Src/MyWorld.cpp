@@ -79,15 +79,6 @@ bool UMyWorld::InitializeWorld()
 
 	AddThing(m_pTankManager->GetTank(1));
 	AddThing(m_pTankManager->GetTank(1)->m_Arrow);
-
-	//m_pTankManager->GetTank(0)->Init();
-	//m_pTankManager->GetTank(1)->Init();
-
-	
-
-
-
-
 	return true;
 }
 
@@ -141,6 +132,7 @@ void UMyWorld::Tick(DWORD dTime)
 		break;
 	}
 	temp[0]=0;//무시 메세지를 만들기위행
+	strmsg.i=0;
 
 	return UWorld::Tick(dTime);
 }

@@ -5,10 +5,10 @@
 #include "BThing.h"
 
 BCamera::BCamera(void)
-:	m_CameraMode(QuarterView_Mode),
+:	m_CameraMode(Thrid_Person),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
-	m_Distance(10.0f),
+	m_Distance(250.0f),
 	m_Pi(0),
 	m_Theta(0),
 	m_Subject(0)

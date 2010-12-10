@@ -12,7 +12,7 @@ public:
 	virtual bool DestroySoundDriver() = 0;
 
 	virtual bool LoadSound(TString Filename) = 0;
-	virtual bool PlayWAVSound() = 0;
+	virtual bool PlayWAVSound(int Index) = 0;
 };
 
 extern BSoundDriver	*GSoundDriver;

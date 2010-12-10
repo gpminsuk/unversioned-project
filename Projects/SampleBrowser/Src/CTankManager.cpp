@@ -34,9 +34,9 @@ bool CTankManager::SetTimer(int i_nTimer)
 
 bool CTankManager::InitializeTank(TVector3 i_vecTank1, TVector3 i_vecTank2)
 {
-	m_pTank[0] = new CTank(Myworld,TVector3(1.0f, 0.0f, 0.0f), 1.5707963f, 0.04f, 0);
+	m_pTank[0] = new CTank(Myworld,TVector3(1.0f, 0.0f, 0.0f), 1.5707963f, 0.02f, 0);
 	
-	m_pTank[1] = new CTank(Myworld,TVector3(1.0f, 0.0f, 0.0f), 1.5707963f, 0.04f, 0);
+	m_pTank[1] = new CTank(Myworld,TVector3(1.0f, 0.0f, 0.0f), 1.5707963f, 0.02f, 0);
 	
 	m_pTank[0]->SetQuaternion(TVector3(0.0f, 1.0f, 0.0f), 1.5707963f*2);
 

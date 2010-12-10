@@ -135,7 +135,7 @@ void CTank::Tick(unsigned long dTime)
 	//m_Arrow->m_Location.z += m_fDirection*1;
 	if(m_Missile->m_Location.y<-100.0f)
 	{
-		m_Missile->m_Location=Opponent->m_Location;
+		m_Missile->m_Location=m_Location;
 		MyWorld->RemoveThing(m_Missile);
 	}
 	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)

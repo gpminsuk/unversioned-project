@@ -2,6 +2,8 @@
 
 #include "MyWorld.h"
 
+#pragma comment(lib, "ws2_32.lib")
+
 class CNetWork
 {
 public:

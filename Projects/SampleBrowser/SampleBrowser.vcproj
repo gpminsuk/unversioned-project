@@ -337,6 +337,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\CNetWork.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\CTank.cpp"
 				>
 			</File>
@@ -412,6 +416,10 @@
 			</File>
 			<File
 				RelativePath=".\Include\CMissile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CNetWork.h"
 				>
 			</File>
 			<File

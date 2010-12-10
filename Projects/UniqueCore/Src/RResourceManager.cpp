@@ -8,6 +8,7 @@
 #include "RDXResource.h"
 
 #include "BDriver.h"
+#include "BSoundDriver.h"
 
 void LoadASEFile(const char* fn)
 {
@@ -570,8 +571,12 @@ RResourceManager::~RResourceManager(void)
 #include <Windows.h>
 bool RResourceManager::LoadResources()
 {
-	//////////////////////////////////// Texture Loading
 	TString Filename;
+	//////////////////////////////////// Sound Loading
+	Filename = "..\\..\\Resources\\tada.wav";
+	GSoundDriver->LoadSound(Filename);
+
+	//////////////////////////////////// Texture Loading
 	Filename = "..\\..\\Resources\\Gross.jpg";
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);

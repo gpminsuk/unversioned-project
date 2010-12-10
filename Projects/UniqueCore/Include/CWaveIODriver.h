@@ -2,7 +2,7 @@
 
 #include "BSoundDriver.h"
 
-//#pragma comment(lib, "WaveIO.lib")
+#pragma comment(lib, "WaveIO.lib")
 
 class CWaveIODriver : public BSoundDriver
 {
@@ -14,8 +14,8 @@ public:
 	virtual bool DestroySoundDriver();
 
 	virtual bool LoadSound(TString Filename);
-	virtual bool PlayWAVSound();
+	virtual bool PlayWAVSound(int Index);
 
-	class CWavePlayer* Player;
-	class CWaveReader* Reader;
+	TArray<class CWavePlayer*> Players;
+	TArray<class CWaveReader*> Readers;
 };

@@ -169,9 +169,12 @@ void CTank::Tick(unsigned long dTime)
 
 void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
-
 	if(Event == KEY_Up)
 	{
+		if(Param.Key == VK_SPACE)
+		{
+			GSoundDriver->PlayWAVSound(0);
+		}
 		if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
 		{
 			if(Param.Key == VK_SPACE)

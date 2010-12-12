@@ -254,4 +254,19 @@ void CTank::UpdateTransform()
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;
 		}
 	}	
+	for(unsigned int i=0;i<CollisionBodies.Size();++i)
+	{
+		CCylinderCollisionBody* Cylinder = (CCylinderCollisionBody*)CollisionBodies(i);
+		if(Cylinder)
+		{
+			Cylinder->Radius = 8.0f;
+			Cylinder->Height = 8.0f;
+		}
+		for(unsigned int j=0;j<CollisionBodies(i)->Primitives.Size();++j)
+		{
+			CollisionBodies(i)->Primitives(j)->Translation = m_Location;
+			CollisionBodies(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),	TQuaternion(), 8.0f);
+			
+		}
+	}	
 }

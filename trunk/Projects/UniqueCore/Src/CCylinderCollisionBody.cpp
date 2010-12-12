@@ -9,9 +9,9 @@
 CCylinderCollisionBody::CCylinderCollisionBody(BThing* InOwner)
 :	BCollisionBody(InOwner),
 	Radius(1.0f),
-	Height(2.0f)
+	Height(1.0f)
 {
-	CCylinderPrimitive *CylinderPrimitive = new CCylinderPrimitive();
+	CCylinderPrimitive *CylinderPrimitive = new CCylinderPrimitive(RenderType_Line);
 	Primitives.AddItem(CylinderPrimitive);
 }
 
@@ -31,7 +31,7 @@ TVector3 CCylinderCollisionBody::LineCheck(TVector3& Start, TVector3& End, TVect
 	TVector2 Pos2D = TVector2(Owner->m_Location.x, Owner->m_Location.z);
 	float DistStart = (Start2D - Pos2D).Size();
 	float DistEnd = (End2D - Pos2D).Size();
-	if((DistStart < Radius || DistEnd < Radius) && ((Start.y < Pos2D.y + Height/2 && Start.y > Pos2D.y) || (End.y < Pos2D.y + Height/2 && End.y > Pos2D.y)))
+	if((DistStart < Radius || DistEnd < Radius) && ((Start.y < Owner->m_Location.y + Height && Start.y > Owner->m_Location.y) || (End.y < Owner->m_Location.y + Height && End.y > Owner->m_Location.y)))
 	{
 		return Owner->m_Location;
 	}

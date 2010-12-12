@@ -36,7 +36,7 @@ void CMissile::PhysicsTick(unsigned long dTime)
 {	
 
 	TVector3 Loc = m_Location;
-	Loc.x=0.0f;
+	//Loc.x=0.0f;
 	//float t = dTime/100.f;
 	//Loc.y  = 0.5f - (float)(t*t*9.8/2.0f);
 	const float fG = 0.05f;

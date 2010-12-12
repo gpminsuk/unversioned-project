@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/NODEFAULTLIB:libcd.lib &#x0D;&#x0A;&#x0D;&#x0A;"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib;&quot;..\External\vld-10\&quot;;&quot;C:\Users\HR\Desktop\2학년 2학기 과제\네트워크게임프로그래밍\Project\trunk\Projects\External\WaveIO\Win32&quot;"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\Expat\lib;&quot;..\External\vld-10\&quot;;E:\trunk\Projects\External\WaveIO\Win32"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

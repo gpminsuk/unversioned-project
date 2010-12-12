@@ -11,3 +11,16 @@ C:\Users\lee\Desktop\PJ\Projects\Mader\obj\Debug\Mader_MarkupCompile.cache
 C:\Users\lee\Desktop\PJ\Projects\Mader\obj\Debug\Mader.g.resources
 C:\Users\lee\Desktop\PJ\Projects\Mader\obj\Debug\Mader.dll
 C:\Users\lee\Desktop\PJ\Projects\Mader\obj\Debug\Mader.pdb
+E:\trunk\Projects\Mader\bin\Debug\Mader.dll
+E:\trunk\Projects\Mader\bin\Debug\Mader.pdb
+E:\trunk\Projects\Mader\obj\Debug\ResolveAssemblyReference.cache
+E:\trunk\Projects\Mader\obj\Debug\MaderMain.baml
+E:\trunk\Projects\Mader\obj\Debug\MaterialConnector.baml
+E:\trunk\Projects\Mader\obj\Debug\MaterialExpressionControl.baml
+E:\trunk\Projects\Mader\obj\Debug\MaderMain.g.cs
+E:\trunk\Projects\Mader\obj\Debug\MaterialConnector.g.cs
+E:\trunk\Projects\Mader\obj\Debug\MaterialExpressionControl.g.cs
+E:\trunk\Projects\Mader\obj\Debug\Mader_MarkupCompile.cache
+E:\trunk\Projects\Mader\obj\Debug\Mader.g.resources
+E:\trunk\Projects\Mader\obj\Debug\Mader.dll
+E:\trunk\Projects\Mader\obj\Debug\Mader.pdb

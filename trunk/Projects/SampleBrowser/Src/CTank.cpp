@@ -90,7 +90,7 @@ void CTank::Fire(float _m_nGage,float _m_FireAngle)
 	m_Missile->m_Location=m_Location;
 	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
 	MyWorld->AddThing(m_Missile);
-	MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
+	//MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
 	EndTurn();
 	Opponent->StartTurn();
 }
@@ -138,7 +138,7 @@ void CTank::Tick(unsigned long dTime)
 	//m_Arrow->m_Location.z += m_fDirection*1;
 	if(m_Missile->m_Location.y<-100.0f)
 	{
-		m_Missile->m_Location=Opponent->m_Location;
+		//m_Missile->m_Location=Opponent->m_Location;
 		MyWorld->RemoveThing(m_Missile);
 	}
 	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)

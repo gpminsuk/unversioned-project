@@ -4,17 +4,20 @@
 #include "CBoxComponent.h"
 #include "CSkeletalMeshComponent.h"
 #include "CWaveIODriver.h"
+#include "CCylinderCollisionBody.h"
 #include "CMeshTerrain.h"
 
 CMeshTerrain::CMeshTerrain()
 {
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(2);
 	Components.AddItem(SkeletalMeshComponent);
+	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CylinderCollisionBody);
 }
 
 CMeshTerrain::~CMeshTerrain()
 {
-
+	
 }
 
 void CMeshTerrain::Tick(unsigned long dTime)

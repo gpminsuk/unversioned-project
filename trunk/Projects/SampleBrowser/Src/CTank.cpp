@@ -114,19 +114,20 @@ void CTank::Backword()
 
 void CTank::ArrowUp()
 {
+	
+	if(m_FireAngle+2.0f>90.0f)
+		return;
 	m_FireAngle+=2.0f;
-	if(m_FireAngle>90)
-		m_FireAngle=90.0f;
-	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), 0.040f*m_fDirection);
-	MyWorld->m_Network->Netsend(1,8,(char)MyWorld->Sequence,0.0,0.0);	
+	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), 0.040f*m_fDirection);	
 	UpdateTransform();
 }
 
 void CTank::ArrowDown()
 {
+	
+	if(m_FireAngle-2.0f<0.0f)
+		return;
 	m_FireAngle-=2.0f;
-	if(m_FireAngle<0)
-		m_FireAngle=0.0f;
 	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), -0.040f*m_fDirection);
 	UpdateTransform();
 }
@@ -155,8 +156,8 @@ void CTank::Tick(unsigned long dTime)
 		if(GKeyMap[VK_UP])
 		{
 			ArrowUp();
-			
-		}
+				MyWorld->m_Network->Netsend(1,8,(char)MyWorld->Sequence,0.0,0.0);
+		}	
 		if(GKeyMap[VK_DOWN])
 		{
 			ArrowDown();
@@ -164,7 +165,10 @@ void CTank::Tick(unsigned long dTime)
 		}
 		if(GKeyMap[VK_SPACE])
 		{
-			m_nGage+=0.001f;		
+			
+			if(m_nGage>0.15f)
+				return;
+			m_nGage+=0.003f;
 		}
 	}
 }

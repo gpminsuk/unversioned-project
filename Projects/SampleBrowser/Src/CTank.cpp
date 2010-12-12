@@ -86,6 +86,7 @@ void CTank::EndTurn()
 
 void CTank::Fire(float _m_nGage,float _m_FireAngle)
 {
+	MyWorld->RemoveThing(m_Missile);
 	m_Missile->m_Location=m_Location;
 	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
 	MyWorld->AddThing(m_Missile);
@@ -117,6 +118,7 @@ void CTank::ArrowUp()
 	if(m_FireAngle>90)
 		m_FireAngle=90.0f;
 	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), 0.040f*m_fDirection);
+	MyWorld->m_Network->Netsend(1,8,(char)MyWorld->Sequence,0.0,0.0);	
 	UpdateTransform();
 }
 
@@ -135,7 +137,7 @@ void CTank::Tick(unsigned long dTime)
 	//m_Arrow->m_Location.z += m_fDirection*1;
 	if(m_Missile->m_Location.y<-100.0f)
 	{
-		m_Missile->m_Location=m_Location;
+		m_Missile->m_Location=Opponent->m_Location;
 		MyWorld->RemoveThing(m_Missile);
 	}
 	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
@@ -153,7 +155,7 @@ void CTank::Tick(unsigned long dTime)
 		if(GKeyMap[VK_UP])
 		{
 			ArrowUp();
-			MyWorld->m_Network->Netsend(1,8,(char)MyWorld->Sequence,0.0,0.0);	
+			
 		}
 		if(GKeyMap[VK_DOWN])
 		{
@@ -162,7 +164,7 @@ void CTank::Tick(unsigned long dTime)
 		}
 		if(GKeyMap[VK_SPACE])
 		{
-			m_nGage+=0.005f;		
+			m_nGage+=0.001f;		
 		}
 	}
 }

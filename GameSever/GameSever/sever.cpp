@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	listen_sock = socket(AF_INET, SOCK_STREAM, 0);	
+	u_long on = 1;
+	retval = ioctlsocket(listen_sock, FIONBIO, &on);
 	retval = bind(listen_sock, (SOCKADDR *)&serveraddr, sizeof(serveraddr));		
 	retval = listen(listen_sock, SOMAXCONN);
-	
-	
-	
+
 	invalid=RooMSocket[0]=RooMSocket[1]=socket(AF_INET, SOCK_STREAM, 0);
 
 	FD_SET rset;
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 
 DWORD WINAPI RoomThread(LPVOID arg)
 {
-	SOCKET *temp = (SOCKET*)arg;
+	SOCKET *temp = (SOCKET *)arg;
 	FD_SET rset,wset;
 	int retval;
 	char msg[BUFSIZE];
@@ -139,34 +139,34 @@ DWORD WINAPI RoomThread(LPVOID arg)
 	retval=send(temp[0],msg,BUFSIZE,0);
 	retval=send(temp[1],msg,BUFSIZE,0);
 	
-	
-	while(retval)
+	timeval D={1,0};
+
+	while(true)
 	{
-		FD_ZERO(&rset);
-	
+		FD_ZERO(&rset);	
 		FD_SET(temp[0],&rset);
 		FD_SET(temp[1],&rset);
 		
-		retval = select(0, &rset, NULL, NULL, NULL);	
-
+		retval = select(0, &rset, NULL, NULL, &D);	
+		if(retval==2)
+		{	
+			printf("쓰레드 종료");
+			return 1;
+		}
 		if (FD_ISSET(temp[0],&rset))
 		{
 			retval=recv(temp[0],msg,BUFSIZE,0);
-			retval=send(temp[1],msg,BUFSIZE,0);
-			
-			//retval=send(temp[0],msg,BUFSIZE,0);
-		
+			retval=send(temp[1],msg,BUFSIZE,0);			
 		}
 		if (FD_ISSET(temp[1],&rset))
 		{
-			retval=recv(temp[1],msg,BUFSIZE,0);
+			retval=recv(temp[1],msg,BUFSIZE,0);		
 			retval=send(temp[0],msg,BUFSIZE,0);
-			
-			//retval=send(temp[1],msg,BUFSIZE,0);
 		}
 	}
 	closesocket(temp[0]);
 	closesocket(temp[1]);
+
 
 	return 0;
 }

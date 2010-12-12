@@ -18,6 +18,7 @@ extern UWorld* GWorld;
 
 UMyWorld::UMyWorld()
 {
+	
 	NetworkID = 3;
 	Sequence = 5;
 	m_Network = new CNetWork();
@@ -26,7 +27,7 @@ UMyWorld::UMyWorld()
 
 UMyWorld::~UMyWorld()
 {
-	
+	m_Network->Closesocket();
 }
 
 bool UMyWorld::DestroyWorld()
@@ -56,8 +57,7 @@ bool UMyWorld::InitializeWorld()
 	m_pTerrain[0]->UpdateTransform();
 	m_pTerrain[1]->UpdateTransform();
 	AddThing(m_pTerrain[0]);
-	AddThing(m_pTerrain[1]);
-	
+	AddThing(m_pTerrain[1]);	
 	/*
 	pixelshader.fx
 	LightPosition이 라이트위치
@@ -131,8 +131,12 @@ void UMyWorld::Tick(DWORD dTime)
 		m_pTankManager->GetTank(strmsg.q)->Fire(strmsg.power,strmsg.angle);
 		break;
 	}
-	temp[0]=0;//무시 메세지를 만들기위행
+	temp[0]=0;
 	strmsg.i=0;
-
 	return UWorld::Tick(dTime);
+}
+
+void UMyWorld::NetTick( DWORD dTime )
+{
+	
 }

@@ -577,7 +577,7 @@ bool RResourceManager::LoadResources()
 	GSoundDriver->LoadSound(Filename);
 
 	//////////////////////////////////// Texture Loading
-	Filename = "..\\..\\Resources\\Gross.jpg";
+	Filename = "..\\..\\Resources\\tank.jpg";
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
@@ -589,11 +589,11 @@ bool RResourceManager::LoadResources()
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
-	Filename = "..\\..\\Resources\\ball.jpg";
+	Filename = "..\\..\\Resources\\ball1.jpg";
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
-	Filename = "..\\..\\Resources\\ball.jpg";
+	Filename = "..\\..\\Resources\\ba1ll.jpg";
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
@@ -643,7 +643,7 @@ bool RResourceManager::LoadResources()
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
 
-	LoadASEFile("..\\..\\Resources\\hr.ASE");
+	LoadASEFile("..\\..\\Resources\\tank.ASE");
 	LoadASEFile("..\\..\\Resources\\arrow.ASE");
 	LoadASEFile("..\\..\\Resources\\terrain.ASE");
 	LoadASEFile("..\\..\\Resources\\ball.ASE");

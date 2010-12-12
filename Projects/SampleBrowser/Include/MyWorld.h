@@ -25,15 +25,17 @@ public:
 	class CUIButtonComponent*	UILabel;
 	class CTerrain*		Terrain;
 	class CTankManager* m_pTankManager;
-	class CMeshTerrain* m_pTerrain[2];
+	class CMeshTerrain* m_pTerrain[4];
 	class CNetWork* m_Network;
 
 	int NetworkID;
 	int Sequence;
 	myMSG strmsg;
+	
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
 	virtual void Tick(DWORD dTime);
+	virtual void NetTick(DWORD dTime);
 	
 };

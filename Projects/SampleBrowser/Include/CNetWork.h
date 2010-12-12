@@ -2,7 +2,10 @@
 
 #include "MyWorld.h"
 
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib,"odbc32.lib")
+#pragma comment(lib,"odbccp32.lib") 
+#pragma comment(lib,"ws2_32.lib")
+
 
 class CNetWork
 {
@@ -15,9 +18,11 @@ public:
 	char sendmsg[12];
 
 	myMSG mymsg;
+	bool m_blnConnetNet;
 	
-	void InitializeNet();
+	bool InitializeNet();
 	char* NetRecv();
 	int recvn(SOCKET s, char *buf, int len, int flags);
 	int Netsend(char i,char j, char q,float angle,float power);
+	bool Closesocket();
 };

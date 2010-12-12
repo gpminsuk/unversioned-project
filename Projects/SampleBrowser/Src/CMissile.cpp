@@ -36,26 +36,32 @@ void CMissile::PhysicsTick(unsigned long dTime)
 {	
 
 	TVector3 Loc = m_Location;
-	//Loc.x=0.0f;
-	//float t = dTime/100.f;
-	//Loc.y  = 0.5f - (float)(t*t*9.8/2.0f);
-	const float fG = 0.05f;
-	
- 	if(m_dy>0)
- 		m_dy -= fG;
- 	else
- 		m_dy -= 2.0f*fG;
 
+	
 	Loc.z += m_dz;
 	Loc.y += m_dy;
 	
 	TVector3 Hit = GWorld->LineCheck(Owner, m_Location, Loc).HitPosition;
 
 	if(Hit != TVector3(0,0,0))
-		m_Location = Hit;
+	{	m_Location = Hit;
+		GWorld->RemoveThing(this);
+		UpdateTransform();
+		return;
+	}
 	else
+	{	
 		m_Location = Loc;
-	UpdateTransform();
+
+		const float fG = 0.05f;
+
+		if(m_dy>0)
+			m_dy -= fG;
+		else
+			m_dy -= 2.0f*fG;
+		UpdateTransform();
+	}
+	
 	
 	//미사일과 탱그 충돌 일어남
 	//미사일 터트리고 상대 탱크 HP 감소	

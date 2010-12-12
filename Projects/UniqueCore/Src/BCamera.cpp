@@ -157,7 +157,7 @@ void BCamera::Tick(unsigned long  dTime)
 			}			
 
 			m_Location = m_LookAt;
-			m_Location.x -= 160.0f;
+			m_Location.x -= 250.0f;
 			m_Location.y += 40.0f;
 			m_Location.z += 50.0f;
 		}

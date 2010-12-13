@@ -125,6 +125,7 @@ DWORD WINAPI RoomThread(LPVOID arg)
 	msg[0] = 3;
 	retval=send(PlayerSocket[0],msg,BUFSIZE,0);
 	retval=send(PlayerSocket[1],msg,BUFSIZE,0);	
+	
 	//다음은 네트워크 아이디 부여를 위한 센드메세지
 	msg[0] = 1;
 	msg[1] = 0;
@@ -158,10 +159,9 @@ DWORD WINAPI RoomThread(LPVOID arg)
 		{
 			retval=recv(PlayerSocket[0],msg,BUFSIZE,0);
 			retval=send(PlayerSocket[1],msg,BUFSIZE,0);
-			
 			if(retval==-1)
 			{	
-				printf("쓰레드 종료");
+				printf("쓰레드 종료 1 %d",retval);
 				return 1;
 			}
 		}
@@ -169,9 +169,10 @@ DWORD WINAPI RoomThread(LPVOID arg)
 		{
 			retval=recv(PlayerSocket[1],msg,BUFSIZE,0);		
 			retval=send(PlayerSocket[0],msg,BUFSIZE,0);
+
 			if(retval==-1)
 			{	
-				printf("쓰레드 종료");
+				printf("쓰레드 종료 2 %d",retval);
 				return 1;
 			}
 		}

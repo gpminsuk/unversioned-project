@@ -13,8 +13,8 @@ m_fPastTime(0) , m_fDirection(1.f)
 {
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(3);
 	Components.AddItem(SkeletalMeshComponent);
-
 	m_Location = _m_Location;
+	boom = false;
 	UpdateTransform();
 }
 
@@ -46,6 +46,7 @@ void CMissile::PhysicsTick(unsigned long dTime)
 	if(Hit != TVector3(0,0,0))
 	{	m_Location = Hit;
 		GWorld->RemoveThing(this);
+		boom = true;
 		UpdateTransform();
 		return;
 	}
@@ -99,4 +100,5 @@ void CMissile::Init(float fPower,float fAngle,TVector3& vecStartPosition,float f
 	m_dy=sin(fAngle*3.141592f/180.0f)*fPower*30.0f;
  	m_vecStartPos = vecStartPosition;
 	m_fDirection = fDirection;
+	boom = false;
 }

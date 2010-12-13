@@ -576,6 +576,9 @@ bool RResourceManager::LoadResources()
 	Filename = "..\\..\\Resources\\tada.wav";
 	GSoundDriver->LoadSound(Filename);
 
+	Filename = "..\\..\\Resources\\back.wav";
+	GSoundDriver->LoadSound(Filename);
+
 	//////////////////////////////////// Texture Loading
 	Filename = "..\\..\\Resources\\tank.jpg";
 	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
@@ -593,9 +596,28 @@ bool RResourceManager::LoadResources()
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
-	Filename = "..\\..\\Resources\\ba1ll.jpg";
+	Filename = "..\\..\\Resources\\sky.jpg";
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\skywaiting.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\skywin.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	Filename = "..\\..\\Resources\\skylose.jpg";
+	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
+	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
+
+	
+
+	
+
+	
+
 
 	
 	pTexBuffer = GDriver->CreateFontBuffer(128,32);
@@ -647,6 +669,7 @@ bool RResourceManager::LoadResources()
 	LoadASEFile("..\\..\\Resources\\arrow.ASE");
 	LoadASEFile("..\\..\\Resources\\terrain.ASE");
 	LoadASEFile("..\\..\\Resources\\ball.ASE");
+	LoadASEFile("..\\..\\Resources\\sky.ASE");
 	return true;
 }
 

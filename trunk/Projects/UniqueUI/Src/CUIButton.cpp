@@ -150,8 +150,8 @@ CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, in
 	INT WinSizeY = 600;
 	for(unsigned int i=0;i<ButtonPrimitive->Primitives.Size();++i)
 	{
-		Primitives(i)->Translation = TVector3((PosX / (float)WinSizeX)*2.0f-1.0f, ((WinSizeY - PosY) / (float)WinSizeY)*2.0f-1.0f, 0.0f);
-		Primitives(i)->TM = TMatrix(TVector3((PosX / (float)WinSizeX)*2.0f-1.0f, ((WinSizeY - PosY)/ (float)WinSizeY)*2.0f-1.0f, 0.0f),
+		Primitives(i)->Translation = TVector3((PosX / (float)WinSizeX)*0.0f-1.0f, ((WinSizeY - PosY) / (float)WinSizeY)*1.0f-0.0f, 0.0f);
+		Primitives(i)->TM = TMatrix(TVector3((PosX / (float)WinSizeX)*1.0f+0.0f, ((WinSizeY - PosY)/ (float)WinSizeY)*1.0f-1.0f, 0.0f),
 			TQuaternion(), TVector3((Width/(float)WinSizeX), (Height/(float)WinSizeY), 0.0f));
 	}
 }

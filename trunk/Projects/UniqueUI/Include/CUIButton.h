@@ -47,7 +47,7 @@ public:
 	int PosX;
 	int PosY;
 
-	CUIButtonComponent(int TexIndex, int x=0, int y=0, int width=100, int height=100);
+	CUIButtonComponent(int TexIndex, int x=0, int y=0, int width=800, int height=600);
 	~CUIButtonComponent();
 
 	virtual void UpdateComponent();

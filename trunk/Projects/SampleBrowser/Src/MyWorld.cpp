@@ -29,11 +29,14 @@ UMyWorld::UMyWorld()
 
 UMyWorld::~UMyWorld()
 {
+	
 	m_Network->Closesocket();
 }
 
 bool UMyWorld::DestroyWorld()
 {
+	m_Network->Netsend(3,0,0,0,0);
+	m_Network->Netsend(4,0,0,0,0);
 //	delete Terrain;
 	delete WaitingLayer;
 	delete WinLayer;
@@ -142,6 +145,9 @@ void UMyWorld::Tick(DWORD dTime)
 		break;
 	case 3:
 		EndScene(WaitingLayer);
+		break;
+	case 4:
+		BeginScene(WaitingLayer);
 		break;
 	}
 	temp[0]=0;

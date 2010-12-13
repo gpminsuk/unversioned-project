@@ -9,6 +9,7 @@ public:
 	~CMissile();
 
 	bool IsInTurn;
+	bool boom;
 
 	virtual void Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);

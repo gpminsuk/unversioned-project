@@ -3,6 +3,8 @@
 #include "UWorld.h"
 
 #pragma comment(lib, "vld.lib")
+#pragma comment(lib, "uniquecore.lib")
+#pragma comment(lib, "uniqueui.lib")
 
 struct myMSG
 {

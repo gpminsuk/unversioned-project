@@ -90,7 +90,7 @@ void CTank::Fire(float _m_nGage,float _m_FireAngle)
 	m_Missile->m_Location=m_Location;
 	m_Missile->Init(_m_nGage,_m_FireAngle,m_Location,m_fDirection);
 	MyWorld->AddThing(m_Missile);
-	//MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
+	MyWorld->Viewport->m_pCamera->m_Subject=m_Missile;
 	EndTurn();
 	Opponent->StartTurn();
 }
@@ -102,14 +102,22 @@ void CTank::SetOpponent(CTank* InOpponent)
 
 void CTank::Forword()
 {
-	m_Location.z += 0.3f;
-	UpdateTransform();
+	if((m_Location.z+0.3f>-95.0f && m_Location.z+0.3f<-15.0f)
+		||(m_Location.z+0.3f>45.0f && m_Location.z+0.3f<125.0f))
+	{
+		m_Location.z += 0.3f;
+		UpdateTransform();
+	}
 }
 
 void CTank::Backword()
 {
-	m_Location.z -= 0.3f;
-	UpdateTransform();
+	if((m_Location.z-0.3f>-95.0f && m_Location.z-0.3f<-15.0f)
+		||(m_Location.z-0.3f>45.0f && m_Location.z-0.3f<125.0f))
+	{
+		m_Location.z -= 0.3f;
+		UpdateTransform();
+	}
 }
 
 void CTank::ArrowUp()
@@ -124,7 +132,6 @@ void CTank::ArrowUp()
 
 void CTank::ArrowDown()
 {
-	
 	if(m_FireAngle-2.0f<0.0f)
 		return;
 	m_FireAngle-=2.0f;
@@ -138,20 +145,32 @@ void CTank::Tick(unsigned long dTime)
 	//m_Arrow->m_Location.z += m_fDirection*1;
 	if(m_Missile->m_Location.y<-100.0f)
 	{
-		//m_Missile->m_Location=Opponent->m_Location;
+		m_Missile->m_Location=Opponent->m_Location;
 		MyWorld->RemoveThing(m_Missile);
+	}
+	else if(m_Missile->boom)
+	{
+		if(MyWorld->NetworkID==MyWorld->Sequence)
+			MyWorld->BeginScene(MyWorld->LossLayer);
+		else
+			MyWorld->BeginScene(MyWorld->WinLayer);
+		m_Missile->boom=false;
 	}
 	if(MyWorld->NetworkID==MyWorld->Sequence && IsInTurn)
 	{	
 		if(GKeyMap[VK_LEFT])
 		{
-			Forword();
-			MyWorld->m_Network->Netsend(1,6,(char)MyWorld->Sequence,0.0,0.0);	
+			
+				Forword();
+				MyWorld->m_Network->Netsend(1,6,(char)MyWorld->Sequence,0.0,0.0);	
+			
 		}
 		if(GKeyMap[VK_RIGHT])
 		{
-			Backword();
-			MyWorld->m_Network->Netsend(1,7,(char)MyWorld->Sequence,0.0,0.0);	
+			
+				Backword();
+				MyWorld->m_Network->Netsend(1,7,(char)MyWorld->Sequence,0.0,0.0);
+			
 		}
 		if(GKeyMap[VK_UP])
 		{
@@ -165,7 +184,6 @@ void CTank::Tick(unsigned long dTime)
 		}
 		if(GKeyMap[VK_SPACE])
 		{
-			
 			if(m_nGage>0.15f)
 				return;
 			m_nGage+=0.003f;
@@ -259,13 +277,13 @@ void CTank::UpdateTransform()
 		CCylinderCollisionBody* Cylinder = (CCylinderCollisionBody*)CollisionBodies(i);
 		if(Cylinder)
 		{
-			Cylinder->Radius = 8.0f;
-			Cylinder->Height = 8.0f;
+			Cylinder->Radius = 6.0f;
+			Cylinder->Height = 6.0f;
 		}
 		for(unsigned int j=0;j<CollisionBodies(i)->Primitives.Size();++j)
 		{
 			CollisionBodies(i)->Primitives(j)->Translation = m_Location;
-			CollisionBodies(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),	TQuaternion(), 8.0f);
+			CollisionBodies(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),	TQuaternion(), 6.0f);
 			
 		}
 	}	

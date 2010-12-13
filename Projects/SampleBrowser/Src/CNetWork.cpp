@@ -19,19 +19,16 @@ bool CNetWork::InitializeNet()
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2,2), &wsa) != 0)
 		return false;
-
 	// 서버와 통신할 소켓 생성
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
-
 	u_long on = 1;
 	retval = ioctlsocket(m_socket, FIONBIO, &on);
-
 	// 서버에 연결
 	SOCKADDR_IN serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_port = htons(9000);
-	serveraddr.sin_addr.s_addr = inet_addr("210.94.178.207");
+	serveraddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	retval = connect(m_socket, (SOCKADDR *)&serveraddr, sizeof(serveraddr));
 	if(retval == SOCKET_ERROR)
 		return false;

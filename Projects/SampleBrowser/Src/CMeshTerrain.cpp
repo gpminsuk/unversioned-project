@@ -17,7 +17,6 @@ CMeshTerrain::CMeshTerrain()
 
 CMeshTerrain::~CMeshTerrain()
 {
-	
 }
 
 void CMeshTerrain::Tick(unsigned long dTime)
@@ -91,6 +90,21 @@ void CMeshTerrain::UpdateTransform()
 			//Components(i)->Primitives(j)->TM._41 = m_Location.x;
 			//Components(i)->Primitives(j)->TM._42 = m_Location.y;
 			//Components(i)->Primitives(j)->TM._43 = m_Location.z;
+		}
+	}	
+	for(unsigned int i=0;i<CollisionBodies.Size();++i)
+	{
+		CCylinderCollisionBody* Cylinder = (CCylinderCollisionBody*)CollisionBodies(i);
+		if(Cylinder)
+		{
+			Cylinder->Radius = 30.0f;
+			Cylinder->Height =30.0f;
+		}
+		for(unsigned int j=0;j<CollisionBodies(i)->Primitives.Size();++j)
+		{
+			CollisionBodies(i)->Primitives(j)->Translation = m_Location;
+			CollisionBodies(i)->Primitives(j)->TM = TMatrix(TVector3(m_Location.x, m_Location.y, m_Location.z),	TQuaternion(), 100.0f);
+
 		}
 	}	
 }

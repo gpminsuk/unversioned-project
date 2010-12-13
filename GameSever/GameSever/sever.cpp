@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	SOCKADDR_IN clientaddr,temp;
 	SOCKET client_sock;
 	int addrlen,ntemp;
-	int a=-1,b=-1;
+	int OneP=-1,TwoP=-1;
 	char msg[BUFSIZE];
 	msg[0] = 0;
 
@@ -68,8 +68,8 @@ int main(int argc, char* argv[])
 		
 		if (FD_ISSET(listen_sock,&rset))
 		{
-			a=send(RooMSocket[0],msg,BUFSIZE,0);
-			b=send(RooMSocket[1],msg,BUFSIZE,0);
+			OneP=send(RooMSocket[0],msg,BUFSIZE,0);
+			TwoP=send(RooMSocket[1],msg,BUFSIZE,0);
 
 			addrlen = sizeof(clientaddr);
 			
@@ -78,34 +78,34 @@ int main(int argc, char* argv[])
 			
 			printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 			
-			if(a == -1 )
+			if(OneP == -1 )
 			{
 				RooMSocket[0]=client_sock;
 				printf("1\n");
-				printf("%d\n",a);
+				printf("%d\n",OneP);
 			}
-			else if(b == -1 )
+			else if(TwoP == -1 )
 			{
 				RooMSocket[1]=client_sock;
 				printf("2\n");
-				printf("%d\n",b);
+				printf("%d\n",TwoP);
 			}
 			
-			a=send(RooMSocket[0],msg,BUFSIZE,0);
-			b=send(RooMSocket[1],msg,BUFSIZE,0);
+			OneP=send(RooMSocket[0],msg,BUFSIZE,0);
+			TwoP=send(RooMSocket[1],msg,BUFSIZE,0);
 
-			printf("%d %d\n",a,b);
+			printf("%d %d\n",OneP,TwoP);
 
 			
-			if(a != -1  && b != -1 )
+			if(OneP != -1  && TwoP != -1 )
 			{
-				a=b=-1;
+				OneP=TwoP=-1;
 				SOCKET *temp = new SOCKET[2];
 				temp[0]=RooMSocket[0];
 				temp[1]=RooMSocket[1];
 				RooMSocket[0]=invalid;
 				RooMSocket[1]=invalid;
-				//쓰레드 시작 temp 넘겨주고 둘이 알아서 주고받게 만듬 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+				//쓰레드 시작 temp 넘겨주고 둘이 알아서 주고받게 만듬
 				CreateThread(NULL,0,RoomThread,(LPVOID)temp,0,NULL);
 				printf("3\n");
 			}
@@ -117,55 +117,68 @@ int main(int argc, char* argv[])
 
 DWORD WINAPI RoomThread(LPVOID arg)
 {
-	SOCKET *temp = (SOCKET *)arg;
+	SOCKET *PlayerSocket = (SOCKET *)arg;
 	FD_SET rset,wset;
 	int retval;
 	char msg[BUFSIZE];
+	//기다리는 장면 제거
+	msg[0] = 3;
+	retval=send(PlayerSocket[0],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[1],msg,BUFSIZE,0);	
 	//다음은 네트워크 아이디 부여를 위한 센드메세지
 	msg[0] = 1;
 	msg[1] = 0;
-	retval=send(temp[0],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[0],msg,BUFSIZE,0);
 	msg[0] = 1;
 	msg[1] = 1;
-	retval=send(temp[1],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[1],msg,BUFSIZE,0);
 	//다음은 순서를 보낸다
 	msg[0] = 1;
 	msg[1] = 3;
-	retval=send(temp[0],msg,BUFSIZE,0);
-	retval=send(temp[1],msg,BUFSIZE,0);	
+	retval=send(PlayerSocket[0],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[1],msg,BUFSIZE,0);	
 	//하나의 탱크를 시작한다.
 	msg[0] = 1;
 	msg[1] = 4;
-	retval=send(temp[0],msg,BUFSIZE,0);
-	retval=send(temp[1],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[0],msg,BUFSIZE,0);
+	retval=send(PlayerSocket[1],msg,BUFSIZE,0);
 	
-	timeval D={1,0};
+	timeval interval={1,0};
+	char a=0;
 
 	while(true)
 	{
 		FD_ZERO(&rset);	
-		FD_SET(temp[0],&rset);
-		FD_SET(temp[1],&rset);
+		FD_SET(PlayerSocket[0],&rset);
+		FD_SET(PlayerSocket[1],&rset);
 		
-		retval = select(0, &rset, NULL, NULL, &D);	
-		if(retval==2)
-		{	
-			printf("쓰레드 종료");
-			return 1;
-		}
-		if (FD_ISSET(temp[0],&rset))
+		retval = select(0, &rset, NULL, NULL, &interval);	
+		
+		if (FD_ISSET(PlayerSocket[0],&rset))
 		{
-			retval=recv(temp[0],msg,BUFSIZE,0);
-			retval=send(temp[1],msg,BUFSIZE,0);			
+			retval=recv(PlayerSocket[0],msg,BUFSIZE,0);
+			retval=send(PlayerSocket[1],msg,BUFSIZE,0);
+			
+			if(retval==-1)
+			{	
+				printf("쓰레드 종료");
+				return 1;
+			}
 		}
-		if (FD_ISSET(temp[1],&rset))
+		if (FD_ISSET(PlayerSocket[1],&rset))
 		{
-			retval=recv(temp[1],msg,BUFSIZE,0);		
-			retval=send(temp[0],msg,BUFSIZE,0);
+			retval=recv(PlayerSocket[1],msg,BUFSIZE,0);		
+			retval=send(PlayerSocket[0],msg,BUFSIZE,0);
+			if(retval==-1)
+			{	
+				printf("쓰레드 종료");
+				return 1;
+			}
 		}
+		
 	}
-	closesocket(temp[0]);
-	closesocket(temp[1]);
+	closesocket(PlayerSocket[0]);
+	closesocket(PlayerSocket[1]);
 
 
 	return 0;

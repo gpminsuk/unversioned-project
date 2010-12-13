@@ -5,10 +5,10 @@
 #include "BThing.h"
 
 BCamera::BCamera(void)
-:	m_CameraMode(QuarterView_Mode),
+:	m_CameraMode(Thrid_Person),
 	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
-	m_Distance(200.0f),
+	m_Distance(150.0f),
 	m_Pi(0),
 	m_Theta(0),
 	m_Subject(0)
@@ -153,13 +153,13 @@ void BCamera::Tick(unsigned long  dTime)
 			}
 			else
 			{
-				m_LookAt = TVector3(40.0f,0.0f,10.0f);
+				m_LookAt = TVector3(0.0f,0.0f,0.0f);
 			}			
 
 			m_Location = m_LookAt;
-			m_Location.x -= 250.0f;
-			m_Location.y += 40.0f;
-			m_Location.z += 50.0f;
+			m_Location.x -= 300.0f;
+			m_Location.y += 50.0f;
+			m_Location.z += 0.0f;
 		}
 		break;
 	}

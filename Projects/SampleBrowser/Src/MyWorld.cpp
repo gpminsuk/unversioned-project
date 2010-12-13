@@ -7,6 +7,7 @@
 #include "CMissile.h"
 #include "CCameraViewport.h"
 #include "BCamera.h"
+#include "CWaveIODriver.h"
 #include "CMeshTerrain.h"
 #include "CNetWork.h"
 
@@ -22,6 +23,7 @@ UMyWorld::UMyWorld()
 	NetworkID = 3;
 	Sequence = 5;
 	m_Network = new CNetWork();
+	soundtime=0;
 	
 }
 
@@ -33,7 +35,9 @@ UMyWorld::~UMyWorld()
 bool UMyWorld::DestroyWorld()
 {
 //	delete Terrain;
-	delete UILabel;
+	delete WaitingLayer;
+	delete WinLayer;
+	delete LossLayer;
 	return true;
 }
 bool UMyWorld::InitializeWorld()
@@ -41,29 +45,26 @@ bool UMyWorld::InitializeWorld()
 	m_Network->InitializeNet();
 	GWorld = this;
 	m_pWorldData = new TWorldOctree();
-	UILabel = new CUIButtonComponent(4);
-	for(unsigned int i=0;i<Viewports.Size();++i)
-	{
-		BViewport* Viewport = Viewports(i);
-		Viewport->Render(UILabel);
-	}
+	WaitingLayer = new CUIButtonComponent(5);
+	WinLayer=	new CUIButtonComponent(6);
+	LossLayer= new CUIButtonComponent(7);
 	//배경
-	//Terrain = new CTerrain();
-	//AddThing(Terrain);
 	m_pTerrain[0] = new CMeshTerrain(TVector3(0.0f, 0.0f, 1.0f), 1.5707963267948966f  , 0.3f, 2);
 	m_pTerrain[1] = new CMeshTerrain(TVector3(0.0f, 0.0f, 1.0f), 1.5707963267948966f  , 0.3f, 2);
 	m_pTerrain[0]->m_Location.z+=60.0f;
 	m_pTerrain[1]->m_Location.z-=80.0f;
+	AddThing(m_pTerrain[0]);
+	AddThing(m_pTerrain[1]);
 	m_pTerrain[0]->UpdateTransform();
 	m_pTerrain[1]->UpdateTransform();
-	AddThing(m_pTerrain[0]);
-	AddThing(m_pTerrain[1]);	
-	/*
-	pixelshader.fx
-	LightPosition이 라이트위치
-	LightRadius가 빛반경
-	LightBrightness가 밝기
-	*/
+
+	m_pSphere=new CMeshTerrain(TVector3(0.0f, 0.0f, 1.0f), 1.5707963267948966f  , 0.1f, 4);
+	m_pSphere->m_Location.x-=80.0f;
+	m_pSphere->SetQuaternion(TVector3(0.0f, 1.0f, 0.0f),220.0f/360.0f*3.141592f);
+	AddThing(m_pSphere);
+	m_pSphere->UpdateTransform();
+	
+	//////////////////////////////////////////////////////////////////////////
 	m_pTankManager = new CTankManager(this);
 	m_pTankManager->InitializeTank(TVector3(5.0f, 10.0f, 80.0f), TVector3(5.0f, 10.0f, -60.0f));
 	
@@ -79,17 +80,26 @@ bool UMyWorld::InitializeWorld()
 
 	AddThing(m_pTankManager->GetTank(1));
 	AddThing(m_pTankManager->GetTank(1)->m_Arrow);
+	GSoundDriver->PlayWAVSound(1);
+	BeginScene(WaitingLayer);
+
 	return true;
 }
 
 void UMyWorld::Tick(DWORD dTime)
 {
+	soundtime+=dTime;
+	if(soundtime>70000)
+	{
+		GSoundDriver->PlayWAVSound(1);
+		soundtime=0;
+	}
 	char *temp = m_Network->NetRecv();
 	memcpy((char *)&strmsg,temp,12);
 	switch(strmsg.i)
 	{
 	case 0:
-		// 0 일때는 접속 확인 메세지이므로 개무시
+		// 0 일때는 접속 확인 메세지이므로 무시
 		break;
 	case 1:
 		//네트워크 아이디 부여받음
@@ -130,6 +140,9 @@ void UMyWorld::Tick(DWORD dTime)
 	case 2:
 		m_pTankManager->GetTank(strmsg.q)->Fire(strmsg.power,strmsg.angle);
 		break;
+	case 3:
+		EndScene(WaitingLayer);
+		break;
 	}
 	temp[0]=0;
 	strmsg.i=0;
@@ -139,4 +152,22 @@ void UMyWorld::Tick(DWORD dTime)
 void UMyWorld::NetTick( DWORD dTime )
 {
 	
+}
+
+void UMyWorld::BeginScene( CUIButtonComponent* _Layer )
+{
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->Render(_Layer);
+	}
+}
+
+void UMyWorld::EndScene( CUIButtonComponent* _Layer )
+{
+	for(unsigned int i=0;i<Viewports.Size();++i)
+	{
+		BViewport* Viewport = Viewports(i);
+		Viewport->RemoveRender(_Layer);
+	}
 }

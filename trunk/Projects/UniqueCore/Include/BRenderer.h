@@ -51,8 +51,9 @@ protected:
 };
 
 extern class BOpaqueBasePass*		GOpaqueBasePass;
-extern class BRTRenderPass*		GBaseRTRenderPass;
-extern class BDrawLinePass*		GDrawLinePass;	
+extern class BDirectionalLightPass*	GDirectionalLightPass;
+extern class BRTRenderPass*			GBaseRTRenderPass;
+extern class BDrawLinePass*			GDrawLinePass;	
 extern class BDrawUIPass*			GDrawFontPass;
 extern class BParticleRenderPass*	GParticleRenderPass;
 

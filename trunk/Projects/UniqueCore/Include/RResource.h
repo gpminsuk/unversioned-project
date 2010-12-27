@@ -8,6 +8,7 @@
 #include "TDataTypes.h"
 
 class BViewport;
+class BLight;
 
 class RShaderBase
 {
@@ -17,6 +18,7 @@ public:
 
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;
+	virtual bool SetLightParameter(BLight* Light) = 0;
 	virtual bool EndShader() = 0;
 
 	wchar_t m_FileName[256];

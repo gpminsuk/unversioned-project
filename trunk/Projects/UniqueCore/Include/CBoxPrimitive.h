@@ -5,14 +5,16 @@
 class TBoxPrimitive : public TPrimitive
 {
 public:
-	TBoxPrimitive();
+	TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSideType);
 };
 
 class CBoxPrimitive : public BPrimitive
 {
 public:
-	CBoxPrimitive(void);
+	CBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSideType);
 	~CBoxPrimitive(void);
+
+	EGeometrySideType SideType;
 
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);

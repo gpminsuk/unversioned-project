@@ -101,15 +101,6 @@ public:
 	BRenderer* m_pRenderer;
 	TArray<BViewport*> Viewports;
 
-	class CCylinderPrimitive* m_Cylinder;
-
-	class CCharacter* m_Character;
-	class CEmitter* m_Emitter;
-
-	class CTerrain *m_Terrain;
-
-	class CUIButtonComponent *m_Button;
-
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 	virtual void InputChar();

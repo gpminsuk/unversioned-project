@@ -6,7 +6,7 @@
 class CBoxComponent : public BComponent
 {
 public:
-	CBoxComponent();
+	CBoxComponent(EGeometrySideType _BoxSideType = SideType_Outside);
 	virtual ~CBoxComponent();
 
 	virtual void UpdateComponent();

@@ -11,11 +11,13 @@
 #include "BDrawUIPass.h"
 #include "BParticleRenderPass.h"
 #include "BRenderingBatch.h"
+#include "BDirectionalLightPass.h"
 
 #include "BPrimitive.h"
 #include "BLineBatcher.h"
 
 BOpaqueBasePass*		GOpaqueBasePass;
+BDirectionalLightPass*	GDirectionalLightPass;
 BRTRenderPass*			GBaseRTRenderPass;
 BDrawLinePass*			GDrawLinePass;	
 BDrawUIPass*			GDrawFontPass;
@@ -33,7 +35,7 @@ BRenderer::BRenderer(AApplication *App)
 	m_nViewportCount = 1;
 
 	GOpaqueBasePass = new BOpaqueBasePass();
-	GBaseRTRenderPass = new BRTRenderPass(GOpaqueBasePass->m_RenderTargets(0));
+	GBaseRTRenderPass = new BRTRenderPass();
 	GDrawLinePass = new BDrawLinePass();
 	GDrawFontPass = new BDrawUIPass();
 	GParticleRenderPass = new BParticleRenderPass();

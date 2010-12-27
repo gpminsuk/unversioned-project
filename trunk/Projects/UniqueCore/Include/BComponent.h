@@ -2,6 +2,7 @@
 
 #include "AObject.h"
 #include "TDataTypes.h"
+#include "Enumerations_Geom.h"
 
 class BSynchronizer;
 

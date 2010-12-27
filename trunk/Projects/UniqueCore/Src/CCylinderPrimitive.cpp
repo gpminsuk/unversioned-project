@@ -36,10 +36,8 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 
 			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
 			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-			RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-			RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 			pBuffer->m_pVB = pVB;
-			pBuffer->m_pIB = pIB;
+			pBuffer->m_pIB = 0;
 
 			struct VD
 			{
@@ -65,7 +63,6 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType)
 				Vertex[i*6+3].Pos = TVector3(COSINE(Theta), 1.0f, SINE(Theta));
 				Vertex[i*6+5].Pos = TVector3(COSINE(Theta), 0.0f, SINE(Theta));
 			}
-			pIB->nIndices = 0;
 		}
 		break;
 	case RenderType_Opaque:

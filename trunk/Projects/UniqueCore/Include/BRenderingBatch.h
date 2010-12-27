@@ -4,6 +4,7 @@
 #include "RResource.h"
 
 class BPrimitive;
+class BLight;
 
 class BRenderingBatch
 {

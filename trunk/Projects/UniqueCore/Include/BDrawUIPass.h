@@ -1,10 +1,10 @@
 #pragma once
 
-#include "TDataTypes.h"
+#include "BRenderPass.h"
 
 class BRenderingBatch;
 
-class BDrawUIPass
+class BDrawUIPass : public BRenderPass
 {
 public:
 	BDrawUIPass();

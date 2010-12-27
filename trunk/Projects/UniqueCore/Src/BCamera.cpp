@@ -13,9 +13,9 @@ BCamera::BCamera(void)
 	m_Theta(0),
 	m_Subject(0)
 {
-	m_Location.x = 10;
+	m_Location.x = 0;
 	m_Location.y = 0;
-	m_Location.z = 25;
+	m_Location.z = 0;
 
 	//m_CameraMode = First_Person;
 }
@@ -51,7 +51,7 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 			case MOUSE_Move:
 				{
 					
-					if(m_Pi + (-Param.dY/100.0f) < (MATH_PI/2.0f) && (m_Pi + -Param.dY/100.0f) > 0.0f)
+					if(m_Pi + (-Param.dY/100.0f) < (MATH_PI/2.0f-0.001f) && (m_Pi + -Param.dY/100.0f) > -(MATH_PI/2.0f-0.001f))
 						m_Pi += -Param.dY/100.0f;
 					m_Theta += -Param.dX/100.0f;
 									

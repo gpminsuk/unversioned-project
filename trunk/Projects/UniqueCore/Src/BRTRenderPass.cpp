@@ -5,9 +5,8 @@
 #include "BRTRenderPass.h"
 #include "BDriver.h"
 
-BRTRenderPass::BRTRenderPass(RRenderTarget* RT)
+BRTRenderPass::BRTRenderPass()
 {
-	m_RenderTarget = RT;
 }
 
 BRTRenderPass::~BRTRenderPass()
@@ -19,7 +18,7 @@ void BRTRenderPass::BeginPass(BViewport* Viewport)
 	RShaderBase* pShader = RShaderTable::Shaders(1);
 	GDriver->SetFillMode(FillMode_Solid);
 	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
-	GDriver->SetTexture(0, m_RenderTarget->m_pTexture);
+	GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
 	pShader->BeginShader();
 
 	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
@@ -41,8 +40,8 @@ void BRTRenderPass::DrawPrimitive()
 
 	VD Vertices[4];
 
-	float OffsetX = 0.5f/m_RenderTarget->m_SizeX;
-	float OffsetY = 0.5f/m_RenderTarget->m_SizeY;
+	float OffsetX = 0.5f/RPR->m_BaseSceneRT->m_SizeX;
+	float OffsetY = 0.5f/RPR->m_BaseSceneRT->m_SizeY;
 
 	Vertices[0].Pos = TVector3(-1.0f, -1.0f, 0.0f);
 	Vertices[1].Pos = TVector3(-1.0f,  1.0f, 0.0f);

@@ -5,7 +5,9 @@
 #include "BDriver.h"
 
 #include "BOpaqueBasePass.h"
+#include "BDirectionalLightPass.h"
 #include "BDrawUIPass.h"
+#include "BViewport.h"
 
 BRenderingBatch::BRenderingBatch()
 :	nVertices(0),
@@ -87,6 +89,14 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 		}
 	}
 	GOpaqueBasePass->EndPass();
+
+	for(unsigned int i=0;i<Viewport->m_Lights.Size();++i)
+	{
+		BLight* Light = Viewport->m_Lights(i);
+		GDirectionalLightPass->BeginPass(Viewport, Light);
+		GDirectionalLightPass->EndPass();
+	}
+	
 }
 
 void BRenderingBatchManager::Syncronize()

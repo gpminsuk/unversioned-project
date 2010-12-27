@@ -4,123 +4,182 @@
 
 #include "RResource.h"
 
-TBoxPrimitive* BoxPrimitive;
+TBoxPrimitive* GBoxPrimitiveOutside;
+TBoxPrimitive* GBoxPrimitiveInside;
 
-CBoxPrimitive::CBoxPrimitive(void)
+CBoxPrimitive::CBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSideType)
 {
-	RenderType = RenderType_Line;
-	Primitives.AddItem(BoxPrimitive);
+	RenderType = _RenderType;
+	SideType = _BoxSideType;
+
+	switch(_RenderType)
+	{
+	case RenderType_Opaque:
+		{
+			switch(_BoxSideType)
+			{
+			case SideType_Inside:
+				Primitives.AddItem(GBoxPrimitiveInside);
+				break;
+			case SideType_Outside:
+				Primitives.AddItem(GBoxPrimitiveOutside);
+				break;
+			}
+		}
+		break;
+	}
 }
 
 CBoxPrimitive::~CBoxPrimitive(void)
 {
 }
 
-TBoxPrimitive::TBoxPrimitive()
+TBoxPrimitive::TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSideType)
 {
-	pBuffer = new RStaticPrimitiveBuffer();
-
-	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
-	pBuffer->m_pVB = pVB;
-	pBuffer->m_pIB = pIB;
-
-	pVB->Declaration = new VertexDeclaration[2];
-	pVB->Declaration[0].Offset = 0;
-	pVB->Declaration[0].Type = DECLTYPE_FLOAT3;	// Position
-	pVB->Declaration[1].Offset = 12;
-	pVB->Declaration[1].Type = DECLTYPE_FLOAT2;	// UV
-
-	struct VD
+	switch(_RenderType)
 	{
-		TVector3 Pos;
-		TVector2 UV;
-	};
+	case RenderType_Opaque:
+		{
+			pBuffer = new RStaticPrimitiveBuffer();
 
-	pVB->nVertexStride = sizeof(VD);
-	
-	pVB->nVertices = 24;
-	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
-	
-	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
+			RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+			RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
+			pBuffer->m_pVB = pVB;
+			pBuffer->m_pIB = pIB;
 
-	Vertex[0].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
-	Vertex[1].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[2].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[3].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
-	Vertex[4].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
-	Vertex[5].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
-	Vertex[6].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
-	Vertex[7].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+			struct VD
+			{
+				TVector3 Pos;
+				TVector3 Normal;
+			};
 
-	Vertex[8].Pos =  TVector3(-1.0f,-1.0f, 1.0f);
-	Vertex[9].Pos =  TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[10].Pos = TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[11].Pos = TVector3( 1.0f, 1.0f, 1.0f);
-	Vertex[12].Pos = TVector3( 1.0f, 1.0f, 1.0f);
-	Vertex[13].Pos = TVector3(-1.0f, 1.0f, 1.0f);
-	Vertex[14].Pos = TVector3(-1.0f, 1.0f, 1.0f);
-	Vertex[15].Pos = TVector3(-1.0f,-1.0f, 1.0f);
+			pVB->nVertexStride = sizeof(VD);
 
-	Vertex[16].Pos = TVector3(-1.0f,-1.0f,-1.0f);
-	Vertex[17].Pos = TVector3(-1.0f,-1.0f, 1.0f);
-	Vertex[18].Pos = TVector3(-1.0f, 1.0f,-1.0f);
-	Vertex[19].Pos = TVector3(-1.0f, 1.0f, 1.0f);
-	Vertex[20].Pos = TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[21].Pos = TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[22].Pos = TVector3( 1.0f, 1.0f,-1.0f);
-	Vertex[23].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+			pVB->nVertices = 24;
+			pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
 
-	pIB->nIndices = 0;
-	/*
-	pVB->nVertices = 24;
-	pVB->pVertices = new char[pVB->nVertexStride*pVB->nVertices];
+			VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
 
-	VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
+			Vertex[0].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+			Vertex[1].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
+			Vertex[2].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
+			Vertex[3].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
 
-	Vertex[0].Pos = TVector3(-1.0f,-1.0f,-1.0f);
-	Vertex[1].Pos = TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[2].Pos = TVector3(-1.0f, 1.0f,-1.0f);
-	Vertex[3].Pos = TVector3( 1.0f, 1.0f,-1.0f);
+			Vertex[4].Pos =  TVector3( 1.0f,-1.0f, 1.0f);
+			Vertex[5].Pos =  TVector3(-1.0f,-1.0f, 1.0f);
+			Vertex[6].Pos =  TVector3( 1.0f, 1.0f, 1.0f);
+			Vertex[7].Pos =  TVector3(-1.0f, 1.0f, 1.0f);
 
-	Vertex[4].Pos = TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[5].Pos = TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[6].Pos = TVector3( 1.0f, 1.0f,-1.0f);
-	Vertex[7].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+			Vertex[8].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
+			Vertex[9].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+			Vertex[10].Pos =  TVector3( 1.0f,-1.0f, 1.0f);
+			Vertex[11].Pos =  TVector3(-1.0f,-1.0f, 1.0f);
 
-	Vertex[8].Pos = TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[9].Pos = TVector3(-1.0f,-1.0f, 1.0f);
-	Vertex[10].Pos = TVector3( 1.0f, 1.0f, 1.0f);
-	Vertex[11].Pos = TVector3(-1.0f, 1.0f, 1.0f);
+			Vertex[12].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
+			Vertex[13].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
+			Vertex[14].Pos =  TVector3(-1.0f, 1.0f, 1.0f);
+			Vertex[15].Pos =  TVector3( 1.0f, 1.0f, 1.0f);
 
-	Vertex[12].Pos = TVector3(-1.0f,-1.0f, 1.0f);
-	Vertex[13].Pos = TVector3(-1.0f,-1.0f,-1.0f);
-	Vertex[14].Pos = TVector3(-1.0f, 1.0f, 1.0f);
-	Vertex[15].Pos = TVector3(-1.0f, 1.0f,-1.0f);
+			Vertex[16].Pos =  TVector3(-1.0f,-1.0f,-1.0f);
+			Vertex[17].Pos =  TVector3(-1.0f, 1.0f,-1.0f);
+			Vertex[18].Pos =  TVector3(-1.0f,-1.0f, 1.0f);
+			Vertex[19].Pos =  TVector3(-1.0f, 1.0f, 1.0f);
 
-	Vertex[16].Pos = TVector3(-1.0f, 1.0f,-1.0f);
-	Vertex[17].Pos = TVector3( 1.0f, 1.0f,-1.0f);
-	Vertex[18].Pos = TVector3(-1.0f, 1.0f, 1.0f);
-	Vertex[19].Pos = TVector3( 1.0f, 1.0f, 1.0f);
+			Vertex[20].Pos =  TVector3( 1.0f, 1.0f,-1.0f);
+			Vertex[21].Pos =  TVector3( 1.0f,-1.0f,-1.0f);
+			Vertex[22].Pos =  TVector3( 1.0f, 1.0f, 1.0f);
+			Vertex[23].Pos =  TVector3( 1.0f,-1.0f, 1.0f);
 
-	Vertex[20].Pos = TVector3( 1.0f,-1.0f, 1.0f);
-	Vertex[21].Pos = TVector3(-1.0f,-1.0f, 1.0f);
-	Vertex[22].Pos = TVector3( 1.0f,-1.0f,-1.0f);
-	Vertex[23].Pos = TVector3(-1.0f,-1.0f,-1.0f);
+			pIB->nIndices = 12;
+			pIB->pIndices = new TIndex16[pIB->nIndices];
+			switch(_BoxSideType)
+			{
+			case SideType_Outside:
+				{
+					Vertex[0].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[1].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[2].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[3].Normal = TVector3(0.0f, 0.0f, -1.0f);
 
-	pIB->nIndices = 12;
-	pIB->pIndices = new TIndex16[pIB->nIndices];
+					Vertex[4].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[5].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[6].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[7].Normal = TVector3(0.0f, 0.0f,  1.0f);
 
-	TIndex16 *Index = pIB->pIndices;
+					Vertex[8].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[9].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[10].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[11].Normal = TVector3(0.0f, -1.0f, 0.0f);
+													
+					Vertex[12].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[13].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[14].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[15].Normal = TVector3(0.0f,  1.0f, 0.0f);
 
-	Index[0] = TIndex16(0,2,3);		Index[1] = TIndex16(0,3,1);
-	Index[2] = TIndex16(4,6,7);		Index[3] = TIndex16(4,7,5);
-	Index[4] = TIndex16(8,10,11);	Index[5] = TIndex16(8,11,9);
-	Index[6] = TIndex16(12,14,15);	Index[7] = TIndex16(12,15,13);
-	Index[8] = TIndex16(16,18,19);	Index[9] = TIndex16(16,19,17);
-	Index[10] = TIndex16(20,22,23);	Index[11] = TIndex16(20,23,21);*/
+					Vertex[16].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[17].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[18].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[19].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+												
+					Vertex[20].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[21].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[22].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[23].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+
+
+					for(int i=0;i<6;++i)
+					{
+						pIB->pIndices[i*2 + 0] = TIndex16(i*4 + 0,i*4 + 2,i*4 + 1);
+						pIB->pIndices[i*2 + 1] = TIndex16(i*4 + 2,i*4 + 3,i*4 + 1);
+					}
+				}				
+				break;
+			case SideType_Inside:
+				{
+					Vertex[0].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[1].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[2].Normal = TVector3(0.0f, 0.0f,  1.0f);
+					Vertex[3].Normal = TVector3(0.0f, 0.0f,  1.0f);
+
+					Vertex[4].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[5].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[6].Normal = TVector3(0.0f, 0.0f, -1.0f);
+					Vertex[7].Normal = TVector3(0.0f, 0.0f, -1.0f);
+
+					Vertex[8].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[9].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[10].Normal = TVector3(0.0f,  1.0f, 0.0f);
+					Vertex[11].Normal = TVector3(0.0f,  1.0f, 0.0f);
+
+					Vertex[12].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[13].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[14].Normal = TVector3(0.0f, -1.0f, 0.0f);
+					Vertex[15].Normal = TVector3(0.0f, -1.0f, 0.0f);
+
+					Vertex[16].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[17].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[18].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+					Vertex[19].Normal = TVector3( 1.0f, 0.0f, 0.0f);
+
+					Vertex[20].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[21].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[22].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+					Vertex[23].Normal = TVector3(-1.0f, 0.0f, 0.0f);
+
+
+					for(int i=0;i<6;++i)
+					{
+						pIB->pIndices[i*2 + 0] = TIndex16(i*4 + 0,i*4 + 1,i*4 + 2);
+						pIB->pIndices[i*2 + 1] = TIndex16(i*4 + 2,i*4 + 1,i*4 + 3);
+					}
+				}
+				break;
+			}
+		}
+		break;
+	}	
 }
 
 unsigned int CBoxPrimitive::GetNumIndices()

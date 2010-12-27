@@ -29,7 +29,7 @@ CEmitter::~CEmitter()
 	}
 }
 
-void CEmitter::Tick(unsigned long dTime)
+bool CEmitter::Tick(unsigned long dTime)
 {
 	/*for(unsigned int i=0;i<Primitives.Size();++i)
 	{
@@ -75,6 +75,7 @@ void CEmitter::Tick(unsigned long dTime)
 		}
 	}	
 	TC = GetTickCount();*/
+	return true;
 }
 
 void CEmitter::PhysicsTick(unsigned long dTime)

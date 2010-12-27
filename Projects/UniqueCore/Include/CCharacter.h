@@ -22,7 +22,7 @@ public:
 
 
 	void SetCharacterPosition(TVector3 pos);	//위치를 pos로 세팅
-	virtual void Tick(unsigned long dTime);		//업데이트	
+	virtual bool Tick(unsigned long dTime);		//업데이트	
 	virtual void PhysicsTick(unsigned long dTime);
 	virtual void UpdateTransform();
 

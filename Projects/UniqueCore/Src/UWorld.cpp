@@ -37,9 +37,10 @@ UWorld::~UWorld()
 	//delete GLineBatcher;
 }
 
-void UWorld::Tick(DWORD dTime)
+bool UWorld::Tick(unsigned long dTime)
 {
 	m_pWorldData->Tick(dTime);
+	return true;
 }
 
 void UWorld::RemoveThing(BThing* Thing)
@@ -237,7 +238,7 @@ TWorldOctree::~TWorldOctree()
 	delete PrimitiveRootNode;
 }
 
-void TWorldOctree::Tick(unsigned long dTime)
+bool TWorldOctree::Tick(unsigned long dTime)
 {
 	for(unsigned int i=0;i<AllObjects.Size();++i)
 	{
@@ -247,6 +248,7 @@ void TWorldOctree::Tick(unsigned long dTime)
 	{
 		AllObjects(i)->PhysicsTick(dTime);
 	}
+	return true;
 }
 
 void TWorldOctree::AddThing(BThing* Thing)

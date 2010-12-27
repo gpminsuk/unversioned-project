@@ -22,9 +22,9 @@ CMissile::~CMissile()
 {
 }
 
-void CMissile::Tick(unsigned long dTime)
+bool CMissile::Tick(unsigned long dTime)
 {
-	
+	return true;	
 }
 
 void CMissile::InputKey(EKey_Event Event, TKeyInput_Param& Param)

@@ -23,13 +23,12 @@ void BComponentThread::ThreadExecute()
 {
 	while(!Application->bQuit)
 	{
-		GetThreadSync();
 		for(unsigned int i=0;i<Objects.Size();++i)
 		{
 			AObject* Object = Objects(i);
-			Object->Tick();
+			Object->Tick(0);
 		}
-		SetThreadSync();
+		UpdateThreadSync();
 	}
 }
 

@@ -15,6 +15,8 @@
 
 //#include "vld.h"
 
+IMPLEMENT_CLASS(UMyWorld);
+
 extern UWorld* GWorld;
 
 UMyWorld::UMyWorld()
@@ -89,7 +91,7 @@ bool UMyWorld::InitializeWorld()
 	return true;
 }
 
-void UMyWorld::Tick(DWORD dTime)
+bool UMyWorld::Tick(DWORD dTime)
 {
 	soundtime+=dTime;
 	if(soundtime>70000)

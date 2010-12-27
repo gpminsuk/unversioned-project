@@ -88,6 +88,11 @@ public:
 		Str[0] = '\0';
 	};
 
+	TString(const char* _Str)
+	{
+		*this = _Str;
+	};
+
 	bool operator ==(TString& _Str)
 	{
 		return !strcmp(Str,_Str.Str);

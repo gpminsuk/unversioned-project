@@ -138,7 +138,7 @@ void CTank::ArrowDown()
 	m_Arrow->SetQuaternion(TVector3(1.0f, 0.0f, 0.0f), -0.040f*m_fDirection);
 	UpdateTransform();
 }
-void CTank::Tick(unsigned long dTime)
+bool CTank::Tick(unsigned long dTime)
 {
 	m_Arrow->m_Location = m_Location;
 	m_Arrow->m_Location.y += 3;
@@ -185,10 +185,11 @@ void CTank::Tick(unsigned long dTime)
 		if(GKeyMap[VK_SPACE])
 		{
 			if(m_nGage>0.15f)
-				return;
+				return true;
 			m_nGage+=0.003f;
 		}
 	}
+	return true;
 }
 
 void CTank::InputKey(EKey_Event Event, TKeyInput_Param& Param)

@@ -6,20 +6,21 @@
 #include "CWindowApp.h"
 #include "CCameraViewport.h"
 #include "CDirectXDriver.h"
+#include "CWaveIODriver.h"
 
 #include "UWorld.h"
 
-UXMLParser::UXMLParser()
+BXMLParser::BXMLParser()
 {
 }
 
-UXMLParser::~UXMLParser()
+BXMLParser::~BXMLParser()
 {
 }
 
-void UXMLParser::StartElement(void *UserData, const char *Name, const char **Atts)
+void BXMLParser::StartElement(void *UserData, const char *Name, const char **Atts)
 {
-	UXMLParser* Parser = (UXMLParser*)UserData;
+	BXMLParser* Parser = (BXMLParser*)UserData;
 	TXMLElement Element;
 	Element.ElementName = Name;
 	unsigned int Idx = 0;
@@ -41,13 +42,13 @@ void UXMLParser::StartElement(void *UserData, const char *Name, const char **Att
 	Parser->ParentElement = &Parser->ParentElement->ChildElements.EndItem();			
 }
 
-void UXMLParser::EndElement(void *UserData, const char *Name)
+void BXMLParser::EndElement(void *UserData, const char *Name)
 {
-	UXMLParser* Parser = (UXMLParser*)UserData;
+	BXMLParser* Parser = (BXMLParser*)UserData;
 	Parser->ParentElement = Parser->ParentElement->Parent;
 }
 
-bool UXMLParser::ReadXMLFile(char* FileName)
+bool BXMLParser::ReadXMLFile(char* FileName)
 {
 	FILE* FilePointer = NULL;
 	fopen_s(&FilePointer, FileName, "r");
@@ -58,7 +59,7 @@ bool UXMLParser::ReadXMLFile(char* FileName)
 		char buf[BUFSIZ];
 		int Done;
 		XML_SetUserData(Parser, this);
-		XML_SetElementHandler(Parser, UXMLParser::StartElement, UXMLParser::EndElement);
+		XML_SetElementHandler(Parser, BXMLParser::StartElement, BXMLParser::EndElement);
 		do
 		{
 			int len = (int)fread(buf, 1, sizeof(buf), FilePointer);
@@ -76,24 +77,24 @@ bool UXMLParser::ReadXMLFile(char* FileName)
 	return false;
 }
 
-bool UXMLParser::GetValue(char* Path, TString& Ret)
+bool BXMLParser::GetValue(char* Path, TString& Ret)
 {
 	return Root.GetValue(Path, Ret);
 }
 
 /////////////////////////////////// Application Config Parser ///////////////////////////////////
 
-UXMLApplicationParser::UXMLApplicationParser()
+CXMLApplicationParser::CXMLApplicationParser()
 {
 
 }
 
-UXMLApplicationParser::~UXMLApplicationParser()
+CXMLApplicationParser::~CXMLApplicationParser()
 {
 
 }
 
-void UXMLApplicationParser::Parse()
+void CXMLApplicationParser::Parse()
 {	
 	TXMLElement Application;
 	if(Root.GetChildElement("Application", Application))
@@ -111,7 +112,14 @@ void UXMLApplicationParser::Parse()
 			{
 				Info.m_wHeight = Value.ToInt();
 			}
-			app = new CWindowApp();
+			if(Application.GetValue("Class", Value))
+			{				
+				app = ConstructClass<AApplication>(Value);
+			}
+			else
+			{
+				return;
+			}
 			if(!app->CreateApp(Info))
 			{
 				app->DestroyApp();
@@ -137,6 +145,8 @@ void UXMLApplicationParser::Parse()
 						DXWindowInfo.m_wWidth = WindowInfo.m_wWidth;
 						GDriver = new CDirectXDriver(DXWindowInfo);
 						GDriver->CreateDriver();
+
+						GSoundDriver = new CWaveIODriver();
 					}
 				}			
 			}
@@ -146,10 +156,30 @@ void UXMLApplicationParser::Parse()
 		TXMLElement World;
 		if(Application.GetChildElement("World", World))
 		{
-			app->m_pWorld = new UWorld();
-			app->m_pViewport = new CCameraViewport();
-			app->m_pRenderer->AddViewport(app->m_pViewport);
-			app->m_pWorld->AddViewport(app->m_pViewport);
+			TString Value;
+			if(World.GetValue("Class", Value))
+			{				
+				app->m_pWorld = ConstructClass<UWorld>(Value);
+			}
+			else
+			{
+				return;
+			}
+			TXMLElement Viewport;
+			if(World.GetChildElement("Viewport", Viewport))
+			{
+				if(Viewport.GetValue("Class", Value))
+				{
+					//CCameraViewport::UClassConstructor_CCameraViewport v;
+					app->m_pViewport = ConstructClass<BViewport>(Value);
+					app->m_pRenderer->AddViewport(app->m_pViewport);
+					app->m_pWorld->AddViewport(app->m_pViewport);
+				}
+				else
+				{
+					return;
+				}
+			}			
 		}
 
 		if(app)

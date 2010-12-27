@@ -1,4 +1,5 @@
 #include "TDataTypes.h"
+#include "AObject.h"
 
 #include "expat.h"
 
@@ -116,11 +117,12 @@ struct TXMLElement
 	}
 };
 
-class UXMLParser
+class BXMLParser : public AObject
 {
 public:
-	UXMLParser();
-	~UXMLParser();
+
+	BXMLParser();
+	~BXMLParser();
 
 	static void EndElement(void *UserData, const char *Name);
 	static void StartElement(void *UserData, const char *Name, const char **Atts);
@@ -136,11 +138,11 @@ public:
 	virtual void Parse() = 0;
 };
 
-class UXMLApplicationParser : public UXMLParser
+class CXMLApplicationParser : public BXMLParser
 {
 public:
-	UXMLApplicationParser();
-	~UXMLApplicationParser();
+	CXMLApplicationParser();
+	~CXMLApplicationParser();
 
 	virtual void Parse();
 };

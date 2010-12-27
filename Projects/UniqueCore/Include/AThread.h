@@ -44,6 +44,7 @@ public:
 
 class AThread : public AObject
 {
+	DECLARE_CLASS(AThread, CLASS_Abstract)
 public:
 	AThread(AApplication* App);
 	virtual ~AThread(void);
@@ -55,8 +56,7 @@ protected:
 	virtual void ThreadSetup() = 0;
 	virtual void ThreadExecute() = 0;
 	virtual void ThreadDestroy() = 0;
-	void GetThreadSync();
-	void SetThreadSync();
+	void UpdateThreadSync();
 
 protected:
 	HANDLE hThread;

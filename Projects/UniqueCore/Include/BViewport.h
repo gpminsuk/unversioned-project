@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AObject.h"
+
 #include "TDataTypes.h"
 #include "InputDefine.h"
 
@@ -14,8 +16,9 @@ enum ESceneFlag
 	Scene_Collision		= 1 << 1,
 };
 
-class BViewport
+class BViewport : public AObject
 {
+	DECLARE_CLASS(BViewport, CLASS_Abstract)
 public:
 	BViewport(void);
 	virtual ~BViewport(void);

@@ -10,10 +10,15 @@ class BCamera;
 class CCameraViewport : public BViewport
 {
 public:
+	DECLARE_CLASS(CCameraViewport,)
+	
+public:
 	CCameraViewport();
 	virtual ~CCameraViewport();
 
 	BCamera *m_pCamera;
+
+	virtual bool Tick(unsigned long Time);
 	
 	virtual void UpdateViewport();
 	virtual TVector3 GetViewportOrigin();

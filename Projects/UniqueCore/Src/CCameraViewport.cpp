@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "CCameraViewport.h"
+
 #include "BCamera.h"
 
 //임시코드
@@ -23,6 +24,11 @@ CCameraViewport::~CCameraViewport(void)
 TVector3 CCameraViewport::GetViewportOrigin()
 {
 	return m_pCamera->m_Location;
+}
+
+bool CCameraViewport::Tick(unsigned long Time)
+{
+	return true;
 }
 
 void CCameraViewport::UpdateViewport()

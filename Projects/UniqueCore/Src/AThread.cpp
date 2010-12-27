@@ -14,37 +14,27 @@ AThread::~AThread(void)
 
 void AThread::Start()
 {
-	//ThreadSetup();
-	//_beginthreadex(NULL, 0, ThreadEntryPoint, this, 0, &threadID);
+	_beginthreadex(NULL, 0, ThreadEntryPoint, this, 0, &threadID);
 }
 
 void AThread::Run()
 {
 	//ThreadExecute();
-	//ThreadDestroy();
 }
 
 unsigned __stdcall AThread::ThreadEntryPoint(void *thread)
 {
 	AThread *pThread = (AThread*)thread;
-	pThread->Run();
+	//pThread->ThreadSetup();
+	//pThread->Run();
+	//pThread->ThreadDestroy();
 	return 0;
 }
 
-void AThread::GetThreadSync()
+void AThread::UpdateThreadSync()
 {
 	for(unsigned int i=0;i<Objects.Size();++i)
 	{
 		AObject* Object = Objects(i);
-		Object->GetSyncData();
-	}
-}
-
-void AThread::SetThreadSync()
-{
-	for(unsigned int i=0;i<Objects.Size();++i)
-	{
-		AObject* Object = Objects(i);
-		Object->SetSyncData();
 	}
 }

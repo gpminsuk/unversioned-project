@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AObject.h"
+
 class ASystemInfo;
 
 class BRenderer;
@@ -21,8 +23,9 @@ public:
 	EPlatform Platform;
 };
 
-class AApplication
+class AApplication : public AObject
 {
+	DECLARE_CLASS(AApplication,CLASS_Abstract)
 public:
 	AApplication(void);
 	virtual ~AApplication();
@@ -41,7 +44,6 @@ public:
 
 	virtual bool CreateApp(TApplicationInfo& Info) = 0;
 	virtual void Do() = 0;
-	virtual void Tick(unsigned long Time) = 0;
 	virtual bool DestroyApp() = 0;
 	virtual void Initialize() = 0;
 };

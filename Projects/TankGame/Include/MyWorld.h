@@ -16,6 +16,7 @@ struct myMSG
 
 class UMyWorld : public UWorld
 {
+	DECLARE_CLASS(UMyWorld,);
 public:
 	UMyWorld();
 	~UMyWorld();
@@ -39,7 +40,7 @@ public:
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
-	virtual void Tick(DWORD dTime);
+	virtual bool Tick(DWORD dTime);
 	virtual void NetTick(DWORD dTime);
 
 	void BeginScene(CUIButtonComponent* _Layer);

@@ -19,9 +19,9 @@ CMeshTerrain::~CMeshTerrain()
 {
 }
 
-void CMeshTerrain::Tick(unsigned long dTime)
+bool CMeshTerrain::Tick(unsigned long dTime)
 {
-
+	return true;
 }
 
 void CMeshTerrain::InputKey(EKey_Event Event, TKeyInput_Param& Param)

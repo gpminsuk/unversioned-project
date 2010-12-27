@@ -1,25 +1,26 @@
 #pragma once
 
+#include "TDataTypes.h"
+
+#include "AClass.h"
+
 class ACriticalSection;
 
-class ASyncData
+class USyncDataClass_
 {
 };
 
 class AObject
 {
-protected:
-	ASyncData* SyncData;
+	DECLARE_CLASS(AObject, CLASS_Abstract)
 
+	bool m_bIsUpdated;
 public:
+	virtual bool Tick(unsigned long Time);
+protected:
+
 	AObject(void);
 	virtual ~AObject(void);
 
-	virtual bool Tick();
-
-	virtual void GetSyncData();
-	virtual void SetSyncData();
-
-	bool m_bIsUpdated;
 	unsigned int m_iObjectId;		//오브젝트마다 고유의 아이디가있음
 };

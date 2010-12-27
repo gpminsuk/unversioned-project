@@ -45,7 +45,7 @@ void CCharacter::SetCharacterPosition(TVector3 pos)
 	UpdateTransform();
 }
 
-void CCharacter::Tick(unsigned long dTime)
+bool CCharacter::Tick(unsigned long dTime)
 {
 	/*if(GKeyMap['W'])
 		SetCharacterPosition(m_Location + TVector3(0.0005f,0.0f,0.0f));
@@ -55,6 +55,7 @@ void CCharacter::Tick(unsigned long dTime)
 		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,0.0005f));
 	if(GKeyMap['D'])
 		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));*/
+	return true;
 }
 
 void CCharacter::PhysicsTick(unsigned long dTime)

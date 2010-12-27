@@ -25,9 +25,10 @@ CArrow::~CArrow()
 
 }
 
-void CArrow::Tick(unsigned long dTime)
+bool CArrow::Tick(unsigned long dTime)
 {
 	UpdateTransform();
+	return true;
 }
 
 void CArrow::InputKey(EKey_Event Event, TKeyInput_Param& Param)

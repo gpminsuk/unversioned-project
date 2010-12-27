@@ -13,7 +13,7 @@ public:
 	TQuaternion m_qRot;
 
 
-	virtual void Tick(unsigned long dTime);
+	virtual bool Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);
 	virtual void UpdateTransform();
 };

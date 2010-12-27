@@ -19,7 +19,7 @@ public:
 		MAX = 2,
 	};
 
-	virtual void Tick(unsigned long dTime);
+	virtual bool Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);
 	virtual void UpdateTransform();
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

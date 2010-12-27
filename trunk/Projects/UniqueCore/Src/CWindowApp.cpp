@@ -134,10 +134,11 @@ void CWindowApp::Do()
 	//while(!bRenderThreadQuit);
 }
 
-void CWindowApp::Tick(unsigned long Time)
+bool CWindowApp::Tick(unsigned long Time)
 {
 	m_pViewport->UpdateViewport();
 	m_pWorld->Tick(Time);
+	return true;
 }
 
 void CWindowApp::SetMousePos(float X, float Y, bool isRatio)

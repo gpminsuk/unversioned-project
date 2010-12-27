@@ -114,26 +114,6 @@ unsigned int CUIButtonPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsign
 	return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 
-
-void CUIButtonPrimitive::SetSyncData()
-{
-	CUIButtonPrimitiveSD* ButtonSD = reinterpret_cast<CUIButtonPrimitiveSD*>(SyncData);
-	if(ButtonSD)
-	{
-		ButtonSD->Width = Width;
-		ButtonSD->Width = Height;
-	}
-}
-
-void CUIButtonPrimitive::GetSyncData()
-{
-	CUIButtonPrimitiveSD* ButtonSD = reinterpret_cast<CUIButtonPrimitiveSD*>(SyncData);
-	if(ButtonSD)
-	{
-		Width = ButtonSD->Width;
-		Height = ButtonSD->Height;
-	}
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////

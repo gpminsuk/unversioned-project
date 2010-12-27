@@ -11,15 +11,7 @@ AObject::~AObject(void)
 {
 }
 
-bool AObject::Tick()
+bool AObject::Tick(unsigned long Time)
 {
 	return true;
-}
-
-void AObject::GetSyncData()
-{
-}
-
-void AObject::SetSyncData()
-{
 }

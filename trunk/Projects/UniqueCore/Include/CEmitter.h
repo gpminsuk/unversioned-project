@@ -7,7 +7,7 @@ public:
 	CEmitter();
 	~CEmitter();
 
-	virtual void Tick(unsigned long dTime);
+	virtual bool Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);
 	virtual void UpdateTransform();
 

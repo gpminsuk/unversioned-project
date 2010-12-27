@@ -21,9 +21,9 @@ CTerrain::~CTerrain(void)
 {
 }
 
-void CTerrain::Tick(unsigned long dTime)
+bool CTerrain::Tick(unsigned long dTime)
 {
-	BThing::Tick(dTime);
+	return BThing::Tick(dTime);	
 }
 
 void CTerrain::PhysicsTick(unsigned long dTime)

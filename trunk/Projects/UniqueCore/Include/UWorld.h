@@ -1,12 +1,11 @@
 #pragma once
 
 #include <windows.h>
+#include "AObject.h"
 #include "TDataTypes.h"
 #include "InputDefine.h"
 
 #include "UFreeTypeDrawer.h"
-
-class AObject;
 
 class BRenderer;
 class BThing;
@@ -27,7 +26,7 @@ public:
 	TWorldStructure() {}
 	virtual ~TWorldStructure() {}
 
-	virtual void Tick(unsigned long dTime) = 0;
+	virtual bool Tick(unsigned long dTime) = 0;
 	virtual void AddThing(class BThing* Thing) = 0;
 	virtual void RemoveThing(class BThing* Thing) = 0;
 
@@ -49,7 +48,7 @@ public:
 
 	TArray<class BThing*> AllObjects;
 
-	virtual void Tick(unsigned long dTime);
+	virtual bool Tick(unsigned long dTime);
 	virtual void AddThing(class BThing* Thing);
 	virtual void RemoveThing(class BThing* Thing);
 	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent = TVector3(0,0,0));
@@ -82,7 +81,7 @@ public:
 	void RemoveThing(class BThing* Thing);
 };
 
-class UWorld
+class UWorld : public AObject
 {
 public:
 	UWorld();
@@ -95,7 +94,7 @@ public:
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
 
-	virtual void Tick(DWORD dTime);
+	virtual bool Tick(unsigned long dTime);
 
 	TWorldStructure* m_pWorldData;
 

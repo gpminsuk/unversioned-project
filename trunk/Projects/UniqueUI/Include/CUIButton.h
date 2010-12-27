@@ -15,7 +15,7 @@ public:
 class CUIButtonPrimitive : public BPrimitive
 {
 public:
-	class CUIButtonPrimitiveSD : public ASyncData
+	class CUIButtonPrimitiveSD
 	{
 	public:
 		int	Width;
@@ -29,9 +29,6 @@ public:
 
 	CUIButtonPrimitive(RTextureBuffer* InTexture);
 	~CUIButtonPrimitive(void);
-
-	virtual void GetSyncData();
-	virtual void SetSyncData();
 
 	virtual void Render(BRenderingBatch *Batch);
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);

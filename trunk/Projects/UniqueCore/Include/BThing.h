@@ -7,20 +7,23 @@
 
 class BThing : public AObject
 {
-public:
-	BThing(void);
-	virtual ~BThing(void);
+	DECLARE_CLASS(BThing, CLASS_Abstract)
+
+	TVector3 m_Location;
 
 	TArray<class BComponent*> Components;
 	TBounds PrimitiveBounds;
 	TArray<class BCollisionBody*> CollisionBodies;
 	TBounds CollisionBodyBounds;
 
-	TVector3 m_Location;
+	BThing(void);
+	virtual ~BThing(void);
 
 	virtual TArray<class BPrimitive*> GetPrimitives();
+public:
+	virtual bool Tick(unsigned long dTime);
 
-	virtual void Tick(unsigned long dTime) = 0;
+public:
 	virtual void PhysicsTick(unsigned long dTime) = 0;
 	virtual void UpdateTransform() = 0;
 	virtual TVector3 LineCheck(TVector3& Start, TVector3& End, TVector3& Extent);

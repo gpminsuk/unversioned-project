@@ -40,13 +40,14 @@ TVector3 BThing::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent)
 	return HitPositions(0);
 }
 
-void BThing::Tick(unsigned long dTime)
+bool BThing::Tick(unsigned long dTime)
 {
 	for(unsigned int i=0;i<Components.Size();++i)
 	{
 		BComponent* Comp = Components(i);
 		Comp->UpdateComponent();
 	}
+	return true;
 }
 
 TArray<BPrimitive*> BThing::GetPrimitives()

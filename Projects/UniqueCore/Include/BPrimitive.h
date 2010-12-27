@@ -5,6 +5,7 @@
 #include "TDataTypes.h"
 #include "RResource.h"
 #include "UFreeTypeDrawer.h"
+#include "Enumerations_Geom.h"
 
 class BSynchronizer;
 class BRenderingBatch;

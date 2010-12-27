@@ -9,6 +9,7 @@ public:
 	struct IDirect3DPixelShader9* m_pPixelShader;
 	virtual bool BeginShader();
 	virtual bool SetParameter(BViewport* vp);
+	virtual bool SetLightParameter(BLight* Light);
 	virtual bool EndShader();
 };
 

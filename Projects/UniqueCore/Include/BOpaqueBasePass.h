@@ -1,10 +1,10 @@
 #pragma once
 
-#include "TDataTypes.h"
+#include "BRenderPass.h"
 
 class BRenderingBatch;
 
-class BOpaqueBasePass
+class BOpaqueBasePass : public BRenderPass
 {
 public:
 	BOpaqueBasePass();
@@ -13,7 +13,5 @@ public:
 	void DrawPrimitive(BRenderingBatch *Batch);
 
 	void BeginPass(BViewport* Viewport);
-	void EndPass();
-
-	TArray<RRenderTarget*>	m_RenderTargets;
+	void EndPass();	
 };

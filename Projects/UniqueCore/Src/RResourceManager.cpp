@@ -649,6 +649,11 @@ bool RResourceManager::LoadResources()
 	wsprintf(pShader->m_FileName, TEXT("ParticleShader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
+	pShader = new RDirectXShader();
+	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+	wsprintf(pShader->m_FileName, TEXT("DLightShader.fx"));
+	RShaderTable::Shaders.AddItem(pShader);
+
 	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
 	{
 		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
@@ -656,8 +661,10 @@ bool RResourceManager::LoadResources()
 
 	//////////////////////////////////// Geometry Loading
 	/////////////////////////////////////////////////////// Basic Geometry Creating
-	extern TBoxPrimitive* BoxPrimitive;
-	BoxPrimitive = new TBoxPrimitive();
+	extern TBoxPrimitive* GBoxPrimitiveOutside;
+	GBoxPrimitiveOutside = new TBoxPrimitive(RenderType_Opaque, SideType_Outside);
+	extern TBoxPrimitive* GBoxPrimitiveInside;
+	GBoxPrimitiveInside = new TBoxPrimitive(RenderType_Opaque, SideType_Inside);
 	extern TCylinderPrimitive* GCylinderPrimitive;
 	GCylinderPrimitive = new TCylinderPrimitive(RenderType_Opaque);
 	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
@@ -677,8 +684,10 @@ bool RResourceManager::ReleaseAllResources()
 {
 	//////////////////////////////////// Geometry Releasing
 	/////////////////////////////////////////////////////// Basic Geometry Releasing
-	extern TBoxPrimitive* BoxPrimitive;
-	delete BoxPrimitive;
+	extern TBoxPrimitive* GBoxPrimitiveOutside;
+	delete GBoxPrimitiveOutside;
+	extern TBoxPrimitive* GBoxPrimitiveInside;
+	delete GBoxPrimitiveInside;
 	extern TCylinderPrimitive* GCylinderPrimitive;
 	delete GCylinderPrimitive;
 	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;

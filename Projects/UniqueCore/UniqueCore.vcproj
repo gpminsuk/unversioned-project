@@ -310,6 +310,10 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
+					RelativePath="..\..\Shaders\PixelDLightShader.fx"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Shaders\PixelFontShader.fx"
 					>
 				</File>
@@ -327,6 +331,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Shaders\PixelShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Shaders\VertexDLightShader.fx"
 					>
 				</File>
 				<File
@@ -502,6 +510,14 @@
 						Name="ShaderPass"
 						>
 						<File
+							RelativePath=".\Src\BDirectionalLightPass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\BDirectionalLightPass.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Src\BDrawLinePass.cpp"
 							>
 						</File>
@@ -531,6 +547,14 @@
 						</File>
 						<File
 							RelativePath=".\Include\BParticleRenderPass.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\BRenderPass.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\BRenderPass.h"
 							>
 						</File>
 						<File
@@ -753,6 +777,10 @@
 					Name="Templates"
 					>
 					<File
+						RelativePath=".\Include\Enumerations_Geom.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Include\InputDefine.h"
 						>
 					</File>
@@ -844,6 +872,14 @@
 				<Filter
 					Name="Thing"
 					>
+					<File
+						RelativePath=".\Src\CBox.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Include\CBox.h"
+						>
+					</File>
 					<File
 						RelativePath=".\Src\CCameraViewport.cpp"
 						>

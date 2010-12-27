@@ -1,8 +1,8 @@
 #pragma once
 
-#include "TDataTypes.h"
+#include "BRenderPass.h"
 
-class BDrawLinePass
+class BDrawLinePass : public BRenderPass
 {
 public:
 	BDrawLinePass();

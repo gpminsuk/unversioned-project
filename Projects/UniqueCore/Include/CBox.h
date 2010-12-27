@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BLight.h"
+#include "BThing.h"
 
-class CDirectionalLight : public BLight
+class CBox : public BThing
 {
 public:
-	CDirectionalLight(void);
-	virtual ~CDirectionalLight(void);
+	CBox(EGeometrySideType _BoxSideType = SideType_Outside);
+	~CBox();	
 
 	virtual bool Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);

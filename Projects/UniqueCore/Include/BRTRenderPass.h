@@ -1,15 +1,15 @@
 #pragma once
 
-class BRTRenderPass
+#include "BRenderPass.h"
+
+class BRTRenderPass : public BRenderPass
 {
 public:
-	BRTRenderPass(RRenderTarget* RT);
+	BRTRenderPass();
 	~BRTRenderPass();
 
 	void DrawPrimitive();
 
 	void BeginPass(BViewport* Viewport);
 	void EndPass();
-
-	RRenderTarget*	m_RenderTarget;
 };

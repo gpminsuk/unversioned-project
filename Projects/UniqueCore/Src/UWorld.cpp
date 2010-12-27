@@ -69,8 +69,8 @@ bool UWorld::InitializeWorld()
 
 	m_pWorldData = new TWorldOctree();
 
-	m_Terrain = new CTerrain();
-	AddThing(m_Terrain);
+//	m_Terrain = new CTerrain();
+	//AddThing(m_Terrain);
 /*
 	m_Character = new CCharacter();
 	m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));

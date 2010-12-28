@@ -27,22 +27,26 @@ void BViewport::SortTemplates()
 {
 }
 
-void BViewport::RemoveRender(BComponent* pComponent)
+void BViewport::Remove(BPrimitive* pPrimitive)
+{
+	BatchManager->RemovePrimitive(pPrimitive);
+}
+void BViewport::Remove(BComponent* pComponent)
 {
 	for(unsigned int i=0;i<pComponent->Primitives.Size();++i)
 	{
-		BatchManager->RemovePrimitive(pComponent->Primitives(i));
+		Remove(pComponent->Primitives(i));
 	}
 }
 
-void BViewport::RemoveRender(BThing* pThing)
+void BViewport::Remove(BThing* pThing)
 {
 	for(unsigned int i=0;i<pThing->Components.Size();++i)
 	{
 		BComponent* pComponent = pThing->Components(i);
 		for(unsigned int j=0;j<pComponent->Primitives.Size();++j)
 		{
-			BatchManager->RemovePrimitive(pComponent->Primitives(j));
+			Remove(pComponent->Primitives(j));
 		}
 	}
 	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
@@ -50,16 +54,21 @@ void BViewport::RemoveRender(BThing* pThing)
 		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
 		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
 		{
-			BatchManager->RemovePrimitive(pCollisionBody->Primitives(j));
+			Remove(pCollisionBody->Primitives(j));
 		}
 	}
+}
+
+void BViewport::Render(BPrimitive* pPrimitive)
+{
+	BatchManager->AddPrimitive(pPrimitive);
 }
 
 void BViewport::Render(BComponent* pComponent)
 {
 	for(unsigned int i=0;i<pComponent->Primitives.Size();++i)
 	{
-		BatchManager->AddPrimitive(pComponent->Primitives(i));
+		Render(pComponent->Primitives(i));
 	}
 }
 
@@ -68,19 +77,26 @@ void BViewport::Render(BThing* pThing)
 	for(unsigned int i=0;i<pThing->Components.Size();++i)
 	{
 		BComponent* pComponent = pThing->Components(i);
-		for(unsigned int j=0;j<pComponent->Primitives.Size();++j)
-		{
-			BatchManager->AddPrimitive(pComponent->Primitives(j));
-		}
+		pComponent->RenderComponent(this);
 	}
 	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
 	{
 		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
 		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
 		{
-			BatchManager->AddPrimitive(pCollisionBody->Primitives(j));
+			Render(pCollisionBody->Primitives(j));
 		}
 	}
+}
+
+void BViewport::RenderLight(BLightComponent* pLightComponent)
+{
+	m_Lights.AddItem(pLightComponent);
+}
+
+void BViewport::RemoveLight(BLightComponent* pLightComponent)
+{
+	m_Lights.DeleteItemByVal(pLightComponent);
 }
 
 void BViewport::Clear()

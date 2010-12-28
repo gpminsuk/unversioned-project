@@ -14,8 +14,9 @@ BDirectionalLightPass::~BDirectionalLightPass()
 {
 }
 
-void BDirectionalLightPass::BeginPass(BViewport* Viewport, BLight* Light)
+void BDirectionalLightPass::BeginPass(BViewport* Viewport, BLightComponent* Light)
 {
+	GDriver->SetBlendState(TBlendState(BlendState_One, BlendState_One));
 	RShaderBase* pShader = RShaderTable::Shaders(5);
 	GDriver->SetRenderTarget(0, RPR->m_BaseSceneRT);
 

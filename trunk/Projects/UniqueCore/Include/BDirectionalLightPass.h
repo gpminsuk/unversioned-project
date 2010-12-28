@@ -15,6 +15,6 @@ public:
 
 	void DrawPrimitive(BRenderingBatch *Batch);
 
-	void BeginPass(BViewport* Viewport, BLight* Light);
+	void BeginPass(BViewport* Viewport, BLightComponent* Light);
 	void EndPass();
 };

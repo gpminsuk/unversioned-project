@@ -38,7 +38,26 @@ void BRenderingBatch::IndexTessellate()
 	}
 }
 
-void BRenderingBatch::RenderBatch(BViewport* Viewport)
+void BRenderingBatch::RenderLight()
+{
+	PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);	
+	if(PrimitiveBuffer)
+	{
+		switch(RenderType)
+		{
+		case RenderType_Line:
+		case RenderType_Opaque:
+			GOpaqueBasePass->DrawPrimitive(this);
+			break;
+		case RenderType_UI:
+			break;
+		}
+		PrimitiveBuffer->Release();
+		delete PrimitiveBuffer;
+	}
+}
+
+void BRenderingBatch::RenderBaseScene()
 {
 	PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);	
 	if(PrimitiveBuffer)
@@ -85,15 +104,24 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 		if(Batch->RenderType == RenderType_Opaque ||
 			Batch->RenderType == RenderType_Line)
 		{
-			Batch->RenderBatch(Viewport);
+			Batch->RenderBaseScene();
 		}
 	}
 	GOpaqueBasePass->EndPass();
 
 	for(unsigned int i=0;i<Viewport->m_Lights.Size();++i)
 	{
-		BLight* Light = Viewport->m_Lights(i);
+		BLightComponent* Light = Viewport->m_Lights(i);
 		GDirectionalLightPass->BeginPass(Viewport, Light);
+		for(unsigned int i=0;i<RenderingBatches.Size();++i)
+		{
+			BRenderingBatch* Batch = RenderingBatches(i);
+			if(Batch->RenderType == RenderType_Opaque ||
+				Batch->RenderType == RenderType_Line)
+			{
+				Batch->RenderLight();
+			}
+		}
 		GDirectionalLightPass->EndPass();
 	}
 	

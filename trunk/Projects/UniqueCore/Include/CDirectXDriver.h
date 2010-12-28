@@ -65,6 +65,7 @@ public:
 
 	virtual void SetStencilState(TStencilState& StencilState);
 	virtual void SetDepthState(TDepthState& DepthState);
+	virtual void SetBlendState(TBlendState& BlendState);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	class RDXRenderTarget* BackBuffer;

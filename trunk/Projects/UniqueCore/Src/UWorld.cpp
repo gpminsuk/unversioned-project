@@ -48,7 +48,7 @@ void UWorld::RemoveThing(BThing* Thing)
 	for(unsigned int i=0;i<Viewports.Size();++i)
 	{
 		BViewport* Viewport = Viewports(i);
-		Viewport->RemoveRender(Thing);
+		Viewport->Remove(Thing);
 	}
 	m_pWorldData->RemoveThing(Thing);
 }

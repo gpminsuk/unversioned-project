@@ -19,7 +19,7 @@ void PS(float2 TexCoord : TEXCOORD0,
 		out float4 OutColor : COLOR0)
 {
 	float4 DiffuseColor = {0.3f,0.3f,0.3f,0.3f};
-	float4 Ambient = {0.2f,0.2f,0.2f,0.0f};
+	float4 Ambient = {0.0f,0.0f,0.0f,0.0f};
 	
 	float3 LightVector = (LightPosition - PixelPosition);
 	float Distance = length(LightVector);
@@ -38,13 +38,12 @@ void PS(float2 TexCoord : TEXCOORD0,
 		SpecularValue = SpecularValue*SpecularBrightness;
 	float4 Specular = {SpecularValue,SpecularValue,SpecularValue,0};
 	
-	
-	if(Distance > LightRadius)
-		OutColor = Ambient;
-	else
-		OutColor = Diffuse + Ambient;
+	if(Distance < LightRadius)
+		OutColor = Diffuse;
 	//OutColor.a = 1.0f;
 	//OutColor = float4(Distance/LightRadius,Distance/LightRadius,Distance/LightRadius,1);
 	//OutColor = Diffuse + Ambient;
 	//OutColor = float4(Normal.x, Normal.y, Normal.z, 1);
+	//OutColor = float4(0.0f,0.0f,0.0f, 1);
+	//OutColor = float4(LightBrightness, LightRadius, 0.0f ,1);
 }

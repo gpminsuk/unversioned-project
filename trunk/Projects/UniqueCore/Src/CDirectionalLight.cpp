@@ -1,8 +1,12 @@
 #include "StdAfx.h"
 #include "CDirectionalLight.h"
 
+#include "CDirectionalLightComponent.h"
+
 CDirectionalLight::CDirectionalLight(void)
 {
+	CDirectionalLightComponent* DirectionalLightComponent = new CDirectionalLightComponent();
+	Components.AddItem(DirectionalLightComponent);
 }
 
 CDirectionalLight::~CDirectionalLight(void)

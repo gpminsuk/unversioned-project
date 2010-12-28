@@ -37,6 +37,9 @@ public:
 
 	UWorld*	m_pWorld;
 
+	class CBox* Box;						// ¹æ
+	class CDirectionalLight* DirectionalLight;
+
 	bool bQuit;
 	bool bRenderThreadQuit;
 

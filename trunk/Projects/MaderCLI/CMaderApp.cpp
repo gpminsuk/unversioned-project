@@ -3,7 +3,10 @@
 #include "BRenderer.h"
 #include "BViewport.h"
 #include "CDirectXDriver.h"
+#include "CWaveIODriver.h"
 #include "CCameraViewport.h"
+#include "CBox.h"
+#include "CDirectionalLight.h"
 #include "RResourceManager.h"
 
 #define generic GENERIC
@@ -15,16 +18,23 @@ CMaderApp::CMaderApp()
 
 }
 
+CMaderApp::~CMaderApp()
+{
+	delete Box;
+	delete DirectionalLight;
+}
+
 bool CMaderApp::CreateApp(TApplicationInfo& Info)
 {
 	m_WindowInfo = (TCSharpWindowInfo&)Info;
-
+ 
 	TDXWindowInfo DXWindowInfo;
 	DXWindowInfo.m_hWnd = m_WindowInfo.m_hWnd;
 	DXWindowInfo.m_wHeight = m_WindowInfo.m_wHeight;
 	DXWindowInfo.m_wWidth = m_WindowInfo.m_wWidth;
 
 	GDriver = new CDirectXDriver(DXWindowInfo);
+	GSoundDriver = new CWaveIODriver();
 	if(!GDriver->CreateDriver())
 		return false;
 
@@ -51,6 +61,17 @@ bool CMaderApp::CreateApp(TApplicationInfo& Info)
 	{
 		m_pWorld->InitializeWorld();
 	}
+
+	Box = new CBox(SideType_Inside);
+	Box->m_Scale = TVector3(100.0f,100.0f,100.0f);
+	Box->UpdateTransform();
+	m_pWorld->AddThing(Box);
+
+	DirectionalLight = new CDirectionalLight();
+	DirectionalLight->m_Location = TVector3(0.0f, 100.0f, 0.0f);
+	DirectionalLight->UpdateTransform();
+	m_pWorld->AddThing(DirectionalLight);
+
 	return true;
 }
 
@@ -62,7 +83,7 @@ void CMaderApp::Do()
 	}
 }
 
-void CMaderApp::Tick(unsigned long Time)
+bool CMaderApp::Tick(unsigned long Time)
 {
 	if(m_pViewport)
 	{
@@ -72,6 +93,7 @@ void CMaderApp::Tick(unsigned long Time)
 	{
 		m_pWorld->Tick(Time);
 	}
+	return true;
 }
 
 void CMaderApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)

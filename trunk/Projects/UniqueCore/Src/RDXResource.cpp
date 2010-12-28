@@ -16,19 +16,24 @@ bool RDirectXShader::BeginShader()
 	return true;
 }
 
-bool RDirectXShader::SetLightParameter(BLight* Light)
+bool RDirectXShader::SetLightParameter(BLightComponent* Light)
 {
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
 	if(!Driver)
 		return false;
 
 	float Power = 1.0f;
-	float Rad = 100.0f;
+	float Rad = 200.0f;
+	TVector3 Loc(0.0f,100.0f,0.0f);
+	TVector3 Dir(0.0f,-1.0f,0.0f);
 
-	Driver->GetDevice()->SetVertexShaderConstantF(1, (float*)&Light->m_Location, 1);
-	Driver->GetDevice()->SetVertexShaderConstantF(2, (float*)&Light->Direction, 1);
-	Driver->GetDevice()->SetVertexShaderConstantF(3, (float*)&Power, 1);
-	Driver->GetDevice()->SetVertexShaderConstantF(4, (float*)&Rad, 1);
+	Driver->GetDevice()->SetPixelShaderConstantF(0, (float*)&Loc, 1);
+	Driver->GetDevice()->SetPixelShaderConstantF(1, (float*)&Loc, 1);
+	Driver->GetDevice()->SetPixelShaderConstantF(2, (float*)&Dir, 1);
+	Driver->GetDevice()->SetPixelShaderConstantF(3, (float*)&Power, 1);
+	Driver->GetDevice()->SetPixelShaderConstantF(4, (float*)&Rad, 1);
+
+	return true;
 }
 
 bool RDirectXShader::SetParameter(BViewport* vp)

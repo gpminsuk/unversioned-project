@@ -1,0 +1,13 @@
+struct TVertexInput
+{
+	float3 Position			: POSITION;
+	float2 TexCoord			: TEXCOORD0;
+	float3 Normal			: NORMAL;
+};
+
+struct TVertexOutput
+{
+	float2 TexCoord			: TEXCOORD0;
+	float3 Normal			: TEXCOORD1;
+	float3 PixelPosition	: TEXCOORD2;
+};

@@ -1,0 +1,14 @@
+texture Texture0;
+
+sampler samp = sampler_state
+{
+    Texture   = (Texture0);
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+float4 GetDiffuse()
+{
+	return float4(0.3f,0.3f,0.3f,0.3f);
+}

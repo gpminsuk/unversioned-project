@@ -1,0 +1,13 @@
+#include "VSCommon.ush"
+#include "VertexProtocol.ush"
+
+void VS(
+	in TVertexInput VertexInput,
+	out TVertexOutput VertexOutput,
+	out float4 OutPosition : POSITION)
+{
+	OutPosition = mul(float4(VertexInput.Position, 1), ViewProjectionMatrix);
+	VertexOutput.TexCoord = VertexInput.TexCoord;
+	VertexOutput.Normal = VertexInput.Normal;
+	VertexOutput.PixelPosition = VertexInput.Position;
+}

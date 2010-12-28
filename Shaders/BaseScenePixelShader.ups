@@ -1,0 +1,9 @@
+#include "PSCommon.ush"
+#include "Material.ush"
+#include "VertexProtocol.ush"
+
+void PS(TVertexOutput VertexOutput,
+		out float4 OutColor : COLOR0)
+{
+	OutColor = GetDiffuse();
+}

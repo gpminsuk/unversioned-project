@@ -390,7 +390,16 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	WCHAR FN[256];
 	
 	//sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
-	wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
+	// TODO : 임시코드
+	static int Cnt = 0;	
+	if(Cnt == 0)
+	{
+		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseSceneVertexShader.uvs"));
+	}
+	else
+	{
+		wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
+	}
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
@@ -405,7 +414,14 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pCode = NULL;
 
 	//sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
-	wsprintf(FN, TEXT("..\\..\\Shaders\\Pixel%s"), pShader->m_FileName);
+	if(Cnt == 0)
+	{
+		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseScenePixelShader.ups"));
+	}
+	else
+	{
+		wsprintf(FN, TEXT("..\\..\\Shaders\\Pixel%s"), pShader->m_FileName);
+	}
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)
@@ -417,6 +433,8 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	}
 	GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &pDXShader->m_pPixelShader);
 	pCode->Release();
+
+	Cnt++;
 	return true;
 }
 

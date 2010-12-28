@@ -310,6 +310,18 @@
 				UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 				>
 				<File
+					RelativePath="..\..\Shaders\BaseScenePixelShader.ups"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Shaders\BaseSceneVertexShader.uvs"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Shaders\Material.ush"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Shaders\PixelDLightShader.fx"
 					>
 				</File>
@@ -334,6 +346,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Shaders\PSCommon.ush"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Shaders\VertexDLightShader.fx"
 					>
 				</File>
@@ -350,11 +366,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Shaders\VertexProtocol.ush"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Shaders\VertexRTShader.fx"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Shaders\VertexShader.fx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Shaders\VSCommon.ush"
 					>
 				</File>
 				<File

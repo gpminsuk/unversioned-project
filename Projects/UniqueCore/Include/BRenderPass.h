@@ -21,3 +21,5 @@ public:
 
 	BRenderPassResource* RPR;
 };
+
+extern BRenderPassResource GRenderPassResource;

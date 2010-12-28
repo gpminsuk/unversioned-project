@@ -7,7 +7,8 @@
 
 class BThing;
 class BComponent;
-class BLight;
+class BPrimitive;
+class BLightComponent;
 class BRenderingBatchManager;
 
 enum ESceneFlag
@@ -26,7 +27,7 @@ public:
 	void operator =(BViewport& vp);
 
 	BRenderingBatchManager* BatchManager;
-	TArray<BLight*>		m_Lights;
+	TArray<BLightComponent*> m_Lights;
 
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;
@@ -37,10 +38,16 @@ public:
 	unsigned long VisibleScenes;
 
 	void Clear();
+
+	void RenderLight(BLightComponent* pLightComponent);
+	void RemoveLight(BLightComponent* pLightComponent);
+
+	void Render(BPrimitive* pPrimitive);
 	void Render(BComponent* pComponent);
 	void Render(BThing* pThing);
-	void RemoveRender(BComponent* pComponent);
-	void RemoveRender(BThing* pThing);
+	void Remove(BPrimitive* pPrimitive);
+	void Remove(BComponent* pComponent);
+	void Remove(BThing* pThing);
 	
 	void SortTemplates();
 

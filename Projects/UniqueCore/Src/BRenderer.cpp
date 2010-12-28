@@ -34,11 +34,13 @@ BRenderer::BRenderer(AApplication *App)
 
 	m_nViewportCount = 1;
 
+	GRenderPassResource.Initialize();
 	GOpaqueBasePass = new BOpaqueBasePass();
 	GBaseRTRenderPass = new BRTRenderPass();
 	GDrawLinePass = new BDrawLinePass();
 	GDrawFontPass = new BDrawUIPass();
 	GParticleRenderPass = new BParticleRenderPass();
+	GDirectionalLightPass = new BDirectionalLightPass();
 
 	LineBatcher = new BLineBatcher();
 }
@@ -51,6 +53,7 @@ BRenderer::~BRenderer()
 	delete GDrawLinePass;
 	delete GOpaqueBasePass;
 	delete GBaseRTRenderPass;
+	delete GDirectionalLightPass;
 
 	delete GDriver;
 	delete GSoundDriver;
@@ -96,7 +99,7 @@ bool BRenderer::RenderViewport(BViewport* Viewport)
 		BRenderingBatch* Batch = Viewport->BatchManager->RenderingBatches(i);
 		if(Batch->RenderType == RenderType_UI)
 		{
-			Batch->RenderBatch(Viewport);
+			Batch->RenderBaseScene();
 		}
 	}
 	GDrawFontPass->EndPass();

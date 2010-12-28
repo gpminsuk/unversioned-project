@@ -25,7 +25,8 @@ public:
 	int GetNumIndices();
 	void IndexTessellate();
 
-	void RenderBatch(BViewport* Viewport);
+	void RenderBaseScene();
+	void RenderLight();
 	void Syncronize();
 };
 

@@ -611,14 +611,6 @@ bool RResourceManager::LoadResources()
 	Filename = "..\\..\\Resources\\skylose.jpg";
 	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	
-
-	
-
-	
-
-
 	
 	pTexBuffer = GDriver->CreateFontBuffer(128,32);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);

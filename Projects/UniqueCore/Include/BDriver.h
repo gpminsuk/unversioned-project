@@ -64,6 +64,27 @@ enum EStencilOperation
 	StencilOp_Decr
 };
 
+enum EBlendState
+{
+	BlendState_Zero,
+	BlendState_One,
+	BlendState_SrcColor,
+	BlendState_InvSrcColor,
+	BlendState_SrcAlpha,
+	BlendState_InvSrcAlpha,
+	BlendState_DestAlpha,
+	BlendState_InvDestAlpha,
+	BlendState_DestColor,
+	BlendState_InvDestColor,
+	BlendState_SrcAlphaSat,
+	BlendState_BothSrcAlpha,
+	BlendState_BothInvSrcAlpha,
+	BlendState_BlendFactor,
+	BlendState_InvBlendFactor,
+	BlendState_SrcColor2,
+	BlendState_InvSrcColor2,
+};
+
 enum ECompareFunction
 {
 	CompareFunc_Never,
@@ -127,6 +148,18 @@ struct TDepthState
 	{ }
 };
 
+struct TBlendState
+{
+	EBlendState SrcBlendState;
+	EBlendState DestBlendState;
+
+	TBlendState() : SrcBlendState(BlendState_One), DestBlendState(BlendState_Zero) {}
+	TBlendState(EBlendState _SrcBlendState, EBlendState _DestBlendState) :
+		SrcBlendState(_SrcBlendState),
+		DestBlendState(_DestBlendState)
+	{ }
+};
+
 struct TLockedRect
 {
 	unsigned int Pitch;
@@ -180,12 +213,14 @@ public:
 	EFillMode CurrentFillMode;
 	TStencilState CurrentStencilState;
 	TDepthState CurrentDepthState;
+	TBlendState CurrentBlendState;
 	ECullMode CurrentCullMode;
 
 	virtual void SetFillMode(EFillMode FM) = 0;
 	virtual void SetCullMode(ECullMode& CullMode) = 0;
 	virtual void SetStencilState(TStencilState& StencilState) = 0;
-	virtual void SetDepthState(TDepthState& DepthState) = 0;	
+	virtual void SetDepthState(TDepthState& DepthState) = 0;
+	virtual void SetBlendState(TBlendState& BlendState) = 0;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 

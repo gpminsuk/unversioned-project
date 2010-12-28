@@ -29,9 +29,13 @@ public:
 	virtual bool CreateMaderApp()
 	{
 		m_Application->m_WindowInfo.m_hWnd = (HWND)MainWindow->GetHwnd().ToPointer();
+#if _WIN64
+		m_Application->m_WindowInfo.m_hInstance = (HINSTANCE)GetWindowLong(m_Application->m_WindowInfo.m_hWnd, GWLP_HINSTANCE);
+#else
 		m_Application->m_WindowInfo.m_hInstance = (HINSTANCE)GetWindowLong(m_Application->m_WindowInfo.m_hWnd, GWL_HINSTANCE);
-		m_Application->m_WindowInfo.m_wHeight = 300;
-		m_Application->m_WindowInfo.m_wWidth = 300;
+#endif
+		m_Application->m_WindowInfo.m_wHeight = 600;
+		m_Application->m_WindowInfo.m_wWidth = 800;
 		MainWindow->SetHwndSourceHook();
 		m_Application->CreateApp(m_Application->m_WindowInfo);
 		return true;
@@ -73,5 +77,6 @@ public:
 	virtual void Tick()
 	{
 		m_Application->Tick(0);
+		m_Application->m_pRenderer->ThreadExecute();
 	}
 };

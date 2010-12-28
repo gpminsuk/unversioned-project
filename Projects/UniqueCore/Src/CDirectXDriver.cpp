@@ -52,6 +52,27 @@ DWORD GStencilOperation[] =
 	D3DSTENCILOP_DECR
 };
 
+DWORD GBlendState[] = 
+{
+	D3DBLEND_ZERO,
+	D3DBLEND_ONE,
+	D3DBLEND_SRCCOLOR,
+	D3DBLEND_INVSRCCOLOR,
+	D3DBLEND_SRCALPHA,
+	D3DBLEND_INVSRCALPHA,
+	D3DBLEND_DESTALPHA, 
+	D3DBLEND_INVDESTALPHA,
+	D3DBLEND_DESTCOLOR,
+	D3DBLEND_INVDESTCOLOR,
+	D3DBLEND_SRCALPHASAT,
+	D3DBLEND_BOTHSRCALPHA,
+	D3DBLEND_BOTHINVSRCALPHA,
+	D3DBLEND_BLENDFACTOR,
+	D3DBLEND_INVBLENDFACTOR,
+	D3DBLEND_SRCCOLOR2,
+	D3DBLEND_INVSRCCOLOR2
+};
+
 DWORD GCompareFunction[] = 
 {
 	D3DCMP_NEVER,
@@ -140,20 +161,13 @@ bool CDirectXDriver::CreateDriver()
 		return false;
 	}
 
-	/*CurrentCullMode = CullMode_CCW;
-	CurrentDepthState = TDepthState(true, CompareFunc_LessEqual);
-	CurrentStencilState = TStencilState();
-	CurrentFillMode = FillMode_Solid;
+	CurrentCullMode = CullMode_CCW;
 
-	m_pDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+	GetDevice()->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
 	GetDevice()->SetRenderState(D3DRS_ZWRITEENABLE, CurrentDepthState.EnableDepthWrite);
 	GetDevice()->SetRenderState(D3DRS_ZFUNC, GCompareFunction[CurrentDepthState.DepthTest]);
 	GetDevice()->SetRenderState(D3DRS_CULLMODE, GCullMode[CurrentCullMode]);
-
-	SetDepthState(CurrentDepthState);
-	SetStencilState(CurrentStencilState);
-	SetCullMode(CurrentCullMode);
-	SetFillMode(CurrentFillMode);*/
+	GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
 	return true;
 }
@@ -624,6 +638,18 @@ void CDirectXDriver::SetStencilState(TStencilState& StencilState)
 				GetDevice()->SetRenderState(D3DRS_STENCILREF, CurrentStencilState.StencilRef = StencilState.StencilRef);
 			}
 		}
+	}
+}
+
+void CDirectXDriver::SetBlendState(TBlendState& BlendState)
+{
+	if(CurrentBlendState.SrcBlendState != BlendState.SrcBlendState)
+	{
+		GetDevice()->SetRenderState(D3DRS_SRCBLEND, GBlendState[CurrentBlendState.SrcBlendState = BlendState.SrcBlendState]);
+	}
+	if(CurrentBlendState.DestBlendState != BlendState.DestBlendState)
+	{
+		GetDevice()->SetRenderState(D3DRS_DESTBLEND, GBlendState[CurrentBlendState.DestBlendState = BlendState.DestBlendState]);
 	}
 }
 

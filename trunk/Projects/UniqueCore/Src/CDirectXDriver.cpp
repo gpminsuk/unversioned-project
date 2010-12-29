@@ -395,11 +395,66 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	if(Cnt == 0)
 	{
 		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseSceneVertexShader.uvs"));
+		FILE* fp = NULL;
+		FILE* cachefp = NULL;
+		WCHAR CacheFN[256];
+		wsprintf(CacheFN, TEXT("..\\..\\Shaders\\Cache\\StaticMeshBaseSceneVertexShader.uvs"));
+		_wfopen_s(&cachefp, CacheFN, TEXT("w+"));
+		_wfopen_s(&fp, FN, TEXT("r"));
+		if(fp)
+		{
+			if(cachefp)
+			{
+				char syntax[256];
+				while(!feof(fp))
+				{
+					fgets(syntax, 256, fp);
+					char* syntaxTmp;
+					if(syntaxTmp = strstr(syntax, "#include"))
+					{
+						if(syntaxTmp = strstr(syntax, "\""))
+						{
+							syntaxTmp += 1;
+							char rest[256];
+							sprintf_s(rest, "%s", syntaxTmp);
+							syntaxTmp[0] = '\0';
+							sprintf_s(syntax, 256, "%s..\\%s", syntax, rest);
+						}
+					}
+
+					if(syntaxTmp = strstr(syntax, "VertexProtocol.ush"))
+					{
+						char rest[256];
+						char replace[256];
+						sprintf_s(rest, "%s", syntaxTmp);
+						syntaxTmp[0] = '\0';
+						sprintf_s(replace, 256, "%sStaticMesh%s", syntax, rest);
+						fprintf_s(cachefp, "%s", replace);
+					}
+					else
+					{
+						fprintf_s(cachefp, "%s", syntax);
+					}
+				}
+				fclose(fp);
+				fclose(cachefp);
+			}
+			else
+			{
+				fclose(fp);
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		wsprintf(FN, TEXT("%s"), CacheFN);
 	}
 	else
 	{
 		wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
-	}
+	}	
 
 	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
 	if(hr != D3D_OK)

@@ -6,6 +6,50 @@
 
 #include "CDirectXDriver.h"
 
+bool RDirectXVertexShader::SetShaderConstantF(TString VarName, float* Value)
+{
+	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
+	if(!Driver)
+		return false;
+	for(unsigned int i=0;i<Constants.Size();++i)
+	{
+		RConstant& Constant = Constants(i);
+		if(Constant.Name == VarName)
+		{
+			Driver->GetDevice()->SetVertexShaderConstantF(Constant.RegisterIndex, Value, Constant.RegisterCount);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool RDirectXPixelShader::SetShaderConstantF(TString VarName, float* Value)
+{
+	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
+	if(!Driver)
+		return false;
+	for(unsigned int i=0;i<Constants.Size();++i)
+	{
+		RConstant& Constant = Constants(i);
+		if(Constant.Name == VarName)
+		{
+			Driver->GetDevice()->SetPixelShaderConstantF(Constant.RegisterIndex, Value, Constant.RegisterCount);
+			return true;
+		}
+	}
+	return false;
+}
+
+RDirectXShader::RDirectXShader()
+{
+
+}
+
+RDirectXShader::~RDirectXShader()
+{
+
+}
+
 bool RDirectXShader::BeginShader()
 {
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
@@ -17,26 +61,6 @@ bool RDirectXShader::BeginShader()
 
 	Driver->GetDevice()->SetVertexShader(DXVertexShader->m_pVertexShader);
 	Driver->GetDevice()->SetPixelShader(DXPixelShader->m_pPixelShader);
-	return true;
-}
-
-bool RDirectXShader::SetLightParameter(BLightComponent* Light)
-{
-	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
-	if(!Driver)
-		return false;
-
-	float Power = 1.0f;
-	float Rad = 200.0f;
-	TVector3 Loc(0.0f,100.0f,0.0f);
-	TVector3 Dir(0.0f,-1.0f,0.0f);
-
-	Driver->GetDevice()->SetPixelShaderConstantF(0, (float*)&Loc, 1);
-	Driver->GetDevice()->SetPixelShaderConstantF(1, (float*)&Loc, 1);
-	Driver->GetDevice()->SetPixelShaderConstantF(2, (float*)&Dir, 1);
-	Driver->GetDevice()->SetPixelShaderConstantF(3, (float*)&Power, 1);
-	Driver->GetDevice()->SetPixelShaderConstantF(4, (float*)&Rad, 1);
-
 	return true;
 }
 

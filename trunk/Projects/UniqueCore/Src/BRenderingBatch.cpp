@@ -38,6 +38,16 @@ void BRenderingBatch::IndexTessellate()
 	}
 }
 
+void BRenderingBatch::ConfigureShader(RShaderBase* Shader)
+{
+	for(unsigned int i=0;i<Primitives.Size();++i)
+	{
+		Primitives(i)->ConfigureVertexBuilder();
+		Primitives(i)->ConfigurePixelShader(Shader->PixelShader);
+		Primitives(i)->ConfigureVertexShader(Shader->VertexShader);
+	}
+}
+
 void BRenderingBatch::RenderLight()
 {
 	PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);	
@@ -93,7 +103,7 @@ BRenderingBatchManager::~BRenderingBatchManager()
 
 void BRenderingBatchManager::RenderBatchChunks(BViewport* Viewport)
 {
-	GOpaqueBasePass->BeginPass(Viewport);
+	/*GOpaqueBasePass->BeginPass(Viewport);
 	for(unsigned int i=0;i<BatchChunks.Size();++i)
 	{
 		BRenderingBatchChunk* Chunk = BatchChunks(i);
@@ -106,7 +116,7 @@ void BRenderingBatchManager::RenderBatchChunks(BViewport* Viewport)
 
 		GOpaqueBasePass->EndRenderBatch();
 	}
-	GOpaqueBasePass->EndPass();
+	GOpaqueBasePass->EndPass();*/
 
 	GDirectionalLightPass->BeginPass(Viewport);
 	for(unsigned int i=0;i<Viewport->m_Lights.Size();++i)
@@ -116,7 +126,6 @@ void BRenderingBatchManager::RenderBatchChunks(BViewport* Viewport)
 			BRenderingBatchChunk* Chunk = BatchChunks(i);
 
 			GDirectionalLightPass->BeginRenderBatch(Chunk);
-			GDirectionalLightPass->BeginRenderLight(Viewport->m_Lights(i));
 
 			{
 				Chunk->RenderLight();
@@ -125,8 +134,7 @@ void BRenderingBatchManager::RenderBatchChunks(BViewport* Viewport)
 			GDirectionalLightPass->EndRenderBatch();
 		}
 	}
-	GDirectionalLightPass->EndPass();
-	
+	GDirectionalLightPass->EndPass();	
 }
 void BRenderingBatchManager::RemovePrimitive(BPrimitive* Primitive)
 {
@@ -154,6 +162,7 @@ void BRenderingBatchChunk::RenderLight()
 {
 	for(unsigned int i=0;i<Batches.Size();++i)
 	{
+		Batches(i)->ConfigureShader(Shader);
 		Batches(i)->RenderLight();
 	}
 }

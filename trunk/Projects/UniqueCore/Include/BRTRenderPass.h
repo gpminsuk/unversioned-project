@@ -8,5 +8,7 @@ public:
 	BRTRenderPass();
 	~BRTRenderPass();
 
+	virtual void BeginPass(BViewport* InViewport);
+
 	void DrawPrimitive();
 };

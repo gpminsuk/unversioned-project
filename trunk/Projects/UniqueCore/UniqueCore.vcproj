@@ -322,27 +322,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Shaders\PixelDLightShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\PixelFontShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\PixelLineShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\PixelParticleShader.fx"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Shaders\PixelRTShader.fx"
 					>
 				</File>
 				<File
-					RelativePath="..\..\Shaders\PixelShader.fx"
+					RelativePath="..\..\Shaders\PointLight.ush"
 					>
 				</File>
 				<File
@@ -350,31 +334,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Shaders\VertexDLightShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\VertexFontShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\VertexLineShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\VertexParticleShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\VertexProtocol.ush"
+					RelativePath="..\..\Shaders\StaticMeshVertexProtocol.ush"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Shaders\VertexRTShader.fx"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Shaders\VertexShader.fx"
 					>
 				</File>
 				<File

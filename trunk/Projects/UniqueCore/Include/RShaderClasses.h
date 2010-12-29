@@ -2,17 +2,28 @@
 
 #include "RResource.h"
 
-class RStandardVertexBuilder : public RVertexBuilder
+class BPrimitive;
+
+class RStandardVertexBuilder : public RShaderConfigure
 {
 public:
+	RStandardVertexBuilder(class RShader* InShader) : RShaderConfigure(InShader) {}
+
+	void ConfigureShader(BPrimitive* InPrimitive);
 };
 
-class RBaseSceneVertexShader : public RVertexShader
+class RBaseSceneVertexShader : public RShaderConfigure
 {
 public:
+	RBaseSceneVertexShader(class RShader* InShader) : RShaderConfigure(InShader) {}
+
+	void ConfigureShader(BPrimitive* InPrimitive);
 };
 
-class RBaseScenePixelShader : public RPixelShader
+class RBaseScenePixelShader : public RShaderConfigure
 {
 public:
+	RBaseScenePixelShader(class RShader* InShader) : RShaderConfigure(InShader) {}
+
+	void ConfigureShader(BPrimitive* InPrimitive);	
 };

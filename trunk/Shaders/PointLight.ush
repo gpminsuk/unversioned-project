@@ -1,0 +1,39 @@
+#ifndef POINT_LIGHT_NUM
+#define POINT_LIGHT_NUM 1
+#endif
+
+float3 LightPosition[POINT_LIGHT_NUM];
+float LightRadius[POINT_LIGHT_NUM];
+float LightBrightness[POINT_LIGHT_NUM];
+
+float4 GetPointLight(TVertexOutput VertexOutput)
+{
+	float4 OutColor = float4(0,0,0,0);
+	/*float3 EyePosition = {6,3,6};
+	float SpecularPower = 10;
+	float SpecularBrightness = 0.3f;
+	float3 ReflectionVector = 2*dot(Normal,LightVector)*Normal - LightVector;
+	float3 EyeVector = normalize(EyePosition - PixelPosition);	
+	float SpecularValue = pow(saturate(dot(EyeVector, ReflectionVector)),SpecularPower);
+	if(dot(Normal,LightVector) <= 0)
+		SpecularValue = 0;
+	else
+		SpecularValue = SpecularValue*SpecularBrightness;
+	float4 Specular = {SpecularValue,SpecularValue,SpecularValue,0};*/	
+	
+	float3 LightVector;
+	float Distance;
+	float4 Diffuse;
+		
+	for(int LightIdx = 0;LightIdx < POINT_LIGHT_NUM;++LightIdx)
+	{		
+		LightVector = (LightPosition[LightIdx] - VertexOutput.PixelPosition);
+		Distance = length(LightVector);
+		LightVector = normalize(LightVector);
+		Diffuse = float4(1.0f,1.0f,1.0f,1.0f)*((saturate(dot(LightVector,VertexOutput.Normal))*LightBrightness[LightIdx]*((LightRadius[LightIdx]-Distance)/LightRadius[LightIdx])));
+				
+		if(Distance < LightRadius[LightIdx])
+			OutColor = Diffuse;
+	}
+	return OutColor;
+}

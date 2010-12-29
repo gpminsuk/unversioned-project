@@ -6,6 +6,7 @@
 #include "RResource.h"
 #include "UFreeTypeDrawer.h"
 #include "Enumerations_Geom.h"
+#include "RShaderClasses.h"
 
 class BSynchronizer;
 class BRenderingBatch;
@@ -61,6 +62,9 @@ public:
 
 	virtual void Render(BRenderingBatch *Batch);
 	virtual void RemoveRender(BRenderingBatch *Batch);
+	virtual void ConfigureVertexBuilder() {}
+	virtual void ConfigurePixelShader(RPixelShader* PixelShader) {}
+	virtual void ConfigureVertexShader(RVertexShader* VertexShader) {}
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

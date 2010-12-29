@@ -573,46 +573,10 @@ bool RResourceManager::LoadResources()
 {
 	TString Filename;
 	//////////////////////////////////// Sound Loading
-	Filename = "..\\..\\Resources\\tada.wav";
-	GSoundDriver->LoadSound(Filename);
-
-	Filename = "..\\..\\Resources\\back.wav";
-	GSoundDriver->LoadSound(Filename);
 
 	//////////////////////////////////// Texture Loading
-	Filename = "..\\..\\Resources\\tank.jpg";
-	RTextureBuffer *pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\arrow.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\terrain.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\ball1.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\sky.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\skywaiting.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\skywin.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
-	Filename = "..\\..\\Resources\\skylose.jpg";
-	pTexBuffer = GDriver->CreateTextureBuffer(Filename);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 	
-	pTexBuffer = GDriver->CreateFontBuffer(128,32);
+	RTextureBuffer *pTexBuffer = GDriver->CreateFontBuffer(128,32);
 	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
 
 	//////////////////////////////////// Shader Loading
@@ -621,32 +585,7 @@ bool RResourceManager::LoadResources()
 	wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
-	wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
-
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "LineShader.fx");
-	wsprintf(pShader->m_FileName, TEXT("LineShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
-
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-	wsprintf(pShader->m_FileName, TEXT("FontShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
-
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-	wsprintf(pShader->m_FileName, TEXT("ParticleShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
-
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-	wsprintf(pShader->m_FileName, TEXT("DLightShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
-
-	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
+	for(unsigned int i=0;i<RShaderTable::Shaders.Size();i+=2)
 	{
 		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
 	}
@@ -663,12 +602,6 @@ bool RResourceManager::LoadResources()
 	GCylinderPrimitiveWireFrame= new TCylinderPrimitive(RenderType_Line);
 	/////////////////////////////////////////////////////// Vertex Buffer Loading
 	/////////////////////////////////////////////////////// Index Buffer Loading
-
-	LoadASEFile("..\\..\\Resources\\tank.ASE");
-	LoadASEFile("..\\..\\Resources\\arrow.ASE");
-	LoadASEFile("..\\..\\Resources\\terrain.ASE");
-	LoadASEFile("..\\..\\Resources\\ball.ASE");
-	LoadASEFile("..\\..\\Resources\\sky.ASE");
 	return true;
 }
 

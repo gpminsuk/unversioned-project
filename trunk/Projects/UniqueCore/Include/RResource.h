@@ -10,11 +10,38 @@
 class BViewport;
 class BLightComponent;
 
+class RVertexBuilder
+{
+
+};
+
+class RPixelShader
+{
+	virtual void b() {}
+};
+
+class RVertexShader
+{
+	virtual void b() {}
+};
+
 class RShaderBase
 {
 public:
-	RShaderBase() {}
-	virtual ~RShaderBase() {}
+	RPixelShader* PixelShader;
+	RVertexShader* VertexShader;
+
+	RShaderBase() :
+		VertexShader(0),
+		PixelShader(0)
+	{
+
+	}
+	virtual ~RShaderBase()
+	{
+		delete VertexShader;
+		delete PixelShader;
+	}
 
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;

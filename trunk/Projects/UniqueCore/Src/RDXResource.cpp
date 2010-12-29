@@ -11,8 +11,12 @@ bool RDirectXShader::BeginShader()
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
 	if(!Driver)
 		return false;
-	Driver->GetDevice()->SetVertexShader(m_pVertexShader);
-	Driver->GetDevice()->SetPixelShader(m_pPixelShader);
+
+	RDirectXPixelShader* DXPixelShader = dynamic_cast<RDirectXPixelShader*>(PixelShader);
+	RDirectXVertexShader* DXVertexShader = dynamic_cast<RDirectXVertexShader*>(VertexShader);
+
+	Driver->GetDevice()->SetVertexShader(DXVertexShader->m_pVertexShader);
+	Driver->GetDevice()->SetPixelShader(DXPixelShader->m_pPixelShader);
 	return true;
 }
 

@@ -39,6 +39,8 @@ public:
 
 	void Clear();
 
+	void RenderViewport();
+
 	void RenderLight(BLightComponent* pLightComponent);
 	void RemoveLight(BLightComponent* pLightComponent);
 

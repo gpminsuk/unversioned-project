@@ -796,6 +796,26 @@
 						RelativePath=".\Include\RResourceManager.h"
 						>
 					</File>
+					<Filter
+						Name="Shader"
+						>
+						<File
+							RelativePath=".\Src\RBaseScenePixelShader.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RBaseSceneVertexShader.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RShaderClasses.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RStandardVertexBuilder.cpp"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Templates"

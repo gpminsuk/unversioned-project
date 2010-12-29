@@ -9,7 +9,4 @@ public:
 	~BRTRenderPass();
 
 	void DrawPrimitive();
-
-	void BeginPass(BViewport* Viewport);
-	void EndPass();
 };

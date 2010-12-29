@@ -18,25 +18,6 @@ BDrawLinePass::~BDrawLinePass()
 {
 }
 
-void BDrawLinePass::BeginPass(BViewport* Viewport)
-{
-	m_Viewport = Viewport;
-	RShaderBase* pShader = RShaderTable::Shaders(2);
-	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
-	GDriver->Clear(false, 0x00000000,true, 1.0f);
-
-	pShader->BeginShader();
-	pShader->SetParameter(Viewport);
-
-	GDriver->SetVertexDeclaration(VertexType_Position);
-}
-
-void BDrawLinePass::EndPass()
-{
-	RShaderBase* pShader = RShaderTable::Shaders(2);
-	pShader->EndShader();
-}
-
 void BDrawLinePass::DrawPrimitive(BLineBatcher* LineBatcher)
 {
 	size_t NumLines = LineBatcher->Lines.Size();

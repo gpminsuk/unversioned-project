@@ -11,3 +11,12 @@ struct TVertexOutput
 	float3 Normal			: TEXCOORD1;
 	float3 PixelPosition	: TEXCOORD2;
 };
+
+#ifdef VERTEX_SHADER
+
+float4 CalcOutPosition(in TVertexInput VertexInput)
+{
+	return mul(float4(VertexInput.Position, 1), ViewProjectionMatrix);
+}
+
+#endif

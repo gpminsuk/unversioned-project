@@ -6,6 +6,8 @@ public:
 	RDirectXVertexShader() {}
 
 	struct IDirect3DVertexShader9* m_pVertexShader;
+
+	virtual bool SetShaderConstantF(TString VarName, float* Value);
 };
 
 class RDirectXPixelShader : public RPixelShader
@@ -14,6 +16,8 @@ public:
 	RDirectXPixelShader() {}
 
 	struct IDirect3DPixelShader9* m_pPixelShader;
+
+	virtual bool SetShaderConstantF(TString VarName, float* Value);
 };
 
 class RDirectXShader : public RShaderBase
@@ -24,7 +28,6 @@ public:
 
 	virtual bool BeginShader();
 	virtual bool SetParameter(BViewport* vp);
-	virtual bool SetLightParameter(BLightComponent* Light);
 	virtual bool EndShader();
 };
 

@@ -40,6 +40,7 @@ public:
 	int GetNumIndices();
 	void IndexTessellate();
 
+	void ConfigureShader(RShaderBase* Shader);
 	void RenderBaseScene();
 	void RenderLight();
 };

@@ -14,7 +14,7 @@ public:
 	BDirectionalLightPass();
 	~BDirectionalLightPass();
 
-	void DrawPrimitive(BRenderingBatch *Batch);
+	virtual void BeginPass(BViewport* InViewport);
 
-	void BeginRenderLight(BLightComponent *InLight);
+	void DrawPrimitive(BRenderingBatch *Batch);
 };

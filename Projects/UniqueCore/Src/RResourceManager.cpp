@@ -585,7 +585,12 @@ bool RResourceManager::LoadResources()
 	wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
 	RShaderTable::Shaders.AddItem(pShader);
 
-	for(unsigned int i=0;i<RShaderTable::Shaders.Size();i+=2)
+	pShader = new RDirectXShader();
+	//sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
+	wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
+	RShaderTable::Shaders.AddItem(pShader);
+
+	for(unsigned int i=0;i<RShaderTable::Shaders.Size();i++)
 	{
 		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
 	}

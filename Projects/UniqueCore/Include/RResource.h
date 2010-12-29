@@ -8,21 +8,52 @@
 #include "TDataTypes.h"
 
 class BViewport;
+class BPrimitive;
 class BLightComponent;
+
+struct RConstant
+{
+	TString Name;
+	unsigned int RegisterCount;
+	unsigned int RegisterIndex;
+};
 
 class RVertexBuilder
 {
 
 };
 
-class RPixelShader
+class RShaderConfigure
 {
-	virtual void b() {}
+public:
+	RShaderConfigure(class RShader* InShader) : Shader(InShader) {}
+
+	class RShader* Shader;
+
+	virtual void ConfigureShader(BPrimitive* InPrimitive) = 0;
 };
 
-class RVertexShader
+class RShader
 {
-	virtual void b() {}
+public:
+	RShader() : Configure(0) {}
+	~RShader() { delete Configure; }
+	RShaderConfigure* Configure;
+	TArray<RConstant> Constants;
+
+	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
+};
+
+class RPixelShader : public RShader
+{
+public:
+	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
+};
+
+class RVertexShader : public RShader
+{
+public:
+	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
 };
 
 class RShaderBase
@@ -45,7 +76,6 @@ public:
 
 	virtual bool BeginShader() = 0;
 	virtual bool SetParameter(BViewport* vp) = 0;
-	virtual bool SetLightParameter(BLightComponent* Light) = 0;
 	virtual bool EndShader() = 0;
 
 	wchar_t m_FileName[256];

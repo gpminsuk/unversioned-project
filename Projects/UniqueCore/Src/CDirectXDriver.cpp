@@ -386,6 +386,9 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pDXShader->VertexShader = new RDirectXVertexShader();
 	pDXShader->PixelShader = new RDirectXPixelShader();
 
+	pDXShader->VertexShader->Configure = new RBaseSceneVertexShader(pDXShader->VertexShader);
+	pDXShader->PixelShader->Configure = new RBaseScenePixelShader(pDXShader->PixelShader);
+
 	RDirectXPixelShader *pDXPixelShader = dynamic_cast<RDirectXPixelShader*>(pShader->PixelShader);
 	RDirectXVertexShader *pDXVertexShader = dynamic_cast<RDirectXVertexShader*>(pShader->VertexShader);
  
@@ -462,7 +465,8 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 		wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
 	}	
 
-	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	LPD3DXCONSTANTTABLE ConstantTable;
+	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0", dwShaderFlags, &pCode, &pErr, &ConstantTable);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];
@@ -474,6 +478,32 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	pCode->Release();
 	pCode = NULL;
 
+	{
+		D3DXCONSTANTTABLE_DESC ConstantTableDesc;
+		hr = ConstantTable->GetDesc(&ConstantTableDesc);
+		if(hr != D3D_OK)
+		{
+			return false;
+		}
+		for(unsigned int i=0;i<ConstantTableDesc.Constants;++i)
+		{
+			D3DXHANDLE ConstantHandle = ConstantTable->GetConstant(NULL,i);
+			D3DXCONSTANT_DESC ConstantDesc;
+			UINT NumConstants = 1;
+			hr = ConstantTable->GetConstantDesc(ConstantHandle,&ConstantDesc,&NumConstants);
+			if(hr != D3D_OK)
+			{
+				return false;
+			}
+			// Copy the constant and its name into a self-contained data structure, and add it to the constant array.
+			RConstant Constant;
+			Constant.Name = ConstantDesc.Name;
+			Constant.RegisterCount = ConstantDesc.RegisterCount;
+			Constant.RegisterIndex = ConstantDesc.RegisterIndex;
+			pDXVertexShader->Constants.AddItem(Constant);
+		}
+	}	
+
 	if(Cnt == 0)
 	{
 		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseScenePixelShader.ups"));
@@ -483,7 +513,8 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 		wsprintf(FN, TEXT("..\\..\\Shaders\\Pixel%s"), pShader->m_FileName);
 	}
 
-	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, NULL);
+	LPD3DXCONSTANTTABLE PixelConstantTable;
+	hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0", dwShaderFlags, &pCode, &pErr, &PixelConstantTable);
 	if(hr != D3D_OK)
 	{
 		char Err[1024];
@@ -493,6 +524,32 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	}
 	GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &pDXPixelShader->m_pPixelShader);
 	pCode->Release();
+
+	{
+		D3DXCONSTANTTABLE_DESC ConstantTableDesc;
+		hr = PixelConstantTable->GetDesc(&ConstantTableDesc);
+		if(hr != D3D_OK)
+		{
+			return false;
+		}
+		for(unsigned int i=0;i<ConstantTableDesc.Constants;++i)
+		{
+			D3DXHANDLE ConstantHandle = PixelConstantTable->GetConstant(NULL,i);
+			D3DXCONSTANT_DESC ConstantDesc;
+			UINT NumConstants = 1;
+			hr = PixelConstantTable->GetConstantDesc(ConstantHandle,&ConstantDesc,&NumConstants);
+			if(hr != D3D_OK)
+			{
+				return false;
+			}
+			// Copy the constant and its name into a self-contained data structure, and add it to the constant array.
+			RConstant Constant;
+			Constant.Name = ConstantDesc.Name;
+			Constant.RegisterCount = ConstantDesc.RegisterCount;
+			Constant.RegisterIndex = ConstantDesc.RegisterIndex;
+			pDXPixelShader->Constants.AddItem(Constant);
+		}
+	}	
 
 	Cnt++;
 	return true;

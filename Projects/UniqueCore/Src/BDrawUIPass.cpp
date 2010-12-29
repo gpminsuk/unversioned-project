@@ -18,24 +18,6 @@ BDrawUIPass::~BDrawUIPass()
 {
 }
 
-void BDrawUIPass::BeginPass(BViewport* Viewport)
-{
-	m_Viewport = Viewport;
-
-	RShaderBase* pShader = RShaderTable::Shaders(3);
-	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
-	pShader->BeginShader();
-	pShader->SetParameter(Viewport);
-
-	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
-}
-
-void BDrawUIPass::EndPass()
-{
-	RShaderBase* pShader = RShaderTable::Shaders(3);
-	pShader->EndShader();
-}
-
 void BDrawUIPass::DrawPrimitive(BRenderingBatch *Batch)
 {
 	if(Batch->PrimitiveType == PrimitiveType_LineList)

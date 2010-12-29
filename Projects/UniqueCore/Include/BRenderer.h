@@ -32,9 +32,6 @@ public:
 	bool RenderViewport(BViewport* Viewport);
 	void RenderLines(BViewport* Viewport);
 
-	bool Syncronize();
-	bool SyncronizeViewport(BViewport* Viewport);
-
 	void ThreadSetup();
 	void ThreadExecute();
 	void ThreadDestroy();

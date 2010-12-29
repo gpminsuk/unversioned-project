@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 
 #include "BRenderPass.h"
+#include "BRenderingBatch.h"
 #include "BDriver.h"
 
 #include "RResource.h"
@@ -33,4 +34,29 @@ BRenderPass::BRenderPass()
 
 BRenderPass::~BRenderPass()
 {
+}
+
+void BRenderPass::BeginRenderBatch(BRenderingBatchChunk* BatchChunk)
+{
+	Shader = BatchChunk->Shader;
+
+	Shader->BeginShader();
+
+	Shader->SetParameter(Viewport);
+}
+
+void BRenderPass::EndRenderBatch()
+{
+	Shader->EndShader();	
+	Shader = 0;
+}
+
+void BRenderPass::BeginPass(BViewport* InViewport)
+{
+	Viewport = InViewport;
+}
+
+void BRenderPass::EndPass()
+{
+	Viewport = 0;
 }

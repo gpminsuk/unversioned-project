@@ -382,6 +382,12 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	if(!pDXShader)
 		return false;
 	HRESULT hr;
+
+	pDXShader->VertexShader = new RDirectXVertexShader();
+	pDXShader->PixelShader = new RDirectXPixelShader();
+
+	RDirectXPixelShader *pDXPixelShader = dynamic_cast<RDirectXPixelShader*>(pShader->PixelShader);
+	RDirectXVertexShader *pDXVertexShader = dynamic_cast<RDirectXVertexShader*>(pShader->VertexShader);
  
 	LPD3DXBUFFER pCode = NULL;
 	LPD3DXBUFFER pErr = NULL;
@@ -464,11 +470,10 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 		pErr->Release();
 		return false;
 	}
-	GetDevice()->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &pDXShader->m_pVertexShader);
+	GetDevice()->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &pDXVertexShader->m_pVertexShader);
 	pCode->Release();
 	pCode = NULL;
 
-	//sprintf_s(FN, 256, "..\\Shaders\\Pixel%s", pShader->m_FileName);
 	if(Cnt == 0)
 	{
 		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseScenePixelShader.ups"));
@@ -486,7 +491,7 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 		pErr->Release();
 		return false;
 	}
-	GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &pDXShader->m_pPixelShader);
+	GetDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), &pDXPixelShader->m_pPixelShader);
 	pCode->Release();
 
 	Cnt++;

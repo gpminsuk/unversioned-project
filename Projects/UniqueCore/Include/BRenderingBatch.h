@@ -5,6 +5,21 @@
 
 class BPrimitive;
 class BLight;
+class BRenderingBatch;
+
+class BRenderingBatchChunk
+{
+public:
+	TArray<BRenderingBatch*> Batches;
+
+	RShaderBase* Shader;
+
+	void RenderBaseScene();
+	void RenderLight();
+
+	void AddPrimitive(BPrimitive* Primitive);
+	void RemovePrimitive(BPrimitive* Primitive);
+};
 
 class BRenderingBatch
 {
@@ -27,7 +42,6 @@ public:
 
 	void RenderBaseScene();
 	void RenderLight();
-	void Syncronize();
 };
 
 class BRenderingBatchManager
@@ -36,10 +50,10 @@ public:
 	BRenderingBatchManager();
 	~BRenderingBatchManager();
 
-	TArray<BRenderingBatch*> RenderingBatches;
+	TArray<BRenderingBatchChunk*> BatchChunks;
 
-	void AddPrimitive(BPrimitive* Component);
-	void RemovePrimitive(BPrimitive* Component);
-	void RenderBatches(BViewport* Viewport);
-	void Syncronize();
+	void AddPrimitive(BPrimitive* Primitive);
+	void RemovePrimitive(BPrimitive* Primitive);
+
+	void RenderBatchChunks(BViewport* Viewport);
 };

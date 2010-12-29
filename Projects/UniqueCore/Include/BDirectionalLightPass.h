@@ -3,6 +3,7 @@
 #include "BRenderPass.h"
 
 class BRenderingBatch;
+class BRenderingBatchChunk;
 class BViewport;
 class RRenderTarget;
 class BLight;
@@ -15,6 +16,5 @@ public:
 
 	void DrawPrimitive(BRenderingBatch *Batch);
 
-	void BeginPass(BViewport* Viewport, BLightComponent* Light);
-	void EndPass();
+	void BeginRenderLight(BLightComponent *InLight);
 };

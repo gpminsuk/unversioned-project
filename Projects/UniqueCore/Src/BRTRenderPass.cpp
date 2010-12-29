@@ -13,23 +13,6 @@ BRTRenderPass::~BRTRenderPass()
 {	
 }
 
-void BRTRenderPass::BeginPass(BViewport* Viewport)
-{
-	RShaderBase* pShader = RShaderTable::Shaders(1);
-	GDriver->SetFillMode(FillMode_Solid);
-	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
-	GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
-	pShader->BeginShader();
-
-	GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
-}
-
-void BRTRenderPass::EndPass()
-{
-	RShaderBase* pShader = RShaderTable::Shaders(1);
-	pShader->EndShader();
-}
-
 void BRTRenderPass::DrawPrimitive()
 {
 	struct VD

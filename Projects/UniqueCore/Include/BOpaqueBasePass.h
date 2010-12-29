@@ -11,7 +11,4 @@ public:
 	~BOpaqueBasePass();
 
 	void DrawPrimitive(BRenderingBatch *Batch);
-
-	void BeginPass(BViewport* Viewport);
-	void EndPass();	
 };

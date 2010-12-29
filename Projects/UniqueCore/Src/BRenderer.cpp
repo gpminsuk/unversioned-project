@@ -87,37 +87,7 @@ bool BRenderer::Render()
 
 bool BRenderer::RenderViewport(BViewport* Viewport)
 {
-	Viewport->BatchManager->RenderBatches(Viewport);
-
-	GBaseRTRenderPass->BeginPass(Viewport);
-	GBaseRTRenderPass->DrawPrimitive();
-	GBaseRTRenderPass->EndPass();
-
-	GDrawFontPass->BeginPass(Viewport);
-	for(unsigned int i=0;i<Viewport->BatchManager->RenderingBatches.Size();++i)
-	{
-		BRenderingBatch* Batch = Viewport->BatchManager->RenderingBatches(i);
-		if(Batch->RenderType == RenderType_UI)
-		{
-			Batch->RenderBaseScene();
-		}
-	}
-	GDrawFontPass->EndPass();
-	return true;
-}
-
-bool BRenderer::Syncronize()
-{
-	for(UINT i=0;i<m_Viewports.Size();++i)
-	{
-		SyncronizeViewport(m_Viewports[i]);	
-	}
-	return true;
-}
-
-bool BRenderer::SyncronizeViewport(BViewport* Viewport)
-{
-	Viewport->BatchManager->Syncronize();
+	Viewport->RenderViewport();
 	return true;
 }
 
@@ -134,8 +104,6 @@ void BRenderer::ThreadExecute()
 	int AccumulatedCount = 0;
 	//while(!Application->bQuit)
 	//{
-		Syncronize();
-
 		if(GDriver->BeginScene())
 		{
 			Render();

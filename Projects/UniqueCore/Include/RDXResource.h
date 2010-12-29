@@ -1,12 +1,27 @@
 #include "RResource.h"
 
+class RDirectXVertexShader : public RVertexShader
+{
+public:
+	RDirectXVertexShader() {}
+
+	struct IDirect3DVertexShader9* m_pVertexShader;
+};
+
+class RDirectXPixelShader : public RPixelShader
+{
+public:
+	RDirectXPixelShader() {}
+
+	struct IDirect3DPixelShader9* m_pPixelShader;
+};
+
 class RDirectXShader : public RShaderBase
 {
 public:
-	RDirectXShader() {}
+	RDirectXShader();
+	~RDirectXShader();
 
-	struct IDirect3DVertexShader9* m_pVertexShader;
-	struct IDirect3DPixelShader9* m_pPixelShader;
 	virtual bool BeginShader();
 	virtual bool SetParameter(BViewport* vp);
 	virtual bool SetLightParameter(BLightComponent* Light);

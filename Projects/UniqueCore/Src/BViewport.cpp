@@ -5,12 +5,15 @@
 #include <algorithm>
 
 #include "BDriver.h"
+#include "BRenderer.h"
 #include "BThing.h"
 #include "BComponent.h"
 #include "BLineBatcher.h"
 #include "BPrimitive.h"
 #include "BRenderingBatch.h"
 #include "BCollisionBody.h"
+
+#include "BRTRenderPass.h"
 
 BViewport::BViewport(void)
 :	VisibleScenes(Scene_World|Scene_Collision) // TODO
@@ -97,6 +100,15 @@ void BViewport::RenderLight(BLightComponent* pLightComponent)
 void BViewport::RemoveLight(BLightComponent* pLightComponent)
 {
 	m_Lights.DeleteItemByVal(pLightComponent);
+}
+
+void BViewport::RenderViewport()
+{
+	BatchManager->RenderBatchChunks(this);
+
+	GBaseRTRenderPass->BeginPass(this);
+	GBaseRTRenderPass->DrawPrimitive();
+	GBaseRTRenderPass->EndPass();
 }
 
 void BViewport::Clear()

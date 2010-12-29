@@ -11,9 +11,4 @@ public:
 	~BDrawUIPass();
 
 	void DrawPrimitive(BRenderingBatch *Batch);
-
-	void BeginPass(class BViewport* Viewport);
-	void EndPass();
-
-	class BViewport* m_Viewport;
 };

@@ -9,7 +9,7 @@ class RStandardVertexBuilder : public RShaderConfigure
 public:
 	RStandardVertexBuilder(class RShader* InShader) : RShaderConfigure(InShader) {}
 
-	void ConfigureShader(BPrimitive* InPrimitive);
+	virtual void ConfigureLight(BRenderingBatch* InBatch);
 };
 
 class RBaseSceneVertexShader : public RShaderConfigure
@@ -17,7 +17,7 @@ class RBaseSceneVertexShader : public RShaderConfigure
 public:
 	RBaseSceneVertexShader(class RShader* InShader) : RShaderConfigure(InShader) {}
 
-	void ConfigureShader(BPrimitive* InPrimitive);
+	virtual void ConfigureLight(BRenderingBatch* InBatch);
 };
 
 class RBaseScenePixelShader : public RShaderConfigure
@@ -25,5 +25,5 @@ class RBaseScenePixelShader : public RShaderConfigure
 public:
 	RBaseScenePixelShader(class RShader* InShader) : RShaderConfigure(InShader) {}
 
-	void ConfigureShader(BPrimitive* InPrimitive);	
+	virtual void ConfigureLight(BRenderingBatch* InBatch);	
 };

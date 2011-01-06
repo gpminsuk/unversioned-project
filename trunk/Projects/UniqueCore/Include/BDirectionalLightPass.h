@@ -3,7 +3,6 @@
 #include "BRenderPass.h"
 
 class BRenderingBatch;
-class BRenderingBatchChunk;
 class BViewport;
 class RRenderTarget;
 class BLight;

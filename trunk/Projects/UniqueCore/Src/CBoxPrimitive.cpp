@@ -187,20 +187,6 @@ unsigned int CBoxPrimitive::GetNumIndices()
 	return Primitives(0)->pBuffer->m_pIB->nIndices;
 }
 
-void CBoxPrimitive::ConfigureVertexBuilder()
-{
-}
-
-void CBoxPrimitive::ConfigurePixelShader(RPixelShader* PixelShader)
-{
-	PixelShader->Configure->ConfigureShader(this);
-}
-
-void CBoxPrimitive::ConfigureVertexShader(RVertexShader* VertexShader)
-{
-	VertexShader->Configure->ConfigureShader(this);
-}
-
 unsigned int CBoxPrimitive::FillDynamicVertexBuffer(char** pData)
 {
 	memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices, 

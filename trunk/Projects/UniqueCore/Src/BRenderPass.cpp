@@ -36,9 +36,9 @@ BRenderPass::~BRenderPass()
 {
 }
 
-void BRenderPass::BeginRenderBatch(BRenderingBatchChunk* BatchChunk)
+void BRenderPass::BeginRenderBatch(BRenderingBatch* Batch)
 {
-	Shader = BatchChunk->Shader;
+	Shader = Batch->Shader;
 
 	Shader->BeginShader();
 

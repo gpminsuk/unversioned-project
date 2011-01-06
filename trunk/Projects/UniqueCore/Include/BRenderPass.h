@@ -3,7 +3,7 @@
 class RShaderBase;
 class BViewport;
 class RRenderTarget;
-class BRenderingBatchChunk;
+class BRenderingBatch;
 
 class BRenderPassResource
 {
@@ -25,7 +25,7 @@ public:
 	virtual void BeginPass(BViewport* InViewport);
 	virtual void EndPass();
 
-	virtual void BeginRenderBatch(BRenderingBatchChunk* BatchChunk);
+	virtual void BeginRenderBatch(BRenderingBatch* Batch);
 	virtual void EndRenderBatch();
 
 	BRenderPassResource* RPR;

@@ -27,7 +27,7 @@ public:
 	void operator =(BViewport& vp);
 
 	BRenderingBatchManager* BatchManager;
-	TArray<BLightComponent*> m_Lights;
+	TArray<BLightComponent*> Lights;
 
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;

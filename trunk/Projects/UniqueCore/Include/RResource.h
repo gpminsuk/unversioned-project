@@ -8,7 +8,7 @@
 #include "TDataTypes.h"
 
 class BViewport;
-class BPrimitive;
+class BRenderingBatch;
 class BLightComponent;
 
 struct RConstant
@@ -30,7 +30,7 @@ public:
 
 	class RShader* Shader;
 
-	virtual void ConfigureShader(BPrimitive* InPrimitive) = 0;
+	virtual void ConfigureLight(BRenderingBatch* InBatch) = 0;
 };
 
 class RShader

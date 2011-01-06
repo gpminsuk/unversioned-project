@@ -3,6 +3,7 @@
 #include "BComponent.h"
 
 class BViewport;
+class RShader;
 
 class BLightComponent : public BComponent
 {
@@ -12,4 +13,6 @@ public:
 
 	virtual void RenderComponent(BViewport* Viewport);
 	virtual void UpdateComponent() = 0;
+
+	virtual void ConfigureShader(RShader* Shader) = 0;
 };

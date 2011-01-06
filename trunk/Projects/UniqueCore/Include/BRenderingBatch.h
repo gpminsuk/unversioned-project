@@ -5,21 +5,6 @@
 
 class BPrimitive;
 class BLight;
-class BRenderingBatch;
-
-class BRenderingBatchChunk
-{
-public:
-	TArray<BRenderingBatch*> Batches;
-
-	RShaderBase* Shader;
-
-	void RenderBaseScene();
-	void RenderLight();
-
-	void AddPrimitive(BPrimitive* Primitive);
-	void RemovePrimitive(BPrimitive* Primitive);
-};
 
 class BRenderingBatch
 {
@@ -27,9 +12,12 @@ public:
 	int nVertices;
 	int nVertexStride;
 
+	RShaderBase* Shader;
+
 	RDynamicPrimitiveBuffer* PrimitiveBuffer;
 
 	TArray<BPrimitive*> Primitives;
+	TArray<BLightComponent*> Lights;
 
 	enum EPrimitiveType PrimitiveType;
 	enum ERenderType RenderType;
@@ -40,7 +28,7 @@ public:
 	int GetNumIndices();
 	void IndexTessellate();
 
-	void ConfigureShader(RShaderBase* Shader);
+	void ConfigureShader();
 	void RenderBaseScene();
 	void RenderLight();
 };
@@ -51,10 +39,10 @@ public:
 	BRenderingBatchManager();
 	~BRenderingBatchManager();
 
-	TArray<BRenderingBatchChunk*> BatchChunks;
+	TArray<BRenderingBatch*> Batches;
 
 	void AddPrimitive(BPrimitive* Primitive);
 	void RemovePrimitive(BPrimitive* Primitive);
 
-	void RenderBatchChunks(BViewport* Viewport);
+	void RenderBatches(BViewport* Viewport);
 };

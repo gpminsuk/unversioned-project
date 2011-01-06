@@ -9,4 +9,6 @@ public:
 	~CDirectionalLightComponent();
 
 	virtual void UpdateComponent();
+
+	virtual void ConfigureShader(RShader* Shader);
 };

@@ -94,17 +94,17 @@ void BViewport::Render(BThing* pThing)
 
 void BViewport::RenderLight(BLightComponent* pLightComponent)
 {
-	m_Lights.AddItem(pLightComponent);
+	Lights.AddItem(pLightComponent);
 }
 
 void BViewport::RemoveLight(BLightComponent* pLightComponent)
 {
-	m_Lights.DeleteItemByVal(pLightComponent);
+	Lights.DeleteItemByVal(pLightComponent);
 }
 
 void BViewport::RenderViewport()
 {
-	BatchManager->RenderBatchChunks(this);
+	BatchManager->RenderBatches(this);
 
 	GBaseRTRenderPass->BeginPass(this);
 	GBaseRTRenderPass->DrawPrimitive();

@@ -2,7 +2,9 @@
 
 #include "CMeshPrimitive.h"
 
-#include "RResource.h"
+#include "RAnimationSequence.h"
+#include "RBoneHierarchy.h"
+#include "RSkeletalMesh.h"
 
 class TSkeletalMesh : public TPrimitive
 {

@@ -52,6 +52,8 @@ public:
 	virtual bool Tick(unsigned long Time);
 	virtual bool Access(AAccessor& Accessor);
 
+	void SaveObject(TString& ResourceName);
+
 	static AObject* CreateObject(AClass* Class, TString& ResourceName);
 protected:
 

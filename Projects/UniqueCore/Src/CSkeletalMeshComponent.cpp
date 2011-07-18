@@ -7,9 +7,6 @@ IMPLEMENT_CLASS(CSkeletalMeshComponent);
 
 CSkeletalMeshComponent::CSkeletalMeshComponent()
 {
-	//CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i), 
-	//	RTextureBufferTable::TextureBuffers(i));
-	//Primitives.AddItem(SkeletalMeshPrimitive);	
 }
 
 CSkeletalMeshComponent::~CSkeletalMeshComponent()

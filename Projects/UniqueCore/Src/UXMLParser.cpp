@@ -8,6 +8,8 @@
 #include "CDirectXDriver.h"
 #include "CWaveIODriver.h"
 
+#include "RASEImporter.h"
+
 #include "UWorld.h"
 
 BXMLParser::BXMLParser()
@@ -95,7 +97,13 @@ CXMLApplicationParser::~CXMLApplicationParser()
 }
 
 void CXMLApplicationParser::Parse()
-{	
+{
+	if( 1 )
+	{
+		RASEImporter Importer;
+		Importer.Import(TString("..\\..\\Resources\\woman.ASE"));
+		return;
+	}
 	TXMLElement Application;
 	if(Root.GetChildElement("Application", Application))
 	{

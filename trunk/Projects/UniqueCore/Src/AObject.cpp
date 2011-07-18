@@ -1,19 +1,6 @@
 #include "StdAfx.h"
 #include "AObject.h"
 
-AAccessor::~AAccessor()
-{
-	if(FilePointer)
-	{
-		fclose(FilePointer);
-	}
-}
-
-bool AAccessor::IsValid()
-{
-	return (FilePointer == 0)?false:true;
-}
-
 AReadAccessor::AReadAccessor(TString& Filename)
 {
 	fopen_s(&FilePointer, Filename.GetBuffer(), "rb");

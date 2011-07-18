@@ -7,6 +7,10 @@
 
 #include "CCylinderCollisionBody.h"
 
+#include "RAnimationSequence.h"
+#include "RBoneHierarchy.h"
+#include "RSkeletalMesh.h"
+
 #include "UWorld.h"
 
 CCharacter::CCharacter()
@@ -24,7 +28,9 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	CSkeletalMeshComponent* SkeletalMeshComponent = LoadResource<CSkeletalMeshComponent>(TString("..\\..\\Resources\\AObject.unq"));
+	RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\AObject.unq"));
+
+	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
 	Components.AddItem(SkeletalMeshComponent);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);

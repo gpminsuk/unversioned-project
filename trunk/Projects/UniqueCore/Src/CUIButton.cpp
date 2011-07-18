@@ -124,7 +124,7 @@ CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, in
 	PosX(x),
 	PosY(y)
 {
-	CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive(RTextureBufferTable::TextureBuffers(TexIndex));
+	/*CUIButtonPrimitive* ButtonPrimitive = new CUIButtonPrimitive();
 	Primitives.AddItem(ButtonPrimitive);
 	INT WinSizeX = 800;
 	INT WinSizeY = 600;
@@ -133,7 +133,7 @@ CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, in
 		Primitives(i)->Translation = TVector3((PosX / (float)WinSizeX)*0.0f-1.0f, ((WinSizeY - PosY) / (float)WinSizeY)*1.0f-0.0f, 0.0f);
 		Primitives(i)->TM = TMatrix(TVector3((PosX / (float)WinSizeX)*1.0f+0.0f, ((WinSizeY - PosY)/ (float)WinSizeY)*1.0f-1.0f, 0.0f),
 			TQuaternion(), TVector3((Width/(float)WinSizeX), (Height/(float)WinSizeY), 0.0f));
-	}
+	}*/
 }
 
 CUIButtonComponent::~CUIButtonComponent()

@@ -784,7 +784,63 @@
 							>
 						</File>
 						<File
+							RelativePath=".\Src\RShaderCompiler.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RShaderCompiler.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Src\RStandardVertexBuilder.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Importers"
+						>
+						<File
+							RelativePath=".\Src\RASEImporter.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RASEImporter.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RImporter.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RImporter.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Resources"
+						>
+						<File
+							RelativePath=".\Src\RAnimationSequence.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RAnimationSequence.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RBoneHierarchy.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RBoneHierarchy.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RSkeletalMesh.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RSkeletalMesh.h"
 							>
 						</File>
 					</Filter>

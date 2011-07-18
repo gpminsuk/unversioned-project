@@ -69,3 +69,12 @@ AObject* AObject::CreateObject(AClass* Class, TString& ResourceName)
 	}
 	return Object;
 }
+
+void AObject::SaveObject(TString& ResourceName)
+{
+	AWriteAccessor Accessor(ResourceName);
+	if(Accessor.IsValid())
+	{
+		Access(Accessor);
+	}
+}

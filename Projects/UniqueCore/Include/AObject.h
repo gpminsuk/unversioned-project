@@ -6,27 +6,6 @@
 
 class ACriticalSection;
 
-#define AACCESSOR_OPERATOR(type)				\
-	virtual AAccessor& operator<<( ##type& A )	\
-	{											\
-		Access(&A, sizeof(A));					\
-		return *this;							\
-	}											\
-
-class AAccessor
-{
-public:
-	~AAccessor();
-	virtual void Access(void *A, int Size) = 0;
-	virtual bool IsValid();
-
-	AACCESSOR_OPERATOR(float);
-	AACCESSOR_OPERATOR(int);
-	AACCESSOR_OPERATOR(unsigned int);
-protected:
-	FILE* FilePointer;
-};
-
 class AReadAccessor : public AAccessor
 {
 public:
@@ -42,7 +21,7 @@ public:
 
 	void Access(void*A, int Size);
 };
-		
+
 class AObject
 {
 	DECLARE_CLASS(AObject, CLASS_Abstract)
@@ -61,6 +40,12 @@ protected:
 	virtual ~AObject(void);
 
 	unsigned int m_iObjectId;		//오브젝트마다 고유의 아이디가있음
+
+	friend AAccessor& operator<<( AAccessor& Ar, AObject* A )
+	{
+		A->Access(Ar);
+		return Ar;
+	}
 };
 
 template <class T>

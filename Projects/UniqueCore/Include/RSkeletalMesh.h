@@ -4,8 +4,9 @@
 #include "TDataTypes.h"
 #include "RResource.h"
 
-class RSkeletalSubMesh
+class RSkeletalSubMesh : public AObject
 {
+	DECLARE_CLASS(RSkeletalSubMesh,)
 public:
 	typedef struct
 	{
@@ -19,6 +20,8 @@ public:
 
 	RSystemMemoryVertexBuffer*	pVB;
 	RSystemMemoryIndexBuffer* pIB;
+
+	virtual bool Access(AAccessor& Accessor);
 };
 
 class RSkeletalMesh : public AObject
@@ -32,4 +35,6 @@ public:
 		SkeletalSubMeshes.Clear(true);
 	}
 	TArray<RSkeletalSubMesh*>	SkeletalSubMeshes;
+
+	virtual bool Access(AAccessor& Accessor);
 };

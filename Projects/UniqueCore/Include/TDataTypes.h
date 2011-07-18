@@ -14,6 +14,29 @@
 // Bitfield type.
 typedef unsigned long       BITFIELD;	// For bitfields.
 
+#define AACCESSOR_OPERATOR(type)				\
+	virtual AAccessor& operator<<( ##type& A )	\
+{											\
+	Access(&A, sizeof(A));					\
+	return *this;							\
+}											\
+
+class AObject;
+
+class AAccessor
+{
+public:
+	~AAccessor();
+	virtual void Access(void *A, int Size) = 0;
+	virtual bool IsValid();
+
+	AACCESSOR_OPERATOR(float);
+	AACCESSOR_OPERATOR(int);
+	AACCESSOR_OPERATOR(unsigned int);
+protected:
+	FILE* FilePointer;
+};
+
 template <class T>
 class TArray
 {
@@ -75,6 +98,15 @@ public:
 	size_t Size()
 	{
 		return mArray.size();
+	}
+
+	friend AAccessor& operator<<( AAccessor& Ar, TArray& A )
+	{
+		for(unsigned int i=0;i<A.Size();++i)
+		{
+			Ar << A[i];
+		}
+		return Ar;
 	}
 };
 
@@ -783,30 +815,3 @@ public:
 	TBoundingBox Box;
 	TBoundingSphere Sphere;
 };
-
-/*
-template <typename T>
-class TArray
-{
-private: 
-	enum
-	{
-		DEFAULT_SIZE = 16,
-	};
-
-	T* m_Data;
-	int m_Size;
-	int m_Num;
-
-	void Init(int size);
-
-public: 
-	TArray();
-	TArray(int size);
-	~TArray();
-	void Add(T item);
-	void Resize(int size);
-	int GetLength();
-	T& operator [](int& index);
-	void operator =(TArray<T>& R);
-};*/

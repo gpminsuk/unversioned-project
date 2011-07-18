@@ -5,8 +5,9 @@
 
 class CSkeletalMeshComponent : public BComponent
 {
+	DECLARE_CLASS(CSkeletalMeshComponent,)
 public:
-	CSkeletalMeshComponent(int i);
+	CSkeletalMeshComponent();
 	virtual ~CSkeletalMeshComponent();
 
 	virtual void UpdateComponent();

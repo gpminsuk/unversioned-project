@@ -79,7 +79,7 @@ void CMaderApp::Do()
 {
 	while(!bQuit)
 	{
-		Sleep(1000);	
+		Sleep(1000);
 	}
 }
 

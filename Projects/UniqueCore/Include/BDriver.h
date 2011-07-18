@@ -85,6 +85,15 @@ enum EBlendState
 	BlendState_InvSrcColor2,
 };
 
+enum EBlendOperation
+{
+	BlendOp_Add,
+	BlendOp_Subtract,
+	BlendOp_Min,
+	BlendOp_Max,
+	BlendOp_ReverseSubtract,
+};
+
 enum ECompareFunction
 {
 	CompareFunc_Never,
@@ -113,11 +122,7 @@ struct TStencilState
 	unsigned long StencilWriteMask;
 	unsigned long StencilRef;
 
-	TStencilState() : EnableStencil(false), StencilTest(CompareFunc_Always), StencilFailOp(StencilOp_Keep), StencilZFailOp(StencilOp_Keep), StencilZPassOp(StencilOp_Keep),
-						EnableTwoSideStencil(false), BackFaceStencilTest(CompareFunc_Always), BackFaceStencilFailOp(StencilOp_Keep), BackFaceStencilZFailOp(StencilOp_Keep), BackFaceStencilZPassOp(StencilOp_Keep),
-						StencilReadMask(0xFFFFFFFF), StencilWriteMask(0xFFFFFFFF), StencilRef(0) {}
-
-	TStencilState(bool _EnableStencil, ECompareFunction _StencilTest=CompareFunc_Always, EStencilOperation _StencilFailOp=StencilOp_Keep, EStencilOperation _StencilZFailOp=StencilOp_Keep, EStencilOperation _StencilZPassOp=StencilOp_Keep, 
+	TStencilState(bool _EnableStencil=false, ECompareFunction _StencilTest=CompareFunc_Always, EStencilOperation _StencilFailOp=StencilOp_Keep, EStencilOperation _StencilZFailOp=StencilOp_Keep, EStencilOperation _StencilZPassOp=StencilOp_Keep, 
 		bool _EnableTwoSideStencil=false, ECompareFunction _BackFaceStencilTest=CompareFunc_Always, EStencilOperation _BackFaceStencilFailOp=StencilOp_Keep, EStencilOperation _BackFaceStencilZFailOp=StencilOp_Keep, EStencilOperation _BackFaceStencilZPassOp=StencilOp_Keep, 
 		unsigned long _StencilReadMask=0xFFFFFFFF, unsigned long _StencilWriteMask=0xFFFFFFFF, unsigned long _StencilRef=0)	: 
 		EnableStencil(_EnableStencil),
@@ -150,14 +155,26 @@ struct TDepthState
 
 struct TBlendState
 {
-	EBlendState SrcBlendState;
-	EBlendState DestBlendState;
+	bool EnableAlphaBlend;
+	EBlendOperation ColorBlendOp;
+	EBlendState SrcColorBlendState;
+	EBlendState DestColorBlendState;
+	EBlendOperation AlphaBlendOp;
+	EBlendState SrcAlphaBlendState;
+	EBlendState DestAlphaBlendState;
 
-	TBlendState() : SrcBlendState(BlendState_One), DestBlendState(BlendState_Zero) {}
-	TBlendState(EBlendState _SrcBlendState, EBlendState _DestBlendState) :
-		SrcBlendState(_SrcBlendState),
-		DestBlendState(_DestBlendState)
-	{ }
+	TBlendState(EBlendOperation _ColorBlendOp=BlendOp_Add, EBlendState _SrcColorBlendState=BlendState_One, EBlendState _DestColorBlendState=BlendState_Zero, 
+		EBlendOperation _AlphaBlendOp=BlendOp_Add, EBlendState _SrcAlphaBlendState=BlendState_One, EBlendState _DestAlphaBlendState=BlendState_Zero) :
+		ColorBlendOp(_ColorBlendOp),
+		SrcColorBlendState(_SrcColorBlendState),
+		DestColorBlendState(_DestColorBlendState),
+		AlphaBlendOp(_AlphaBlendOp),
+		SrcAlphaBlendState(_SrcAlphaBlendState),
+		DestAlphaBlendState(_DestAlphaBlendState)
+	{
+		EnableAlphaBlend = ColorBlendOp != BlendOp_Add || SrcAlphaBlendState != BlendState_One || DestColorBlendState != BlendState_Zero ||
+			AlphaBlendOp != BlendOp_Add || DestAlphaBlendState != BlendState_One || SrcAlphaBlendState != BlendState_Zero;
+	}
 };
 
 struct TLockedRect

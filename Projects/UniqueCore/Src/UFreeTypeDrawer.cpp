@@ -42,10 +42,11 @@ void UFreeTypeFontDrawer::DrawString(TString String, RTextureBuffer *Tex)
 	// TODO 매프레임 텍스트 로딩 안해도 되게 캐싱 해야함
 	TLockedRect Rect = DXTex->Lock();
 	int *pColor = (int*)Rect.pBits;
+	unsigned int TexWidth = Rect.Pitch / 4;
 
 	for(unsigned int i=0;i<DXTex->Height;++i)
 	{
-		for(unsigned int j=0;j<DXTex->Width;++j)
+		for(unsigned int j=0;j<TexWidth;++j)
 		{
 			pColor[i*DXTex->Width+j] = 0;
 		}
@@ -81,16 +82,16 @@ void UFreeTypeFontDrawer::DrawString(TString String, RTextureBuffer *Tex)
 
 		for (y=0;y<((height<Tex->Height)?height:Tex->Height);y++)
 		{
-			for (x=0;x<((width<Tex->Width)?width:Tex->Width);x++)
+			for (x=0;x<((width<TexWidth)?width:TexWidth);x++)
 			{
 				Color= face->glyph->bitmap.buffer[y*width+x];
-				if (Color != 0 && (x+i*10 < Tex->Width))
+				if (Color != 0 && (x+i*10 < TexWidth))
 				{
-					pColor[y*Tex->Width+x+(i*10)] = (Color) + (Color << 8) + (Color << 16) + (255 << 24);
+					pColor[y*TexWidth+x+(i*10)] = (Color) + (Color << 8) + (Color << 16) + (Color << 24);
 				}
 				else
 				{
-					pColor[y*Tex->Width+x+(i*10)] = (0) + (0 << 8) + (0 << 16) + (255 << 24);
+					pColor[y*TexWidth+x+(i*10)] = (0) + (0 << 8) + (0 << 16) + (0 << 24);
 				}
 			}
 		}

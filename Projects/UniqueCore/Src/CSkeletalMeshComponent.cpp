@@ -3,11 +3,13 @@
 #include "CSkeletalMeshPrimitive.h" 
 #include "BDriver.h"
 
-CSkeletalMeshComponent::CSkeletalMeshComponent(int i)
+IMPLEMENT_CLASS(CSkeletalMeshComponent);
+
+CSkeletalMeshComponent::CSkeletalMeshComponent()
 {
-	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i), 
-		RTextureBufferTable::TextureBuffers(i));
-	Primitives.AddItem(SkeletalMeshPrimitive);	
+	//CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive(RBoneHierarchyTable::BoneHierarchies(i), RSkeletalMeshTable::SkeletalMeshes(i), RAnimationSequenceTable::Sequences(i), 
+	//	RTextureBufferTable::TextureBuffers(i));
+	//Primitives.AddItem(SkeletalMeshPrimitive);	
 }
 
 CSkeletalMeshComponent::~CSkeletalMeshComponent()
@@ -23,7 +25,7 @@ void CSkeletalMeshComponent::UpdateComponent()
 
 void CSkeletalMeshComponent::PlayAnimation(int StartTime, bool Loop)
 {
-	for(int i=0;i<Primitives(0)->Primitives.Size();++i)
+	for(unsigned int i=0;i<Primitives(0)->Primitives.Size();++i)
 	{
 		TSkeletalMesh* Prim = (TSkeletalMesh*)Primitives(0)->Primitives(i);
 		if(Prim)
@@ -37,7 +39,7 @@ void CSkeletalMeshComponent::PlayAnimation(int StartTime, bool Loop)
 
 void CSkeletalMeshComponent::StopAnimation()
 {
-	for(int i=0;i<Primitives(0)->Primitives.Size();++i)
+	for(unsigned int i=0;i<Primitives(0)->Primitives.Size();++i)
 	{
 		TSkeletalMesh* Prim = (TSkeletalMesh*)Primitives(0)->Primitives(i);
 		if(Prim)

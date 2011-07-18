@@ -67,7 +67,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\;..\External\WaveIO\Win32"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames="libcmt.lib"

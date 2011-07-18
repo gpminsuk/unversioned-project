@@ -40,6 +40,10 @@ class UClass_##ClassName : public AClass												\
 		}																				\
 	};																					\
 	static UClass_##ClassName Class__##ClassName;										\
+	static AClass* Class()																\
+	{																					\
+		return (AClass*)&Class__##ClassName;											\
+	}																					\
 
 #define IMPLEMENT_CLASS(ClassName)														\
 	ClassName::UClass_##ClassName ClassName::Class__##ClassName;						\

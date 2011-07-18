@@ -86,7 +86,6 @@ void BRenderingBatch::RenderBaseScene()
 
 BRenderingBatchManager::BRenderingBatchManager()
 {
-
 }
 
 BRenderingBatchManager::~BRenderingBatchManager()
@@ -95,20 +94,18 @@ BRenderingBatchManager::~BRenderingBatchManager()
 
 void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 {
-	/*GOpaqueBasePass->BeginPass(Viewport);
-	for(unsigned int i=0;i<BatchChunks.Size();++i)
+	GOpaqueBasePass->BeginPass(Viewport);
+	for(unsigned int i=0;i<Batches.Size();++i)
 	{
-		BRenderingBatchChunk* Chunk = BatchChunks(i);
+		BRenderingBatch* Batch = Batches(i);
 
-		GOpaqueBasePass->BeginRenderBatch(Chunk);
-
+		GOpaqueBasePass->BeginRenderBatch(Batch);
 		{
-			Chunk->RenderBaseScene();
+			Batch->RenderBaseScene();
 		}
-
 		GOpaqueBasePass->EndRenderBatch();
 	}
-	GOpaqueBasePass->EndPass();*/
+	GOpaqueBasePass->EndPass();
 
 	GDirectionalLightPass->BeginPass(Viewport);
 	for(unsigned int i=0;i<Viewport->Lights.Size();++i)
@@ -118,12 +115,10 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport)
 			BRenderingBatch* Batch = Batches(i);
 			Batch->Lights = Viewport->Lights;
 			GDirectionalLightPass->BeginRenderBatch(Batch);
-
 			{
 				Batch->ConfigureShader();
 				Batch->RenderLight();
 			}
-
 			GDirectionalLightPass->EndRenderBatch();
 		}
 	}

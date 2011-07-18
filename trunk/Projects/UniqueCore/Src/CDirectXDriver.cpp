@@ -9,6 +9,18 @@
 
 #include "RDXResource.h"
 
+#define DX9_SET_BLENDSTATE(a1, a2) \
+	if(CurrentBlendState.##a2 != BlendState.##a2)\
+	{\
+	GetDevice()->SetRenderState(##a1, GBlendState[CurrentBlendState.##a2 = BlendState.##a2]);\
+	}
+
+#define DX9_SET_STENCILSTATE(a1, a2) \
+	if(CurrentStencilState.##a2 != StencilState.##a2)\
+	{\
+	GetDevice()->SetRenderState(##a1, GBlendState[CurrentStencilState.##a2 = StencilState.##a2]);\
+	}
+
 D3DFORMAT GPixelFormats[] = 
 {
 	D3DFMT_A8R8G8B8,
@@ -704,88 +716,51 @@ void CDirectXDriver::SetFillMode(EFillMode FM)
 
 void CDirectXDriver::SetStencilState(TStencilState& StencilState)
 {
-	if(CurrentStencilState.EnableStencil != StencilState.EnableStencil)
-	{
-		GetDevice()->SetRenderState(D3DRS_STENCILENABLE, CurrentStencilState.EnableStencil = StencilState.EnableStencil);
-	}
+	DX9_SET_STENCILSTATE(D3DRS_STENCILENABLE, EnableStencil);
 	if(CurrentStencilState.EnableStencil)
 	{
 		bool DoesUseComp=false;
-		if(CurrentStencilState.StencilTest != StencilState.StencilTest)
-		{
-			GetDevice()->SetRenderState(D3DRS_STENCILFUNC, GCompareFunction[CurrentStencilState.StencilTest = StencilState.StencilTest]);
-		}
+		DX9_SET_STENCILSTATE(D3DRS_STENCILFUNC, StencilTest);
 		if(CurrentStencilState.StencilTest != CompareFunc_Always || CurrentStencilState.StencilTest != CompareFunc_Never)
 		{
-			if(CurrentStencilState.StencilFailOp != StencilState.StencilFailOp)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILFAIL, GStencilOperation[CurrentStencilState.StencilFailOp = StencilState.StencilFailOp]);
-			}
-			if(CurrentStencilState.StencilZFailOp != StencilState.StencilZFailOp)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILZFAIL, GStencilOperation[CurrentStencilState.StencilZFailOp = StencilState.StencilZFailOp]);
-			}
-			if(CurrentStencilState.StencilZPassOp != StencilState.StencilZPassOp)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILPASS, GStencilOperation[CurrentStencilState.StencilZPassOp = StencilState.StencilZPassOp]);
-			}
+			DX9_SET_STENCILSTATE(D3DRS_STENCILFAIL, StencilFailOp);
+			DX9_SET_STENCILSTATE(D3DRS_STENCILZFAIL, StencilZFailOp);
+			DX9_SET_STENCILSTATE(D3DRS_STENCILPASS, StencilZPassOp);
 			DoesUseComp = true;
 		}
-		if(CurrentStencilState.EnableTwoSideStencil != StencilState.EnableTwoSideStencil)
-		{
-			GetDevice()->SetRenderState(D3DRS_CCW_STENCILFUNC, GCompareFunction[CurrentStencilState.StencilTest = StencilState.StencilTest]);
-		}
+		DX9_SET_STENCILSTATE(D3DRS_CCW_STENCILFUNC, EnableTwoSideStencil);
 		if(CurrentStencilState.EnableTwoSideStencil)
 		{
-			if(CurrentStencilState.BackFaceStencilTest != StencilState.BackFaceStencilTest)
-			{
-				GetDevice()->SetRenderState(D3DRS_CCW_STENCILFUNC, GCompareFunction[CurrentStencilState.BackFaceStencilTest = StencilState.BackFaceStencilTest]);
-			}
+			DX9_SET_STENCILSTATE(D3DRS_CCW_STENCILFUNC, BackFaceStencilTest);
 			if(CurrentStencilState.BackFaceStencilTest != CompareFunc_Always || CurrentStencilState.BackFaceStencilTest != CompareFunc_Never)
 			{
-				if(CurrentStencilState.BackFaceStencilFailOp != StencilState.BackFaceStencilFailOp)
-				{
-					GetDevice()->SetRenderState(D3DRS_CCW_STENCILFAIL, GStencilOperation[CurrentStencilState.BackFaceStencilFailOp = StencilState.BackFaceStencilFailOp]);
-				}
-				if(CurrentStencilState.BackFaceStencilZFailOp != StencilState.BackFaceStencilZFailOp)
-				{
-					GetDevice()->SetRenderState(D3DRS_CCW_STENCILZFAIL, GStencilOperation[CurrentStencilState.BackFaceStencilZFailOp = StencilState.BackFaceStencilZFailOp]);
-				}
-				if(CurrentStencilState.BackFaceStencilZPassOp != StencilState.BackFaceStencilZPassOp)
-				{
-					GetDevice()->SetRenderState(D3DRS_CCW_STENCILPASS, GStencilOperation[CurrentStencilState.BackFaceStencilZPassOp = StencilState.BackFaceStencilZPassOp]);
-				}
+				DX9_SET_STENCILSTATE(D3DRS_STENCILFAIL, BackFaceStencilFailOp);
+				DX9_SET_STENCILSTATE(D3DRS_STENCILZFAIL, BackFaceStencilZFailOp);
+				DX9_SET_STENCILSTATE(D3DRS_STENCILPASS, BackFaceStencilZPassOp);
 				DoesUseComp = true;
 			}
 		}
 		if(DoesUseComp)
 		{
-			if(CurrentStencilState.StencilReadMask != StencilState.StencilReadMask)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILMASK, CurrentStencilState.StencilReadMask = StencilState.StencilReadMask);
-			}
-			if(CurrentStencilState.StencilWriteMask != StencilState.StencilWriteMask)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILWRITEMASK, CurrentStencilState.StencilWriteMask = StencilState.StencilWriteMask);
-			}
-			if(CurrentStencilState.StencilRef != CurrentStencilState.StencilRef)
-			{
-				GetDevice()->SetRenderState(D3DRS_STENCILREF, CurrentStencilState.StencilRef = StencilState.StencilRef);
-			}
+			DX9_SET_STENCILSTATE(D3DRS_STENCILMASK, StencilReadMask);
+			DX9_SET_STENCILSTATE(D3DRS_STENCILWRITEMASK, StencilWriteMask);
+			DX9_SET_STENCILSTATE(D3DRS_STENCILREF, StencilRef);
 		}
 	}
 }
 
 void CDirectXDriver::SetBlendState(TBlendState& BlendState)
 {
-	if(CurrentBlendState.SrcBlendState != BlendState.SrcBlendState)
+	DX9_SET_BLENDSTATE(D3DRS_ALPHABLENDENABLE, EnableAlphaBlend);
+	if(CurrentBlendState.EnableAlphaBlend)
 	{
-		GetDevice()->SetRenderState(D3DRS_SRCBLEND, GBlendState[CurrentBlendState.SrcBlendState = BlendState.SrcBlendState]);
-	}
-	if(CurrentBlendState.DestBlendState != BlendState.DestBlendState)
-	{
-		GetDevice()->SetRenderState(D3DRS_DESTBLEND, GBlendState[CurrentBlendState.DestBlendState = BlendState.DestBlendState]);
-	}
+		DX9_SET_BLENDSTATE(D3DRS_BLENDOP, ColorBlendOp);
+		DX9_SET_BLENDSTATE(D3DRS_SRCBLEND, SrcColorBlendState);
+		DX9_SET_BLENDSTATE(D3DRS_DESTBLEND, DestColorBlendState);
+		DX9_SET_BLENDSTATE(D3DRS_BLENDOPALPHA, AlphaBlendOp);
+		DX9_SET_BLENDSTATE(D3DRS_SRCBLENDALPHA, SrcAlphaBlendState);
+		DX9_SET_BLENDSTATE(D3DRS_DESTBLENDALPHA, DestAlphaBlendState);
+	}	
 }
 
 void CDirectXDriver::SetDepthState(TDepthState& DepthState)

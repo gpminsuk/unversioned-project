@@ -130,6 +130,11 @@ public:
 	}
 };
 
+class TFilename : public TString
+{
+public:
+};
+
 class TIndex16
 {
 public:

@@ -5,6 +5,7 @@
 #include "BDriver.h"
 #include "BSoundDriver.h"
 
+#include "BTextDrawer.h"
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
 #include "BDrawLinePass.h"
@@ -43,10 +44,12 @@ BRenderer::BRenderer(AApplication *App)
 	GDirectionalLightPass = new BDirectionalLightPass();
 
 	LineBatcher = new BLineBatcher();
+	GTextDrawer = new BTextDrawer();
 }
 
 BRenderer::~BRenderer()
 {
+	delete GTextDrawer;
 	delete LineBatcher;	
 	delete GParticleRenderPass;
 	delete GDrawFontPass;

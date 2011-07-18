@@ -8,6 +8,7 @@
 #include <d3dx9effect.h>
 
 #include "CWindowApp.h"
+#include "CUIButton.h"
 
 CCameraViewport::CCameraViewport()
 {

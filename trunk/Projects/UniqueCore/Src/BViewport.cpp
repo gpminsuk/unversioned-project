@@ -6,6 +6,7 @@
 
 #include "BDriver.h"
 #include "BRenderer.h"
+#include "BTextDrawer.h"
 #include "BThing.h"
 #include "BComponent.h"
 #include "BLineBatcher.h"
@@ -109,6 +110,8 @@ void BViewport::RenderViewport()
 	GBaseRTRenderPass->BeginPass(this);
 	GBaseRTRenderPass->DrawPrimitive();
 	GBaseRTRenderPass->EndPass();
+
+	GTextDrawer->DrawTexts(this);
 }
 
 void BViewport::Clear()

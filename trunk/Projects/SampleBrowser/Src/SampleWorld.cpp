@@ -3,6 +3,7 @@
 
 #include "CBox.h"
 #include "CDirectionalLight.h"
+#include "CCharacter.h"
 
 IMPLEMENT_CLASS(USampleWorld);
 
@@ -17,6 +18,11 @@ USampleWorld::~USampleWorld()
 bool USampleWorld::DestroyWorld()
 {
 	__super::DestroyWorld();
+
+	delete Box;
+	delete DirectionalLight;
+	delete Character;
+
 	return true;
 }
 bool USampleWorld::InitializeWorld()
@@ -32,6 +38,10 @@ bool USampleWorld::InitializeWorld()
 	DirectionalLight->m_Location = TVector3(0.0f, 100.0f, 0.0f);
 	DirectionalLight->UpdateTransform();
 	AddThing(DirectionalLight);
+
+	Character = new CCharacter();
+	Character->UpdateTransform();
+	AddThing(Character);
 
 	return true;
 }

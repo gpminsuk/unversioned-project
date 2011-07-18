@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "AObject.h"
 #include "CCharacter.h"
 
 #include "CBoxPrimitive.h"
@@ -23,7 +24,7 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent(0);
+	CSkeletalMeshComponent* SkeletalMeshComponent = LoadResource<CSkeletalMeshComponent>(TString("..\\..\\Resources\\AObject.unq"));
 	Components.AddItem(SkeletalMeshComponent);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);

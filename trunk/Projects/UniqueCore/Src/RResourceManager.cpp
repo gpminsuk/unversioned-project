@@ -574,11 +574,6 @@ bool RResourceManager::LoadResources()
 	TString Filename;
 	//////////////////////////////////// Sound Loading
 
-	//////////////////////////////////// Texture Loading
-	
-	RTextureBuffer *pTexBuffer = GDriver->CreateFontBuffer(128,32);
-	RTextureBufferTable::TextureBuffers.AddItem(pTexBuffer);
-
 	//////////////////////////////////// Shader Loading
 	RDirectXShader *pShader = new RDirectXShader();
 	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");

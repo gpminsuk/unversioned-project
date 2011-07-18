@@ -10,6 +10,7 @@ public:
 	~USampleWorld();
 
 	class CBox* Box;						// ¹æ
+	class CCharacter* Character;
 	class CDirectionalLight* DirectionalLight;
 	
 	virtual bool InitializeWorld();

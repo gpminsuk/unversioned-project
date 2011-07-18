@@ -16,8 +16,6 @@
 #include "CEmitter.h"
 #include "CCylinderPrimitive.h"
 
-#include "..\..\UniqueUI\Include\CUIButton.h"
-
 UWorld* GWorld;
 
 UWorld::UWorld()

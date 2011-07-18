@@ -573,6 +573,14 @@
 							RelativePath=".\Include\BPrimitive.h"
 							>
 						</File>
+						<File
+							RelativePath=".\Src\BTextDrawer.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\BTextDrawer.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Thread"
@@ -1014,6 +1022,26 @@
 					</File>
 				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="UI"
+			>
+			<File
+				RelativePath=".\Src\CUIButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CUIButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\CUILabel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Include\CUILabel.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\stdafx.h"

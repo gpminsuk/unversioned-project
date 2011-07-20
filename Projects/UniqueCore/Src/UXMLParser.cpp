@@ -98,7 +98,7 @@ CXMLApplicationParser::~CXMLApplicationParser()
 
 void CXMLApplicationParser::Parse()
 {
-	if( 0 )
+	if( 0 ) 
 	{
 		RASEImporter Importer;
 		RAnimationSequence* AnimationSequence;

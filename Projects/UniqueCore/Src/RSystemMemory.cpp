@@ -27,8 +27,8 @@ bool RSystemMemoryVertexBuffer::Access(AAccessor& Accessor)
 		pVertices = new char[nVertexStride*nVertices];
 	}
 	for(unsigned int i=0;i<nVertices;++i)
-	{
-		Accessor << pVertices[i];
+	{		
+		Accessor.Access(&pVertices[i*nVertexStride], nVertexStride);
 	}	
 	return true;
 }

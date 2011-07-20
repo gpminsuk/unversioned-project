@@ -30,8 +30,8 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	//RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\SkeletalMesh.unq"));
-	//RBoneHierarchy* BoneHierarchy = LoadResource<RBoneHierarchy>(TString("..\\..\\Resources\\BoneHierarchy.unq"));
+	RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\SkeletalMesh.unq"));
+	RBoneHierarchy* BoneHierarchy = LoadResource<RBoneHierarchy>(TString("..\\..\\Resources\\BoneHierarchy.unq"));
 
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
 	Components.AddItem(SkeletalMeshComponent);
@@ -42,9 +42,9 @@ CCharacter::CCharacter()
 
 	RASEImporter Importer;
 	RAnimationSequence* AnimationSequence = NULL;
-	RBoneHierarchy* BoneHierarchy;
-	RSkeletalMesh* SkeletalMesh;
-	Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, SkeletalMesh);
+	//RBoneHierarchy* BoneHierarchy;
+	//RSkeletalMesh* SkeletalMesh;
+	//Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, SkeletalMesh);
 
 	SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, SkeletalMesh, NULL);
 

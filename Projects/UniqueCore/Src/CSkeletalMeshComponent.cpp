@@ -7,10 +7,17 @@ IMPLEMENT_CLASS(CSkeletalMeshComponent);
 
 CSkeletalMeshComponent::CSkeletalMeshComponent()
 {
+	SkeletalMeshPrimitive = new CSkeletalMeshPrimitive();	
+	Primitives.AddItem(SkeletalMeshPrimitive);	
 }
 
 CSkeletalMeshComponent::~CSkeletalMeshComponent()
 {
+}
+
+void CSkeletalMeshComponent::SetSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* AnimationSeq)
+{
+	SkeletalMeshPrimitive->SetSkeletalMesh(InBoneHierarchy, InSkeletalMesh, AnimationSeq);
 }
 
 void CSkeletalMeshComponent::UpdateComponent()

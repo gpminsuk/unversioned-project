@@ -98,10 +98,13 @@ CXMLApplicationParser::~CXMLApplicationParser()
 
 void CXMLApplicationParser::Parse()
 {
-	if( 1 )
+	if( 0 )
 	{
 		RASEImporter Importer;
-		Importer.Import(TString("..\\..\\Resources\\woman.ASE"));
+		RAnimationSequence* AnimationSequence;
+		RBoneHierarchy* BoneHierarchy;
+		RSkeletalMesh* Model;
+		Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, Model);
 		return;
 	}
 	TXMLElement Application;

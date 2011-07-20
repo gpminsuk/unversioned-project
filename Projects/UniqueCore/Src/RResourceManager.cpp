@@ -22,6 +22,12 @@ bool RResourceManager::LoadResources()
 {
 	TString Filename;
 	//////////////////////////////////// Sound Loading
+	RTexture* Texture = new RTexture();
+	GDriver->CreateTextureBuffer(256, 256);
+
+	Filename = "..\\..\\Resources\\terrain.jpg";
+	extern RTextureBuffer* GDefaultTexture;
+	GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
 
 	//////////////////////////////////// Shader Loading
 	RDirectXShader *pShader = new RDirectXShader();
@@ -66,19 +72,6 @@ bool RResourceManager::ReleaseAllResources()
 	delete GCylinderPrimitive;
 	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
 	delete GCylinderPrimitiveWireFrame;
-	/////////////////////////////////////////////////////// Vertex Buffer Releasing
-	for(unsigned int i=0;i<RSystemMemoryVertexBufferTable::VertexBuffers.Size();++i)
-	{
-		delete RSystemMemoryVertexBufferTable::VertexBuffers(i);
-	}
-	RSystemMemoryVertexBufferTable::VertexBuffers.Clear(true);
-
-	/////////////////////////////////////////////////////// Index Buffer Releasing
-	for(unsigned int i=0;i<RSystemMemoryIndexBufferTable::IndexBuffers.Size();++i)
-	{
-		delete RSystemMemoryIndexBufferTable::IndexBuffers(i);
-	}
-	RSystemMemoryIndexBufferTable::IndexBuffers.Clear(true);
 
 	//////////////////////////////////// Shader Releasing
 	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)

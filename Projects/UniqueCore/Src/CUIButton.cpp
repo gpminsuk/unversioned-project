@@ -8,9 +8,7 @@ TUIButtonPrimitive::TUIButtonPrimitive()
 	pBuffer = new RStaticPrimitiveBuffer();
 
 	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 	pBuffer->m_pVB = pVB;
 	pBuffer->m_pIB = pIB;
 

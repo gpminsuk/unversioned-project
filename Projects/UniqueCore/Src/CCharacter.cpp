@@ -10,6 +10,7 @@
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
 #include "RSkeletalMesh.h"
+#include "RASEImporter.h"
 
 #include "UWorld.h"
 
@@ -28,10 +29,19 @@ CCharacter::CCharacter()
 
 	m_Location		= TVector3(0, 0, 0);
 
-	RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\AObject.unq"));
+	//RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\SkeletalMesh.unq"));
+	//RBoneHierarchy* BoneHierarchy = LoadResource<RBoneHierarchy>(TString("..\\..\\Resources\\BoneHierarchy.unq"));
 
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
 	Components.AddItem(SkeletalMeshComponent);
+
+	RASEImporter Importer;
+	RAnimationSequence* AnimationSequence;
+	RBoneHierarchy* BoneHierarchy;
+	RSkeletalMesh* Model;
+	Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, Model);
+
+	SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, Model, AnimationSequence);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CharacterCollisionBody);

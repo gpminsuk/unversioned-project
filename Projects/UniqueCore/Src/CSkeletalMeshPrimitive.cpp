@@ -5,17 +5,12 @@
 
 #define TEST_BIP_EXCLUDED
 
-CSkeletalMeshPrimitive::CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence, RTextureBuffer* InTexture)
+CSkeletalMeshPrimitive::CSkeletalMeshPrimitive()
 {
 	RenderType = RenderType_Opaque;
 
-	Texture = InTexture;
-	for(unsigned int i=0;i<InBoneHierarchy->RootBone.Size();++i)
-	{
-		SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy->RootBone(i), InSkeletalMesh, InAnimationSequence);
-		UpdatePrimitive();
-		Primitives.AddItem(SkeletalMeshTemplate);
-	}
+	extern RTextureBuffer* GDefaultTexture;
+	Texture = GDefaultTexture;
 }
 
 CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void)
@@ -23,6 +18,16 @@ CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void)
 	for(unsigned int i=0;i<Primitives.Size();++i)
 	{
 		delete Primitives(i); 
+	}
+}
+
+void CSkeletalMeshPrimitive::SetSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* AnimationSeq)
+{
+	for(unsigned int i=0;i<InBoneHierarchy->RootBone.Size();++i)
+	{
+		SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy->RootBone(i), InSkeletalMesh, AnimationSeq);
+		UpdatePrimitive();
+		Primitives.AddItem(SkeletalMeshTemplate);
 	}
 }
 
@@ -80,7 +85,7 @@ unsigned int CSkeletalMeshPrimitive::GetNumIndices()
 	return NumIndices;
 }
 
-TSkeletalMesh::TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+TSkeletalMesh::TSkeletalMesh(RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
 :	CurrentFrame(0),
 	AnimationSequenceRef(InAnimationSequence)
 {
@@ -89,9 +94,7 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSke
 	pBuffer = new RStaticPrimitiveBuffer();
 
 	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 	pBuffer->m_pVB = pVB;
 	pBuffer->m_pIB = pIB;
 
@@ -116,7 +119,8 @@ void TSkeletalMesh::UpdatePrimitive()
 	{
 		CurrentFrame+=100;
 	}
-	if(AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame && IsLooping)
+
+	if(AnimationSequenceRef && AnimationSequenceRef->EndFrame*AnimationSequenceRef->TickPerFrame < CurrentFrame && IsLooping)
 	{
 		CurrentFrame = 0;
 	}
@@ -159,7 +163,7 @@ void TSkeletalMesh::TBone::CalcBoneMatrices_Recursive(unsigned int CurrentFrame,
 	}
 }
 
-TSkeletalMesh::TBone::TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
+TSkeletalMesh::TBone::TBone(RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
 :	AnimationBoneSequenceRef(0)
 {
 	BoneRef = InBone;

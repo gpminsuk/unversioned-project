@@ -4,7 +4,7 @@
 
 #include "BDriver.h"
 #include "BViewport.h"
-#include "RResource.h"
+#include "RTexture.h"
 
 BTextDrawer* GTextDrawer;
 

@@ -843,6 +843,22 @@
 							RelativePath=".\Include\RSkeletalMesh.h"
 							>
 						</File>
+						<File
+							RelativePath=".\Src\RSystemMemory.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RSystemMemory.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Src\RTexture.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Include\RTexture.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

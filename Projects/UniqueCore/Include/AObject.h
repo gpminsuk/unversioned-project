@@ -24,7 +24,7 @@ public:
 
 class AObject
 {
-	DECLARE_CLASS(AObject, CLASS_Abstract)
+	DECLARE_CLASS_BASE(AObject, CLASS_Abstract)
 
 	bool m_bIsUpdated;
 public:
@@ -40,12 +40,6 @@ protected:
 	virtual ~AObject(void);
 
 	unsigned int m_iObjectId;		//오브젝트마다 고유의 아이디가있음
-
-	friend AAccessor& operator<<( AAccessor& Ar, AObject* A )
-	{
-		A->Access(Ar);
-		return Ar;
-	}
 };
 
 template <class T>

@@ -4,6 +4,7 @@
 
 #include "CBoxPrimitive.h"
 #include "CSkeletalMeshComponent.h"
+#include "CSkeletalMeshPrimitive.h"
 
 #include "CCylinderCollisionBody.h"
 
@@ -35,13 +36,17 @@ CCharacter::CCharacter()
 	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
 	Components.AddItem(SkeletalMeshComponent);
 
-	RASEImporter Importer;
-	RAnimationSequence* AnimationSequence;
-	RBoneHierarchy* BoneHierarchy;
-	RSkeletalMesh* Model;
-	Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, Model);
+	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._11 *= 10.0f;
+	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._22 *= 10.0f;
+	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._33 *= 10.0f;
 
-	SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, Model, AnimationSequence);
+	RASEImporter Importer;
+	RAnimationSequence* AnimationSequence = NULL;
+	RBoneHierarchy* BoneHierarchy;
+	RSkeletalMesh* SkeletalMesh;
+	Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, SkeletalMesh);
+
+	SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, SkeletalMesh, NULL);
 
 	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
 	CollisionBodies.AddItem(CharacterCollisionBody);

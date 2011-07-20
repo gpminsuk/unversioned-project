@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RResource.h"
+#include "RSystemMemory.h"
 
 class BViewport;
 class BPrimitive;

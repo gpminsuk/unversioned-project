@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TDataTypes.h"
-#include "RResource.h"
+#include "RSystemMemory.h"
 
 class BPrimitive;
 class BLight;

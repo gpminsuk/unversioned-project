@@ -18,18 +18,18 @@ public:
 
 	typedef TIndex16 ID;
 
-	TSkeletalMesh(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
+	TSkeletalMesh(RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
 	~TSkeletalMesh();
 
 	class TBone
 	{
 	public:
-		TBone(RBoneHierarchy::RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
+		TBone(RBone* InBone, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence = NULL);
 		~TBone();
 
 		TMatrix BoneTM;
 
-		RBoneHierarchy::RBone* BoneRef;
+		RBone* BoneRef;
 		TArray<RSkeletalSubMesh*> SubMesheRefs;
 		RAnimationBoneSequence* AnimationBoneSequenceRef;
 
@@ -57,11 +57,13 @@ public:
 class CSkeletalMeshPrimitive : public CMeshPrimitive
 {
 public:
-	CSkeletalMeshPrimitive(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence, RTextureBuffer* InTexture);
+	CSkeletalMeshPrimitive();
 	~CSkeletalMeshPrimitive(void);
 
 	TSkeletalMesh* SkeletalMeshTemplate;
 	RTextureBuffer* Texture;
+
+	void SetSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* AnimationSeq);
 
 	virtual void UpdatePrimitive();
 

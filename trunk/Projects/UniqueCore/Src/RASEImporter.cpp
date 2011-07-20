@@ -5,7 +5,7 @@
 #include "RBoneHierarchy.h"
 #include "RSkeletalMesh.h"
 
-bool RASEImporter::Import(TString& Filename)
+bool RASEImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RSkeletalMesh*& Model)
 {
 	char* fn = Filename.Str;
 	char line[1024];
@@ -23,9 +23,9 @@ bool RASEImporter::Import(TString& Filename)
 	if(strcmp(string,"*3DSMAX_ASCIIEXPORT") != 0)
 		return false;
 
-	RAnimationSequence* AnimationSequence = new RAnimationSequence();
-	RBoneHierarchy* BoneHierarchy = new RBoneHierarchy();
-	RSkeletalMesh* Model = new RSkeletalMesh();
+	AnimationSequence = new RAnimationSequence();
+	BoneHierarchy = new RBoneHierarchy();
+	Model = new RSkeletalMesh();
 
 	while(!feof(fp))
 	{
@@ -129,7 +129,7 @@ bool RASEImporter::Import(TString& Filename)
 
 		if(!strcmp(string, "*GEOMOBJECT"))
 		{
-			RBoneHierarchy::RBone *Bone = NULL;
+			RBone *Bone = NULL;
 			while(1)
 			{
 				fgets(line, 1024, fp);
@@ -157,7 +157,7 @@ bool RASEImporter::Import(TString& Filename)
 
 				if(!strcmp(string, "*NODE_TM"))
 				{
-					Bone = new RBoneHierarchy::RBone();
+					Bone = new RBone();
 					TMatrix BoneTM;
 					while(1)
 					{
@@ -211,8 +211,8 @@ bool RASEImporter::Import(TString& Filename)
 					{
 						BoneHierarchy->AddBone(Bone, ParentNodeName);
 					}
-					RBoneHierarchy::RBone* ItBone = Bone->Parent;
-					TArray<RBoneHierarchy::RBone*> BoneStack;
+					RBone* ItBone = Bone->Parent;
+					TArray<RBone*> BoneStack;
 					while(ItBone)
 					{
 						BoneStack.AddItem(ItBone);
@@ -389,10 +389,7 @@ bool RASEImporter::Import(TString& Filename)
 						if(!strcmp(string, "}"))
 						{
 							RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-							RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-
 							RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-							RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 
 							pVB->Declaration = new VertexDeclaration[3];
 							pVB->Declaration[0].Offset = 0;

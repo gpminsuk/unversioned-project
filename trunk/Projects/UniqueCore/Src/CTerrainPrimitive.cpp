@@ -192,8 +192,6 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 			RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
 			Primitive->pBuffer->m_pVB = pVB;
 
-			RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
-
 			struct VD
 			{
 				TVector3 Pos;

@@ -26,6 +26,7 @@ class AObject;
 class AAccessor
 {
 public:
+	AAccessor();
 	~AAccessor();
 	virtual void Access(void *A, int Size) = 0;
 	virtual bool IsValid();
@@ -33,8 +34,18 @@ public:
 	AACCESSOR_OPERATOR(float);
 	AACCESSOR_OPERATOR(int);
 	AACCESSOR_OPERATOR(unsigned int);
+	AACCESSOR_OPERATOR(short);
+	AACCESSOR_OPERATOR(char);
+
+	virtual AAccessor& operator<<( class AObject*& A );
+
+	bool IsLoading()	const	{return bIsLoading;}
+	bool IsSaving()		const	{return bIsSaving;}
 protected:
 	FILE* FilePointer;
+
+	bool bIsLoading;
+	bool bIsSaving;
 };
 
 template <class T>
@@ -100,13 +111,30 @@ public:
 		return mArray.size();
 	}
 
-	friend AAccessor& operator<<( AAccessor& Ar, TArray& A )
+	friend AAccessor& operator<<( AAccessor& Ac, TArray& A )
 	{
-		for(unsigned int i=0;i<A.Size();++i)
+		if(Ac.IsLoading())
 		{
-			Ar << A[i];
+			size_t Size;
+			Ac << Size;
+			// TODO 속도향상 Stack미리 잡아서
+			for(unsigned int i=0;i<Size;++i)
+			{		
+				T* NewItem = ::new T;
+				Ac << *NewItem;
+				A.AddItem(*NewItem);
+			}
 		}
-		return Ar;
+		else if(Ac.IsSaving())
+		{
+			size_t Size = A.Size();
+			Ac << Size;
+			for(unsigned int i=0;i<Size;++i)
+			{
+				Ac << A[i];
+			}
+		}
+		return Ac;
 	}
 };
 
@@ -160,6 +188,15 @@ public:
 	{
 		return atoi(Str);
 	}
+
+	friend AAccessor& operator<<( AAccessor& Ac, TString& A )
+	{
+		for(unsigned int i=0;i<1024;++i)
+		{
+			Ac << A.Str[i];
+		}
+		return Ac;
+	}
 };
 
 class TFilename : public TString
@@ -173,6 +210,12 @@ public:
 	TIndex16() { _1 = 0; _2 = 0; _3 = 0; }
 	TIndex16(short __1, short __2, short __3) { _1 = __1; _2 = __2; _3 = __3; }
 	short _1,_2,_3;
+
+	friend AAccessor& operator<<( AAccessor& Ac, TIndex16& A )
+	{
+		Ac << A._1 << A._2 << A._3;
+		return Ac;
+	}
 };
 
 class TIntPoint
@@ -792,6 +835,15 @@ public:
 			_13 = (xz2 - wy2);
 		}*/
 		return *this;
+	}
+
+	friend AAccessor& operator<<( AAccessor& Ac, TMatrix& A )
+	{
+		Ac << A._11 << A._12 << A._13 << A._14;
+		Ac << A._21 << A._22 << A._23 << A._24;
+		Ac << A._31 << A._32 << A._33 << A._34;
+		Ac << A._41 << A._42 << A._43 << A._44;
+		return Ac;
 	}
 };
 

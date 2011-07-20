@@ -3,6 +3,7 @@
 
 AReadAccessor::AReadAccessor(TString& Filename)
 {
+	bIsLoading = true;
 	fopen_s(&FilePointer, Filename.GetBuffer(), "rb");
 }
 
@@ -13,6 +14,7 @@ void AReadAccessor::Access(void *A, int Size)
 
 AWriteAccessor::AWriteAccessor(TString& Filename)
 {
+	bIsSaving = true;
 	fopen_s(&FilePointer, Filename.GetBuffer(), "wb");	
 }
 

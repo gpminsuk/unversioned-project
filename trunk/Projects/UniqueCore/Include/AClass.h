@@ -27,26 +27,47 @@ public:																					\
 	}																					\
 };																						\
 
-#define DECLARE_CLASS(ClassName, ClassType) \
-public:																					\
-	DECLARE_CONSTRUCTOR_##ClassType(ClassName)											\
-class UClass_##ClassName : public AClass												\
+
+#define DECLARE_CLASS_OPERATOR(InClassName)												\
+	friend AAccessor &operator<<( AAccessor& Ac, InClassName*& A )						\
 	{																					\
-	public:																				\
-	UClass_##ClassName()																\
-	: AClass(TString(#ClassName))														\
+		if(Ac.IsLoading())																\
 		{																				\
-		Constructor = new UClassConstructor_##ClassName();								\
+			TString ClassNameStr;														\
+			Ac << ClassNameStr;															\
+			A = ConstructClass<##InClassName>(ClassNameStr);							\
 		}																				\
-	};																					\
-	static UClass_##ClassName Class__##ClassName;										\
-	static AClass* Class()																\
-	{																					\
-		return (AClass*)&Class__##ClassName;											\
+		else if(Ac.IsSaving())															\
+		{																				\
+			Ac << ##InClassName::Class()->ClassName;									\
+		}																				\
+		return Ac << *(AObject**)&A;													\
 	}																					\
 
-#define IMPLEMENT_CLASS(ClassName)														\
-	ClassName::UClass_##ClassName ClassName::Class__##ClassName;						\
+#define DECLARE_CLASS(InClassName, ClassType)											\
+	DECLARE_CLASS_BASE(InClassName, ClassType)											\
+	DECLARE_CLASS_OPERATOR(InClassName)													\
+
+#define DECLARE_CLASS_BASE(InClassName, ClassType)										\
+public:																					\
+	DECLARE_CONSTRUCTOR_##ClassType(InClassName)										\
+class UClass_##InClassName : public AClass												\
+	{																					\
+	public:																				\
+	UClass_##InClassName()																\
+	: AClass(TString(#InClassName))														\
+		{																				\
+		Constructor = new UClassConstructor_##InClassName();							\
+		}																				\
+	};																					\
+	static UClass_##InClassName Class__##InClassName;									\
+	static AClass* Class()																\
+	{																					\
+		return (AClass*)&Class__##InClassName;											\
+	}																					\
+
+#define IMPLEMENT_CLASS(InClassName)													\
+	InClassName::UClass_##InClassName InClassName::Class__##InClassName;				\
 
 class AObject;
 

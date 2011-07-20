@@ -1,4 +1,6 @@
 #include "RResource.h"
+#include "RSystemMemory.h"
+#include "RTexture.h"
 
 class RDirectXVertexShader : public RVertexShader
 {

@@ -3,7 +3,7 @@
 #include "AObject.h"
 
 #include "TDataTypes.h"
-#include "RResource.h"
+#include "RSystemMemory.h"
 #include "UFreeTypeDrawer.h"
 #include "Enumerations_Geom.h"
 #include "RShaderClasses.h"

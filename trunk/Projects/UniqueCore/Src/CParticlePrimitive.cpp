@@ -45,11 +45,9 @@ void CParticlePrimitive::CreateParticlePrimitive(unsigned int ParticleCount)
 
 	RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
 	Primitive->pBuffer->m_pVB = pVB;
-	RSystemMemoryVertexBufferTable::VertexBuffers.AddItem(pVB);
 
 	RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
 	Primitive->pBuffer->m_pIB = pIB;
-	RSystemMemoryIndexBufferTable::IndexBuffers.AddItem(pIB);
 
 	pVB->nVertexStride = sizeof(VD);
 	pVB->nVertices = ParticleCount*4;

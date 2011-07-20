@@ -87,40 +87,6 @@ public:
 	static TArray<RShaderBase*> Shaders;
 };
 
-class RSystemMemoryIndexBuffer
-{
-public:
-	RSystemMemoryIndexBuffer() : pIndices(0), nIndices(0) {}
-	virtual ~RSystemMemoryIndexBuffer()
-	{
-		delete[] pIndices; pIndices = 0;
-		nIndices = 0;
-	}
-
-	TIndex16 *pIndices;
-	unsigned int nIndices;
-};
-
-class RVideoMemoryIndexBuffer
-{
-public:
-	RVideoMemoryIndexBuffer() : nIndices(0) {}
-	virtual ~RVideoMemoryIndexBuffer()
-	{
-	   nIndices = 0;
-	}
-	
-	unsigned int nIndices;
-};
-
-class RSystemMemoryIndexBufferTable
-{
-public:
-	static TArray<RSystemMemoryIndexBuffer*> IndexBuffers;
-};
-
-// primitive per one DP
-
 enum VD_TYPE
 {
 	DECLTYPE_FLOAT1 = 0,
@@ -149,23 +115,16 @@ struct VertexDeclaration
 	char Type;
 };
 
-class RSystemMemoryVertexBuffer
+class RVideoMemoryIndexBuffer
 {
 public:
-	RSystemMemoryVertexBuffer() : pVertices(0), nVertices(0), Declaration(0) {}
-	virtual ~RSystemMemoryVertexBuffer()
+	RVideoMemoryIndexBuffer() : nIndices(0) {}
+	virtual ~RVideoMemoryIndexBuffer()
 	{
-		delete[] pVertices; pVertices = 0;
-		delete[] Declaration; Declaration = 0;
-		nVertices = 0;
+		nIndices = 0;
 	}
 
-	unsigned int nVertices;
-	unsigned int nVertexStride;
-
-	VertexDeclaration* Declaration;
-
-	char *pVertices;
+	unsigned int nIndices;
 };
 
 class RVideoMemoryVertexBuffer
@@ -184,61 +143,9 @@ public:
 	VertexDeclaration* Declaration;
 };
 
-class RSystemMemoryVertexBufferTable
-{
-public:
-	static TArray<RSystemMemoryVertexBuffer*> VertexBuffers;
-};
-
 class RPrimitiveBuffer
 {
 public:
-};
-
-class RDynamicPrimitiveBuffer : public RPrimitiveBuffer
-{
-public:
-	RDynamicPrimitiveBuffer() : m_pVB(0), m_pIB(0) {}
-	virtual ~RDynamicPrimitiveBuffer() {}
-
-	RVideoMemoryVertexBuffer* m_pVB;
-	RVideoMemoryIndexBuffer* m_pIB;
-
-	virtual void Release() = 0;
-};
-
-class RStaticPrimitiveBuffer : public RPrimitiveBuffer
-{
-public:
-	RSystemMemoryVertexBuffer* m_pVB;
-	RSystemMemoryIndexBuffer* m_pIB;
-};
-
-class RTexture
-{
-protected:
-	enum ETextureMemoryType
-	{
-		TMT_SYSTEM,
-		TMT_MANAGED,
-		TMT_VIDEO
-	};
-	int Width;
-	int Height;
-	ETextureMemoryType MemoryType;
-};
-
-class RTextureBuffer
-{
-public:
-	RTextureBuffer() {}
-	virtual ~RTextureBuffer() {}
-
-	unsigned int Width;
-	unsigned int Height;
-
-	virtual struct TLockedRect Lock() = 0;
-	virtual bool Unlock() = 0;
 };
 
 class RMaterial
@@ -253,7 +160,7 @@ public:
 	RRenderTarget() : m_pTexture(0) {}
 	virtual ~RRenderTarget() {}
 
-	RTextureBuffer* m_pTexture;
+	class RTextureBuffer* m_pTexture;
 
 	unsigned int m_SizeX;
 	unsigned int m_SizeY;

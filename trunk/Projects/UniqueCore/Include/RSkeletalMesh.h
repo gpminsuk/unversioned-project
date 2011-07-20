@@ -2,7 +2,7 @@
 
 #include "AObject.h"
 #include "TDataTypes.h"
-#include "RResource.h"
+#include "RSystemMemory.h"
 
 class RSkeletalSubMesh : public AObject
 {

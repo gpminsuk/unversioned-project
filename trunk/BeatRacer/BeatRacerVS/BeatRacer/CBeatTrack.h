@@ -1,8 +1,10 @@
 #pragma once
 
+#include "CDrawable.h"
 #include <vector>
 
 class CBeatRunner;
+class CBitmapResource;
 
 enum EHitType
 {
@@ -38,7 +40,7 @@ public:
 	std::vector<CNote> Notes;
 };
 
-class CBeatTrack
+class CBeatTrack : public CDrawable
 {
 public:
 	CBeatTrack();
@@ -48,6 +50,7 @@ public:
 	void Pause();
 	void Resume();
 	bool Advance(unsigned long DeltaTime);
+	void Draw(CGraphicInterface* GI);
 	EHitResult Hit(EHitType HitType);
 protected:
 	CBeatRunner* Runner;
@@ -56,4 +59,8 @@ private:
 	unsigned int NextNoteIndex;
 	unsigned long PlayTime;
 	bool bPlaying;
+
+	CBitmapResource* PassedTrack[2];
+	CBitmapResource* RemainTrack[2];
+	CBitmapResource* CornerSpot;
 };

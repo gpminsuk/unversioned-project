@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CBeatTrack.h"
+#include "CGraphicInterface.h"
 
 CTrackData::CTrackData()
 {
@@ -82,4 +83,17 @@ EHitResult CBeatTrack::Hit(EHitType HitType)
 		}
 	}
 	return HitResult_None;
+}
+
+void CBeatTrack::Draw(CGraphicInterface* GI)
+{	
+	unsigned long DrawLengthLimit = 3 * 1000;
+	for(unsigned int i=0;i<Track->Notes.size();++i)
+	{
+		CNote& Note = Track->Notes[i];
+		if(Note.Position/(float)Track->BPS*1000 < DrawLengthLimit)
+		{
+			GI->DrawBitmap2D(PassedTrack[0], 0, 0, 10, 30);
+		}
+	}
 }

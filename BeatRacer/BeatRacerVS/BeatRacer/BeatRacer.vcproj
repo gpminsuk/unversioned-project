@@ -209,6 +209,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CDrawable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CGraphicInterface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

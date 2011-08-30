@@ -74,6 +74,10 @@ void Java_com_game_BeatRacer_GI_Draw( /*JNIEnv*  env*/ )
 	}
 }
 
+void Java_com_game_BeatRacer_GI_Resize( /*JNIEnv*  env*/ )
+{
+}
+
 void Java_com_game_BeatRacer_GI_Destroy( /*JNIEnv*  env*/ )
 {
 	if(GI)

@@ -1,5 +1,7 @@
-package com.example.BeatRacer;
+package com.example.hellojni;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -47,14 +49,15 @@ class Track
 class BeatRacerGLSurfaceView extends GLSurfaceView {
     public BeatRacerGLSurfaceView(Context context) {
         super(context);
-        mRenderer = new BeatRacerRenderer();
+        mRenderer = new GI();
         setRenderer(mRenderer);
     }
 
     public boolean onTouchEvent(final MotionEvent event) {
+		return false;
     }
 
-    BeatRacerRenderer mRenderer;
+    GI mRenderer;
 }
 
 class GI implements GLSurfaceView.Renderer {
@@ -62,6 +65,9 @@ class GI implements GLSurfaceView.Renderer {
         Initialize();
     }
 
+    public void onSurfaceChanged(GL10 gl, int w, int h) {
+    }
+    
     public void onDrawFrame(GL10 gl) {
         Draw();
     }

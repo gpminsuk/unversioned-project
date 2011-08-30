@@ -66,6 +66,14 @@ void Java_com_game_BeatRacer_GI_Initialize( /*JNIEnv*  env*/ )
 	GI = new CGraphicInterface_Android();
 }
 
+void Java_com_game_BeatRacer_GI_Draw( /*JNIEnv*  env*/ )
+{
+	if(Track)
+	{
+		Track->Draw(GI);
+	}
+}
+
 void Java_com_game_BeatRacer_GI_Destroy( /*JNIEnv*  env*/ )
 {
 	if(GI)

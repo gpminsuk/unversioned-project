@@ -227,6 +227,22 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<Filter
+			Name="Android Glue"
+			>
+			<File
+				RelativePath=".\AndroidGlue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CGraphicInterface_Android.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CGraphicInterface_Android.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

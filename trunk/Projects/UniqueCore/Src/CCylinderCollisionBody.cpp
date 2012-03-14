@@ -11,7 +11,7 @@ CCylinderCollisionBody::CCylinderCollisionBody(BThing* InOwner)
 	Radius(1.0f),
 	Height(1.0f)
 {
-	CCylinderPrimitive *CylinderPrimitive = new CCylinderPrimitive(RenderType_Translucent);
+	CCylinderPrimitive *CylinderPrimitive = new CCylinderPrimitive(RenderType_Opaque);
 	Primitives.AddItem(CylinderPrimitive);
 }
 

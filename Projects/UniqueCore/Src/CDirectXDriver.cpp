@@ -412,7 +412,7 @@ bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader)
 	
 	//sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
 	// TODO : 임시코드
-	static int Cnt = 0;	
+	static int Cnt = 1;	
 	if(Cnt == 0)
 	{
 		wsprintf(FN, TEXT("..\\..\\Shaders\\BaseSceneVertexShader.uvs"));

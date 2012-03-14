@@ -21,7 +21,7 @@ bool USampleWorld::DestroyWorld()
 
 	delete Box;
 	delete DirectionalLight;
-	delete Character;
+	//delete Character;
 
 	return true;
 }
@@ -32,16 +32,16 @@ bool USampleWorld::InitializeWorld()
 	Box = new CBox(SideType_Inside);
 	Box->m_Scale = TVector3(100.0f,100.0f,100.0f);
 	Box->UpdateTransform();
-//	AddThing(Box);
+	AddThing(Box);
 
 	DirectionalLight = new CDirectionalLight();
 	DirectionalLight->m_Location = TVector3(0.0f, 100.0f, 0.0f);
 	DirectionalLight->UpdateTransform();
 	AddThing(DirectionalLight);
 
-	Character = new CCharacter();
-	Character->UpdateTransform();
-	AddThing(Character);
+	//Character = new CCharacter();
+	//Character->UpdateTransform();
+	//AddThing(Character);
 
 	return true;
 }

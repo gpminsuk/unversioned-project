@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CMaderApp.h"
+#include "DMaderApp.h"
 #include "CDirectXDriver.h"
 #include "BRenderer.h"
 
@@ -14,12 +14,7 @@ ref class MaderMainCLI : Mader::IMaderMainInterface
 {
 public:
 	Mader::MaderMain^ MainWindow;
-	CMaderApp* m_Application;
-
-	virtual void Test()
-	{		
-		MainWindow->ShowDialog();
-	}
+	DMaderApp* m_Application;
 
 	virtual IntPtr GetBackBuffer()
 	{		
@@ -59,7 +54,7 @@ public:
 		return (IntPtr)RetVal;
 	}
 
-	MaderMainCLI(CMaderApp* App)
+	MaderMainCLI(DMaderApp* App)
 		: m_Application(App)
 	{
 		MainWindow = gcnew Mader::MaderMain();

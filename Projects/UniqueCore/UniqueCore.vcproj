@@ -185,7 +185,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include"
+				AdditionalIncludeDirectories="&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include;.\Include;..\External\WaveIO\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"

@@ -12,6 +12,8 @@
     <AssemblyName>Mader</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,12 +67,6 @@
   <ItemGroup>
     <Compile Include="DirectXHost.cs" />
     <Compile Include="MaderMainInterface.cs" />
-    <Compile Include="MaterialConnector.xaml.cs">
-      <DependentUpon>MaterialConnector.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MaterialExpressionControl.xaml.cs">
-      <DependentUpon>MaterialExpressionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaderMain.xaml.cs">
       <DependentUpon>MaderMain.xaml</DependentUpon>
@@ -78,14 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MaderMain.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MaterialConnector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MaterialExpressionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

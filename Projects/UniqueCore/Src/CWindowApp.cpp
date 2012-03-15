@@ -15,6 +15,17 @@ CWindowApp*	CWindowApp::StaticThis = 0;
 SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = {0,};
 
+CWindowApp::CWindowApp()
+{
+	StaticThis = this;
+
+	m_MouseMap.bLButtonDown = 0;
+	m_MouseMap.bRButtonDown = 0;
+	m_MouseMap.bMButtonDown = 0;
+
+	GetSystemInfo(&GSystemInformation);
+}
+
 void CWindowApp::Initialize()
 {
 	RResourceManager::LoadResources();
@@ -38,10 +49,6 @@ void CWindowApp::Initialize()
 bool CWindowApp::CreateApp(TApplicationInfo& Info)
 {
 	m_WindowInfo = (TWindowInfo&)Info;
-	GetSystemInfo(&GSystemInformation);
-
-	StaticThis = this;
-
 	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
 	WNDCLASSEX wcex;
 
@@ -79,10 +86,6 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info)
 
 	ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
 	UpdateWindow(m_WindowInfo.m_hWnd);
-
-	m_MouseMap.bLButtonDown = 0;
-	m_MouseMap.bRButtonDown = 0;
-	m_MouseMap.bMButtonDown = 0;
 
 	return true;
 }

@@ -216,7 +216,7 @@
 				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				ExceptionHandling="2"
-				RuntimeLibrary="3"
+				RuntimeLibrary="2"
 				BufferSecurityCheck="true"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -239,9 +239,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS"
-				AdditionalDependencies="uniquecore.lib uniqueUI.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\"
+				AdditionalLibraryDirectories="&quot;..\External\freetype-2.3.7\objs&quot;;..\External\expat\lib;..\..\Binaries\Release\;..\External\WaveIO\Win32"
 				ManifestFile="$(IntDir)\Menifest\$(TargetFileName).intermediate.manifest"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
@@ -397,7 +396,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CMaderApp.cpp"
+				RelativePath=".\DMaderApp.cpp"
 				>
 			</File>
 			<File
@@ -411,7 +410,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\CMaderApp.h"
+				RelativePath=".\DMaderApp.h"
 				>
 			</File>
 			<File

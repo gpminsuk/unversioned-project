@@ -41,6 +41,8 @@ public:
 
 	static CWindowApp* StaticThis;
 
+	CWindowApp();
+
 	static LRESULT CALLBACK Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
 	bool CreateApp(TApplicationInfo& Info);

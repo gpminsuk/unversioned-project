@@ -7,7 +7,6 @@ namespace Mader
 {
     public interface IMaderMainInterface
     {
-        void Test();
         void Tick();
         bool CreateMaderApp();
         IntPtr GetBackBuffer();

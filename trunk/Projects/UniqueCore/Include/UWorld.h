@@ -88,7 +88,7 @@ public:
 	~UWorld(void);
 
 	inline void SetRenderer(BRenderer* R) { m_pRenderer = R; }
-	inline void AddViewport(BViewport* V) { Viewports.AddItem(V); }
+	void AddViewport(BViewport* V) { Viewports.AddItem(V); }
 	inline void RemoveViewport(BViewport* V) { Viewports.DeleteItemByVal(V); }
 
 	virtual bool InitializeWorld();

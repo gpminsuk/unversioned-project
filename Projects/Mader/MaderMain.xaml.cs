@@ -52,7 +52,18 @@ namespace Mader
             m_Backend.Tick();
         }
 
-        public IntPtr GetHwnd()
+        public IntPtr GetWindowHandle()
+        {
+            return new WindowInteropHelper(this).Handle;
+        }
+
+        public void GetRendererWindowSize(ref int width, ref int height)
+        {
+            width = 8000;
+            height = 600;
+        }
+
+        public IntPtr GetRendererWindowHandle()
         {
             return m_DirectXHost.Handle;
         }

@@ -87,6 +87,7 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info)
 	ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
 	UpdateWindow(m_WindowInfo.m_hWnd);
 
+	m_WindowInfo.m_hRendererWnd = m_WindowInfo.m_hWnd;
 	return true;
 }
 

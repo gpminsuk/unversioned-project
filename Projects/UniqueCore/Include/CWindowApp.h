@@ -24,6 +24,7 @@ public:
 	}
 
 	HWND m_hWnd;
+	HWND m_hRendererWnd;
 	HINSTANCE m_hInstance;
 
 	int m_wWidth;

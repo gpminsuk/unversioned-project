@@ -83,6 +83,7 @@ public:
 
 class UWorld : public AObject
 {
+	DECLARE_CLASS(UWorld,)
 public:
 	UWorld();
 	~UWorld(void);

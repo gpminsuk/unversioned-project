@@ -19,6 +19,9 @@ IMPLEMENT_CLASS(CWindowApp)
 #include "CCameraViewport.h"
 IMPLEMENT_CLASS(CCameraViewport)
 
+#include "UWorld.h"
+IMPLEMENT_CLASS(UWorld)
+
 AClassManager* GClassManager;
 
 void AClassManager::AddClass(AClass* Class)

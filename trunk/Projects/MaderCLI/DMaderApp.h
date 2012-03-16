@@ -1,17 +1,19 @@
 #pragma once
 
 #include "CWindowApp.h"
+#include <vcclr.h>
+
+ref class MaderMainCLI;
 
 class DMaderApp : public CWindowApp
 {
+	DECLARE_CLASS(DMaderApp,)
 public:
 	DMaderApp();
 	~DMaderApp();
 
+	gcroot<MaderMainCLI^> m_MaderMainCLI;
+
 	virtual bool CreateApp(TApplicationInfo& Info);
-	virtual void Initialize() {};
 	virtual void Do();
-	virtual bool Tick(unsigned long Time);
-	virtual bool DestroyApp() { return true; };
-	virtual void SetMousePos(float X, float Y, bool isRatio = false) {};
 };

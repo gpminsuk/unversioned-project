@@ -46,7 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;;..\External\expat\include"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				ObjectFile="$(IntDir)\Obj\"
@@ -213,7 +213,7 @@
 				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.7\include&quot;"
+				AdditionalIncludeDirectories="..\UniqueCore\Include;&quot;..\External\freetype-2.3.\include&quot;;..\External\expat\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				ExceptionHandling="2"
 				RuntimeLibrary="2"
@@ -403,6 +403,10 @@
 				RelativePath=".\MaderMainCLI.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\UMaderWorld.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -415,6 +419,10 @@
 			</File>
 			<File
 				RelativePath=".\MaderMainCLI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UMaderWorld.h"
 				>
 			</File>
 		</Filter>

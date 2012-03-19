@@ -151,7 +151,7 @@ void CXMLApplicationParser::Parse()
 					{
 						TWindowInfo& WindowInfo = (TWindowInfo&)WindowsApp->m_WindowInfo;
 						TDXWindowInfo DXWindowInfo;
-						DXWindowInfo.m_hWnd = WindowInfo.m_hRendererWnd;
+						DXWindowInfo.m_hWnd = WindowInfo.m_hWnd;
 						DXWindowInfo.m_wHeight = WindowInfo.m_wHeight;
 						DXWindowInfo.m_wWidth = WindowInfo.m_wWidth;
 						GDriver = new CDirectXDriver(DXWindowInfo);

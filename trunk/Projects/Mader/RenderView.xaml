@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="Mader.RenderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Height="Auto" Width="Auto">
+    <Grid>
+        <Border Name="ViewerBorder" Grid.Column="2" Grid.Row="0"></Border>        
+        <TextBlock>TESXTSETSF</TextBlock>
+    </Grid>
+</UserControl>

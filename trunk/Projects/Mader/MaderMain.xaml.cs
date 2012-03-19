@@ -23,55 +23,23 @@ namespace Mader
     public partial class MaderMain : Window
     {
         static public IMaderMainInterface m_Backend;
-        private DirectXHost m_DirectXHost;
-        private DispatcherTimer GameLoop;
 
-        public MaderMain()
+        public MaderMain(IMaderMainInterface Backend)
         {
+            m_Backend = Backend;            
+
             InitializeComponent();
 
-            m_DirectXHost = new DirectXHost();
-            ViewerBorder.Child = m_DirectXHost;
-        }
-
-        public void Initialize(IMaderMainInterface Backend)
-        {
-            m_Backend = Backend;
-
-            GameLoop = new DispatcherTimer { Interval = TimeSpan.Zero };
+            DispatcherTimer GameLoop = new DispatcherTimer { Interval = TimeSpan.Zero };
             GameLoop.Tick += Idle;
             GameLoop.Start();
-
+            
             Show();
-
-            m_Backend.CreateMaderApp();
         }
 
         void Idle(object Sender, EventArgs e)
         {
-            m_Backend.Tick();
-        }
-
-        public IntPtr GetWindowHandle()
-        {
-            return new WindowInteropHelper(this).Handle;
-        }
-
-        public void GetRendererWindowSize(ref int width, ref int height)
-        {
-            width = 8000;
-            height = 600;
-        }
-
-        public IntPtr GetRendererWindowHandle()
-        {
-            return m_DirectXHost.Handle;
-        }
-
-        public void SetHwndSourceHook()
-        {
-            HwndSource Source = (HwndSource)PresentationSource.FromVisual(this);
-            Source.AddHook(m_Backend.HandleMessages);
+            m_Backend.Tick(0);
         }
     }
 }

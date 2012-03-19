@@ -65,17 +65,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DirectXHost.cs" />
     <Compile Include="MaderMainInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaderMain.xaml.cs">
       <DependentUpon>MaderMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RenderView.xaml.cs">
+      <DependentUpon>RenderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolBox.xaml.cs">
+      <DependentUpon>ToolBox.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="MaderMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RenderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

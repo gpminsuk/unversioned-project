@@ -16,11 +16,9 @@ public:
 	class DMaderApp* m_Application;
 	Application^ MyApp;
 
-	virtual IntPtr GetBackBuffer();
-	virtual bool CreateMaderApp();
-	virtual IntPtr HandleMessages(IntPtr hwnd, int msg, IntPtr wParam,IntPtr lParam,bool% handled);
-	virtual void Tick();
+	virtual void Tick(float deltaTime);
 	virtual void Run();
+	virtual IntPtr CreateMaderWindow(IntPtr hWndParent);
 
 	MaderMainCLI(DMaderApp* App);
 	~MaderMainCLI();

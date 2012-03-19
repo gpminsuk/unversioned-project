@@ -7,9 +7,7 @@ namespace Mader
 {
     public interface IMaderMainInterface
     {
-        void Tick();
-        bool CreateMaderApp();
-        IntPtr GetBackBuffer();
-        IntPtr HandleMessages(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled);
+        void Tick(float deltaTime);
+        IntPtr CreateMaderWindow(IntPtr hWndParent);
     }
 }

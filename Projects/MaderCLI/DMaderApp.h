@@ -14,6 +14,7 @@ public:
 
 	gcroot<MaderMainCLI^> m_MaderMainCLI;
 
+	HWND CreateMaderRenderView(HWND ParenthWnd);
 	virtual bool CreateApp(TApplicationInfo& Info);
 	virtual void Do();
 };

@@ -40,25 +40,44 @@ namespace Mader
 
     public partial class RenderView : UserControl
     {
-        public DirectXHost m_DirectXHost;
+        public DirectXHost directXHost;
+
+        private bool mouseRightButtonDown = false;
+        private bool mouseMovedAfterRightButtonDown = false;
+
+        private void Rectangle_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            e.Handled = mouseMovedAfterRightButtonDown;
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseRightButtonDown(e);
+            mouseRightButtonDown = true;
+            mouseMovedAfterRightButtonDown = false;
+        }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
             MaderMain.m_Backend.MessageTranslator(Message.MaderMsg_MouseMove, e);
+            if (mouseRightButtonDown)
+            {
+                mouseMovedAfterRightButtonDown = true;
+            }
         }
 
         public RenderView()
         {
             InitializeComponent();
 
-            m_DirectXHost = new DirectXHost();
-            ViewerBorder.Child = m_DirectXHost;
+            directXHost = new DirectXHost();
+            ViewerBorder.Child = directXHost;
         }
                 
         public IntPtr GetWindowHandle()
         {
-            return m_DirectXHost.Handle;
+            return directXHost.Handle;
         }
     }
 }

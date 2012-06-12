@@ -168,12 +168,6 @@ void CWindowApp::SetMousePos(float X, float Y, bool isRatio)
 void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	TMouseInput_Param Param;
-	Param.bRAltDown = ::GetKeyState(VK_RMENU);
-	Param.bLAltDown = ::GetKeyState(VK_LMENU);
-	Param.bRCtrlDown = ::GetKeyState(VK_RCONTROL);
-	Param.bLCtrlDown = ::GetKeyState(VK_LCONTROL);
-	Param.bRShiftDown = ::GetKeyState(VK_RSHIFT);
-	Param.bLShiftDown = ::GetKeyState(VK_LSHIFT);
 	Param.bLButtonDown = m_MouseMap.bLButtonDown;
 	Param.bRButtonDown = m_MouseMap.bRButtonDown;
 	Param.bMButtonDown = m_MouseMap.bMButtonDown;
@@ -237,19 +231,11 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
 	default:
 		return;
 	}
-	m_pWorld->InputMouse(Event, Param);
-	m_pViewport->InputMouse(Event, Param);
+	InputMouse(Event, Param);
 }
-
 void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	TKeyInput_Param Param;
-	Param.bRAltDown = ::GetKeyState(VK_RMENU);
-	Param.bLAltDown = ::GetKeyState(VK_LMENU);
-	Param.bRCtrlDown = ::GetKeyState(VK_RCONTROL);
-	Param.bLCtrlDown = ::GetKeyState(VK_LCONTROL);
-	Param.bRShiftDown = ::GetKeyState(VK_RSHIFT);
-	Param.bLShiftDown = ::GetKeyState(VK_LSHIFT);
 	Param.Key = (unsigned short)wParam;	
 	EKey_Event Event;
 	switch(Message)
@@ -263,6 +249,17 @@ void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam)
 		Event = KEY_Up;
 		break;
 	}
+	InputKey(Event, Param);
+}
+
+void CWindowApp::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
+{
+	m_pWorld->InputMouse(Event, Param);
+	m_pViewport->InputMouse(Event, Param);
+}
+
+void CWindowApp::InputKey(EKey_Event Event, TKeyInput_Param& Param)
+{
 	m_pWorld->InputKey(Event, Param);
 	m_pViewport->InputKey(Event, Param);
 }

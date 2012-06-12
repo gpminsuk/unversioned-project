@@ -4,9 +4,8 @@
 
 #include "BThing.h"
 
-BCamera::BCamera(void)
-:	m_CameraMode(Thrid_Person),
-	m_LookAt(0.0f,0.0f,0.0f),
+BCamera::BCamera()
+:	m_LookAt(0.0f,0.0f,0.0f),
 	m_Up(0.0f,1.0f,0.0f),
 	m_Distance(150.0f),
 	m_Pi(0),
@@ -16,8 +15,6 @@ BCamera::BCamera(void)
 	m_Location.x = 0;
 	m_Location.y = 0;
 	m_Location.z = 0;
-
-	//m_CameraMode = First_Person;
 }
 
 BCamera::~BCamera(void)
@@ -29,7 +26,7 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 	m_bIsUpdated = true;
 	switch(m_CameraMode)
 	{
-	case First_Person:
+	case ECamera_Mode::First_Person:
 		{
 			switch(Event)
 			{
@@ -44,7 +41,7 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 			}
 		}
 		break;
-	case Thrid_Person:
+	case ECamera_Mode::Thrid_Person:
 		{
 			switch(Event)
 			{
@@ -65,8 +62,9 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
 			}
 		}
 		break;
-	case Free_Mode1:
-	case Free_Mode:
+	case ECamera_Mode::Free_Mode_Editor:
+		break;
+	case ECamera_Mode::Free_Mode:
 		{
 			switch(Event)
 			{
@@ -88,10 +86,10 @@ void BCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param)
 {
 	switch(m_CameraMode)
 	{
-	case First_Person:
-	case Thrid_Person:
-	case Free_Mode1:
-	case Free_Mode:
+	case ECamera_Mode::First_Person:
+	case ECamera_Mode::Thrid_Person:
+	case ECamera_Mode::Free_Mode_Editor:
+	case ECamera_Mode::Free_Mode:
 		break;
 	}
 }
@@ -100,7 +98,7 @@ void BCamera::Tick(unsigned long  dTime)
 {
 	switch(m_CameraMode)
 	{
-	case First_Person:
+	case ECamera_Mode::First_Person:
 		{
 			if(m_Subject)
 				m_Location = m_Subject->m_Location + TVector3(0.0f,0.6f,0.0f);
@@ -112,7 +110,7 @@ void BCamera::Tick(unsigned long  dTime)
 			m_LookAt += m_Location;
 		}
 		break;
-	case Thrid_Person:
+	case ECamera_Mode::Thrid_Person:
 		{
 			if(m_Subject)
 				m_LookAt = m_Subject->m_Location;
@@ -126,8 +124,8 @@ void BCamera::Tick(unsigned long  dTime)
 			m_Location += m_LookAt;
 		}
 		break;
-	case Free_Mode1:
-	case Free_Mode:
+	case ECamera_Mode::Free_Mode_Editor:
+	case ECamera_Mode::Free_Mode:
 		{
 			if(GKeyMap['W'])
 				m_Location += (m_LookAt - m_Location).Normalize()/100000.0f;
@@ -145,7 +143,7 @@ void BCamera::Tick(unsigned long  dTime)
 			m_LookAt += m_Location;
 		}
 		break;
-	case QuarterView_Mode:
+	case ECamera_Mode::QuarterView_Mode:
 		{
 			if(m_Subject)
 			{
@@ -170,11 +168,11 @@ bool BCamera::ShouldUpdate()
 {
 	switch(m_CameraMode)
 	{
-	case First_Person:
-	case Thrid_Person:
+	case ECamera_Mode::First_Person:
+	case ECamera_Mode::Thrid_Person:
 		return m_bIsUpdated || (!m_Subject)?false:m_Subject->m_bIsUpdated;
-	case Free_Mode1:
-	case Free_Mode:
+	case ECamera_Mode::Free_Mode_Editor:
+	case ECamera_Mode::Free_Mode:
 		return m_bIsUpdated || GKeyMap['W'] || GKeyMap['S'] || GKeyMap['A'] || GKeyMap['D'];
 	}
 	return m_bIsUpdated;

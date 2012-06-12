@@ -19,6 +19,7 @@ public:
 	virtual void Tick(float deltaTime);
 	virtual void Run();
 	virtual IntPtr CreateMaderWindow(IntPtr hWndParent);
+	virtual void MessageTranslator(Mader::Message msg, ... array<System::Object^>^ args);
 
 	MaderMainCLI(DMaderApp* App);
 	~MaderMainCLI();

@@ -4,24 +4,15 @@
 
 #include "TDataTypes.h"
 
-enum ECamera_Mode
-{
-	First_Person,
-	Thrid_Person,
-	Free_Mode,	
-	Free_Mode1,	
-	QuarterView_Mode,
-};
-
 class BCamera
 {
 public:
-	BCamera(void);
+	BCamera();
 	virtual ~BCamera(void);
 
 	class BThing*	m_Subject;
 
-	ECamera_Mode m_CameraMode;
+	ECamera_Mode::Enum m_CameraMode;
 
 	TMatrix m_RotationMatrix;
 	float m_Distance, m_Pi, m_Theta;

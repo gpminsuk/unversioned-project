@@ -5,7 +5,7 @@
     Title="MaderMain" Height="432.684" Width="703.566">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
-            <Menu>
+            <Menu>                
                 <MenuItem Header="파일"></MenuItem>
             </Menu>
             <ToolBarTray>
@@ -25,6 +25,9 @@
             <uc:ToolBox>
             </uc:ToolBox>
         </StackPanel>
-        <uc:RenderView x:Name="m_RenderView"></uc:RenderView>
+        <Grid>            
+            
+            <uc:RenderView x:Name="m_RenderView"></uc:RenderView>
+        </Grid>
     </DockPanel>
 </Window>

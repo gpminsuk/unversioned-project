@@ -181,7 +181,6 @@ void CXMLApplicationParser::Parse()
 			{
 				if(Viewport.GetValue("Class", Value))
 				{
-					//CCameraViewport::UClassConstructor_CCameraViewport v;
 					app->m_pViewport = ConstructClass<BViewport>(Value);
 					app->m_pRenderer->AddViewport(app->m_pViewport);
 					app->m_pWorld->AddViewport(app->m_pViewport);

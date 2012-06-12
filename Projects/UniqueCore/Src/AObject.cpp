@@ -44,6 +44,11 @@ bool AObject::Access(AAccessor& Accessor)
 	return true;
 }
 
+void AObject::SetProperty(TString& PropertyName, TString& Value)
+{
+
+}
+
 AObject* AObject::CreateObject(AClass* Class, TString& ResourceName)
 {
 	AObject* Object = Class->Constructor->Construct();	

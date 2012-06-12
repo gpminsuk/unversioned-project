@@ -30,6 +30,7 @@ class AObject
 public:
 	virtual bool Tick(unsigned long Time);
 	virtual bool Access(AAccessor& Accessor);
+	virtual void SetProperty(TString& PropertyName, TString& Value);
 
 	void SaveObject(TString& ResourceName);
 

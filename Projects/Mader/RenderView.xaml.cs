@@ -25,7 +25,7 @@ namespace Mader
         internal static extern bool DestroyWindow(IntPtr hwnd);
     }
 
-    class DirectXHost : HwndHost
+    public class DirectXHost : HwndHost
     {
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
@@ -40,7 +40,13 @@ namespace Mader
 
     public partial class RenderView : UserControl
     {
-        DirectXHost m_DirectXHost;
+        public DirectXHost m_DirectXHost;
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            MaderMain.m_Backend.MessageTranslator(Message.MaderMsg_MouseMove, e);
+        }
 
         public RenderView()
         {
@@ -49,7 +55,7 @@ namespace Mader
             m_DirectXHost = new DirectXHost();
             ViewerBorder.Child = m_DirectXHost;
         }
-
+                
         public IntPtr GetWindowHandle()
         {
             return m_DirectXHost.Handle;

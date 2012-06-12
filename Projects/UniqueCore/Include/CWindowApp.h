@@ -1,5 +1,6 @@
 #pragma once
 
+#include "InputDefine.h"
 #include "TDataTypes.h"
 #include "TWindowInfo.h"
 
@@ -50,9 +51,12 @@ public:
 	bool Tick(unsigned long Time);
 	bool DestroyApp();
 
-	void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
+	virtual void MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
 	void KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam);
+
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 
 	virtual void SetMousePos(float X, float Y, bool isRatio = false);
 	virtual void Initialize();

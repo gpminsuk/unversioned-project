@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Collections;
+using ResourceManager;
 
 namespace Mader
 {
@@ -23,6 +24,8 @@ namespace Mader
     public partial class MaderMain : Window
     {
         static public IMaderMainInterface m_Backend;
+
+        ResourceManagerMain resourceManagerWindow;
 
         public MaderMain(IMaderMainInterface Backend)
         {
@@ -39,6 +42,8 @@ namespace Mader
         public void ShowWindow()
         {
             Show();
+            resourceManagerWindow = new ResourceManagerMain();
+            resourceManagerWindow.Show();
         }
 
         public IntPtr GetWindowHandle()

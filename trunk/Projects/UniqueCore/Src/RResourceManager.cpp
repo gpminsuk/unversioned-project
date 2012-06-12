@@ -20,6 +20,10 @@ RResourceManager::~RResourceManager(void)
 #include <Windows.h>
 bool RResourceManager::LoadResources()
 {
+	if( !GDriver )
+	{
+		return false;
+	}
 	TString Filename;
 	//////////////////////////////////// Sound Loading
 	RTexture* Texture = new RTexture();

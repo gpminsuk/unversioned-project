@@ -1,0 +1,13 @@
+﻿<Window x:Class="ResourceManager.ResourceManagerMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:uc="clr-namespace:ResourceManager"
+        Title="ResourceManagerMain" Height="350" Width="525">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Left">
+        </StackPanel>
+        <Grid>
+            <uc:ResourceView x:Name="resourceView"></uc:ResourceView>
+        </Grid>
+    </DockPanel>
+</Window>

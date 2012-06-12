@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}</ProjectGuid>
+    <RootNamespace>AA</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Binaries\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\Binaries\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Binaries\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\Intermediate\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Obj\*.obj%3b.\Obj%3b*.ilk%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b*.meta%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\Binaries\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\Obj\*.obj%3b.\Obj%3b*.ilk%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.pgc%3b*.pgd%3b*.meta%3b$(TargetPath)</ExtensionsToDeleteOnClean>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <BuildLog>
+      <Path>$(IntDir)BuildLog\BuildLog.htm</Path>
+    </BuildLog>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\External\freetype-2.3.7\include;..\External\expat\include;.\Include;..\External\WaveIO\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\$(IntDir)_$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>$(IntDir)Obj\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)PDB\$(TargetFileName)_$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <BuildLog>
+      <Path>$(IntDir)BuildLog\BuildLog.htm</Path>
+    </BuildLog>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\External\freetype-2.3.7\include;..\External\expat\include;.\Include;..\External\WaveIO\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\$(IntDir)_$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>$(IntDir)Obj\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)PDB\$(TargetFileName)_$(TargetName).pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>libexpat.lib;freetype243MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\External\freetype-2.3.7\objs\x64;..\External\Expat\lib\x64;..\External\WaveIO\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <BuildLog>
+      <Path>$(IntDir)BuildLog\BuildLog.htm</Path>
+    </BuildLog>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\External\freetype-2.3.7\include;..\External\expat\include;.\Include;..\External\WaveIO\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\$(IntDir).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <ObjectFileName>$(IntDir)Obj\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)PDB\vc90.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>
+      </CompileAsManaged>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>..\External\freetype-2.3.7\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <BuildLog>
+      <Path>$(IntDir)BuildLog\BuildLog.htm</Path>
+    </BuildLog>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\External\freetype-2.3.7\include;..\External\expat\include;.\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>.\$(IntDir).pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>
+      </AssemblerOutput>
+      <ObjectFileName>$(IntDir)Obj\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)PDB\vc90.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>freetype237MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\External\freetype-2.3.7\objs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\..\Shaders\Material.ush" />
+    <None Include="..\..\Shaders\PixelRTShader.fx" />
+    <None Include="..\..\..\MyProject\Shaders\PixelShader.fx" />
+    <None Include="..\..\Shaders\PointLight.ush" />
+    <None Include="..\..\Shaders\PSCommon.ush" />
+    <None Include="..\..\Shaders\StaticMeshVertexProtocol.ush" />
+    <None Include="..\..\Shaders\VertexRTShader.fx" />
+    <None Include="..\..\Shaders\VertexShader.fx" />
+    <None Include="..\..\Shaders\VSCommon.ush" />
+    <None Include="..\Resources\woman_01_all.ASE" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Src\AApplication.cpp" />
+    <ClCompile Include="Src\AClass.cpp" />
+    <ClCompile Include="Src\AObject.cpp" />
+    <ClCompile Include="Src\ASystemInfo.cpp" />
+    <ClCompile Include="Src\AThread.cpp" />
+    <ClCompile Include="Src\BCamera.cpp" />
+    <ClCompile Include="Src\BDriver.cpp" />
+    <ClCompile Include="Src\BLight.cpp" />
+    <ClCompile Include="Src\BMaterialBase.cpp" />
+    <ClCompile Include="Src\BRenderingBatch.cpp" />
+    <ClCompile Include="Src\BSoundDriver.cpp" />
+    <ClCompile Include="Src\BViewport.cpp" />
+    <ClCompile Include="Src\BDirectionalLightPass.cpp" />
+    <ClCompile Include="Src\BDrawLinePass.cpp" />
+    <ClCompile Include="Src\BDrawUIPass.cpp" />
+    <ClCompile Include="Src\BOpaqueBasePass.cpp" />
+    <ClCompile Include="Src\BParticleRenderPass.cpp" />
+    <ClCompile Include="Src\BRenderPass.cpp" />
+    <ClCompile Include="Src\BRTRenderPass.cpp" />
+    <ClCompile Include="Src\BLineBatcher.cpp" />
+    <ClCompile Include="Src\BPrimitive.cpp" />
+    <ClCompile Include="Src\BTextDrawer.cpp" />
+    <ClCompile Include="Src\BComponentThread.cpp" />
+    <ClCompile Include="Src\BComponentThreadManager.cpp" />
+    <ClCompile Include="Src\BRenderer.cpp" />
+    <ClCompile Include="Src\CDirectionalLight.cpp" />
+    <ClCompile Include="Src\CDirectXDriver.cpp" />
+    <ClCompile Include="Src\CDirectXSoundDriver.cpp" />
+    <ClCompile Include="Src\CPointLight.cpp" />
+    <ClCompile Include="Src\CWaveIODriver.cpp" />
+    <ClCompile Include="Src\CWindowApp.cpp" />
+    <ClCompile Include="Src\CBoxPrimitive.cpp" />
+    <ClCompile Include="Src\CCylinderPrimitive.cpp" />
+    <ClCompile Include="Src\CMeshPrimitive.cpp" />
+    <ClCompile Include="Src\CParticlePrimitive.cpp" />
+    <ClCompile Include="Src\CPlanePrimitive.cpp" />
+    <ClCompile Include="Src\CSkeletalMeshPrimitive.cpp" />
+    <ClCompile Include="Src\CTerrainPrimitive.cpp" />
+    <ClCompile Include="Src\RDXResource.cpp" />
+    <ClCompile Include="Src\RResource.cpp" />
+    <ClCompile Include="Src\RResourceManager.cpp">
+      <ExpandAttributedSource Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExpandAttributedSource>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </AssemblerOutput>
+      <ExpandAttributedSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExpandAttributedSource>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="Src\RBaseScenePixelShader.cpp" />
+    <ClCompile Include="Src\RBaseSceneVertexShader.cpp" />
+    <ClCompile Include="Src\RShaderCompiler.cpp" />
+    <ClCompile Include="Src\RStandardVertexBuilder.cpp" />
+    <ClCompile Include="Src\RASEImporter.cpp" />
+    <ClCompile Include="Src\RImporter.cpp" />
+    <ClCompile Include="Src\RAnimationSequence.cpp" />
+    <ClCompile Include="Src\RBoneHierarchy.cpp" />
+    <ClCompile Include="Src\RSkeletalMesh.cpp" />
+    <ClCompile Include="Src\RSystemMemory.cpp" />
+    <ClCompile Include="Src\RTexture.cpp" />
+    <ClCompile Include="Src\InputDefine.cpp" />
+    <ClCompile Include="Src\TDataTypes.cpp" />
+    <ClCompile Include="Src\BCollisionBody.cpp" />
+    <ClCompile Include="Src\BComponent.cpp" />
+    <ClCompile Include="Src\BLightComponent.cpp" />
+    <ClCompile Include="Src\BThing.cpp" />
+    <ClCompile Include="Src\CCylinderCollisionBody.cpp" />
+    <ClCompile Include="Src\CHeightFieldCollisionBody.cpp" />
+    <ClCompile Include="Src\CBox.cpp" />
+    <ClCompile Include="Src\CCameraViewport.cpp" />
+    <ClCompile Include="Src\CCharacter.cpp" />
+    <ClCompile Include="Src\CEmitter.cpp" />
+    <ClCompile Include="Src\CTerrain.cpp" />
+    <ClCompile Include="Src\CBoxComponent.cpp" />
+    <ClCompile Include="Src\CDirectionalLightComponent.cpp" />
+    <ClCompile Include="Src\CSkeletalMeshComponent.cpp" />
+    <ClCompile Include="Src\CTerrainComponent.cpp" />
+    <ClCompile Include="Src\UWorld.cpp" />
+    <ClCompile Include="Src\UFreeTypeDrawer.cpp" />
+    <ClCompile Include="Src\UXMLParser.cpp" />
+    <ClCompile Include="Src\CUIButton.cpp" />
+    <ClCompile Include="Src\CUILabel.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\AApplication.h" />
+    <ClInclude Include="Include\AClass.h" />
+    <ClInclude Include="Include\AObject.h" />
+    <ClInclude Include="Include\ASystemInfo.h" />
+    <ClInclude Include="Include\AThread.h" />
+    <ClInclude Include="Include\BCamera.h" />
+    <ClInclude Include="Include\BDriver.h" />
+    <ClInclude Include="Include\BLight.h" />
+    <ClInclude Include="Include\BMaterialBase.h" />
+    <ClInclude Include="Include\BRenderingBatch.h" />
+    <ClInclude Include="Include\BSoundDriver.h" />
+    <ClInclude Include="Include\BViewport.h" />
+    <ClInclude Include="Include\BDirectionalLightPass.h" />
+    <ClInclude Include="Include\BDrawLinePass.h" />
+    <ClInclude Include="Include\BDrawUIPass.h" />
+    <ClInclude Include="Include\BOpaqueBasePass.h" />
+    <ClInclude Include="Include\BParticleRenderPass.h" />
+    <ClInclude Include="Include\BRenderPass.h" />
+    <ClInclude Include="Include\BRTRenderPass.h" />
+    <ClInclude Include="Include\BLineBatcher.h" />
+    <ClInclude Include="Include\BPrimitive.h" />
+    <ClInclude Include="Include\BTextDrawer.h" />
+    <ClInclude Include="Include\BComponentThread.h" />
+    <ClInclude Include="Include\BComponentThreadManager.h" />
+    <ClInclude Include="Include\BRenderer.h" />
+    <ClInclude Include="Include\CDirectionalLight.h" />
+    <ClInclude Include="Include\CDirectXDriver.h" />
+    <ClInclude Include="Include\CDirectXSoundDriver.h" />
+    <ClInclude Include="Include\CPointLight.h" />
+    <ClInclude Include="Include\CWaveIODriver.h" />
+    <ClInclude Include="Include\CWindowApp.h" />
+    <ClInclude Include="Include\CBoxPrimitive.h" />
+    <ClInclude Include="Include\CCylinderPrimitive.h" />
+    <ClInclude Include="Include\CMeshPrimitive.h" />
+    <ClInclude Include="Include\CParticlePrimitive.h" />
+    <ClInclude Include="Include\CPlanePrimitive.h" />
+    <ClInclude Include="Include\CSkeletalMeshPrimitive.h" />
+    <ClInclude Include="Include\CTerrainPrimitive.h" />
+    <ClInclude Include="Include\RDXResource.h" />
+    <ClInclude Include="Include\RResource.h" />
+    <ClInclude Include="Include\RResourceManager.h" />
+    <ClInclude Include="Include\RShaderClasses.h" />
+    <ClInclude Include="Include\RShaderCompiler.h" />
+    <ClInclude Include="Include\RASEImporter.h" />
+    <ClInclude Include="Include\RImporter.h" />
+    <ClInclude Include="Include\RAnimationSequence.h" />
+    <ClInclude Include="Include\RBoneHierarchy.h" />
+    <ClInclude Include="Include\RSkeletalMesh.h" />
+    <ClInclude Include="Include\RSystemMemory.h" />
+    <ClInclude Include="Include\RTexture.h" />
+    <ClInclude Include="Include\Enumerations_Geom.h" />
+    <ClInclude Include="Include\InputDefine.h" />
+    <ClInclude Include="Include\TDataTypes.h" />
+    <ClInclude Include="Include\TWindowInfo.h" />
+    <ClInclude Include="Include\BCollisionBody.h" />
+    <ClInclude Include="Include\BComponent.h" />
+    <ClInclude Include="Include\BLightComponent.h" />
+    <ClInclude Include="Include\BThing.h" />
+    <ClInclude Include="Include\CCylinderCollisionBody.h" />
+    <ClInclude Include="Include\CHeightFieldCollisionBody.h" />
+    <ClInclude Include="Include\CBox.h" />
+    <ClInclude Include="Include\CCameraViewport.h" />
+    <ClInclude Include="Include\CCharacter.h" />
+    <ClInclude Include="Include\CEmitter.h" />
+    <ClInclude Include="Include\CTerrain.h" />
+    <ClInclude Include="Include\CBoxComponent.h" />
+    <ClInclude Include="Include\CDirectionalLightComponent.h" />
+    <ClInclude Include="Include\CSkeletalMeshComponent.h" />
+    <ClInclude Include="Include\CTerrainComponent.h" />
+    <ClInclude Include="Include\UWorld.h" />
+    <ClInclude Include="Src\UFreeTypeDrawer.h" />
+    <ClInclude Include="Include\UXMLParser.h" />
+    <ClInclude Include="..\External\expat\include\xmlparse.h" />
+    <ClInclude Include="Include\CUIButton.h" />
+    <ClInclude Include="Include\CUILabel.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

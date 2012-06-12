@@ -32,6 +32,11 @@ bool CCameraViewport::Tick(unsigned long Time)
 	return true;
 }
 
+void CCameraViewport::SetProperty(TString& PropertyName, TString& Value)
+{
+
+}
+
 void CCameraViewport::UpdateViewport()
 {
 	if(m_pCamera && m_pCamera->ShouldUpdate() || true)

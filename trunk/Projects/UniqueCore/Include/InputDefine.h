@@ -44,6 +44,8 @@ struct TInput_Param
 
 struct TMouseInput_Param : TInput_Param
 {
+	TMouseInput_Param();
+
 	unsigned char bLButtonDown:1;
 	unsigned char bRButtonDown:1;
 	unsigned char bMButtonDown:1;

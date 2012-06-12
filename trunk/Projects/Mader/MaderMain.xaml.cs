@@ -34,7 +34,16 @@ namespace Mader
             GameLoop.Tick += Idle;
             GameLoop.Start();
             
+        }
+
+        public void ShowWindow()
+        {
             Show();
+        }
+
+        public IntPtr GetWindowHandle()
+        {
+            return ((HwndSource)HwndSource.FromVisual(this)).Handle;
         }
 
         void Idle(object Sender, EventArgs e)

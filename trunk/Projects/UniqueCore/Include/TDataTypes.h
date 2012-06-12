@@ -867,3 +867,15 @@ public:
 	TBoundingBox Box;
 	TBoundingSphere Sphere;
 };
+
+namespace ECamera_Mode
+{
+	enum Enum
+	{
+		First_Person,
+		Thrid_Person,
+		Free_Mode,	
+		Free_Mode_Editor,	
+		QuarterView_Mode,
+	};
+}

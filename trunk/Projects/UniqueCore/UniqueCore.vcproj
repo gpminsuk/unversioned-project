@@ -869,6 +869,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Src\InputDefine.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Include\InputDefine.h"
 						>
 					</File>

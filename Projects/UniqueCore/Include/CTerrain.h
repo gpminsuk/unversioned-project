@@ -1,7 +1,7 @@
 #pragma once
 #include "BThing.h"
 
-class CTerrain : public BThing
+class CTerrain: public BThing
 {
 public:
 	CTerrain();
@@ -11,7 +11,6 @@ public:
 	float m_fRadian;
 	float m_fSize;
 	TQuaternion m_qRot;
-
 
 	virtual bool Tick(unsigned long dTime);
 	virtual void PhysicsTick(unsigned long dTime);

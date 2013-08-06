@@ -3,7 +3,7 @@
 #include "TDataTypes.h"
 #include "BComponent.h"
 
-class CTerrainComponent : public BComponent
+class CTerrainComponent: public BComponent
 {
 public:
 	CTerrainComponent();

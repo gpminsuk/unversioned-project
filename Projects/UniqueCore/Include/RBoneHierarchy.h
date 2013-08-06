@@ -2,41 +2,18 @@
 
 #include "AObject.h"
 #include "TDataTypes.h"
+#include "RAnimationSequence.h"
 
-class RBone : public AObject
+class RBone: public AObject
 {
-	DECLARE_CLASS(RBone,)
-public:
-	RBone() : Parent(0) {}
-	~RBone()
-	{
-		for(unsigned int i=0;i<ChildBones.Size();++i)
-		{
-			delete ChildBones(i);
-		}
-	}
-
-	void AddBone_Recursive(RBone* Bone, TString ParentName)
-	{
-		if(BoneName == ParentName)
-		{
-			ChildBones.AddItem(Bone);
-			Bone->Parent = this;
-		}
-		else
-		{
-			for(unsigned int i=0;i<ChildBones.Size();++i)
-			{
-				ChildBones(i)->AddBone_Recursive(Bone, ParentName);
-			}
-		}			
-	}
-
+DECLARE_CLASS(RBone,)
+	public:
 	TString BoneName;
 
+	int BoneIndex;
+	int SkinBoneIndex;
 	RBone *Parent;
-
-	TArray<RBone*> ChildBones;
+	RAnimationBoneSequence* AnimationBoneSequenceRef;
 
 	TMatrix TM;
 	TMatrix InvTM;
@@ -44,15 +21,15 @@ public:
 	virtual bool Access(AAccessor& Accessor);
 };
 
-class RBoneHierarchy : public AObject
+class RBoneHierarchy: public AObject
 {
-	DECLARE_CLASS(RBoneHierarchy,)
-public:
+DECLARE_CLASS(RBoneHierarchy,)
+	public:
 	TMatrix GetBoneMatrix(RBone* Bone)
-	{
+			{
 		TMatrix Ret;
 		Ret.SetIdentity();
-		while(Bone)
+		while (Bone)
 		{
 			Ret = Ret * Bone->TM;
 			Bone = Bone->Parent;
@@ -60,31 +37,16 @@ public:
 		return Ret;
 	}
 
-	void AddBone(RBone* Bone, TString ParentName)
-	{
-		if(ParentName == "")
-		{
-			RootBone.AddItem(Bone);
-		}
-		else
-		{
-			RootBone(0)->AddBone_Recursive(Bone, ParentName);
-		}
-	}
-
-	RBoneHierarchy()
-	{
-	}
-
 	~RBoneHierarchy()
 	{
-		for(unsigned int i=0;i<RootBone.Size();++i)
-		{
-			delete RootBone(i);
+		for (unsigned int i = 0; i < Bones.Size(); ++i)
+				{
+			delete Bones(i);
 		}
 	}
 
-	TArray<RBone*> RootBone;
+	TArray<RBone*> Bones;
 
+	RBone* FindBone(TString& name);
 	virtual bool Access(AAccessor& Accessor);
 };

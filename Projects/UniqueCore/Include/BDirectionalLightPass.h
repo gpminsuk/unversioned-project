@@ -7,7 +7,7 @@ class BViewport;
 class RRenderTarget;
 class BLight;
 
-class BDirectionalLightPass : public BRenderPass
+class BDirectionalLightPass: public BRenderPass
 {
 public:
 	BDirectionalLightPass();

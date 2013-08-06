@@ -23,21 +23,24 @@ public:
 class TWorldStructure
 {
 public:
-	TWorldStructure() {}
-	virtual ~TWorldStructure() {}
+	TWorldStructure() {
+	}
+	virtual ~TWorldStructure() {
+	}
 
 	virtual bool Tick(unsigned long dTime) = 0;
 	virtual void AddThing(class BThing* Thing) = 0;
 	virtual void RemoveThing(class BThing* Thing) = 0;
 
-	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent = TVector3(0,0,0)) = 0;
+	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent =
+			TVector3(0, 0, 0)) = 0;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) = 0;
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) = 0;
 	virtual void InputChar() = 0;
 };
 
-class TWorldOctree : public TWorldStructure
+class TWorldOctree: public TWorldStructure
 {
 public:
 	TWorldOctree();
@@ -51,7 +54,8 @@ public:
 	virtual bool Tick(unsigned long dTime);
 	virtual void AddThing(class BThing* Thing);
 	virtual void RemoveThing(class BThing* Thing);
-	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent = TVector3(0,0,0));
+	virtual THitInfo LineCheck(class BThing* SourceThing, TVector3& Start, TVector3& End, TVector3& Extent =
+			TVector3(0, 0, 0));
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
@@ -81,16 +85,22 @@ public:
 	void RemoveThing(class BThing* Thing);
 };
 
-class UWorld : public AObject
+class UWorld: public AObject
 {
-	DECLARE_CLASS(UWorld,)
-public:
+DECLARE_CLASS(UWorld,)
+	public:
 	UWorld();
 	~UWorld(void);
 
-	inline void SetRenderer(BRenderer* R) { m_pRenderer = R; }
-	void AddViewport(BViewport* V) { Viewports.AddItem(V); }
-	inline void RemoveViewport(BViewport* V) { Viewports.DeleteItemByVal(V); }
+	inline void SetRenderer(BRenderer* R) {
+		m_pRenderer = R;
+	}
+	void AddViewport(BViewport* V) {
+		Viewports.AddItem(V);
+	}
+	inline void RemoveViewport(BViewport* V) {
+		Viewports.DeleteItemByVal(V);
+	}
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
@@ -106,11 +116,12 @@ public:
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
 	virtual void InputChar();
 
-	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent = TVector3(0,0,0));
+	virtual THitInfo LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent =
+			TVector3(0, 0, 0));
 	void AddThing(BThing* Thing);
 	void RemoveThing(BThing* Thing);
-protected:
-	
+	protected:
+
 };
 
 extern UWorld* GWorld;

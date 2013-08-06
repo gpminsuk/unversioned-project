@@ -4,7 +4,7 @@
 
 class BRenderingBatch;
 
-class BDrawUIPass : public BRenderPass
+class BDrawUIPass: public BRenderPass
 {
 public:
 	BDrawUIPass();

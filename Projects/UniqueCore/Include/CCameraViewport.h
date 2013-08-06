@@ -7,11 +7,11 @@
 
 class BCamera;
 
-class CCameraViewport : public BViewport
+class CCameraViewport: public BViewport
 {
 public:
-	DECLARE_CLASS(CCameraViewport,)
-	
+DECLARE_CLASS(CCameraViewport,)
+
 public:
 	CCameraViewport();
 	virtual ~CCameraViewport();
@@ -20,7 +20,7 @@ public:
 
 	virtual bool Tick(unsigned long Time);
 	virtual void SetProperty(TString& PropertyName, TString& Value);
-	
+
 	virtual void UpdateViewport();
 	virtual TVector3 GetViewportOrigin();
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);

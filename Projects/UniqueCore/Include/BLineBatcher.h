@@ -10,7 +10,7 @@ public:
 	TVector3 Point1, Point2;
 };
 
-class BLineBatcher// : public AObject
+class BLineBatcher // : public AObject
 {
 public:
 	BLineBatcher(void);

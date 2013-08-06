@@ -5,8 +5,7 @@ IMPLEMENT_CLASS(RTexture);
 
 RTextureBuffer* GDefaultTexture;
 
-bool RTexture::Access(AAccessor& Accessor)
-{
-	__super::Access(Accessor);
-	return true;
+bool RTexture::Access(AAccessor& Accessor) {
+    __super::Access(Accessor);
+    return true;
 }

@@ -2,7 +2,7 @@
 
 #include "BSoundDriver.h"
 
-class CDirectXSoundDriver : public BSoundDriver
+class CDirectXSoundDriver: public BSoundDriver
 {
 public:
 	CDirectXSoundDriver();

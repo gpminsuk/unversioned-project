@@ -17,103 +17,82 @@
 #include "BRTRenderPass.h"
 
 BViewport::BViewport(void)
-:	VisibleScenes(Scene_World|Scene_Collision) // TODO
-{
-	BatchManager = new BRenderingBatchManager();
+    :
+    VisibleScenes(Scene_World | Scene_Collision) { // TODO
+    BatchManager = new BRenderingBatchManager();
 }
 
-BViewport::~BViewport(void)
-{
-	delete BatchManager;
+BViewport::~BViewport(void) {
+    delete BatchManager;
 }
 
-void BViewport::SortTemplates()
-{
+void BViewport::SortTemplates() {
 }
 
-void BViewport::Remove(BPrimitive* pPrimitive)
-{
-	BatchManager->RemovePrimitive(pPrimitive);
+void BViewport::Remove(BPrimitive* pPrimitive) {
+    BatchManager->RemovePrimitive(pPrimitive);
 }
-void BViewport::Remove(BComponent* pComponent)
-{
-	for(unsigned int i=0;i<pComponent->Primitives.Size();++i)
-	{
-		Remove(pComponent->Primitives(i));
-	}
+void BViewport::Remove(BComponent* pComponent) {
+    for (unsigned int i = 0; i < pComponent->Primitives.Size(); ++i) {
+        Remove(pComponent->Primitives(i));
+    }
 }
 
-void BViewport::Remove(BThing* pThing)
-{
-	for(unsigned int i=0;i<pThing->Components.Size();++i)
-	{
-		BComponent* pComponent = pThing->Components(i);
-		for(unsigned int j=0;j<pComponent->Primitives.Size();++j)
-		{
-			Remove(pComponent->Primitives(j));
-		}
-	}
-	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
-	{
-		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
-		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
-		{
-			Remove(pCollisionBody->Primitives(j));
-		}
-	}
+void BViewport::Remove(BThing* pThing) {
+    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
+        BComponent* pComponent = pThing->Components(i);
+        for (unsigned int j = 0; j < pComponent->Primitives.Size(); ++j) {
+            Remove(pComponent->Primitives(j));
+        }
+    }
+    for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
+        BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+        for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
+            Remove(pCollisionBody->Primitives(j));
+        }
+    }
 }
 
-void BViewport::Render(BPrimitive* pPrimitive)
-{
-	BatchManager->AddPrimitive(pPrimitive);
+void BViewport::Render(BPrimitive* pPrimitive) {
+    BatchManager->AddPrimitive(pPrimitive);
 }
 
-void BViewport::Render(BComponent* pComponent)
-{
-	for(unsigned int i=0;i<pComponent->Primitives.Size();++i)
-	{
-		Render(pComponent->Primitives(i));
-	}
+void BViewport::Render(BComponent* pComponent) {
+    for (unsigned int i = 0; i < pComponent->Primitives.Size(); ++i) {
+        Render(pComponent->Primitives(i));
+    }
 }
 
-void BViewport::Render(BThing* pThing)
-{
-	for(unsigned int i=0;i<pThing->Components.Size();++i)
-	{
-		BComponent* pComponent = pThing->Components(i);
-		pComponent->RenderComponent(this);
-	}
-	for(unsigned int i=0;i<pThing->CollisionBodies.Size();++i)
-	{
-		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
-		for(unsigned int j=0;j<pCollisionBody->Primitives.Size();++j)
-		{
-			Render(pCollisionBody->Primitives(j));
-		}
-	}
+void BViewport::Render(BThing* pThing) {
+    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
+        BComponent* pComponent = pThing->Components(i);
+        pComponent->RenderComponent(this);
+    }
+    for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
+        BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+        for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
+            Render(pCollisionBody->Primitives(j));
+        }
+    }
 }
 
-void BViewport::RenderLight(BLightComponent* pLightComponent)
-{
-	Lights.AddItem(pLightComponent);
+void BViewport::RenderLight(BLightComponent* pLightComponent) {
+    Lights.AddItem(pLightComponent);
 }
 
-void BViewport::RemoveLight(BLightComponent* pLightComponent)
-{
-	Lights.DeleteItemByVal(pLightComponent);
+void BViewport::RemoveLight(BLightComponent* pLightComponent) {
+    Lights.DeleteItemByVal(pLightComponent);
 }
 
-void BViewport::RenderViewport()
-{
-	BatchManager->RenderBatches(this);
+void BViewport::RenderViewport() {
+    BatchManager->RenderBatches(this);
 
-	GBaseRTRenderPass->BeginPass(this);
-	GBaseRTRenderPass->DrawPrimitive();
-	GBaseRTRenderPass->EndPass();
+    GBaseRTRenderPass->BeginPass(this);
+    GBaseRTRenderPass->DrawPrimitive();
+    GBaseRTRenderPass->EndPass();
 
-	GTextDrawer->DrawTexts(this);
+    GTextDrawer->DrawTexts(this);
 }
 
-void BViewport::Clear()
-{
+void BViewport::Clear() {
 }

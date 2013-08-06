@@ -3,7 +3,7 @@
 
 class TTerrainQuadTreeNode
 {
-public:	
+public:
 	TTerrainQuadTreeNode();
 
 	enum E_QuadTreeNodeType
@@ -41,7 +41,8 @@ public:
 	unsigned int Depth;
 
 	void DestroyNode();
-	void CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, TTerrainQuadTree* Tree, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType = Node_Root);
+	void CreateTerrainQuadTreeLeaves(float** HeightValue, TIntPoint Coordinate, TTerrainQuadTreeNode* Parent, TTerrainQuadTree* Tree, unsigned int Level, unsigned int NumCellX, E_QuadTreeNodeType NodeType =
+			Node_Root);
 
 	void FillLODIndexBuffer(TIndex16** pData);
 	void CheckLODLeafNode(TVector3 LODOrigin);
@@ -67,7 +68,7 @@ public:
 	unsigned int CheckLODLeafNode(TVector3 LODOrigin);
 };
 
-class TTerrainPrimitive : public TPrimitive
+class TTerrainPrimitive: public TPrimitive
 {
 public:
 	TTerrainPrimitive();
@@ -83,17 +84,17 @@ public:
 	TIndex16 *pLODIndices;
 	int nLODIndices;
 
-	void CreateTerrainQuadTree(float** HeightValue, unsigned int CellSizeX, unsigned int CellSizeY,unsigned int MaxTessellationLevel);
+	void CreateTerrainQuadTree(float** HeightValue, unsigned int CellSizeX, unsigned int CellSizeY, unsigned int MaxTessellationLevel);
 	bool Tessellate(TVector3 Origin);
 
 	TTerrainQuadTree** QuadTree;
 
 	unsigned int QuadTreeSizeX;
 	unsigned int QuadTreeSizeY;
-private:
+	private:
 };
 
-class CTerrainPrimitive : public BPrimitive
+class CTerrainPrimitive: public BPrimitive
 {
 public:
 	CTerrainPrimitive(void);
@@ -103,6 +104,7 @@ public:
 	bool DestroyTerrainPrimitive();
 	void UpdateTerrainPrimitive(TVector3 _LODOrigin);
 
+	virtual RShaderBase* GetShaderType();
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual void IndexTessellate();
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);

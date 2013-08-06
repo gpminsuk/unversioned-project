@@ -10,7 +10,7 @@ public:
 	BCamera();
 	virtual ~BCamera(void);
 
-	class BThing*	m_Subject;
+	class BThing* m_Subject;
 
 	ECamera_Mode::Enum m_CameraMode;
 

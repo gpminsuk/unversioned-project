@@ -15,4 +15,4 @@ public:
 	virtual bool PlayWAVSound(int Index) = 0;
 };
 
-extern BSoundDriver	*GSoundDriver;
+extern BSoundDriver *GSoundDriver;

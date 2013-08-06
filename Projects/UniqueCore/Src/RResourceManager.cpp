@@ -10,79 +10,84 @@
 #include "BDriver.h"
 #include "BSoundDriver.h"
 
-RResourceManager::RResourceManager(void)
-{
+RResourceManager::RResourceManager(void) {
 }
 
-RResourceManager::~RResourceManager(void)
-{
+RResourceManager::~RResourceManager(void) {
 }
 #include <Windows.h>
-bool RResourceManager::LoadResources()
-{
-	if( !GDriver )
-	{
-		return false;
-	}
-	TString Filename;
-	//////////////////////////////////// Sound Loading
-	RTexture* Texture = new RTexture();
-	GDriver->CreateTextureBuffer(256, 256);
+bool RResourceManager::LoadResources() {
+    if (!GDriver) {
+        return false;
+    }
+    TString Filename;
+    //////////////////////////////////// Sound Loading
+    RTexture* Texture = new RTexture();
+    GDriver->CreateTextureBuffer(256, 256);
 
-	Filename = "..\\..\\Resources\\terrain.jpg";
-	extern RTextureBuffer* GDefaultTexture;
-	GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
+    Filename = "..\\..\\Resources\\renekton_brutal_TX_CM.DDS";
+    extern RTextureBuffer* GDefaultTexture;
+    GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
 
-	//////////////////////////////////// Shader Loading
-	RDirectXShader *pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-	wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
+    //////////////////////////////////// Shader Loading
+    RDirectXShader *pShader = new RDirectXShader();
+    //sprintf_s(pShader->m_FileName, 256, "Shader.fx");
+    wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
+    RShaderTable::Shaders.AddItem(pShader);
 
-	pShader = new RDirectXShader();
-	//sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
-	wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
-	RShaderTable::Shaders.AddItem(pShader);
+    pShader = new RDirectXShader();
+    //sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
+    wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
+    RShaderTable::Shaders.AddItem(pShader);
 
-	for(unsigned int i=0;i<RShaderTable::Shaders.Size();i++)
-	{
-		GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
-	}
+    for (unsigned int i = 0; i < RShaderTable::Shaders.Size(); i++) {
+        GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
+    }
 
-	//////////////////////////////////// Geometry Loading
-	/////////////////////////////////////////////////////// Basic Geometry Creating
-	extern TBoxPrimitive* GBoxPrimitiveOutside;
-	GBoxPrimitiveOutside = new TBoxPrimitive(RenderType_Opaque, SideType_Outside);
-	extern TBoxPrimitive* GBoxPrimitiveInside;
-	GBoxPrimitiveInside = new TBoxPrimitive(RenderType_Opaque, SideType_Inside);
-	extern TCylinderPrimitive* GCylinderPrimitive;
-	GCylinderPrimitive = new TCylinderPrimitive(RenderType_Opaque);
-	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
-	GCylinderPrimitiveWireFrame= new TCylinderPrimitive(RenderType_Line);
-	/////////////////////////////////////////////////////// Vertex Buffer Loading
-	/////////////////////////////////////////////////////// Index Buffer Loading
-	return true;
+	/////////////////////////////////////////////////////// Vertex Decl Loading
+	RVertexDeclaration::Position_Normal = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal);
+	RVertexDeclaration::Position_TexCoord = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float2, DeclUsage_TexCoord);
+	RVertexDeclaration::Position_Normal_TexCoord = new RDXVertexDeclaration(3, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
+	RVertexDeclaration::SkeletalMesh_GPU_Skin = new RDXVertexDeclaration(5, DeclType_Float3, DeclUsage_Position, DeclType_Ubyte4, DeclUsage_BlendIndices, DeclType_Float4, DeclUsage_BlendWeight, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
+
+    //////////////////////////////////// Geometry Loading
+    /////////////////////////////////////////////////////// Basic Geometry Creating
+    extern TBoxPrimitive* GBoxPrimitiveOutside;
+    GBoxPrimitiveOutside = new TBoxPrimitive(RenderType_Opaque,
+            SideType_Outside);
+    extern TBoxPrimitive* GBoxPrimitiveInside;
+    GBoxPrimitiveInside = new TBoxPrimitive(RenderType_Opaque, SideType_Inside);
+    extern TCylinderPrimitive* GCylinderPrimitive;
+    GCylinderPrimitive = new TCylinderPrimitive(RenderType_Opaque);
+    extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
+    GCylinderPrimitiveWireFrame = new TCylinderPrimitive(RenderType_Line);
+    /////////////////////////////////////////////////////// Vertex Buffer Loading
+    /////////////////////////////////////////////////////// Index Buffer Loading
+    return true;
 }
 
-bool RResourceManager::ReleaseAllResources()
-{
-	//////////////////////////////////// Geometry Releasing
-	/////////////////////////////////////////////////////// Basic Geometry Releasing
-	extern TBoxPrimitive* GBoxPrimitiveOutside;
-	delete GBoxPrimitiveOutside;
-	extern TBoxPrimitive* GBoxPrimitiveInside;
-	delete GBoxPrimitiveInside;
-	extern TCylinderPrimitive* GCylinderPrimitive;
-	delete GCylinderPrimitive;
-	extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
-	delete GCylinderPrimitiveWireFrame;
+bool RResourceManager::ReleaseAllResources() {
+    //////////////////////////////////// Geometry Releasing
+    /////////////////////////////////////////////////////// Basic Geometry Releasing
+    extern TBoxPrimitive* GBoxPrimitiveOutside;
+    delete GBoxPrimitiveOutside;
+    extern TBoxPrimitive* GBoxPrimitiveInside;
+    delete GBoxPrimitiveInside;
+    extern TCylinderPrimitive* GCylinderPrimitive;
+    delete GCylinderPrimitive;
+    extern TCylinderPrimitive* GCylinderPrimitiveWireFrame;
+    delete GCylinderPrimitiveWireFrame;
 
-	//////////////////////////////////// Shader Releasing
-	for(unsigned int i=0;i<RShaderTable::Shaders.Size();++i)
-	{
-		delete RShaderTable::Shaders(i);
-	}
-	RShaderTable::Shaders.Clear(true);
+    //////////////////////////////////// Shader Releasing
+    for (unsigned int i = 0; i < RShaderTable::Shaders.Size(); ++i) {
+        delete RShaderTable::Shaders(i);
+    }
+    RShaderTable::Shaders.Clear(true);
 
-	return true;
+	//////////////////////////////////// Vertex Decl Releasing
+	delete RVertexDeclaration::Position_Normal;
+	delete RVertexDeclaration::Position_TexCoord;
+	delete RVertexDeclaration::Position_Normal_TexCoord;
+	delete RVertexDeclaration::SkeletalMesh_GPU_Skin;
+    return true;
 }

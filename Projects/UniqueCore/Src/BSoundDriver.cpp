@@ -3,12 +3,10 @@
 
 BSoundDriver *GSoundDriver = 0;
 
-BSoundDriver::BSoundDriver()
-{
+BSoundDriver::BSoundDriver() {
 
 }
 
-BSoundDriver::~BSoundDriver()
-{
+BSoundDriver::~BSoundDriver() {
 
 }

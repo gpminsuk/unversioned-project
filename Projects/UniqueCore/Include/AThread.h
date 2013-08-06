@@ -18,39 +18,41 @@ class ACriticalSection
 
 public:
 	FORCEINLINE ACriticalSection(void)
-	{
+			{
 		InitializeCriticalSection(&CriticalSection);
-		SetCriticalSectionSpinCount(&CriticalSection,4000);
+		SetCriticalSectionSpinCount(&CriticalSection, 4000);
 	}
 
 	FORCEINLINE ~ACriticalSection(void)
-	{
+			{
 		DeleteCriticalSection(&CriticalSection);
 	}
 
-	FORCEINLINE void Lock(void)
-	{
-		if( TryEnterCriticalSection(&CriticalSection) == 0 )
-		{
+	FORCEINLINE
+	void Lock(void)
+			{
+		if (TryEnterCriticalSection(&CriticalSection) == 0)
+				{
 			EnterCriticalSection(&CriticalSection);
 		}
 	}
 
-	FORCEINLINE void Unlock(void)
-	{
+	FORCEINLINE
+	void Unlock(void)
+			{
 		LeaveCriticalSection(&CriticalSection);
 	}
 };
 
-class AThread : public AObject
+class AThread: public AObject
 {
-	DECLARE_CLASS(AThread, CLASS_Abstract)
-public:
+DECLARE_CLASS(AThread, CLASS_Abstract)
+	public:
 	AThread(AApplication* App);
 	virtual ~AThread(void);
-		
+
 	void Start();
-protected:
+	protected:
 	void Run();
 	static unsigned __stdcall ThreadEntryPoint(void* thread);
 	virtual void ThreadSetup() = 0;

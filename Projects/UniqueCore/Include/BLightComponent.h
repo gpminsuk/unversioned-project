@@ -5,7 +5,7 @@
 class BViewport;
 class RShader;
 
-class BLightComponent : public BComponent
+class BLightComponent: public BComponent
 {
 public:
 	BLightComponent();

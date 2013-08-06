@@ -1,11 +1,11 @@
 #pragma once
 #include "BCollisionBody.h"
 
-class CCylinderCollisionBody : public BCollisionBody
+class CCylinderCollisionBody: public BCollisionBody
 {
 public:
 	CCylinderCollisionBody(class BThing* InOwner);
-	virtual ~CCylinderCollisionBody();	
+	virtual ~CCylinderCollisionBody();
 
 	float Radius;
 	float Height;

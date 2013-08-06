@@ -8,10 +8,10 @@ class RSkeletalMesh;
 class RBoneHierarchy;
 class RAnimationSequence;
 
-class CSkeletalMeshComponent : public BComponent
+class CSkeletalMeshComponent: public BComponent
 {
-	DECLARE_CLASS(CSkeletalMeshComponent,)
-public:
+DECLARE_CLASS(CSkeletalMeshComponent,)
+	public:
 	CSkeletalMeshComponent();
 	virtual ~CSkeletalMeshComponent();
 

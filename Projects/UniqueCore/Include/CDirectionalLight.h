@@ -2,7 +2,7 @@
 
 #include "BLight.h"
 
-class CDirectionalLight : public BLight
+class CDirectionalLight: public BLight
 {
 public:
 	CDirectionalLight(void);

@@ -3,10 +3,10 @@
 #include "AObject.h"
 #include "TDataTypes.h"
 
-class RTexture : public AObject
+class RTexture: public AObject
 {
-	DECLARE_CLASS(RTexture,)
-protected:
+DECLARE_CLASS(RTexture,)
+	protected:
 	enum ETextureMemoryType
 	{
 		TMT_SYSTEM,
@@ -23,8 +23,10 @@ protected:
 class RTextureBuffer
 {
 public:
-	RTextureBuffer() {}
-	virtual ~RTextureBuffer() {}
+	RTextureBuffer() {
+	}
+	virtual ~RTextureBuffer() {
+	}
 
 	unsigned int Width;
 	unsigned int Height;

@@ -11,14 +11,14 @@ struct TXMLAttribute
 	TString AttributeValue;
 
 	bool IsAttribute(const char* Name, const char* Value)
-	{
+			{
 		return AttributeName == Name && AttributeValue == Value;
 	}
 
 	bool GetAttribute(const char* Name, TString& Value)
-	{
-		if(AttributeName == Name)
-		{
+			{
+		if (AttributeName == Name)
+				{
 			Value = AttributeValue;
 			return true;
 		}
@@ -39,17 +39,17 @@ struct TXMLElement
 	TArray<TXMLElement> ChildElements;
 
 	bool IsElementName(const char* Name)
-	{
+			{
 		return ElementName == Name;
 	}
 
 	bool GetChildElement(const char* Name, TXMLElement& Ret)
-	{
-		for(unsigned int i=0;i<ChildElements.Size();++i)
-		{
-			TXMLElement& Element = ChildElements(i);
-			if(Element.IsElementName(Name))
 			{
+		for (unsigned int i = 0; i < ChildElements.Size(); ++i)
+				{
+			TXMLElement& Element = ChildElements(i);
+			if (Element.IsElementName(Name))
+					{
 				Ret = Element;
 				return true;
 			}
@@ -58,12 +58,12 @@ struct TXMLElement
 	}
 
 	bool GetAttributeValue(const char* Name, TString& Ret)
-	{
-		for(unsigned int i=0;i<Attributes.Size();++i)
-		{
-			TXMLAttribute& Attribute = Attributes(i);
-			if(Attribute.GetAttribute(Name, Ret))
 			{
+		for (unsigned int i = 0; i < Attributes.Size(); ++i)
+				{
+			TXMLAttribute& Attribute = Attributes(i);
+			if (Attribute.GetAttribute(Name, Ret))
+					{
 				return true;
 			}
 		}
@@ -71,31 +71,31 @@ struct TXMLElement
 	}
 
 	bool HasAttribute(const char* Name, const char* Value)
-	{
-		for(unsigned int i=0;i<Attributes.Size();++i)
-		{
-			TXMLAttribute& Attribute = Attributes(i);
-			if(Attribute.IsAttribute(Name, Value))
 			{
+		for (unsigned int i = 0; i < Attributes.Size(); ++i)
+				{
+			TXMLAttribute& Attribute = Attributes(i);
+			if (Attribute.IsAttribute(Name, Value))
+					{
 				return true;
 			}
 		}
 		return false;
-	}	
+	}
 
 	bool GetValue(char* Path, TString& Ret)
-	{
+			{
 		char* RestPath = strchr(Path, '.');
-		if(RestPath)
+		if (RestPath)
 		{
 			char ElementName[1024];
 			memcpy(ElementName, Path, (RestPath - Path));
 			ElementName[(RestPath - Path)] = '\0';
-			for(unsigned int i=0;i<ChildElements.Size();++i)
-			{
+			for (unsigned int i = 0; i < ChildElements.Size(); ++i)
+					{
 				TXMLElement& Element = ChildElements(i);
-				if(Element.ElementName == ElementName)
-				{
+				if (Element.ElementName == ElementName)
+						{
 					Element.GetValue(RestPath + 1, Ret);
 					return true;
 				}
@@ -103,11 +103,11 @@ struct TXMLElement
 		}
 		else
 		{
-			for(unsigned int i=0;i<Attributes.Size();++i)
-			{
+			for (unsigned int i = 0; i < Attributes.Size(); ++i)
+					{
 				TXMLAttribute& Attribute = Attributes(i);
-				if(Attribute.AttributeName == Path)
-				{
+				if (Attribute.AttributeName == Path)
+						{
 					Ret = Attribute.GetValue();
 					return true;
 				}
@@ -117,7 +117,7 @@ struct TXMLElement
 	}
 };
 
-class BXMLParser : public AObject
+class BXMLParser: public AObject
 {
 public:
 
@@ -138,7 +138,7 @@ public:
 	virtual void Parse() = 0;
 };
 
-class CXMLApplicationParser : public BXMLParser
+class CXMLApplicationParser: public BXMLParser
 {
 public:
 	CXMLApplicationParser();

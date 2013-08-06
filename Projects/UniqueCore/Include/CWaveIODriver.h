@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "WaveIO.lib")
 
-class CWaveIODriver : public BSoundDriver
+class CWaveIODriver: public BSoundDriver
 {
 public:
 	CWaveIODriver();

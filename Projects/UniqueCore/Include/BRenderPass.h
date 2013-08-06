@@ -11,7 +11,7 @@ public:
 	BRenderPassResource();
 	~BRenderPassResource();
 
-	RRenderTarget*	m_BaseSceneRT;
+	RRenderTarget* m_BaseSceneRT;
 
 	void Initialize();
 };

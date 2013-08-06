@@ -9,17 +9,17 @@
 
 struct UMouseMap
 {
-	unsigned char bLButtonDown:1;
-	unsigned char bRButtonDown:1;
-	unsigned char bMButtonDown:1;
+	unsigned char bLButtonDown :1;
+	unsigned char bRButtonDown :1;
+	unsigned char bMButtonDown :1;
 };
 
-struct TWindowInfo : public TApplicationInfo
+struct TWindowInfo: public TApplicationInfo
 {
 public:
 	TWindowInfo() :
-		m_wWidth(800),
-		m_wHeight(600)
+			m_wWidth(800),
+					m_wHeight(600)
 	{
 		Platform = Platform_Windows_x86;
 	}
@@ -31,10 +31,10 @@ public:
 	int m_wHeight;
 };
 
-class CWindowApp : public AApplication
+class CWindowApp: public AApplication
 {
-	DECLARE_CLASS(CWindowApp,)
-public:
+DECLARE_CLASS(CWindowApp,)
+	public:
 	TWindowInfo m_WindowInfo;
 
 	UMouseMap m_MouseMap;

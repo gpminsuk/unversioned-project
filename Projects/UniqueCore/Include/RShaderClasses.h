@@ -4,26 +4,32 @@
 
 class BPrimitive;
 
-class RStandardVertexBuilder : public RShaderConfigure
+class RStandardVertexBuilder: public RShaderConfigure
 {
 public:
-	RStandardVertexBuilder(class RShader* InShader) : RShaderConfigure(InShader) {}
+	RStandardVertexBuilder(class RShader* InShader) :
+			RShaderConfigure(InShader) {
+	}
 
 	virtual void ConfigureLight(BRenderingBatch* InBatch);
 };
 
-class RBaseSceneVertexShader : public RShaderConfigure
+class RBaseSceneVertexShader: public RShaderConfigure
 {
 public:
-	RBaseSceneVertexShader(class RShader* InShader) : RShaderConfigure(InShader) {}
+	RBaseSceneVertexShader(class RShader* InShader) :
+			RShaderConfigure(InShader) {
+	}
 
 	virtual void ConfigureLight(BRenderingBatch* InBatch);
 };
 
-class RBaseScenePixelShader : public RShaderConfigure
+class RBaseScenePixelShader: public RShaderConfigure
 {
 public:
-	RBaseScenePixelShader(class RShader* InShader) : RShaderConfigure(InShader) {}
+	RBaseScenePixelShader(class RShader* InShader) :
+			RShaderConfigure(InShader) {
+	}
 
-	virtual void ConfigureLight(BRenderingBatch* InBatch);	
+	virtual void ConfigureLight(BRenderingBatch* InBatch);
 };

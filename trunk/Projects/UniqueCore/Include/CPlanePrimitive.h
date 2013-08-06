@@ -2,7 +2,7 @@
 
 #include "BPrimitive.h"
 
-class CPlanePrimitive : public BPrimitive
+class CPlanePrimitive: public BPrimitive
 {
 public:
 	CPlanePrimitive(void);

@@ -3,8 +3,8 @@ float4x4 ViewProjectionMatrix : register(c0);
 struct TVertexInput
 {
 	float3 Position			: POSITION;
-	float2 TexCoord			: TEXCOORD0;
 	float3 Normal			: NORMAL;
+	float2 TexCoord			: TEXCOORD0;
 };
 
 struct TVertexOutput

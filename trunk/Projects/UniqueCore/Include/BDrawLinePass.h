@@ -2,7 +2,7 @@
 
 #include "BRenderPass.h"
 
-class BDrawLinePass : public BRenderPass
+class BDrawLinePass: public BRenderPass
 {
 public:
 	BDrawLinePass();

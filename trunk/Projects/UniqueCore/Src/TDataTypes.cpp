@@ -7,26 +7,22 @@
 TMatrix TMatrix::Identity;
 
 AAccessor::AAccessor()
-:	bIsLoading(false),
-	bIsSaving(false)
-{	
+    :
+    bIsLoading(false),
+    bIsSaving(false) {
 }
 
-AAccessor::~AAccessor()
-{
-	if(FilePointer)
-	{
-		fclose(FilePointer);
-	}
+AAccessor::~AAccessor() {
+    if (FilePointer) {
+        fclose(FilePointer);
+    }
 }
 
-bool AAccessor::IsValid()
-{
-	return (FilePointer == 0)?false:true;
+bool AAccessor::IsValid() {
+    return (FilePointer == 0) ? false : true;
 }
 
-AAccessor& AAccessor::operator<<( class AObject*& A )
-{
-	A->Access(*this);
-	return *this;
+AAccessor& AAccessor::operator<<(class AObject*& A) {
+    A->Access(*this);
+    return *this;
 }

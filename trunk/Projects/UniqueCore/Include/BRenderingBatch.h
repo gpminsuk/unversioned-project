@@ -10,7 +10,7 @@ class BRenderingBatch
 {
 public:
 	int nVertices;
-	int nVertexStride;
+	RVertexDeclaration* Declaration;
 
 	RShaderBase* Shader;
 
@@ -22,9 +22,12 @@ public:
 	enum EPrimitiveType PrimitiveType;
 	enum ERenderType RenderType;
 
-	BRenderingBatch();
+	BRenderingBatch(BPrimitive* InitialPrimitive);
 	~BRenderingBatch();
 
+	bool IsBatchable(BPrimitive* Primitive);
+	void RemovePrimitive(BPrimitive* Primitive);
+	void BatchPrimitive(BPrimitive* Primitive);
 	int GetNumIndices();
 	void IndexTessellate();
 

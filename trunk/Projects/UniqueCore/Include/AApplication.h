@@ -8,45 +8,42 @@ class BRenderer;
 class BViewport;
 class UWorld;
 
-enum EPlatform
-{
-	Platform_Windows_x86
+enum EPlatform {
+    Platform_Windows_x86
 };
 
-struct TApplicationInfo
-{
+struct TApplicationInfo {
 public:
-	TApplicationInfo() :
-	  Platform(Platform_Windows_x86)
-	  {}
+    TApplicationInfo() :
+        Platform(Platform_Windows_x86) {
+    }
 
-	EPlatform Platform;
+    EPlatform Platform;
 };
 
-class AApplication : public AObject
-{
-	DECLARE_CLASS(AApplication,CLASS_Abstract)
+class AApplication: public AObject {
+    DECLARE_CLASS(AApplication,CLASS_Abstract)
 public:
-	AApplication(void);
-	virtual ~AApplication();
+    AApplication(void);
+    virtual ~AApplication();
 
-	ASystemInfo* SystemInfo;
+    ASystemInfo* SystemInfo;
 
-	BRenderer *m_pRenderer;
-	BViewport *m_pViewport;
+    BRenderer *m_pRenderer;
+    BViewport *m_pViewport;
 
-	UWorld*	m_pWorld;
+    UWorld* m_pWorld;
 
-	class CBox* Box;						// ¹æ
-	class CDirectionalLight* DirectionalLight;
+    class CBox* Box;						// ¹æ
+    class CDirectionalLight* DirectionalLight;
 
-	bool bQuit;
-	bool bRenderThreadQuit;
+    bool bQuit;
+    bool bRenderThreadQuit;
 
-	virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
+    virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
 
-	virtual bool CreateApp(TApplicationInfo& Info) = 0;
-	virtual void Do() = 0;
-	virtual bool DestroyApp() = 0;
-	virtual void Initialize() = 0;
+    virtual bool CreateApp(TApplicationInfo& Info) = 0;
+    virtual void Do() = 0;
+    virtual bool DestroyApp() = 0;
+    virtual void Initialize() = 0;
 };

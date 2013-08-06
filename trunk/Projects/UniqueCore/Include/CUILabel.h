@@ -4,7 +4,7 @@
 #include "BPrimitive.h"
 #include "BComponent.h"
 
-class CUILabelPrimitive : public BPrimitive
+class CUILabelPrimitive: public BPrimitive
 {
 public:
 	TString Text;
@@ -15,7 +15,7 @@ public:
 	virtual unsigned int GetNumIndices();
 };
 
-class CUILabelComponent : public BComponent
+class CUILabelComponent: public BComponent
 {
 public:
 	int Width;

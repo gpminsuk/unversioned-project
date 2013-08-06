@@ -25,7 +25,9 @@ class RVertexBuilder
 class RShaderConfigure
 {
 public:
-	RShaderConfigure(class RShader* InShader) : Shader(InShader) {}
+	RShaderConfigure(class RShader* InShader) :
+			Shader(InShader) {
+	}
 
 	class RShader* Shader;
 
@@ -35,21 +37,25 @@ public:
 class RShader
 {
 public:
-	RShader() : Configure(0) {}
-	~RShader() { delete Configure; }
+	RShader() :
+			Configure(0) {
+	}
+	~RShader() {
+		delete Configure;
+	}
 	RShaderConfigure* Configure;
 	TArray<RConstant> Constants;
 
 	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
 };
 
-class RPixelShader : public RShader
+class RPixelShader: public RShader
 {
 public:
 	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
 };
 
-class RVertexShader : public RShader
+class RVertexShader: public RShader
 {
 public:
 	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
@@ -62,8 +68,8 @@ public:
 	RVertexShader* VertexShader;
 
 	RShaderBase() :
-		VertexShader(0),
-		PixelShader(0)
+			VertexShader(0),
+					PixelShader(0)
 	{
 
 	}
@@ -78,7 +84,7 @@ public:
 	virtual bool EndShader() = 0;
 
 	wchar_t m_FileName[256];
-protected:
+	protected:
 };
 
 class RShaderTable
@@ -87,38 +93,46 @@ public:
 	static TArray<RShaderBase*> Shaders;
 };
 
-enum VD_TYPE
-{
-	DECLTYPE_FLOAT1 = 0,
-	DECLTYPE_FLOAT2 = 1,
-	DECLTYPE_FLOAT3 = 2,
-	DECLTYPE_FLOAT4 = 3,
-	DECLTYPE_COLOR = 4,
-	DECLTYPE_UBYTE4 = 5,  
-	DECLTYPE_SHORT2 = 6,
-	DECLTYPE_SHORT4 = 7,
-	DECLTYPE_UBYTE4N = 8,
-	DECLTYPE_SHORT2N = 9,
-	DECLTYPE_SHORT4N = 10,
-	DECLTYPE_USHORT2N = 11,
-	DECLTYPE_USHORT4N = 12,
-	DECLTYPE_UDEC3 = 13,
-	DECLTYPE_DEC3N = 14,
-	DECLTYPE_FLOAT16_2 = 15,
-	DECLTYPE_FLOAT16_4 = 16,
-	DECLTYPE_UNUSED = 17,
-};
+class RVertexDeclaration {
+public:
+	static RVertexDeclaration* Position_Normal_TexCoord;
+	struct Position_Normal_TexCoord_VD {
+		TVector3 Position;
+		TVector3 Normal;
+		TVector2 TexCoord;
+	};
+	static RVertexDeclaration* Position_Normal;
+	struct Position_Normal_VD {
+		TVector3 Position;
+		TVector3 Normal;
+	};
+	static RVertexDeclaration* Position_TexCoord;
+	struct Position_TexCoord_VD {
+		TVector3 Position;
+		TVector2 TexCoord;
+	};
+	static RVertexDeclaration* SkeletalMesh_GPU_Skin;	
+	struct SkeletalMesh_GPU_Skin_VD {
+		TVector3 Position;
+		TVector3 Normal;
+		TVector2 TexCoord;
+		char BoneIndices[4];
+		float BoneWeights[4];
+	};
 
-struct VertexDeclaration
-{
-	short Offset;
-	char Type;
+	TArray<unsigned int> Types;
+	TArray<unsigned int> Usages;
+
+	virtual unsigned int GetTypeSize(unsigned int Type) = 0;
+	virtual unsigned int GetStride() = 0;
 };
 
 class RVideoMemoryIndexBuffer
 {
 public:
-	RVideoMemoryIndexBuffer() : nIndices(0) {}
+	RVideoMemoryIndexBuffer() :
+			nIndices(0) {
+	}
 	virtual ~RVideoMemoryIndexBuffer()
 	{
 		nIndices = 0;
@@ -130,17 +144,17 @@ public:
 class RVideoMemoryVertexBuffer
 {
 public:
-	RVideoMemoryVertexBuffer() : nVertices(0), Declaration(0) {}
+	RVideoMemoryVertexBuffer() :
+			nVertices(0) {
+	}
 	virtual ~RVideoMemoryVertexBuffer()
 	{
-		delete[] Declaration; Declaration = 0;
 		nVertices = 0;
 	}
 
 	unsigned int nVertices;
-	unsigned int nVertexStride;
 
-	VertexDeclaration* Declaration;
+	RVertexDeclaration* Declaration;
 };
 
 class RPrimitiveBuffer
@@ -157,8 +171,11 @@ public:
 class RRenderTarget
 {
 public:
-	RRenderTarget() : m_pTexture(0) {}
-	virtual ~RRenderTarget() {}
+	RRenderTarget() :
+			m_pTexture(0) {
+	}
+	virtual ~RRenderTarget() {
+	}
 
 	class RTextureBuffer* m_pTexture;
 

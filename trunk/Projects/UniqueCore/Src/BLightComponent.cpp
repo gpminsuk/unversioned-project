@@ -3,15 +3,12 @@
 #include "BPrimitive.h"
 #include "BViewport.h"
 
-BLightComponent::BLightComponent()
-{	
+BLightComponent::BLightComponent() {
 }
 
-BLightComponent::~BLightComponent()
-{
+BLightComponent::~BLightComponent() {
 }
 
-void BLightComponent::RenderComponent(BViewport* Viewport)
-{
-	Viewport->RenderLight(this);
+void BLightComponent::RenderComponent(BViewport* Viewport) {
+    Viewport->RenderLight(this);
 }

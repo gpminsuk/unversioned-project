@@ -6,33 +6,29 @@
 
 #include "BCamera.h"
 
-CTerrain::CTerrain()
-{
-	CTerrainComponent* TerrainComponent = new CTerrainComponent();
-	Components.AddItem(TerrainComponent);
+CTerrain::CTerrain() {
+    CTerrainComponent* TerrainComponent = new CTerrainComponent();
+    Components.AddItem(TerrainComponent);
 
-	CHeightFieldCollisionBody* TerrainCollisionBody = new CHeightFieldCollisionBody(this);
-	CollisionBodies.AddItem(TerrainCollisionBody);
+    CHeightFieldCollisionBody* TerrainCollisionBody =
+        new CHeightFieldCollisionBody(this);
+    CollisionBodies.AddItem(TerrainCollisionBody);
 
-	UpdateTransform();
+    UpdateTransform();
 }
 
-CTerrain::~CTerrain(void)
-{
+CTerrain::~CTerrain(void) {
 }
 
-bool CTerrain::Tick(unsigned long dTime)
-{
-	return BThing::Tick(dTime);	
+bool CTerrain::Tick(unsigned long dTime) {
+    return BThing::Tick(dTime);
 }
 
-void CTerrain::PhysicsTick(unsigned long dTime)
-{
+void CTerrain::PhysicsTick(unsigned long dTime) {
 }
 
-void CTerrain::UpdateTransform()
-{
-	CollisionBodyBounds.Box.Extent = TVector3(5.0f,5.0f,5.0f);
-	CollisionBodyBounds.Position = m_Location;
-	CollisionBodyBounds.Sphere.Radius = 5.0f;
+void CTerrain::UpdateTransform() {
+    CollisionBodyBounds.Box.Extent = TVector3(5.0f, 5.0f, 5.0f);
+    CollisionBodyBounds.Position = m_Location;
+    CollisionBodyBounds.Sphere.Radius = 5.0f;
 }

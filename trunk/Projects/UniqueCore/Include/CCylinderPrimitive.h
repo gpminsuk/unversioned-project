@@ -2,13 +2,13 @@
 
 #include "BPrimitive.h"
 
-class TCylinderPrimitive : public TPrimitive
+class TCylinderPrimitive: public TPrimitive
 {
 public:
 	TCylinderPrimitive(ERenderType _RenderType = RenderType_Opaque);
 };
 
-class CCylinderPrimitive : public BPrimitive
+class CCylinderPrimitive: public BPrimitive
 {
 public:
 	CCylinderPrimitive(ERenderType _RenderType = RenderType_Opaque);

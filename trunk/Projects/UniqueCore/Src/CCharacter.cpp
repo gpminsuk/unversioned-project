@@ -11,107 +11,111 @@
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
 #include "RSkeletalMesh.h"
-#include "RASEImporter.h"
+
+#include "RSKNImporter.h"
+#include "RSKLImporter.h"
+#include "RANMImporter.h"
 
 #include "UWorld.h"
 
-CCharacter::CCharacter()
-{
-	m_Height		= 0.0f;	
-	m_Radius		= 0.0f;	
-	m_Weight		= 0.0f;	
-	m_WalkSpeed		= 0.0f;
-	m_RunSpeed		= 0.0f;
-	
+CCharacter::CCharacter() {
+    m_Height = 0.0f;
+    m_Radius = 0.0f;
+    m_Weight = 0.0f;
+    m_WalkSpeed = 0.0f;
+    m_RunSpeed = 0.0f;
 
-	bIsMovable		= false;
-	bIsPhysical		= false;
-	bIsPassable		= false;	
+    bIsMovable = false;
+    bIsPhysical = false;
+    bIsPassable = false;
 
-	m_Location		= TVector3(0, 0, 0);
+    m_Location = TVector3(10, -2, 0);
 
-	RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(TString("..\\..\\Resources\\SkeletalMesh.unq"));
-	RBoneHierarchy* BoneHierarchy = LoadResource<RBoneHierarchy>(TString("..\\..\\Resources\\BoneHierarchy.unq"));
+    RSKNImporter SKNImporter;
+    RSKLImporter SKLImporter;
+    RANMImporter ANMImporter;
+    RAnimationSequence* AnimationSequence;
+    RBoneHierarchy* BoneHierarchy;
+    RSkeletalMesh* SkeletalMesh;
+    SKNImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skn"),
+                       AnimationSequence, BoneHierarchy, SkeletalMesh);
+    SKLImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skl"),
+                       AnimationSequence, BoneHierarchy, SkeletalMesh);
+    ANMImporter.Import(TString("..\\..\\Resources\\renekton_attack1_60fps.anm"),
+                       AnimationSequence, BoneHierarchy, SkeletalMesh);
 
-	CSkeletalMeshComponent* SkeletalMeshComponent = new CSkeletalMeshComponent();
-	Components.AddItem(SkeletalMeshComponent);
+    CSkeletalMeshComponent* SkeletalMeshComponent =
+        new CSkeletalMeshComponent();
+    Components.AddItem(SkeletalMeshComponent);
 
-	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._11 *= 10.0f;
-	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._22 *= 10.0f;
-	SkeletalMeshComponent->SkeletalMeshPrimitive->TM._33 *= 10.0f;
+    SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, SkeletalMesh,
+                                           AnimationSequence);
 
-	RASEImporter Importer;
-	RAnimationSequence* AnimationSequence = NULL;
-	//RBoneHierarchy* BoneHierarchy;
-	//RSkeletalMesh* SkeletalMesh;
-	//Importer.Import(TString("..\\..\\Resources\\woman.ASE"), AnimationSequence, BoneHierarchy, SkeletalMesh);
+    CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(
+        this);
+    CollisionBodies.AddItem(CharacterCollisionBody);
 
-	SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, SkeletalMesh, NULL);
-
-	CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
-	CollisionBodies.AddItem(CharacterCollisionBody);
-
-	UpdateTransform();
+    UpdateTransform();
 }
 
-CCharacter::~CCharacter()
-{
+CCharacter::~CCharacter() {
 
 }
 
-void CCharacter::SetCharacterPosition(TVector3 pos)
-{
-	m_Location = pos;
+void CCharacter::SetCharacterPosition(TVector3 pos) {
+    m_Location = pos;
 
-	m_Location = GWorld->LineCheck(this, m_Location, pos).HitPosition;
-	UpdateTransform();
+    m_Location = GWorld->LineCheck(this, m_Location, pos).HitPosition;
+    UpdateTransform();
 }
 
-bool CCharacter::Tick(unsigned long dTime)
-{
-	/*if(GKeyMap['W'])
-		SetCharacterPosition(m_Location + TVector3(0.0005f,0.0f,0.0f));
-	if(GKeyMap['S'])
-		SetCharacterPosition(m_Location + TVector3(-0.0005f,0.0f,0.0f));
-	if(GKeyMap['A'])
-		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,0.0005f));
-	if(GKeyMap['D'])
-		SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));*/
-	return true;
+bool CCharacter::Tick(unsigned long dTime) {
+    /*if(GKeyMap['W'])
+     SetCharacterPosition(m_Location + TVector3(0.0005f,0.0f,0.0f));
+     if(GKeyMap['S'])
+     SetCharacterPosition(m_Location + TVector3(-0.0005f,0.0f,0.0f));
+     if(GKeyMap['A'])
+     SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,0.0005f));
+     if(GKeyMap['D'])
+     SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));*/
+    return true;
 }
 
-void CCharacter::PhysicsTick(unsigned long dTime)
-{
-	return;
-	TVector3 Loc = m_Location;
-	float t = 0.003f;
-	Loc.y -= (float)(t*t*9.8/2.0f);
-	SetCharacterPosition(Loc);
+void CCharacter::PhysicsTick(unsigned long dTime) {
+    return;
+    TVector3 Loc = m_Location;
+    float t = 0.003f;
+    Loc.y -= (float) (t * t * 9.8 / 2.0f);
+    SetCharacterPosition(Loc);
 }
 
-void CCharacter::UpdateTransform()
-{	
-	for(unsigned int i=0;i<CollisionBodies(0)->Primitives.Size();++i)
-	{
-		CollisionBodies(0)->Primitives(i)->Translation = m_Location;
-		CollisionBodies(0)->Primitives(i)->TM._41 = m_Location.x;
-		CollisionBodies(0)->Primitives(i)->TM._42 = m_Location.y;
-		CollisionBodies(0)->Primitives(i)->TM._43 = m_Location.z;
-	}
+void CCharacter::UpdateTransform() {
+    for (unsigned int i = 0; i < CollisionBodies(0)->Primitives.Size(); ++i) {
+        CollisionBodies(0)->Primitives(i)->Translation = m_Location;
+        CollisionBodies(0)->Primitives(i)->TM._41 = m_Location.x;
+        CollisionBodies(0)->Primitives(i)->TM._42 = m_Location.y;
+        CollisionBodies(0)->Primitives(i)->TM._43 = m_Location.z;
+    }
+    for (unsigned int i = 0; i < Components(0)->Primitives.Size(); ++i) {
+        Components(0)->Primitives(i)->Translation = m_Location;
+        Components(0)->Primitives(i)->TM._41 = m_Location.x;
+        Components(0)->Primitives(i)->TM._42 = m_Location.y;
+		Components(0)->Primitives(i)->TM._43 = m_Location.z;
+		Components(0)->Primitives(i)->TM._11 = 0.05f;
+		Components(0)->Primitives(i)->TM._22 = 0.05f;
+		Components(0)->Primitives(i)->TM._33 = 0.05f;
+    }
 
-	CollisionBodyBounds.Box.Extent = TVector3(5.0f,5.0f,5.0f);
-	CollisionBodyBounds.Position = m_Location;
-	CollisionBodyBounds.Sphere.Radius = 5.0f;	
+    CollisionBodyBounds.Box.Extent = TVector3(5.0f, 5.0f, 5.0f);
+    CollisionBodyBounds.Position = m_Location;
+    CollisionBodyBounds.Sphere.Radius = 5.0f;
 }
 
-void CCharacter::InputMouse(EMouse_Event Event, TMouseInput_Param& Param)
-{
+void CCharacter::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
 }
 
-void CCharacter::InputKey(EKey_Event Event, TKeyInput_Param& Param)
-{
+void CCharacter::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
 }
 
-void CCharacter::InputChar()
-{
+void CCharacter::InputChar() {
 }

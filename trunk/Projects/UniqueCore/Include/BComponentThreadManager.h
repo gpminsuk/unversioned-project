@@ -4,7 +4,7 @@
 
 class ASystemInfo;
 
-class BComponentThreadManager : public AThread
+class BComponentThreadManager: public AThread
 {
 public:
 	BComponentThreadManager(AApplication* App);

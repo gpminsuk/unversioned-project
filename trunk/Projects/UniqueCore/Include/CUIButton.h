@@ -6,22 +6,22 @@
 class CUIButtonPrimitive;
 class CUIButtonComponent;
 
-class TUIButtonPrimitive : public TPrimitive
+class TUIButtonPrimitive: public TPrimitive
 {
 public:
 	TUIButtonPrimitive();
 };
 
-class CUIButtonPrimitive : public BPrimitive
+class CUIButtonPrimitive: public BPrimitive
 {
 public:
 	class CUIButtonPrimitiveSD
 	{
 	public:
-		int	Width;
+		int Width;
 		int Height;
 	};
-	
+
 	int Width;
 	int Height;
 
@@ -36,7 +36,7 @@ public:
 	virtual unsigned int GetNumIndices();
 };
 
-class CUIButtonComponent : public BComponent
+class CUIButtonComponent: public BComponent
 {
 public:
 	int Width;
@@ -44,7 +44,8 @@ public:
 	int PosX;
 	int PosY;
 
-	CUIButtonComponent(int TexIndex, int x=0, int y=0, int width=800, int height=600);
+	CUIButtonComponent(int TexIndex, int x = 0, int y = 0, int width = 800, int height =
+			600);
 	~CUIButtonComponent();
 
 	virtual void UpdateComponent();

@@ -34,21 +34,21 @@ enum EKey_Event
 
 struct TInput_Param
 {
-	unsigned char bLShiftDown:1;
-	unsigned char bRShiftDown:1;
-	unsigned char bLCtrlDown:1;
-	unsigned char bRCtrlDown:1;
-	unsigned char bLAltDown:1;
-	unsigned char bRAltDown:1;
+	unsigned char bLShiftDown :1;
+	unsigned char bRShiftDown :1;
+	unsigned char bLCtrlDown :1;
+	unsigned char bRCtrlDown :1;
+	unsigned char bLAltDown :1;
+	unsigned char bRAltDown :1;
 };
 
-struct TMouseInput_Param : TInput_Param
+struct TMouseInput_Param: TInput_Param
 {
 	TMouseInput_Param();
 
-	unsigned char bLButtonDown:1;
-	unsigned char bRButtonDown:1;
-	unsigned char bMButtonDown:1;
+	unsigned char bLButtonDown :1;
+	unsigned char bRButtonDown :1;
+	unsigned char bMButtonDown :1;
 
 	unsigned short X;
 	unsigned short Y;
@@ -59,7 +59,7 @@ struct TMouseInput_Param : TInput_Param
 
 extern unsigned char GKeyMap[KEYMAP_SIZE];
 
-struct TKeyInput_Param : TInput_Param
+struct TKeyInput_Param: TInput_Param
 {
 	unsigned short Key;
 };

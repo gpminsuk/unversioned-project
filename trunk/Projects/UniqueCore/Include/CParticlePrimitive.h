@@ -10,14 +10,14 @@ struct TParticleInstance
 	bool isAlive;
 };
 
-class TParticlePrimitive : public TPrimitive
+class TParticlePrimitive: public TPrimitive
 {
 public:
 	TParticlePrimitive();
 	virtual ~TParticlePrimitive();
 };
 
-class CParticlePrimitive : public BPrimitive
+class CParticlePrimitive: public BPrimitive
 {
 public:
 	CParticlePrimitive(void);

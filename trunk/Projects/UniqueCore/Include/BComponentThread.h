@@ -2,7 +2,7 @@
 
 #include "AThread.h"
 
-class BComponentThread : public AThread
+class BComponentThread: public AThread
 {
 public:
 	BComponentThread(AApplication* App);

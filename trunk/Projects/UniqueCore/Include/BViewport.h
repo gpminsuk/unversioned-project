@@ -13,14 +13,14 @@ class BRenderingBatchManager;
 
 enum ESceneFlag
 {
-	Scene_World			= 1 << 0,
-	Scene_Collision		= 1 << 1,
+	Scene_World = 1 << 0,
+	Scene_Collision = 1 << 1,
 };
 
-class BViewport : public AObject
+class BViewport: public AObject
 {
-	DECLARE_CLASS(BViewport, CLASS_Abstract)
-public:
+DECLARE_CLASS(BViewport, CLASS_Abstract)
+	public:
 	BViewport(void);
 	virtual ~BViewport(void);
 
@@ -50,7 +50,7 @@ public:
 	void Remove(BPrimitive* pPrimitive);
 	void Remove(BComponent* pComponent);
 	void Remove(BThing* pThing);
-	
+
 	void SortTemplates();
 
 	virtual void UpdateViewport() = 0;

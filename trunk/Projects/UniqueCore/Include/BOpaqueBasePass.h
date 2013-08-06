@@ -4,7 +4,7 @@
 
 class BRenderingBatch;
 
-class BOpaqueBasePass : public BRenderPass
+class BOpaqueBasePass: public BRenderPass
 {
 public:
 	BOpaqueBasePass();

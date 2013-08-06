@@ -2,27 +2,29 @@
 #include "RSystemMemory.h"
 #include "RTexture.h"
 
-class RDirectXVertexShader : public RVertexShader
+class RDirectXVertexShader: public RVertexShader
 {
 public:
-	RDirectXVertexShader() {}
+	RDirectXVertexShader() {
+	}
 
 	struct IDirect3DVertexShader9* m_pVertexShader;
 
 	virtual bool SetShaderConstantF(TString VarName, float* Value);
 };
 
-class RDirectXPixelShader : public RPixelShader
+class RDirectXPixelShader: public RPixelShader
 {
 public:
-	RDirectXPixelShader() {}
+	RDirectXPixelShader() {
+	}
 
 	struct IDirect3DPixelShader9* m_pPixelShader;
 
 	virtual bool SetShaderConstantF(TString VarName, float* Value);
 };
 
-class RDirectXShader : public RShaderBase
+class RDirectXShader: public RShaderBase
 {
 public:
 	RDirectXShader();
@@ -33,7 +35,7 @@ public:
 	virtual bool EndShader();
 };
 
-class RDXRenderTarget : public RRenderTarget
+class RDXRenderTarget: public RRenderTarget
 {
 public:
 	struct IDirect3DSurface9* m_pRTSurface;
@@ -44,10 +46,12 @@ public:
 	virtual ~RDXRenderTarget();
 };
 
-class RDXTextureBuffer : public RTextureBuffer
+class RDXTextureBuffer: public RTextureBuffer
 {
 public:
-	RDXTextureBuffer() : m_pTexture(0) {}
+	RDXTextureBuffer() :
+			m_pTexture(0) {
+	}
 	virtual ~RDXTextureBuffer();
 
 	struct IDirect3DTexture9* m_pTexture;
@@ -56,29 +60,42 @@ public:
 	virtual bool Unlock();
 };
 
-class RDXFontBuffer : public RDXTextureBuffer
+class RDXFontBuffer: public RDXTextureBuffer
 {
 public:
 	TString String;
 };
 
-class RDXVideoMemoryVertexBuffer : public RVideoMemoryVertexBuffer
+class RDXVideoMemoryVertexBuffer: public RVideoMemoryVertexBuffer
 {
 public:
 	struct IDirect3DVertexBuffer9* VB;
 };
 
-class RDXVideoMemoryIndexBuffer : public RVideoMemoryIndexBuffer
+class RDXVideoMemoryIndexBuffer: public RVideoMemoryIndexBuffer
 {
 public:
 	struct IDirect3DIndexBuffer9* IB;
 };
 
-class RDXDynamicPrimitiveBuffer : public RDynamicPrimitiveBuffer
+class RDXDynamicPrimitiveBuffer: public RDynamicPrimitiveBuffer
 {
 public:
 	RDXDynamicPrimitiveBuffer();
 	virtual ~RDXDynamicPrimitiveBuffer();
 
 	virtual void Release();
+};
+
+class RDXVertexDeclaration: public RVertexDeclaration
+{
+public:
+	struct _D3DVERTEXELEMENT9* DXDeclElements;
+	struct IDirect3DVertexDeclaration9* DXDecl;
+
+	RDXVertexDeclaration(unsigned int Count, ...);
+	~RDXVertexDeclaration();
+
+	virtual unsigned int GetTypeSize(unsigned int Type);
+	virtual unsigned int GetStride();
 };

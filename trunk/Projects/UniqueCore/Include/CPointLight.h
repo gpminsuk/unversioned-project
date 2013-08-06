@@ -4,7 +4,7 @@
 
 class BPrimitive;
 
-class CPointLight : public BLight
+class CPointLight: public BLight
 {
 public:
 	CPointLight(void);

@@ -7,7 +7,7 @@
 class BSynchronizer;
 class BViewport;
 
-class BComponent : public AObject
+class BComponent: public AObject
 {
 public:
 	BComponent();

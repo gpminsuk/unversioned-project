@@ -6,9 +6,9 @@
 #include "InputDefine.h"
 #include "Enumerations_Geom.h"
 
-class BThing : public AObject
+class BThing: public AObject
 {
-	DECLARE_CLASS(BThing, CLASS_Abstract)
+DECLARE_CLASS(BThing, CLASS_Abstract)
 
 	TVector3 m_Location;
 	TVector3 m_Scale;
@@ -22,7 +22,7 @@ class BThing : public AObject
 	virtual ~BThing(void);
 
 	virtual TArray<class BPrimitive*> GetPrimitives();
-public:
+	public:
 	virtual bool Tick(unsigned long dTime);
 
 public:
@@ -30,7 +30,10 @@ public:
 	virtual void UpdateTransform() = 0;
 	virtual TVector3 LineCheck(TVector3& Start, TVector3& End, TVector3& Extent);
 
-	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {}
-	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) {}
-	virtual void InputChar() {}
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
+	}
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) {
+	}
+	virtual void InputChar() {
+	}
 };

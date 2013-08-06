@@ -15,19 +15,21 @@ struct TDXWindowInfo
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "d3d9.lib")
 
-class CDirectXDriver : public BDriver
+class CDirectXDriver: public BDriver
 {
 public:
 	CDirectXDriver(TDXWindowInfo Window);
 	virtual ~CDirectXDriver();
-	inline LPDIRECT3DDEVICE9 GetDevice() { return m_pDevice; }
+	inline LPDIRECT3DDEVICE9 GetDevice() {
+		return m_pDevice;
+	}
 
 	virtual bool CreateDriver();
 	virtual bool DestroyDriver();
 
 	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer);
 	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer);
-	virtual bool SetVertexDeclaration(unsigned long Type);
+	virtual bool SetVertexDeclaration(RVertexDeclaration* Decl);
 
 	virtual bool DrawPrimitive(EPrimitiveType PrimitiveType, UINT PrimCount);
 	virtual bool DrawIndexedPrimitive(EPrimitiveType PrimitiveType, UINT NumVertices, UINT PrimCount);
@@ -42,14 +44,17 @@ public:
 	virtual bool BeginScene();
 	virtual bool EndScene();
 
-	virtual bool Clear(bool bClearColor = true, DWORD Color = 0x00000000, bool bClearDepth = false, float Depth = 0.0f, bool bClearStencil = false, DWORD Stencil = 0.0f);
+	virtual bool Clear(bool bClearColor = true, DWORD Color = 0x00000000, bool bClearDepth =
+			false, float Depth = 0.0f, bool bClearStencil = false, DWORD Stencil =
+			0.0f);
 
 	virtual bool CompileShaderFromFile(RShaderBase *pShader);
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader);
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader);
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);
 
-	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage = TexUsage_RenderTarget);
+	virtual RRenderTarget* CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage =
+			TexUsage_RenderTarget);
 	virtual RTextureBuffer* CreateTextureBuffer(unsigned int Width, unsigned int Height);
 	virtual RTextureBuffer* CreateFontBuffer(unsigned int Width, unsigned int Height);
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
@@ -58,6 +63,8 @@ public:
 	virtual RRenderTarget* GetBackBuffer();
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
+
+	virtual void InitializeVertexDecl(RVertexDeclaration* Decl);
 
 	////////////////////////////////////////////////////// RenderState //////////////////////////////////////////////////
 	virtual void SetFillMode(EFillMode FM);
@@ -70,10 +77,8 @@ public:
 
 	class RDXRenderTarget* BackBuffer;
 
-	LPDIRECT3DDEVICE9	m_pDevice;
-	LPDIRECT3D9			m_pD3D;
-private:
-	TDXWindowInfo		m_pWindow;
-
-	IDirect3DVertexDeclaration9* m_Declarations[VertexType_End];
+	LPDIRECT3DDEVICE9 m_pDevice;
+	LPDIRECT3D9 m_pD3D;
+	private:
+	TDXWindowInfo m_pWindow;
 };

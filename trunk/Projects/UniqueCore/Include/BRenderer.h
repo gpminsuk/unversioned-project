@@ -17,10 +17,11 @@ class AApplication;
 struct TRendererInfo
 {
 public:
-	TRendererInfo() {}
+	TRendererInfo() {
+	}
 };
 
-class BRenderer : public AThread
+class BRenderer: public AThread
 {
 public:
 	BRenderer(AApplication *App);
@@ -37,7 +38,7 @@ public:
 	void ThreadDestroy();
 
 	void AddViewport(BViewport* pViewport);
-protected:
+	protected:
 	TArray<BViewport*> m_Viewports;
 	class BLineBatcher* LineBatcher;
 	int m_nViewportCount;
@@ -47,10 +48,10 @@ protected:
 	DWORD m_fFPS;
 };
 
-extern class BOpaqueBasePass*		GOpaqueBasePass;
-extern class BDirectionalLightPass*	GDirectionalLightPass;
-extern class BRTRenderPass*			GBaseRTRenderPass;
-extern class BDrawLinePass*			GDrawLinePass;	
-extern class BDrawUIPass*			GDrawFontPass;
-extern class BParticleRenderPass*	GParticleRenderPass;
+extern class BOpaqueBasePass* GOpaqueBasePass;
+extern class BDirectionalLightPass* GDirectionalLightPass;
+extern class BRTRenderPass* GBaseRTRenderPass;
+extern class BDrawLinePass* GDrawLinePass;
+extern class BDrawUIPass* GDrawFontPass;
+extern class BParticleRenderPass* GParticleRenderPass;
 

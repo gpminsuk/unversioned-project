@@ -4,7 +4,7 @@
 
 class BRenderingBatch;
 
-class BParticleRenderPass : public BRenderPass
+class BParticleRenderPass: public BRenderPass
 {
 public:
 	BParticleRenderPass();

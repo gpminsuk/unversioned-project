@@ -1,10 +1,9 @@
 #pragma once
 
-class ASystemInfo
-{
+class ASystemInfo {
 public:
-	ASystemInfo();
-	~ASystemInfo();
+    ASystemInfo();
+    ~ASystemInfo();
 
-	int NumberOfProcessors;
+    int NumberOfProcessors;
 };

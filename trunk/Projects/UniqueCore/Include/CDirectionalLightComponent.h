@@ -2,7 +2,7 @@
 
 #include "BLightComponent.h"
 
-class CDirectionalLightComponent : public BLightComponent
+class CDirectionalLightComponent: public BLightComponent
 {
 public:
 	CDirectionalLightComponent();

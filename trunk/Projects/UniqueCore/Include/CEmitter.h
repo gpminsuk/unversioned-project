@@ -1,7 +1,7 @@
 #pragma once
 #include "BThing.h"
 
-class CEmitter : public BThing
+class CEmitter: public BThing
 {
 public:
 	CEmitter();

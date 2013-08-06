@@ -24,31 +24,26 @@ IMPLEMENT_CLASS(UWorld)
 
 AClassManager* GClassManager;
 
-void AClassManager::AddClass(AClass* Class)
-{
-	Classes.AddItem(Class);
+void AClassManager::AddClass(AClass* Class) {
+    Classes.AddItem(Class);
 }
 
-AClass::AClass(TString ClassName) 
-: ClassName(ClassName),
-  Constructor(0)
-{
-	if(!GClassManager)
-	{
-		GClassManager = new AClassManager();
-	}
-	GClassManager->AddClass(this);
+AClass::AClass(TString ClassName)
+    :
+    ClassName(ClassName),
+    Constructor(0) {
+    if (!GClassManager) {
+        GClassManager = new AClassManager();
+    }
+    GClassManager->AddClass(this);
 }
 
-AClass::~AClass()
-{
-	if(Constructor)
-	{
-		delete Constructor;
-	}
-	if(GClassManager)
-	{
-		delete GClassManager;
-		GClassManager = 0;
-	}
+AClass::~AClass() {
+    if (Constructor) {
+        delete Constructor;
+    }
+    if (GClassManager) {
+        delete GClassManager;
+        GClassManager = 0;
+    }
 }

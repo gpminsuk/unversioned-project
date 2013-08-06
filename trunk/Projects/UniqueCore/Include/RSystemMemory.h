@@ -4,37 +4,37 @@
 #include "TDataTypes.h"
 #include "RResource.h"
 
-class RSystemMemoryVertexBuffer : public AObject
+class RSystemMemoryVertexBuffer: public AObject
 {
-	DECLARE_CLASS(RSystemMemoryVertexBuffer,)
-public:
-	RSystemMemoryVertexBuffer() : pVertices(0), nVertices(0), Declaration(0) {}
+DECLARE_CLASS(RSystemMemoryVertexBuffer,)
+	public:
+	RSystemMemoryVertexBuffer() :
+			pVertices(0), nVertices(0) {
+	}
 	virtual ~RSystemMemoryVertexBuffer()
 	{
-		delete[] pVertices; pVertices = 0;
-		delete[] Declaration; Declaration = 0;
-		nVertices = 0;
+		delete[] pVertices;
 	}
 
 	unsigned int nVertices;
-	unsigned int nVertexStride;
 
-	VertexDeclaration* Declaration;
+	RVertexDeclaration* Declaration;
 
 	char *pVertices;
 
 	virtual bool Access(AAccessor& Accessor);
 };
 
-class RSystemMemoryIndexBuffer : public AObject
+class RSystemMemoryIndexBuffer: public AObject
 {
-	DECLARE_CLASS(RSystemMemoryIndexBuffer,)
-public:
-	RSystemMemoryIndexBuffer() : pIndices(0), nIndices(0) {}
+DECLARE_CLASS(RSystemMemoryIndexBuffer,)
+	public:
+	RSystemMemoryIndexBuffer() :
+			pIndices(0), nIndices(0) {
+	}
 	virtual ~RSystemMemoryIndexBuffer()
 	{
-		delete[] pIndices; pIndices = 0;
-		nIndices = 0;
+		delete[] pIndices;
 	}
 
 	TIndex16 *pIndices;
@@ -43,11 +43,14 @@ public:
 	virtual bool Access(AAccessor& Accessor);
 };
 
-class RDynamicPrimitiveBuffer : public RPrimitiveBuffer
+class RDynamicPrimitiveBuffer: public RPrimitiveBuffer
 {
 public:
-	RDynamicPrimitiveBuffer() : m_pVB(0), m_pIB(0) {}
-	virtual ~RDynamicPrimitiveBuffer() {}
+	RDynamicPrimitiveBuffer() :
+			m_pVB(0), m_pIB(0) {
+	}
+	virtual ~RDynamicPrimitiveBuffer() {
+	}
 
 	RVideoMemoryVertexBuffer* m_pVB;
 	RVideoMemoryIndexBuffer* m_pIB;
@@ -55,7 +58,7 @@ public:
 	virtual void Release() = 0;
 };
 
-class RStaticPrimitiveBuffer : public RPrimitiveBuffer
+class RStaticPrimitiveBuffer: public RPrimitiveBuffer
 {
 public:
 	RSystemMemoryVertexBuffer* m_pVB;

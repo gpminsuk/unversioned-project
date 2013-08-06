@@ -5,33 +5,26 @@
 #include "AObject.h"
 
 BComponentThreadManager::BComponentThreadManager(AApplication* App) :
-	AThread(App)
-{
-	SystemInfo = App->SystemInfo;
+    AThread(App) {
+    SystemInfo = App->SystemInfo;
 }
 
-BComponentThreadManager::~BComponentThreadManager()
-{
+BComponentThreadManager::~BComponentThreadManager() {
 
 }
 
-void BComponentThreadManager::ThreadSetup()
-{	
+void BComponentThreadManager::ThreadSetup() {
 }
 
-void BComponentThreadManager::ThreadExecute()
-{
-	while(!Application->bQuit)
-	{
-		for(unsigned int i=0;i<Objects.Size();++i)
-		{
-			AObject* Object = Objects(i);
-			Object->Tick(0);
-		}
-		UpdateThreadSync();
-	}
+void BComponentThreadManager::ThreadExecute() {
+    while (!Application->bQuit) {
+        for (unsigned int i = 0; i < Objects.Size(); ++i) {
+            AObject* Object = Objects(i);
+            Object->Tick(0);
+        }
+        UpdateThreadSync();
+    }
 }
 
-void BComponentThreadManager::ThreadDestroy()
-{
+void BComponentThreadManager::ThreadDestroy() {
 }

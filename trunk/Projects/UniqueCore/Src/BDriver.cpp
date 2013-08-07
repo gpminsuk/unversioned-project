@@ -4,7 +4,8 @@
 BDriver *GDriver = 0;
 RRenderTarget *GBackBuffer = 0;
 
-BDriver::BDriver() {
+BDriver::BDriver() :
+	CurrentVertexDecl(0) {
 
 }
 

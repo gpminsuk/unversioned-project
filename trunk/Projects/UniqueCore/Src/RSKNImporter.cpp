@@ -4,6 +4,7 @@
 
 #include "RSkeletalMesh.h"
 #include "CDirectXDriver.h"
+#include "RShaderClasses.h"
 
 bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RSkeletalMesh*& Model) {
 	char* fn = Filename.Str;
@@ -59,13 +60,13 @@ bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
 
 		for(unsigned int i=0;i<subMesh->pVB->nVertices;++i) {
 			fread(&pVertices[i].Position, sizeof(TVector3), 1, fp);
-			fread(&pVertices[i].BoneIndices, sizeof(char)*4, 1, fp);
-			fread(&pVertices[i].BoneWeights, sizeof(float)*4, 1, fp);
+			fread(pVertices[i].BoneIndices, sizeof(char)*4, 1, fp);
+			fread(pVertices[i].BoneWeights, sizeof(float)*4, 1, fp);
 			fread(&pVertices[i].Normal, sizeof(TVector3), 1, fp);
 			fread(&pVertices[i].TexCoord, sizeof(TVector2), 1, fp);
 		}
 
-		subMesh->pVB->Declaration = RVertexDeclaration::SkeletalMesh_GPU_Skin;
+		subMesh->pVB->Protocol = RVertexProtocol::Protocols(0);
 
 		Model->SkeletalSubMeshes.AddItem(subMesh);
 	}

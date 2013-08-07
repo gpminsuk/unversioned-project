@@ -119,8 +119,7 @@ BYTE GVertexDeclUsage[] = {
 };
 
 CDirectXDriver::CDirectXDriver(TDXWindowInfo Window)
-    :
-    m_pWindow(Window) {
+    : m_pWindow(Window) {
     BackBuffer = new RDXRenderTarget();
 }
 
@@ -231,7 +230,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
     }
     HRESULT hr;
     hr = m_pDevice->CreateVertexBuffer(
-             pBatch->nVertices * pBatch->Declaration->GetStride(),
+             pBatch->nVertices * pBatch->Protocol->Decl->GetStride(),
              D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
              0,
              D3DPOOL_DEFAULT,
@@ -246,7 +245,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
         }
     }
     void *pData;
-    hr = VB->VB->Lock(0, pBatch->nVertices * pBatch->Declaration->GetStride()
+    hr = VB->VB->Lock(0, pBatch->nVertices * pBatch->Protocol->Decl->GetStride()
                       , (void**) &pData, D3DLOCK_DISCARD);
 
     if (hr != D3D_OK) {
@@ -265,7 +264,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
         VB->VB->Unlock();
     }
 
-    hr = m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->Declaration->GetStride());
+    hr = m_pDevice->SetStreamSource(0, VB->VB, 0, pBatch->Protocol->Decl->GetStride());
     if (hr != D3D_OK)
         return false;
 
@@ -375,168 +374,108 @@ bool CDirectXDriver::EndScene() {
     return true;
 }
 
-bool CDirectXDriver::CompileShaderFromFile(RShaderBase *pShader) {
-    RDirectXShader *pDXShader = dynamic_cast<RDirectXShader*>(pShader);
-    if (!pDXShader)
-        return false;
-    HRESULT hr;
+bool CDirectXDriver::CompileMaterial(RMaterial* Material) {
+	for(unsigned int i=0;i<RShaderPass::ShaderPasses.Size();++i) {
+		RShaderPass* ShaderPass = RShaderPass::ShaderPasses(i);
+		for(unsigned int j=0;j<RVertexProtocol::Protocols.Size();++j) {
+			RVertexProtocol* VertexProtocol = RVertexProtocol::Protocols(j);
+			RDirectXShader* Shader = new RDirectXShader();
+			Material->Shaders.AddItem(Shader);
+			Shader->VertexShader = new RDirectXVertexShader();
+			Shader->PixelShader = new RDirectXPixelShader();
 
-    pDXShader->VertexShader = new RDirectXVertexShader();
-    pDXShader->PixelShader = new RDirectXPixelShader();
+			RDirectXVertexShader* pDXVertexShader = dynamic_cast<RDirectXVertexShader*>(Shader->VertexShader);
+			RDirectXPixelShader* pDXPixelShader = dynamic_cast<RDirectXPixelShader*>(Shader->PixelShader);
 
-    pDXShader->VertexShader->Configure = new RBaseSceneVertexShader(
-        pDXShader->VertexShader);
-    pDXShader->PixelShader->Configure = new RBaseScenePixelShader(
-        pDXShader->PixelShader);
+			LPD3DXBUFFER pCode = NULL;
+			LPD3DXBUFFER pErr = NULL;
+			DWORD dwShaderFlags = 0;
 
-    RDirectXPixelShader *pDXPixelShader =
-        dynamic_cast<RDirectXPixelShader*>(pShader->PixelShader);
-    RDirectXVertexShader *pDXVertexShader =
-        dynamic_cast<RDirectXVertexShader*>(pShader->VertexShader);
+			WCHAR FN[256];
+			TCHAR Chr[1024];
+			MultiByteToWideChar(CP_ACP, 0, Material->VertexShaderFileNames(i*RShaderPass::ShaderPasses.Size() + j).GetBuffer(), 1024, Chr, 1024);
+			wsprintf(FN, TEXT("%s"), Chr);
 
-    LPD3DXBUFFER pCode = NULL;
-    LPD3DXBUFFER pErr = NULL;
-    DWORD dwShaderFlags = 0;
+			LPD3DXCONSTANTTABLE ConstantTable;
+			HRESULT hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0",
+				dwShaderFlags, &pCode, &pErr, &ConstantTable);
+ 			if (hr != D3D_OK) {
+				char Err[1024];
+				sprintf_s(Err, 1024, "%s", (char*) pErr->GetBufferPointer());
+				pErr->Release();
+				return false;
+			}
+			GetDevice()->CreateVertexShader((DWORD*) pCode->GetBufferPointer(),
+				&pDXVertexShader->m_pVertexShader);
+			pCode->Release();
+			pCode = NULL;
 
-    WCHAR FN[256];
+			{
+				D3DXCONSTANTTABLE_DESC ConstantTableDesc;
+				hr = ConstantTable->GetDesc(&ConstantTableDesc);
+				if (hr != D3D_OK) {
+					return false;
+				}
+				for (unsigned int i = 0; i < ConstantTableDesc.Constants; ++i) {
+					D3DXHANDLE ConstantHandle = ConstantTable->GetConstant(NULL, i);
+					D3DXCONSTANT_DESC ConstantDesc;
+					UINT NumConstants = 1;
+					hr = ConstantTable->GetConstantDesc(ConstantHandle, &ConstantDesc,
+						&NumConstants);
+					if (hr != D3D_OK) {
+						return false;
+					}
+					// Copy the constant and its name into a self-contained data structure, and add it to the constant array.
+					RConstant Constant;
+					Constant.Name = ConstantDesc.Name;
+					Constant.RegisterCount = ConstantDesc.RegisterCount;
+					Constant.RegisterIndex = ConstantDesc.RegisterIndex;
+					pDXVertexShader->Constants.AddItem(Constant);
+				}
+			}
 
-    //sprintf_s(FN, 256, "..\\Shaders\\Vertex%s", pShader->m_FileName);
-    // TODO : 임시코드
-    static int Cnt = 1;
-    if (Cnt == 0) {
-        wsprintf(FN, TEXT("..\\..\\Shaders\\BaseSceneVertexShader.uvs"));
-        FILE* fp = NULL;
-        FILE* cachefp = NULL;
-        WCHAR CacheFN[256];
-        wsprintf(CacheFN,
-                 TEXT(
-                     "..\\..\\Shaders\\Cache\\StaticMeshBaseSceneVertexShader.uvs"));
-        _wfopen_s(&cachefp, CacheFN, TEXT("w+"));
-        _wfopen_s(&fp, FN, TEXT("r"));
-        if (fp) {
-            if (cachefp) {
-                char syntax[256];
-                while (!feof(fp)) {
-                    fgets(syntax, 256, fp);
-                    char* syntaxTmp;
-                    if (syntaxTmp = strstr(syntax, "#include")) {
-                        if (syntaxTmp = strstr(syntax, "\"")) {
-                            syntaxTmp += 1;
-                            char rest[256];
-                            sprintf_s(rest, "%s", syntaxTmp);
-                            syntaxTmp[0] = '\0';
-                            sprintf_s(syntax, 256, "%s..\\%s", syntax, rest);
-                        }
-                    }
+			MultiByteToWideChar(CP_ACP, 0, Material->PixelShaderFileNames(i*RShaderPass::ShaderPasses.Size() + j).GetBuffer(), 1024, Chr, 1024);
+			wsprintf(FN, TEXT("%s"), Chr);	
 
-                    if (syntaxTmp = strstr(syntax, "VertexProtocol.ush")) {
-                        char rest[256];
-                        char replace[256];
-                        sprintf_s(rest, "%s", syntaxTmp);
-                        syntaxTmp[0] = '\0';
-                        sprintf_s(replace, 256, "%sStaticMesh%s", syntax, rest);
-                        fprintf_s(cachefp, "%s", replace);
-                    } else {
-                        fprintf_s(cachefp, "%s", syntax);
-                    }
-                }
-                fclose(fp);
-                fclose(cachefp);
-            } else {
-                fclose(fp);
-                return false;
-            }
-        } else {
-            return false;
-        }
-        wsprintf(FN, TEXT("%s"), CacheFN);
-    } else {
-        wsprintf(FN, TEXT("..\\..\\Shaders\\Vertex%s"), pShader->m_FileName);
-    }
+			LPD3DXCONSTANTTABLE PixelConstantTable;
+			hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0",
+				dwShaderFlags, &pCode, &pErr, &PixelConstantTable);
+			if (hr != D3D_OK) {
+				char Err[1024];
+				sprintf_s(Err, 1024, "%s", (char*) pErr->GetBufferPointer());
+				pErr->Release();
+				return false;
+			}
+			GetDevice()->CreatePixelShader((DWORD*) pCode->GetBufferPointer(),
+				&pDXPixelShader->m_pPixelShader);
+			pCode->Release();
 
-    LPD3DXCONSTANTTABLE ConstantTable;
-    hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "VS", "vs_2_0",
-                                   dwShaderFlags, &pCode, &pErr, &ConstantTable);
-    if (hr != D3D_OK) {
-        char Err[1024];
-        sprintf_s(Err, 1024, "%s", (char*) pErr->GetBufferPointer());
-        pErr->Release();
-        return false;
-    }
-    GetDevice()->CreateVertexShader((DWORD*) pCode->GetBufferPointer(),
-                                    &pDXVertexShader->m_pVertexShader);
-    pCode->Release();
-    pCode = NULL;
-
-    {
-        D3DXCONSTANTTABLE_DESC ConstantTableDesc;
-        hr = ConstantTable->GetDesc(&ConstantTableDesc);
-        if (hr != D3D_OK) {
-            return false;
-        }
-        for (unsigned int i = 0; i < ConstantTableDesc.Constants; ++i) {
-            D3DXHANDLE ConstantHandle = ConstantTable->GetConstant(NULL, i);
-            D3DXCONSTANT_DESC ConstantDesc;
-            UINT NumConstants = 1;
-            hr = ConstantTable->GetConstantDesc(ConstantHandle, &ConstantDesc,
-                                                &NumConstants);
-            if (hr != D3D_OK) {
-                return false;
-            }
-            // Copy the constant and its name into a self-contained data structure, and add it to the constant array.
-            RConstant Constant;
-            Constant.Name = ConstantDesc.Name;
-            Constant.RegisterCount = ConstantDesc.RegisterCount;
-            Constant.RegisterIndex = ConstantDesc.RegisterIndex;
-            pDXVertexShader->Constants.AddItem(Constant);
-        }
-    }
-
-    if (Cnt == 0) {
-        wsprintf(FN, TEXT("..\\..\\Shaders\\BaseScenePixelShader.ups"));
-    } else {
-        wsprintf(FN, TEXT("..\\..\\Shaders\\Pixel%s"), pShader->m_FileName);
-    }
-
-    LPD3DXCONSTANTTABLE PixelConstantTable;
-    hr = D3DXCompileShaderFromFile(FN, NULL, NULL, "PS", "ps_2_0",
-                                   dwShaderFlags, &pCode, &pErr, &PixelConstantTable);
-    if (hr != D3D_OK) {
-        char Err[1024];
-        sprintf_s(Err, 1024, "%s", (char*) pErr->GetBufferPointer());
-        pErr->Release();
-        return false;
-    }
-    GetDevice()->CreatePixelShader((DWORD*) pCode->GetBufferPointer(),
-                                   &pDXPixelShader->m_pPixelShader);
-    pCode->Release();
-
-    {
-        D3DXCONSTANTTABLE_DESC ConstantTableDesc;
-        hr = PixelConstantTable->GetDesc(&ConstantTableDesc);
-        if (hr != D3D_OK) {
-            return false;
-        }
-        for (unsigned int i = 0; i < ConstantTableDesc.Constants; ++i) {
-            D3DXHANDLE ConstantHandle = PixelConstantTable->GetConstant(NULL,
-                                        i);
-            D3DXCONSTANT_DESC ConstantDesc;
-            UINT NumConstants = 1;
-            hr = PixelConstantTable->GetConstantDesc(ConstantHandle,
-                    &ConstantDesc, &NumConstants);
-            if (hr != D3D_OK) {
-                return false;
-            }
-            // Copy the constant and its name into a self-contained data structure, and add it to the constant array.
-            RConstant Constant;
-            Constant.Name = ConstantDesc.Name;
-            Constant.RegisterCount = ConstantDesc.RegisterCount;
-            Constant.RegisterIndex = ConstantDesc.RegisterIndex;
-            pDXPixelShader->Constants.AddItem(Constant);
-        }
-    }
-
-    Cnt++;
+			{
+				D3DXCONSTANTTABLE_DESC ConstantTableDesc;
+				hr = PixelConstantTable->GetDesc(&ConstantTableDesc);
+				if (hr != D3D_OK) {
+					return false;
+				}
+				for (unsigned int i = 0; i < ConstantTableDesc.Constants; ++i) {
+					D3DXHANDLE ConstantHandle = PixelConstantTable->GetConstant(NULL,
+						i);
+					D3DXCONSTANT_DESC ConstantDesc;
+					UINT NumConstants = 1;
+					hr = PixelConstantTable->GetConstantDesc(ConstantHandle,
+						&ConstantDesc, &NumConstants);
+					if (hr != D3D_OK) {
+						return false;
+					}
+					// Copy the constant and its name into a self-contained data structure, and add it to the constant array.
+					RConstant Constant;
+					Constant.Name = ConstantDesc.Name;
+					Constant.RegisterCount = ConstantDesc.RegisterCount;
+					Constant.RegisterIndex = ConstantDesc.RegisterIndex;
+					pDXPixelShader->Constants.AddItem(Constant);
+				}
+			}
+		}
+	}	
     return true;
 }
 
@@ -628,11 +567,14 @@ bool CDirectXDriver::SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer) {
 }
 
 bool CDirectXDriver::SetVertexDeclaration(RVertexDeclaration* Decl) {
-	RDXVertexDeclaration* DXDecl = dynamic_cast<RDXVertexDeclaration*>(Decl);
-	if(!DXDecl->DXDecl) {
-		GetDevice()->CreateVertexDeclaration(DXDecl->DXDeclElements, &DXDecl->DXDecl);
-	}
-    GetDevice()->SetVertexDeclaration(DXDecl->DXDecl);
+	//if(Decl != CurrentVertexDecl) {
+		RDXVertexDeclaration* DXDecl = dynamic_cast<RDXVertexDeclaration*>(Decl);
+		if(!DXDecl->DXDecl) {
+			GetDevice()->CreateVertexDeclaration(DXDecl->DXDeclElements, &DXDecl->DXDecl);
+		}
+		CurrentVertexDecl = DXDecl;
+		GetDevice()->SetVertexDeclaration(DXDecl->DXDecl);
+	//}	
     return true;
 }
 

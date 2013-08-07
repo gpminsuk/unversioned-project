@@ -10,9 +10,8 @@ class BRenderingBatch
 {
 public:
 	int nVertices;
-	RVertexDeclaration* Declaration;
-
-	RShaderBase* Shader;
+	RVertexProtocol* Protocol;
+	RMaterial* pMaterial;
 
 	RDynamicPrimitiveBuffer* PrimitiveBuffer;
 

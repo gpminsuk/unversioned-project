@@ -250,7 +250,7 @@ public:
 			false, float Depth = 0.0f, bool bClearStencil = false, unsigned long Stencil =
 			0.0f) = 0;
 
-	virtual bool CompileShaderFromFile(RShaderBase *pShader) = 0;
+	virtual bool CompileMaterial(RMaterial* Material) = 0;
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader) = 0;
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader) = 0;
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader) = 0;
@@ -274,6 +274,7 @@ public:
 	TDepthState CurrentDepthState;
 	TBlendState CurrentBlendState;
 	ECullMode CurrentCullMode;
+	RVertexDeclaration* CurrentVertexDecl;
 
 	virtual void SetFillMode(EFillMode FM) = 0;
 	virtual void SetCullMode(ECullMode& CullMode) = 0;

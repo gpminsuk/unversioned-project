@@ -16,11 +16,11 @@ void BRTRenderPass::BeginPass(BViewport* InViewport) {
 
 	GDriver->SetVertexDeclaration(RVertexDeclaration::Position_TexCoord);
 
-    RShaderBase* pShader = RShaderTable::Shaders(1);
+    RMaterial* Material = RMaterialTable::Materials(0);	
     GDriver->SetFillMode(FillMode_Solid);
     GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
     GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
-    pShader->BeginShader();
+    Material->FindShader(RVertexProtocol::Protocols(1), RShaderPass::ShaderPasses(0))->BeginShader();
 }
 
 void BRTRenderPass::DrawPrimitive() {

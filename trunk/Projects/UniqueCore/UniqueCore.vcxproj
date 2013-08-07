@@ -235,10 +235,8 @@
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </AssemblerOutput>
     </ClCompile>
-    <ClCompile Include="Src\RBaseScenePixelShader.cpp" />
-    <ClCompile Include="Src\RBaseSceneVertexShader.cpp" />
+    <ClCompile Include="Src\RShaderClasses.cpp" />
     <ClCompile Include="Src\RShaderCompiler.cpp" />
-    <ClCompile Include="Src\RStandardVertexBuilder.cpp" />
     <ClCompile Include="Src\RImporter.cpp" />
     <ClCompile Include="Src\RAnimationSequence.cpp" />
     <ClCompile Include="Src\RBoneHierarchy.cpp" />

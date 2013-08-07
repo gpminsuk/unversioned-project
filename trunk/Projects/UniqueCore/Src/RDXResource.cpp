@@ -175,7 +175,7 @@ RDXVertexDeclaration::RDXVertexDeclaration(unsigned int Count, ...) {
 		Usages.AddItem(Usage);
 	}
 	va_end(list);
-	
+
 	CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
 	Driver->InitializeVertexDecl(this);
 

@@ -22,7 +22,7 @@ void BTextDrawer::AddText(TString& Str) {
 }
 
 void BTextDrawer::DrawTexts(BViewport* Viewport) {
-    RShaderBase* pShader = RShaderTable::Shaders(1);
+    RShaderBase* pShader = RMaterialTable::Materials(0)->Shaders(0);
     GDriver->SetFillMode(FillMode_Solid);
     GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
     //GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);

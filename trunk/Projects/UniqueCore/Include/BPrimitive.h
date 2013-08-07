@@ -53,7 +53,7 @@ public:
 	virtual void UpdatePrimitive() {
 	}
 
-	virtual RShaderBase* GetShaderType() = 0;
+	virtual RMaterial* GetMaterial() = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

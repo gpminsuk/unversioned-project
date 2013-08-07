@@ -32,10 +32,10 @@ BRenderPass::~BRenderPass() {
 }
 
 void BRenderPass::BeginRenderBatch(BRenderingBatch* Batch) {
-	GDriver->SetVertexDeclaration(Batch->Declaration);
+	GDriver->SetVertexDeclaration(Batch->Protocol->Decl);
 
-    Shader = Batch->Shader;
-    Shader->BeginShader();
+	Shader = Batch->pMaterial->FindShader(Batch->Protocol, RShaderPass::ShaderPasses(0));
+	Shader->BeginShader();
     Shader->SetParameter(Viewport);
 }
 

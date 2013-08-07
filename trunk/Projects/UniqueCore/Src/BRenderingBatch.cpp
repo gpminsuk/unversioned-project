@@ -21,7 +21,7 @@ BRenderingBatch::~BRenderingBatch() {
 }
 
 bool BRenderingBatch::IsBatchable(BPrimitive* Primitive) {	
-	return (Shader == Primitive->GetShaderType() && RenderType == Primitive->RenderType && Declaration == Primitive->Primitives(0)->pBuffer->m_pVB->Declaration);
+	return (pMaterial == Primitive->GetMaterial() && RenderType == Primitive->RenderType && Protocol == Primitive->Primitives(0)->pBuffer->m_pVB->Protocol);
 }
 
 void BRenderingBatch::RemovePrimitive(BPrimitive* Primitive) {
@@ -35,13 +35,13 @@ void BRenderingBatch::RemovePrimitive(BPrimitive* Primitive) {
 }
 
 void BRenderingBatch::BatchPrimitive(BPrimitive* Primitive) {
-	Shader = Primitive->GetShaderType();
+	pMaterial = Primitive->GetMaterial();
 	RenderType = Primitive->RenderType;
 	PrimitiveType = PrimitiveType_TriangleList;
 	for (unsigned int i = 0; i < Primitive->Primitives.Size(); ++i) {
 		TPrimitive* Prim = Primitive->Primitives(i);
 		if (Prim) {
-			Declaration = Prim->pBuffer->m_pVB->Declaration;
+			Protocol = Prim->pBuffer->m_pVB->Protocol;
 			nVertices += Prim->pBuffer->m_pVB->nVertices;
 		}
 	}
@@ -63,8 +63,7 @@ void BRenderingBatch::IndexTessellate() {
 }
 
 void BRenderingBatch::ConfigureShader() {
-    Shader->PixelShader->Configure->ConfigureLight(this);
-    Shader->VertexShader->Configure->ConfigureLight(this);
+	RShaderPass::ShaderPasses(0)->ConfigureLight(pMaterial->Shaders(0)->PixelShader, pMaterial->Shaders(0)->VertexShader, this);
 }
 
 void BRenderingBatch::RenderLight() {

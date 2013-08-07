@@ -4,32 +4,44 @@
 
 class BPrimitive;
 
-class RStandardVertexBuilder: public RShaderConfigure
+class RBaseShaderPass: public RShaderPass
 {
 public:
-	RStandardVertexBuilder(class RShader* InShader) :
-			RShaderConfigure(InShader) {
-	}
+	virtual void ConfigureLight(RShader* InPixelShader, RShader* InVertexShader, BRenderingBatch* InBatch);
 
-	virtual void ConfigureLight(BRenderingBatch* InBatch);
+	virtual TString GetName() {
+		return "Base";
+	}
 };
 
-class RBaseSceneVertexShader: public RShaderConfigure
+class RRenderTargetShaderPass: public RShaderPass
 {
 public:
-	RBaseSceneVertexShader(class RShader* InShader) :
-			RShaderConfigure(InShader) {
-	}
+	virtual void ConfigureLight(RShader* InPixelShader, RShader* InVertexShader, BRenderingBatch* InBatch);
 
-	virtual void ConfigureLight(BRenderingBatch* InBatch);
+	virtual TString GetName() {
+		return "RenderTarget";
+	}
 };
 
-class RBaseScenePixelShader: public RShaderConfigure
-{
+class RStaticMeshVertexProtocol : public RVertexProtocol {
 public:
-	RBaseScenePixelShader(class RShader* InShader) :
-			RShaderConfigure(InShader) {
+	RStaticMeshVertexProtocol() {
+		Decl = RVertexDeclaration::Position_Normal_TexCoord;
 	}
 
-	virtual void ConfigureLight(BRenderingBatch* InBatch);
+	virtual TString GetName() {
+		return "StaticMesh";
+	}
+};
+
+class RRenderTargetVertexProtocol : public RVertexProtocol {
+public:
+	RRenderTargetVertexProtocol() {
+		Decl = RVertexDeclaration::Position_TexCoord;
+	}
+
+	virtual TString GetName() {
+		return "RenderTarget";
+	}
 };

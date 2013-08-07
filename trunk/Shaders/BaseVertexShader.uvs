@@ -1,0 +1,11 @@
+#include "VSCommon.ush"    
+#include "VertexProtocol.ush"
+
+void VS(
+	in TVertexInput VertexInput,
+	out TVertexOutput VertexOutput,
+	out float4 OutPosition : POSITION)
+{
+	VertexOutput = GetVertexOutput(VertexInput);
+	OutPosition = CalcOutPosition(VertexInput);
+}

@@ -139,16 +139,16 @@ unsigned int CCylinderPrimitive::GetNumIndices() {
 unsigned int CCylinderPrimitive::FillDynamicVertexBuffer(char** pData) {
     memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
            Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride());
+           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
     for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
         *((TVector3*) &((*pData)[k
-                                 * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])) = TM
+                                 * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
                                          .TransformVector3(
                                              *((TVector3*) &((*pData)[k
-                                                     * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])));
+                                                     * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
     }
     *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride();
+              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
     return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 

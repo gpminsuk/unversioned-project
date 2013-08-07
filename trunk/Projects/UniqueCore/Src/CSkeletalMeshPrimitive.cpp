@@ -33,28 +33,25 @@ void CSkeletalMeshPrimitive::UpdatePrimitive() {
     }
 }
 
-RShaderBase* CSkeletalMeshPrimitive::GetShaderType() {
-	return RShaderTable::Shaders(0);
+RMaterial* CSkeletalMeshPrimitive::GetMaterial() {
+	return RMaterialTable::Materials(0);
 }
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData) {
-    GDriver->SetTexture(0, Texture);
+	GDriver->SetTexture(0, Texture);
 
     unsigned int nVerticies = 0;
     for (unsigned int i = 0; i < Primitives.Size(); ++i) {
         TPrimitive* Primitive = Primitives(i);
         memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices,
                Primitive->pBuffer->m_pVB->nVertices
-               * Primitive->pBuffer->m_pVB->Declaration->GetStride());
-        for (unsigned int k = 0; k < Primitive->pBuffer->m_pVB->nVertices; ++k) {
-            *((TVector3*) &((*pData)[k
-                                     * Primitive->pBuffer->m_pVB->Declaration->GetStride()])) = TM
-                                             .TransformVector3(
-                                                 *((TVector3*) &((*pData)[k
-                                                         * Primitive->pBuffer->m_pVB->Declaration->GetStride()])));
+			   * Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride());
+		RVertexDeclaration::Position_Normal_TexCoord_VD* pVertices = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(*pData);
+        for (unsigned int k = 0; k < Primitive->pBuffer->m_pVB->nVertices; ++k) {			
+            pVertices[k].Position = TM.TransformVector3(pVertices[k].Position);
         }
         *pData += Primitive->pBuffer->m_pVB->nVertices
-                  * Primitive->pBuffer->m_pVB->Declaration->GetStride();
+                  * Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride();
         nVerticies += Primitive->pBuffer->m_pVB->nVertices;
     }
     return nVerticies;
@@ -108,9 +105,9 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InS
     pBuffer->m_pVB = pVB;
     pBuffer->m_pIB = pIB;
 	
-    pVB->Declaration = RVertexDeclaration::Position_Normal_TexCoord;//InSkeletalMesh->SkeletalSubMeshes(0)->pVB->Declaration;
+    pVB->Protocol = RVertexProtocol::Protocols(0);//InSkeletalMesh->SkeletalSubMeshes(0)->pVB->Declaration;
     pVB->nVertices = InSkeletalMesh->SkeletalSubMeshes(0)->pVB->nVertices;
-    pVB->pVertices = new char[pVB->Declaration->GetStride()* pVB->nVertices];
+    pVB->pVertices = new char[pVB->Protocol->Decl->GetStride()* pVB->nVertices];
 	RVertexDeclaration::Position_Normal_TexCoord_VD* pVertices = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(pVB->pVertices);
 	RVertexDeclaration::SkeletalMesh_GPU_Skin_VD* pSrcVertices = reinterpret_cast<RVertexDeclaration::SkeletalMesh_GPU_Skin_VD*>(InSkeletalMesh->SkeletalSubMeshes(0)->pVB->pVertices);
 	for(unsigned int i=0;i<pVB->nVertices;++i) {
@@ -118,9 +115,6 @@ TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InS
 		pVertices[i].Normal = pSrcVertices[i].Normal;
 		pVertices[i].TexCoord = pSrcVertices[i].TexCoord;
 	}
-    memcpy_s(pVB->pVertices, pVB->Declaration->GetStride()* pVB->nVertices,
-             InSkeletalMesh->SkeletalSubMeshes(0)->pVB->pVertices,
-             pVB->Declaration->GetStride() * pVB->nVertices);
 
     pIB->nIndices = InSkeletalMesh->SkeletalSubMeshes(0)->pIB->nIndices;
     pIB->pIndices = new ID[pIB->nIndices];

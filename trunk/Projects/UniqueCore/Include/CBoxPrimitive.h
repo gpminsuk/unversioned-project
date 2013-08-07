@@ -16,7 +16,7 @@ public:
 
 	EGeometrySideType SideType;
 
-	virtual RShaderBase* GetShaderType();
+	virtual RMaterial* GetMaterial();
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();

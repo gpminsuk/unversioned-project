@@ -48,7 +48,7 @@ public:
 			false, float Depth = 0.0f, bool bClearStencil = false, DWORD Stencil =
 			0.0f);
 
-	virtual bool CompileShaderFromFile(RShaderBase *pShader);
+	virtual bool CompileMaterial(RMaterial* Material);
 	virtual bool AssembleShaderFromFile(RShaderBase *pShader);
 	virtual bool CompileShaderFromMemory(RShaderBase *pShader);
 	virtual bool AssembleShaderFromMemory(RShaderBase *pShader);

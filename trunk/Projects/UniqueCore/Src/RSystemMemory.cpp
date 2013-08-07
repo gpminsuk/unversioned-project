@@ -17,7 +17,7 @@ bool RSystemMemoryIndexBuffer::Access(AAccessor& Accessor) {
 }
 
 bool RSystemMemoryVertexBuffer::Access(AAccessor& Accessor) {
-	unsigned int nVertexStride = Declaration->GetStride();
+	unsigned int nVertexStride = Protocol->Decl->GetStride();
     Accessor << nVertexStride;
     Accessor << nVertices;
     if (Accessor.IsLoading()) {

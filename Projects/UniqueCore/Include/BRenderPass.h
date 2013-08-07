@@ -4,6 +4,7 @@ class RShaderBase;
 class BViewport;
 class RRenderTarget;
 class BRenderingBatch;
+class RMaterial;
 
 class BRenderPassResource
 {

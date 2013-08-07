@@ -18,7 +18,7 @@ DECLARE_CLASS(RSystemMemoryVertexBuffer,)
 
 	unsigned int nVertices;
 
-	RVertexDeclaration* Declaration;
+	RVertexProtocol* Protocol;
 
 	char *pVertices;
 

@@ -40,9 +40,9 @@ void CParticlePrimitive::CreateParticlePrimitive(unsigned int ParticleCount) {
     RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
     Primitive->pBuffer->m_pIB = pIB;
 
-	pVB->Declaration = RVertexDeclaration::Position_TexCoord;
+	pVB->Protocol = RVertexProtocol::Protocols(1);
     pVB->nVertices = ParticleCount * 4;
-    pVB->pVertices = new char[pVB->Declaration->GetStride() * pVB->nVertices];
+    pVB->pVertices = new char[pVB->Protocol->Decl->GetStride() * pVB->nVertices];
 
     RVertexDeclaration::Position_TexCoord_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_TexCoord_VD*>(pVB->pVertices);
 	
@@ -131,16 +131,16 @@ unsigned int CParticlePrimitive::GetNumIndices() {
 unsigned int CParticlePrimitive::FillDynamicVertexBuffer(char** pData) {
     memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
            Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride());
+           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
     for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
-        (*((RVertexDeclaration::Position_TexCoord_VD*) &((*pData)[k * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])))
+        (*((RVertexDeclaration::Position_TexCoord_VD*) &((*pData)[k * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])))
         .Position = TM.TransformVector3(
                    *((TVector3*) &((*pData)[k
-                                            * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])));
+                                            * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
         //(*((VD*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride]))).Size = TVector3(0.1f,0.1f,0.1f);
     }
     *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride();
+              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
     return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 

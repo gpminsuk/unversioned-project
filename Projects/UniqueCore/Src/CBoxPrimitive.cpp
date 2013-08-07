@@ -39,9 +39,9 @@ TBoxPrimitive::TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSide
         pBuffer->m_pVB = pVB;
         pBuffer->m_pIB = pIB;
 				
-		pVB->Declaration = RVertexDeclaration::Position_Normal;
+		pVB->Protocol = RVertexProtocol::Protocols(0);
         pVB->nVertices = 24;
-        pVB->pVertices = new char[pVB->Declaration->GetStride() * pVB->nVertices];
+        pVB->pVertices = new char[pVB->Protocol->Decl->GetStride() * pVB->nVertices];
 
         RVertexDeclaration::Position_Normal_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_Normal_VD*>(pVB->pVertices);
 
@@ -166,23 +166,23 @@ unsigned int CBoxPrimitive::GetNumIndices() {
     return Primitives(0)->pBuffer->m_pIB->nIndices;
 }
 
-RShaderBase* CBoxPrimitive::GetShaderType() {
-	return RShaderTable::Shaders(0);
+RMaterial* CBoxPrimitive::GetMaterial() {
+	return RMaterialTable::Materials(0);
 }
 
 unsigned int CBoxPrimitive::FillDynamicVertexBuffer(char** pData) {
     memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
            Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride());
+           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
     for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
         *((TVector3*) &((*pData)[k
-                                 * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])) = TM
+                                 * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
                                          .TransformVector3(
                                              *((TVector3*) &((*pData)[k
-                                                     * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride()])));
+                                                     * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
     }
     *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Declaration->GetStride();
+              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
     return Primitives(0)->pBuffer->m_pVB->nVertices;
 }
 

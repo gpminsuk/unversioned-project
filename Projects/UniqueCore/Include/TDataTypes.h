@@ -187,6 +187,24 @@ public:
 		memcpy(Str, _Str, len + 1);
 	}
 
+	TString& operator +(TString& _Str)
+	{
+		int len1 = strlen(Str);
+		int len2 = strlen(_Str.Str);
+		memcpy(Str + len1, _Str.Str, len2);
+		Str[len1 + len2] = '\0';
+		return *this;
+	}
+
+	TString& operator +(const char* _Str)
+	{
+		int len1 = strlen(Str);
+		int len2 = strlen(_Str);
+		memcpy(Str + len1, _Str, len2);
+		Str[len1 + len2] = '\0';
+		return *this;
+	}
+
 	char* GetBuffer()
 	{
 		return Str;

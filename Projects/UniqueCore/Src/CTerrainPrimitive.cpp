@@ -49,15 +49,15 @@ unsigned int CTerrainPrimitive::FillDynamicVertexBuffer(char** pData) {
         if (Prim) {
             memcpy((*pData), Prim->pBuffer->m_pVB->pVertices,
                    Prim->pBuffer->m_pVB->nVertices
-                   * Prim->pBuffer->m_pVB->Declaration->GetStride());
+                   * Prim->pBuffer->m_pVB->Protocol->Decl->GetStride());
             for (unsigned int k = 0; k < Prim->pBuffer->m_pVB->nVertices; ++k) {
-                *((TVector3*) &((*pData)[k * Prim->pBuffer->m_pVB->Declaration->GetStride()])) =
+                *((TVector3*) &((*pData)[k * Prim->pBuffer->m_pVB->Protocol->Decl->GetStride()])) =
                     TM.TransformVector3(
                         *((TVector3*) &((*pData)[k
-                                                 * Prim->pBuffer->m_pVB->Declaration->GetStride()])));
+                                                 * Prim->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
             }
             *pData += Prim->pBuffer->m_pVB->nVertices
-                      * Prim->pBuffer->m_pVB->Declaration->GetStride();
+                      * Prim->pBuffer->m_pVB->Protocol->Decl->GetStride();
             Ret += Prim->pBuffer->m_pVB->nVertices;
         }
     }
@@ -176,8 +176,8 @@ CTerrainPrimitive::~CTerrainPrimitive(void) {
     DestroyTerrainPrimitive();
 }
 
-RShaderBase* CTerrainPrimitive::GetShaderType() {
-	return RShaderTable::Shaders(0);
+RMaterial* CTerrainPrimitive::GetMaterial() {
+	return RMaterialTable::Materials(0);
 }
 
 bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned int NumCellY, unsigned int NumPatchX, unsigned int NumPatchY) {
@@ -204,7 +204,7 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
             Primitive->CellWidth = SizeX;
 
             pVB->nVertices = SizeX * SizeY * 4;
-            pVB->pVertices = new char[pVB->Declaration->GetStride() * pVB->nVertices];
+            pVB->pVertices = new char[pVB->Protocol->Decl->GetStride() * pVB->nVertices];
 
             VD *Vertex = reinterpret_cast<VD*>(pVB->pVertices);
             float **HeightValue;

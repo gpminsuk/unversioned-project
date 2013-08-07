@@ -29,26 +29,23 @@ bool RResourceManager::LoadResources() {
     extern RTextureBuffer* GDefaultTexture;
     GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
 
-    //////////////////////////////////// Shader Loading
-    RDirectXShader *pShader = new RDirectXShader();
-    //sprintf_s(pShader->m_FileName, 256, "Shader.fx");
-    wsprintf(pShader->m_FileName, TEXT("Shader.fx"));
-    RShaderTable::Shaders.AddItem(pShader);
-
-    pShader = new RDirectXShader();
-    //sprintf_s(pShader->m_FileName, 256, "RTShader.fx");
-    wsprintf(pShader->m_FileName, TEXT("RTShader.fx"));
-    RShaderTable::Shaders.AddItem(pShader);
-
-    for (unsigned int i = 0; i < RShaderTable::Shaders.Size(); i++) {
-        GDriver->CompileShaderFromFile(RShaderTable::Shaders(i));
-    }
-
 	/////////////////////////////////////////////////////// Vertex Decl Loading
 	RVertexDeclaration::Position_Normal = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal);
 	RVertexDeclaration::Position_TexCoord = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float2, DeclUsage_TexCoord);
 	RVertexDeclaration::Position_Normal_TexCoord = new RDXVertexDeclaration(3, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
 	RVertexDeclaration::SkeletalMesh_GPU_Skin = new RDXVertexDeclaration(5, DeclType_Float3, DeclUsage_Position, DeclType_Ubyte4, DeclUsage_BlendIndices, DeclType_Float4, DeclUsage_BlendWeight, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
+
+	/////////////////////////////////////////////////////// Vertex Protocol Loading
+	RVertexProtocol::Protocols.AddItem(new RStaticMeshVertexProtocol());
+	RVertexProtocol::Protocols.AddItem(new RRenderTargetVertexProtocol());
+
+	/////////////////////////////////////////////////////// Shader Pass Loading
+	RShaderPass::ShaderPasses.AddItem(new RBaseShaderPass());
+	RShaderPass::ShaderPasses.AddItem(new RRenderTargetShaderPass());
+
+	//////////////////////////////////// Material Loading
+	RMaterial* Material = new RMaterial("Textured");
+	RMaterialTable::Materials.AddItem(Material);
 
     //////////////////////////////////// Geometry Loading
     /////////////////////////////////////////////////////// Basic Geometry Creating
@@ -79,10 +76,22 @@ bool RResourceManager::ReleaseAllResources() {
     delete GCylinderPrimitiveWireFrame;
 
     //////////////////////////////////// Shader Releasing
-    for (unsigned int i = 0; i < RShaderTable::Shaders.Size(); ++i) {
-        delete RShaderTable::Shaders(i);
+    for (unsigned int i = 0; i < RMaterialTable::Materials.Size(); ++i) {
+        delete RMaterialTable::Materials(i);
     }
-    RShaderTable::Shaders.Clear(true);
+    RMaterialTable::Materials.Clear(true);
+
+	//////////////////////////////////// Vertex Protocol Releasing
+	for (unsigned int i = 0; i < RVertexProtocol::Protocols.Size(); ++i) {
+		delete RVertexProtocol::Protocols(i);
+	}
+	RVertexProtocol::Protocols.Clear(true);
+
+	//////////////////////////////////// Shader Pass Releasing
+	for (unsigned int i = 0; i < RShaderPass::ShaderPasses.Size(); ++i) {
+		delete RShaderPass::ShaderPasses(i);
+	}
+	RShaderPass::ShaderPasses.Clear(true);
 
 	//////////////////////////////////// Vertex Decl Releasing
 	delete RVertexDeclaration::Position_Normal;

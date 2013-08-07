@@ -10,6 +10,40 @@ class BViewport;
 class BRenderingBatch;
 class BLightComponent;
 
+class RVertexDeclaration {
+public:
+	static RVertexDeclaration* Position_Normal_TexCoord;
+	struct Position_Normal_TexCoord_VD {
+		TVector3 Position;
+		TVector3 Normal;
+		TVector2 TexCoord;
+	};
+	static RVertexDeclaration* Position_Normal;
+	struct Position_Normal_VD {
+		TVector3 Position;
+		TVector3 Normal;
+	};
+	static RVertexDeclaration* Position_TexCoord;
+	struct Position_TexCoord_VD {
+		TVector3 Position;
+		TVector2 TexCoord;
+	};
+	static RVertexDeclaration* SkeletalMesh_GPU_Skin;	
+	struct SkeletalMesh_GPU_Skin_VD {
+		TVector3 Position;
+		TVector3 Normal;
+		TVector2 TexCoord;
+		char BoneIndices[4];
+		float BoneWeights[4];
+	};
+
+	TArray<unsigned int> Types;
+	TArray<unsigned int> Usages;
+
+	virtual unsigned int GetTypeSize(unsigned int Type) = 0;
+	virtual unsigned int GetStride() = 0;
+};
+
 struct RConstant
 {
 	TString Name;
@@ -17,33 +51,41 @@ struct RConstant
 	unsigned int RegisterIndex;
 };
 
-class RVertexBuilder
-{
-
-};
-
-class RShaderConfigure
+class RShaderPass
 {
 public:
-	RShaderConfigure(class RShader* InShader) :
-			Shader(InShader) {
+	static TArray<RShaderPass*> ShaderPasses;
+
+	virtual TString GetName() = 0;
+	virtual void ConfigureLight(class RShader* InPixelShader, RShader* InVertexShader, BRenderingBatch* InBatch) = 0;
+};
+
+class RVertexProtocol
+{
+public:
+	static TArray<RVertexProtocol*> Protocols;
+	RVertexProtocol() :
+		Decl(0) {}
+
+	virtual ~RVertexProtocol() {
 	}
+	
+	class RVertexDeclaration* Decl;
 
-	class RShader* Shader;
-
-	virtual void ConfigureLight(BRenderingBatch* InBatch) = 0;
+	virtual TString GetName() = 0;
 };
 
 class RShader
 {
 public:
 	RShader() :
-			Configure(0) {
+			ShaderPass(0) {
 	}
 	~RShader() {
-		delete Configure;
+		delete ShaderPass;
 	}
-	RShaderConfigure* Configure;
+	RShaderPass* ShaderPass;
+	RVertexDeclaration* VertexProtocol;
 	TArray<RConstant> Constants;
 
 	virtual bool SetShaderConstantF(TString VarName, float* Value) = 0;
@@ -87,46 +129,6 @@ public:
 	protected:
 };
 
-class RShaderTable
-{
-public:
-	static TArray<RShaderBase*> Shaders;
-};
-
-class RVertexDeclaration {
-public:
-	static RVertexDeclaration* Position_Normal_TexCoord;
-	struct Position_Normal_TexCoord_VD {
-		TVector3 Position;
-		TVector3 Normal;
-		TVector2 TexCoord;
-	};
-	static RVertexDeclaration* Position_Normal;
-	struct Position_Normal_VD {
-		TVector3 Position;
-		TVector3 Normal;
-	};
-	static RVertexDeclaration* Position_TexCoord;
-	struct Position_TexCoord_VD {
-		TVector3 Position;
-		TVector2 TexCoord;
-	};
-	static RVertexDeclaration* SkeletalMesh_GPU_Skin;	
-	struct SkeletalMesh_GPU_Skin_VD {
-		TVector3 Position;
-		TVector3 Normal;
-		TVector2 TexCoord;
-		char BoneIndices[4];
-		float BoneWeights[4];
-	};
-
-	TArray<unsigned int> Types;
-	TArray<unsigned int> Usages;
-
-	virtual unsigned int GetTypeSize(unsigned int Type) = 0;
-	virtual unsigned int GetStride() = 0;
-};
-
 class RVideoMemoryIndexBuffer
 {
 public:
@@ -165,7 +167,22 @@ public:
 class RMaterial
 {
 public:
+	RMaterial(TString name);
+
 	int TID;
+	TArray<TString> VertexShaderFileNames;
+	TArray<TString> PixelShaderFileNames;
+	TArray<RShaderBase*> Shaders;
+
+	RShaderBase* FindShader(RVertexProtocol* VertexProtocol, RShaderPass* ShaderPass);
+private:
+	void ReplaceInclude(FILE* fp, FILE* cachefp, TString VertexProtocolName, TString MaterialName);
+};
+
+class RMaterialTable
+{
+public:
+	static TArray<RMaterial*> Materials;
 };
 
 class RRenderTarget

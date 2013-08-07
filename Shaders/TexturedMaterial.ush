@@ -1,0 +1,15 @@
+texture Texture0;
+
+sampler samp = sampler_state
+{
+    Texture   = (Texture0);
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+float4 GetDiffuse(TVertexOutput VertexOutput)
+{
+	return tex2D(samp, VertexOutput.TexCoord) * 0.4 + 0.1;
+	//return float4(1.0f,0.8f,0.6f,1.0f);
+}

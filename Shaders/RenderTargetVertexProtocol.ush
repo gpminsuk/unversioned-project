@@ -1,0 +1,25 @@
+struct TVertexInput
+{
+	float3 Position			: POSITION;
+	float2 TexCoord			: TEXCOORD0;
+};
+
+struct TVertexOutput
+{
+	float2 TexCoord			: TEXCOORD0;
+};
+
+#ifdef VERTEX_SHADER
+
+float4 CalcOutPosition(in TVertexInput VertexInput)
+{
+	return float4(VertexInput.Position, 1);
+}
+
+TVertexOutput GetVertexOutput(in TVertexInput VertexInput)
+{
+	TVertexOutput VertexOutput;	
+	VertexOutput.TexCoord = VertexInput.TexCoord;
+	return VertexOutput;
+}
+#endif

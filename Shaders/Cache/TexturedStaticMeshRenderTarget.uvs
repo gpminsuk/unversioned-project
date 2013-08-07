@@ -1,0 +1,11 @@
+#include "..\VSCommon.ush"    
+#include "..\StaticMeshVertexProtocol.ush"
+
+void VS(
+	in TVertexInput VertexInput,
+	out TVertexOutput VertexOutput,
+	out float4 OutPosition : POSITION)
+{
+	OutPosition = float4(VertexInput.Position,1.0f);
+	VertexOutput.TexCoord = VertexInput.TexCoord;
+}

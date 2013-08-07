@@ -78,6 +78,7 @@ bool CCharacter::Tick(unsigned long dTime) {
      SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,0.0005f));
      if(GKeyMap['D'])
      SetCharacterPosition(m_Location + TVector3(0.0f,0.0f,-0.0005f));*/
+	UpdateTransform();
     return true;
 }
 
@@ -96,14 +97,18 @@ void CCharacter::UpdateTransform() {
         CollisionBodies(0)->Primitives(i)->TM._42 = m_Location.y;
         CollisionBodies(0)->Primitives(i)->TM._43 = m_Location.z;
     }
-    for (unsigned int i = 0; i < Components(0)->Primitives.Size(); ++i) {
-        Components(0)->Primitives(i)->Translation = m_Location;
+	for (unsigned int i = 0; i < Components(0)->Primitives.Size(); ++i) {
+		Components(0)->Primitives(i)->TM.SetIdentity();
+		Components(0)->Primitives(i)->Translation = m_Location;
+		Components(0)->Primitives(i)->TM._11 *= 0.05f;
+		Components(0)->Primitives(i)->TM._22 *= 0.05f;
+		Components(0)->Primitives(i)->TM._33 *= 0.05f;
+		static float r = 0.1f;
+		Components(0)->Primitives(i)->TM.Rotate(TQuaternion(TVector3(0,1,0), r));
+		r += 0.1f;
         Components(0)->Primitives(i)->TM._41 = m_Location.x;
         Components(0)->Primitives(i)->TM._42 = m_Location.y;
 		Components(0)->Primitives(i)->TM._43 = m_Location.z;
-		Components(0)->Primitives(i)->TM._11 = 0.05f;
-		Components(0)->Primitives(i)->TM._22 = 0.05f;
-		Components(0)->Primitives(i)->TM._33 = 0.05f;
     }
 
     CollisionBodyBounds.Box.Extent = TVector3(5.0f, 5.0f, 5.0f);

@@ -1,0 +1,14 @@
+texture Texture0;
+
+sampler samp = sampler_state
+{
+    Texture   = (Texture0);
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+float4 GetDiffuse(TVertexOutput VertexOutput)
+{
+	return float4(0.9f,0.8f,0.7f,1.0f);
+}

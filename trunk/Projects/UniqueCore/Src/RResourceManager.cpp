@@ -30,7 +30,6 @@ bool RResourceManager::LoadResources() {
     GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
 
 	/////////////////////////////////////////////////////// Vertex Decl Loading
-	RVertexDeclaration::Position_Normal = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal);
 	RVertexDeclaration::Position_TexCoord = new RDXVertexDeclaration(2, DeclType_Float3, DeclUsage_Position, DeclType_Float2, DeclUsage_TexCoord);
 	RVertexDeclaration::Position_Normal_TexCoord = new RDXVertexDeclaration(3, DeclType_Float3, DeclUsage_Position, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
 	RVertexDeclaration::SkeletalMesh_GPU_Skin = new RDXVertexDeclaration(5, DeclType_Float3, DeclUsage_Position, DeclType_Ubyte4, DeclUsage_BlendIndices, DeclType_Float4, DeclUsage_BlendWeight, DeclType_Float3, DeclUsage_Normal, DeclType_Float2, DeclUsage_TexCoord);
@@ -44,8 +43,8 @@ bool RResourceManager::LoadResources() {
 	RShaderPass::ShaderPasses.AddItem(new RRenderTargetShaderPass());
 
 	//////////////////////////////////// Material Loading
-	RMaterial* Material = new RMaterial("Textured");
-	RMaterialTable::Materials.AddItem(Material);
+	RMaterialTable::Materials.AddItem(new RMaterial("Textured"));
+	RMaterialTable::Materials.AddItem(new RMaterial("Red"));
 
     //////////////////////////////////// Geometry Loading
     /////////////////////////////////////////////////////// Basic Geometry Creating
@@ -94,7 +93,6 @@ bool RResourceManager::ReleaseAllResources() {
 	RShaderPass::ShaderPasses.Clear(true);
 
 	//////////////////////////////////// Vertex Decl Releasing
-	delete RVertexDeclaration::Position_Normal;
 	delete RVertexDeclaration::Position_TexCoord;
 	delete RVertexDeclaration::Position_Normal_TexCoord;
 	delete RVertexDeclaration::SkeletalMesh_GPU_Skin;

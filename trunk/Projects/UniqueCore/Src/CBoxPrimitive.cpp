@@ -43,7 +43,7 @@ TBoxPrimitive::TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSide
         pVB->nVertices = 24;
         pVB->pVertices = new char[pVB->Protocol->Decl->GetStride() * pVB->nVertices];
 
-        RVertexDeclaration::Position_Normal_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_Normal_VD*>(pVB->pVertices);
+        RVertexDeclaration::Position_Normal_TexCoord_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(pVB->pVertices);
 
         Vertex[0].Position = TVector3(-1.0f, -1.0f, -1.0f);
         Vertex[1].Position = TVector3(1.0f, -1.0f, -1.0f);
@@ -167,7 +167,7 @@ unsigned int CBoxPrimitive::GetNumIndices() {
 }
 
 RMaterial* CBoxPrimitive::GetMaterial() {
-	return RMaterialTable::Materials(0);
+	return RMaterialTable::Materials(1);
 }
 
 unsigned int CBoxPrimitive::FillDynamicVertexBuffer(char** pData) {

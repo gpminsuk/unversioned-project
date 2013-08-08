@@ -87,15 +87,6 @@ CXMLApplicationParser::~CXMLApplicationParser() {
 }
 
 void CXMLApplicationParser::Parse() {
-    if (0) {
-        RSKNImporter Importer;
-        RAnimationSequence* AnimationSequence;
-        RBoneHierarchy* BoneHierarchy;
-        RSkeletalMesh* Model;
-        Importer.Import(TString("..\\..\\Resources\\Renekton_brutal.skn"),
-                        AnimationSequence, BoneHierarchy, Model);
-        return;
-    }
     TXMLElement Application;
     if (Root.GetChildElement("Application", Application)) {
         AApplication *app = 0;

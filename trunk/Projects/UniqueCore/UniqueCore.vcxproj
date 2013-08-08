@@ -22,6 +22,7 @@
     <ProjectGuid>{A8AC34C4-FF52-4EEA-B40A-392CE8986DE5}</ProjectGuid>
     <RootNamespace>AA</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>ExodusCore</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -178,6 +179,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\RAnimationController.cpp" />
     <ClCompile Include="Src\RANMImporter.cpp" />
     <ClCompile Include="Src\RSKLImporter.cpp" />
     <ClCompile Include="Src\RSKNImporter.cpp" />
@@ -236,7 +238,6 @@
       </AssemblerOutput>
     </ClCompile>
     <ClCompile Include="Src\RShaderClasses.cpp" />
-    <ClCompile Include="Src\RShaderCompiler.cpp" />
     <ClCompile Include="Src\RImporter.cpp" />
     <ClCompile Include="Src\RAnimationSequence.cpp" />
     <ClCompile Include="Src\RBoneHierarchy.cpp" />
@@ -305,12 +306,12 @@
     <ClInclude Include="Include\CPlanePrimitive.h" />
     <ClInclude Include="Include\CSkeletalMeshPrimitive.h" />
     <ClInclude Include="Include\CTerrainPrimitive.h" />
+    <ClInclude Include="Include\RAnimationController.h" />
     <ClInclude Include="Include\RANMImporter.h" />
     <ClInclude Include="Include\RDXResource.h" />
     <ClInclude Include="Include\RResource.h" />
     <ClInclude Include="Include\RResourceManager.h" />
     <ClInclude Include="Include\RShaderClasses.h" />
-    <ClInclude Include="Include\RShaderCompiler.h" />
     <ClInclude Include="Include\RImporter.h" />
     <ClInclude Include="Include\RAnimationSequence.h" />
     <ClInclude Include="Include\RBoneHierarchy.h" />

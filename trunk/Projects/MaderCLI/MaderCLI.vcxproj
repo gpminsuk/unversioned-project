@@ -20,8 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84E65534-43F3-4C24-AAFE-C4B7E3823D9E}</ProjectGuid>
-    <RootNamespace>MaderCLI</RootNamespace>
+    <RootNamespace>MosesCLI</RootNamespace>
     <Keyword>ManagedCProj</Keyword>
+    <ProjectName>MosesCLI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -240,8 +241,8 @@
     </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="Mader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\Mader\bin\Release\Mader.dll</HintPath>
+    <Reference Include="Moses, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\Moses\bin\Release\Moses.dll</HintPath>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </Reference>
@@ -259,18 +260,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DMaderApp.cpp" />
-    <ClCompile Include="MaderMainCLI.cpp" />
-    <ClCompile Include="UMaderWorld.cpp" />
+    <ClCompile Include="DMosesApp.cpp" />
+    <ClCompile Include="MosesMainCLI.cpp" />
+    <ClCompile Include="UMosesWorld.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DMaderApp.h" />
-    <ClInclude Include="MaderMainCLI.h" />
-    <ClInclude Include="UMaderWorld.h" />
+    <ClInclude Include="DMosesApp.h" />
+    <ClInclude Include="MosesMainCLI.h" />
+    <ClInclude Include="UMosesWorld.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ float LightBrightness[POINT_LIGHT_NUM];
 float4 GetPointLight(TVertexOutput VertexOutput)
 {
 	float4 OutColor = float4(0,0,0,0);
+	// Specular
 	/*float3 EyePosition = {6,3,6};
 	float SpecularPower = 10;
 	float SpecularBrightness = 0.3f;

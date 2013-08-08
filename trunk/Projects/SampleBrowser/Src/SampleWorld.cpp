@@ -35,7 +35,7 @@ bool USampleWorld::InitializeWorld()
 	AddThing(Box);
 
 	DirectionalLight = new CDirectionalLight();
-	DirectionalLight->m_Location = TVector3(-100.0f, 0.0f, 0.0f);
+	DirectionalLight->m_Location = TVector3(0.0f, 0.0f, 0.0f);
 	DirectionalLight->UpdateTransform();
 	AddThing(DirectionalLight);
 

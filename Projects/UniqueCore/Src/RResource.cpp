@@ -6,7 +6,6 @@
 TArray<RMaterial*> RMaterialTable::Materials;
 
 RVertexDeclaration* RVertexDeclaration::Position_Normal_TexCoord;
-RVertexDeclaration* RVertexDeclaration::Position_Normal;
 RVertexDeclaration* RVertexDeclaration::Position_TexCoord;
 RVertexDeclaration* RVertexDeclaration::SkeletalMesh_GPU_Skin;
 
@@ -18,6 +17,11 @@ RMaterial::RMaterial(TString Name) {
 		RShaderPass* ShaderPass = RShaderPass::ShaderPasses(i);
 		for(unsigned int j=0;j<RVertexProtocol::Protocols.Size();++j) {
 			RVertexProtocol* VertexProtocol = RVertexProtocol::Protocols(j);
+			if(!ShaderPass->ShouldCompile(VertexProtocol)) {
+				VertexShaderFileNames.AddItem("");
+				PixelShaderFileNames.AddItem("");
+				continue;
+			}
 			TString VertexShaderFullName = "";
 			VertexShaderFullName = VertexShaderFullName + "..\\..\\Shaders\\Cache\\" + Name + VertexProtocol->GetName() + ShaderPass->GetName() + ".uvs";
 			TString PixelShaderFullName = "";

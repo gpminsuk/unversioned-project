@@ -42,3 +42,9 @@ void CSkeletalMeshComponent::StopAnimation() {
         }
     }
 }
+
+IMPLEMENT_CLASS(CAnimationController);
+
+void CAnimationController::PlayAnimation(RAnimationSequence* AnimationSequence) {
+
+}

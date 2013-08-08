@@ -167,8 +167,9 @@ void TSkeletalMesh::UpdatePrimitive() {
             }
             BoneTM *= WeightedMatrix;
             pVertex[i].Position = BoneTM.TransformVector3(pSrcVertex[i].Position);
-			BoneTM.Translate(TVector3(0,0,0));
-			pVertex[i].Normal = BoneTM.TransformVector3(pSrcVertex[i].Normal);
+			pVertex[i].Normal = BoneTM.TransformVector3(pSrcVertex[i].Position + pSrcVertex[i].Normal);
+			pVertex[i].Normal -= pVertex[i].Position;
+			pVertex[i].Normal.Normalize();
         }
     }
 }

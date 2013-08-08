@@ -10,6 +10,6 @@ sampler samp = sampler_state
 
 float4 GetDiffuse(TVertexOutput VertexOutput)
 {
-	return tex2D(samp, VertexOutput.TexCoord) * 0.9 + 0.1;
+	return tex2D(samp, VertexOutput.TexCoord);
 	//return float4(1.0f,0.8f,0.6f,1.0f);
 }

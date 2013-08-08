@@ -379,6 +379,9 @@ bool CDirectXDriver::CompileMaterial(RMaterial* Material) {
 		RShaderPass* ShaderPass = RShaderPass::ShaderPasses(i);
 		for(unsigned int j=0;j<RVertexProtocol::Protocols.Size();++j) {
 			RVertexProtocol* VertexProtocol = RVertexProtocol::Protocols(j);
+			if(Material->VertexShaderFileNames(i*RShaderPass::ShaderPasses.Size() + j) == "") {
+				continue;
+			}
 			RDirectXShader* Shader = new RDirectXShader();
 			Material->Shaders.AddItem(Shader);
 			Shader->VertexShader = new RDirectXVertexShader();

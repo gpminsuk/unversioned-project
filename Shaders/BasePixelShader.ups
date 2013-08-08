@@ -2,6 +2,7 @@
 #include "VertexProtocol.ush"
 #include "Material.ush"
 
+#define POINT_LIGHT
 #ifdef POINT_LIGHT
 #include "PointLight.ush"
 #endif

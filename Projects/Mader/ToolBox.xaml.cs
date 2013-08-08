@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Mader
+namespace Moses
 {
     /// <summary>
     /// ToolBox.xaml에 대한 상호 작용 논리

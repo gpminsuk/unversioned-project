@@ -18,11 +18,6 @@ public:
 		TVector3 Normal;
 		TVector2 TexCoord;
 	};
-	static RVertexDeclaration* Position_Normal;
-	struct Position_Normal_VD {
-		TVector3 Position;
-		TVector3 Normal;
-	};
 	static RVertexDeclaration* Position_TexCoord;
 	struct Position_TexCoord_VD {
 		TVector3 Position;
@@ -57,6 +52,7 @@ public:
 	static TArray<RShaderPass*> ShaderPasses;
 
 	virtual TString GetName() = 0;
+	virtual bool ShouldCompile(class RVertexProtocol* Protocol) = 0;
 	virtual void ConfigureLight(class RShader* InPixelShader, RShader* InVertexShader, BRenderingBatch* InBatch) = 0;
 };
 

@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 
-namespace Mader
+namespace Moses
 {
     /// <summary>
     /// RenderView.xaml에 대한 상호 작용 논리
@@ -29,7 +29,7 @@ namespace Mader
     {
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
-            return new HandleRef(this, MaderMain.m_Backend.CreateMaderWindow(hwndParent.Handle));
+            return new HandleRef(this, MosesMain.m_Backend.CreateMosesWindow(hwndParent.Handle));
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
@@ -60,7 +60,7 @@ namespace Mader
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            MaderMain.m_Backend.MessageTranslator(Message.MaderMsg_MouseMove, e);
+            MosesMain.m_Backend.MessageTranslator(Message.MosesMsg_MouseMove, e);
             if (mouseRightButtonDown)
             {
                 mouseMovedAfterRightButtonDown = true;

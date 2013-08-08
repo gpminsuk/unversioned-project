@@ -12,6 +12,13 @@ public:
 	virtual TString GetName() {
 		return "Base";
 	}
+	
+	virtual bool ShouldCompile(RVertexProtocol* Protocol) {
+		if(Protocol->GetName() == "RenderTarget") {
+			return false;
+		}
+		return true;
+	}
 };
 
 class RRenderTargetShaderPass: public RShaderPass
@@ -21,6 +28,13 @@ public:
 
 	virtual TString GetName() {
 		return "RenderTarget";
+	}
+
+	virtual bool ShouldCompile(RVertexProtocol* Protocol) {
+		if(Protocol->GetName() == "RenderTarget") {
+			return true;
+		}
+		return false;
 	}
 };
 

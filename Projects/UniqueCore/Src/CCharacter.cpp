@@ -29,7 +29,7 @@ CCharacter::CCharacter() {
     bIsPhysical = false;
     bIsPassable = false;
 
-    m_Location = TVector3(15, -3, 0);
+    m_Location = TVector3(15,0, 0);
 
     RSKNImporter SKNImporter;
     RSKLImporter SKLImporter;
@@ -104,7 +104,7 @@ void CCharacter::UpdateTransform() {
 		Components(0)->Primitives(i)->TM._22 *= 0.05f;
 		Components(0)->Primitives(i)->TM._33 *= 0.05f;
 		static float r = MATH_PI/2;
-		Components(0)->Primitives(i)->TM.Rotate(TQuaternion(TVector3(0,1,0), r));
+		//Components(0)->Primitives(i)->TM.Rotate(TQuaternion(TVector3(0,1,0), r));
 		//r += 0.1f;
         Components(0)->Primitives(i)->TM._41 = m_Location.x;
         Components(0)->Primitives(i)->TM._42 = m_Location.y;

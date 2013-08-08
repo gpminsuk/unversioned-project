@@ -177,9 +177,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/CLRTHREADATTRIBUTE:STA /SUBSYSTEM:WINDOWS %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalLibraryDirectories>..\External\freetype-2.3.7\objs;..\External\expat\lib;..\..\Binaries\Release\;..\External\WaveIO\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\External\freetype-2.3.7\objs;..\External\Expat\lib;..\External\WaveIO\Win32;..\External\vld-10\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ManifestFile>$(IntDir)Menifest\$(TargetFileName).intermediate.manifest</ManifestFile>
-      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EntryPointSymbol>

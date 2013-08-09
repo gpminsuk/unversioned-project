@@ -2,7 +2,7 @@
 
 #include "BComponent.h"
 
-class BViewport;
+class BRenderer;
 class RShader;
 
 class BLightComponent: public BComponent
@@ -11,7 +11,7 @@ public:
 	BLightComponent();
 	virtual ~BLightComponent();
 
-	virtual void RenderComponent(BViewport* Viewport);
+	virtual void RenderComponent(BRenderer* Renderer);
 	virtual void UpdateComponent() = 0;
 
 	virtual void ConfigureShader(RShader* Shader) = 0;

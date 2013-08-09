@@ -6,6 +6,7 @@
 class BViewport;
 class BPrimitive;
 class BRenderingBatch;
+class BCamera;
 
 enum ETextureUsage
 {
@@ -226,7 +227,8 @@ public:
 	BDriver();
 	virtual ~BDriver();
 
-	virtual bool CreateDriver() = 0;
+	virtual bool CreateDriver(BViewport* InitialViewport) = 0;
+	virtual RSwapChain* CreateSwapChain(BViewport* Viewport) = 0;
 	virtual bool DestroyDriver() = 0;
 
 	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
@@ -243,8 +245,8 @@ public:
 	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(BRenderingBatch* pBatch) = 0;
 	virtual RTextureBuffer* CreateTextureBuffer(const TString& Str) = 0;
 
-	virtual bool BeginScene() = 0;
-	virtual bool EndScene() = 0;
+	virtual bool BeginScene(BViewport* Viewport) = 0;
+	virtual bool EndScene(BViewport* Viewport) = 0;
 
 	virtual bool Clear(bool bClearColor = true, unsigned long Color = 0x00000000, bool bClearDepth =
 			false, float Depth = 0.0f, bool bClearStencil = false, unsigned long Stencil =
@@ -262,7 +264,6 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT) = 0;
 
-	virtual RRenderTarget* GetBackBuffer() = 0;
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) = 0;
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height) = 0;
 

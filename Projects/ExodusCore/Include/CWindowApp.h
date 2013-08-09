@@ -17,9 +17,7 @@ struct UMouseMap
 struct TWindowInfo: public TApplicationInfo
 {
 public:
-	TWindowInfo() :
-			m_wWidth(800),
-					m_wHeight(600)
+	TWindowInfo()
 	{
 		Platform = Platform_Windows_x86;
 	}
@@ -35,10 +33,9 @@ class CWindowApp: public AApplication
 {
 DECLARE_CLASS(CWindowApp,)
 	public:
-	TWindowInfo m_WindowInfo;
-
 	UMouseMap m_MouseMap;
 	TIntPoint m_MousePt;
+	TWindowInfo m_WindowInfo;
 
 	static CWindowApp* StaticThis;
 

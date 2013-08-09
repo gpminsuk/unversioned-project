@@ -253,7 +253,7 @@
     <ClCompile Include="Src\CCylinderCollisionBody.cpp" />
     <ClCompile Include="Src\CHeightFieldCollisionBody.cpp" />
     <ClCompile Include="Src\CBox.cpp" />
-    <ClCompile Include="Src\CCameraViewport.cpp" />
+    <ClCompile Include="Src\CWindowsViewport.cpp" />
     <ClCompile Include="Src\CCharacter.cpp" />
     <ClCompile Include="Src\CEmitter.cpp" />
     <ClCompile Include="Src\CTerrain.cpp" />
@@ -330,7 +330,7 @@
     <ClInclude Include="Include\CCylinderCollisionBody.h" />
     <ClInclude Include="Include\CHeightFieldCollisionBody.h" />
     <ClInclude Include="Include\CBox.h" />
-    <ClInclude Include="Include\CCameraViewport.h" />
+    <ClInclude Include="Include\CWindowsViewport.h" />
     <ClInclude Include="Include\CCharacter.h" />
     <ClInclude Include="Include\CEmitter.h" />
     <ClInclude Include="Include\CTerrain.h" />

@@ -4,7 +4,7 @@
 #include "BViewport.h"
 #include "CDirectXDriver.h"
 #include "CWaveIODriver.h"
-#include "CCameraViewport.h"
+#include "CWindowsViewport.h"
 #include "CBox.h"
 #include "CDirectionalLight.h"
 #include "RResourceManager.h"
@@ -25,27 +25,32 @@ DMosesApp::~DMosesApp()
 {
 }
 
-HWND DMosesApp::CreateMosesRenderView(HWND ParenthWnd)
+void DMosesApp::ResizeMosesRenderView(HWND Handle, int left, int top, int right, int bottom) {
+	::MoveWindow(Handle, left, top, right - left, bottom - top, true);
+}
+
+HWND DMosesApp::CreateMosesRenderView(int Width, int Height, HWND ParenthWnd)
 {
-	m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
+	TWindowInfo Info;
+	Info.m_hInstance = GetModuleHandle(NULL);
 
-	m_WindowInfo.m_wWidth = 800;
-	m_WindowInfo.m_wHeight = 600;
+	Info.m_wWidth = Width;
+	Info.m_wHeight = Height;
 
-	m_WindowInfo.m_hWnd = ::CreateWindow(
+	Info.m_hWnd = ::CreateWindow(
 		_T("static"),
-		_T("CAPTION"),
+		_T(""),
 		WS_CHILD | WS_VISIBLE,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		m_WindowInfo.m_wWidth + 14,
-		m_WindowInfo.m_wHeight + 36,
+		Info.m_wWidth,
+		Info.m_wHeight,
 		ParenthWnd,
 		0,
 		m_WindowInfo.m_hInstance,
 		0);
-
-	return m_WindowInfo.m_hWnd;
+	WindowInfos.AddItem(Info);
+	return Info.m_hWnd;
 }
 
 bool DMosesApp::CreateApp(TApplicationInfo& Info)
@@ -54,6 +59,17 @@ bool DMosesApp::CreateApp(TApplicationInfo& Info)
 
 	m_MosesMainCLI = gcnew MosesMainCLI(this);
 	m_MosesMainCLI->MainWindow->ShowWindow();
+	
+	m_WindowInfo = WindowInfos(0);
+	m_pViewport = new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, m_WindowInfo.m_hWnd);
+	GDriver->CreateDriver(m_pViewport);
+	m_pRenderer = new BRenderer(this);
+	m_pRenderer->AddViewport(m_pViewport);
+	m_pWorld->m_pRenderer = m_pRenderer;
+	for(unsigned int i=1;i<WindowInfos.Size();++i) {
+		BViewport* Viewport = new CWindowsViewport(WindowInfos(i).m_wWidth, WindowInfos(i).m_wHeight, WindowInfos(i).m_hWnd);
+		m_pRenderer->AddViewport(Viewport);
+	}
 	return true;
 }
 

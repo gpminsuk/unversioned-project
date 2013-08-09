@@ -9,7 +9,9 @@ class BThing;
 class BComponent;
 class BPrimitive;
 class BLightComponent;
-class BRenderingBatchManager;
+class BCamera;
+class RSwapChain;
+class RRenderTarget;
 
 enum ESceneFlag
 {
@@ -19,15 +21,14 @@ enum ESceneFlag
 
 class BViewport: public AObject
 {
-DECLARE_CLASS(BViewport, CLASS_Abstract)
-	public:
-	BViewport(void);
+public:
+	BViewport(unsigned int Width, unsigned int Height);
 	virtual ~BViewport(void);
 
-	void operator =(BViewport& vp);
-
-	BRenderingBatchManager* BatchManager;
-	TArray<BLightComponent*> Lights;
+	void operator=(BViewport& vp);
+	
+	RSwapChain* SwapChain;
+	BCamera* Camera;
 
 	TMatrix m_ViewMatrix;
 	TMatrix m_ProjectionMatrix;
@@ -39,23 +40,16 @@ DECLARE_CLASS(BViewport, CLASS_Abstract)
 
 	void Clear();
 
-	void RenderViewport();
-
-	void RenderLight(BLightComponent* pLightComponent);
-	void RemoveLight(BLightComponent* pLightComponent);
-
-	void Render(BPrimitive* pPrimitive);
-	void Render(BComponent* pComponent);
-	void Render(BThing* pThing);
-	void Remove(BPrimitive* pPrimitive);
-	void Remove(BComponent* pComponent);
-	void Remove(BThing* pThing);
+	RRenderTarget* GetBackBuffer();
+	
+	//void Render(BComponent* pComponent);
+	//void Remove(BComponent* pComponent);
 
 	void SortTemplates();
 
-	virtual void UpdateViewport() = 0;
-	virtual TVector3 GetViewportOrigin() = 0;
-	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param) = 0;
-	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param) = 0;
-	virtual void InputChar() = 0;
+	virtual void UpdateViewport();
+	virtual TVector3 GetViewportOrigin();
+	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
+	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
+	virtual void InputChar();
 };

@@ -32,9 +32,13 @@ void MosesMainCLI::Tick(float deltaTime)
 	m_Application->m_pRenderer->ThreadExecute();
 }
 
-IntPtr MosesMainCLI::CreateMosesWindow(IntPtr hWndParent)
+IntPtr MosesMainCLI::CreateMosesWindow(double Width, double Height, IntPtr hWndParent)
 {
-	return IntPtr(m_Application->CreateMosesRenderView((HWND)hWndParent.ToPointer()));
+	return IntPtr(m_Application->CreateMosesRenderView((int)Width, (int)Height, (HWND)hWndParent.ToPointer()));
+}
+
+void MosesMainCLI::ResizeMosesWindow(IntPtr Handle, int left, int top, int right, int bottom) {
+	m_Application->ResizeMosesRenderView((HWND)Handle.ToPointer(), left, top, right, bottom);
 }
 
 void MosesMainCLI::Run()
@@ -43,7 +47,7 @@ void MosesMainCLI::Run()
 	MyApp->Run(MainWindow);
 }
 
-void MosesMainCLI::MessageTranslator(Moses::Message msg, ... array<System::Object^>^ args)
+void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args)
 {
 	switch(msg)
 	{

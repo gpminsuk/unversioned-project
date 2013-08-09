@@ -2,6 +2,7 @@
 #include "BCamera.h"
 #include "CWindowApp.h"
 
+#include "BDriver.h"
 #include "BThing.h"
 
 BCamera::BCamera()
@@ -15,7 +16,7 @@ BCamera::BCamera()
     m_Location.x = 0;
     m_Location.y = 0;
     m_Location.z = 0;
-    m_CameraMode = ECamera_Mode::First_Person;
+	m_CameraMode = ECamera_Mode::First_Person;
 }
 
 BCamera::~BCamera(void) {

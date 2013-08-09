@@ -4,6 +4,8 @@
 
 #include "TDataTypes.h"
 
+class RSwapChain;
+
 class BCamera
 {
 public:
@@ -20,7 +22,7 @@ public:
 	bool m_bIsUpdated;
 
 	void Tick(unsigned long dTime);
-
+	
 	virtual bool ShouldUpdate();
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);

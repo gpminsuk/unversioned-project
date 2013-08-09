@@ -5,12 +5,7 @@
 #include <d3dx9effect.h>
 #include <windows.h>
 
-struct TDXWindowInfo
-{
-	HWND m_hWnd;
-	int m_wWidth;
-	int m_wHeight;
-};
+class RDXRenderTarget;
 
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "d3d9.lib")
@@ -18,13 +13,14 @@ struct TDXWindowInfo
 class CDirectXDriver: public BDriver
 {
 public:
-	CDirectXDriver(TDXWindowInfo Window);
+	CDirectXDriver();
 	virtual ~CDirectXDriver();
 	inline LPDIRECT3DDEVICE9 GetDevice() {
 		return m_pDevice;
 	}
 
-	virtual bool CreateDriver();
+	virtual bool CreateDriver(BViewport* InitialViewport);
+	virtual RSwapChain* CreateSwapChain(BViewport* Viewport);
 	virtual bool DestroyDriver();
 
 	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer);
@@ -41,8 +37,8 @@ public:
 	virtual RDynamicPrimitiveBuffer* CreatePrimitiveBuffer(BRenderingBatch* pBatch);
 	virtual RTextureBuffer* CreateTextureBuffer(const TString& Str);
 
-	virtual bool BeginScene();
-	virtual bool EndScene();
+	virtual bool BeginScene(BViewport* Viewport);
+	virtual bool EndScene(BViewport* Viewport);
 
 	virtual bool Clear(bool bClearColor = true, DWORD Color = 0x00000000, bool bClearDepth =
 			false, float Depth = 0.0f, bool bClearStencil = false, DWORD Stencil =
@@ -60,7 +56,6 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT);
 
-	virtual RRenderTarget* GetBackBuffer();
 	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
 
@@ -75,10 +70,8 @@ public:
 	virtual void SetBlendState(TBlendState& BlendState);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	class RDXRenderTarget* BackBuffer;
-
 	LPDIRECT3DDEVICE9 m_pDevice;
 	LPDIRECT3D9 m_pD3D;
-	private:
-	TDXWindowInfo m_pWindow;
+
+	RDXRenderTarget* InitialBackBuffer;
 };

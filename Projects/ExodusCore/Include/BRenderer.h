@@ -9,8 +9,12 @@
 
 #pragma comment(lib,"winmm.lib")
 
+class BThing;
 class BViewport;
+class BPrimitive;
 class RPrimitiveBuffer;
+class BRenderingBatchManager;
+class BLineBatcher;
 class BTextureBuffer;
 class AApplication;
 
@@ -30,7 +34,6 @@ public:
 	bool Initialize();
 	bool Destroy();
 	bool Render();
-	bool RenderViewport(BViewport* Viewport);
 	void RenderLines(BViewport* Viewport);
 
 	void ThreadSetup();
@@ -38,10 +41,20 @@ public:
 	void ThreadDestroy();
 
 	void AddViewport(BViewport* pViewport);
-	protected:
+	
+	void RenderLight(BLightComponent* pLightComponent);
+	void RemoveLight(BLightComponent* pLightComponent);
+
+	void Render(BPrimitive* pPrimitive);
+	void Remove(BPrimitive* pPrimitive);	
+	void Render(BThing* pThing);
+	void Remove(BThing* pThing);
+protected:
 	TArray<BViewport*> m_Viewports;
-	class BLineBatcher* LineBatcher;
-	int m_nViewportCount;
+
+	BRenderingBatchManager* BatchManager;
+	BLineBatcher* LineBatcher;
+	TArray<BLightComponent*> Lights;
 
 	DWORD m_dFrameTime[FPS_COUNTER_NUMBER];
 	int m_iFTimeIdx;

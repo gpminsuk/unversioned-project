@@ -95,12 +95,6 @@ DECLARE_CLASS(UWorld,)
 	inline void SetRenderer(BRenderer* R) {
 		m_pRenderer = R;
 	}
-	void AddViewport(BViewport* V) {
-		Viewports.AddItem(V);
-	}
-	inline void RemoveViewport(BViewport* V) {
-		Viewports.DeleteItemByVal(V);
-	}
 
 	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
@@ -108,9 +102,7 @@ DECLARE_CLASS(UWorld,)
 	virtual bool Tick(unsigned long dTime);
 
 	TWorldStructure* m_pWorldData;
-
 	BRenderer* m_pRenderer;
-	TArray<BViewport*> Viewports;
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);

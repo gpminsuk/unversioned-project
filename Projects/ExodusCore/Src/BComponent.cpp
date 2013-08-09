@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "BComponent.h"
 #include "BPrimitive.h"
-#include "BViewport.h"
+#include "BRenderer.h"
 
 BComponent::BComponent() {
 }
@@ -13,8 +13,8 @@ BComponent::~BComponent() {
     Primitives.Clear();
 }
 
-void BComponent::RenderComponent(BViewport* Viewport) {
+void BComponent::RenderComponent(BRenderer* Renderer) {
     for (unsigned int j = 0; j < Primitives.Size(); ++j) {
-        Viewport->Render(Primitives(j));
+        Renderer->Render(Primitives(j));
     }
 }

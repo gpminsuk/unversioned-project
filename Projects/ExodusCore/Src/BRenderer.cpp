@@ -4,7 +4,10 @@
 #include "AApplication.h"
 #include "BDriver.h"
 #include "BSoundDriver.h"
+#include "BThing.h"
 
+#include "BCollisionBody.h"
+#include "BComponent.h"
 #include "BTextDrawer.h"
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
@@ -28,13 +31,10 @@ BRenderer::BRenderer(AApplication *App)
     :
     m_fFPS(0),
     m_iFTimeIdx(0),
-    m_nViewportCount(0),
     AThread(App) {
     for (int i = 0; i < FPS_COUNTER_NUMBER; ++i)
         m_dFrameTime[i] = 0;
-
-    m_nViewportCount = 1;
-
+	
     GRenderPassResource.Initialize();
     GOpaqueBasePass = new BOpaqueBasePass();
     GBaseRTRenderPass = new BRTRenderPass();
@@ -44,6 +44,7 @@ BRenderer::BRenderer(AApplication *App)
     GDirectionalLightPass = new BDirectionalLightPass();
 
     LineBatcher = new BLineBatcher();
+	BatchManager = new BRenderingBatchManager();
     GTextDrawer = new BTextDrawer();
 }
 
@@ -60,6 +61,8 @@ BRenderer::~BRenderer() {
     delete GDriver;
     delete GSoundDriver;
     GDriver = 0;
+
+    delete BatchManager;
 }
 
 void BRenderer::AddViewport(BViewport* pViewport) {
@@ -76,14 +79,20 @@ bool BRenderer::Destroy() {
 }
 
 bool BRenderer::Render() {
-    for (UINT i = 0; i < m_Viewports.Size(); ++i) {
-        RenderViewport(m_Viewports[i]);
-    }
-    return true;
-}
+	for (UINT i = 0; i < m_Viewports.Size(); ++i) {
+		BViewport* Viewport = m_Viewports(i);
+		GDriver->BeginScene(Viewport);
 
-bool BRenderer::RenderViewport(BViewport* Viewport) {
-    Viewport->RenderViewport();
+		BatchManager->RenderBatches(Viewport, Lights);
+
+		GBaseRTRenderPass->BeginPass(Viewport);
+		GBaseRTRenderPass->DrawPrimitive();
+		GBaseRTRenderPass->EndPass();
+
+		GTextDrawer->DrawTexts(Viewport);
+
+		GDriver->EndScene(Viewport);
+    }
     return true;
 }
 
@@ -99,10 +108,7 @@ void BRenderer::ThreadExecute() {
     int AccumulatedCount = 0;
     //while(!Application->bQuit)
     //{
-    if (GDriver->BeginScene()) {
-        Render();
-        GDriver->EndScene();
-    }
+	Render();
 
     m_fFPS -= m_dFrameTime[m_iFTimeIdx];
     m_dFrameTime[m_iFTimeIdx] = timeGetTime() - dTime;
@@ -120,4 +126,48 @@ void BRenderer::ThreadExecute() {
 void BRenderer::ThreadDestroy() {
     Destroy();
     Application->bRenderThreadQuit = true;
+}
+
+void BRenderer::Render(BPrimitive* pPrimitive) {
+    BatchManager->AddPrimitive(pPrimitive);
+}
+
+void BRenderer::Remove(BPrimitive* pPrimitive) {
+    BatchManager->RemovePrimitive(pPrimitive);
+}
+
+void BRenderer::Remove(BThing* pThing) {
+    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
+        BComponent* pComponent = pThing->Components(i);
+        for (unsigned int j = 0; j < pComponent->Primitives.Size(); ++j) {
+            Remove(pComponent->Primitives(j));
+        }
+    }
+    for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
+        BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+        for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
+            Remove(pCollisionBody->Primitives(j));
+        }
+    }
+}
+
+void BRenderer::Render(BThing* pThing) {
+	for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
+		BComponent* pComponent = pThing->Components(i);
+		pComponent->RenderComponent(this);
+	}
+	for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
+		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
+		for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
+			Render(pCollisionBody->Primitives(j));
+		}
+	}
+}
+
+void BRenderer::RenderLight(BLightComponent* pLightComponent) {
+	Lights.AddItem(pLightComponent);
+}
+
+void BRenderer::RemoveLight(BLightComponent* pLightComponent) {
+	Lights.DeleteItemByVal(pLightComponent);
 }

@@ -29,12 +29,17 @@ namespace Moses
     {
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
-            return new HandleRef(this, MosesMain.m_Backend.CreateMosesWindow(hwndParent.Handle));
+            return new HandleRef(this, MosesMain.m_Backend.CreateMosesWindow(800, 600, hwndParent.Handle));
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
         {
             NativeMethods.DestroyWindow(hwnd.Handle);
+        }
+
+        protected override void OnWindowPositionChanged(Rect rcBoundingBox)
+        {
+            MosesMain.m_Backend.ResizeMosesWindow(Handle, (int)rcBoundingBox.Left, (int)rcBoundingBox.Top, (int)rcBoundingBox.Right, (int)rcBoundingBox.Bottom);
         }
     }
 
@@ -60,7 +65,7 @@ namespace Moses
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            MosesMain.m_Backend.MessageTranslator(Message.MosesMsg_MouseMove, e);
+            MosesMain.m_Backend.MessageTranslator(GetWindowHandle(), Message.MosesMsg_MouseMove, e);
             if (mouseRightButtonDown)
             {
                 mouseMovedAfterRightButtonDown = true;

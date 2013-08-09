@@ -10,14 +10,8 @@ IMPLEMENT_CLASS(AThread)
 #include "BThing.h"
 IMPLEMENT_CLASS(BThing)
 
-#include "BViewport.h"
-IMPLEMENT_CLASS(BViewport)
-
 #include "CWindowApp.h"
 IMPLEMENT_CLASS(CWindowApp)
-
-#include "CCameraViewport.h"
-IMPLEMENT_CLASS(CCameraViewport)
 
 #include "UWorld.h"
 IMPLEMENT_CLASS(UWorld)

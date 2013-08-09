@@ -105,7 +105,7 @@ BRenderingBatchManager::BRenderingBatchManager() {
 BRenderingBatchManager::~BRenderingBatchManager() {
 }
 
-void BRenderingBatchManager::RenderBatches(BViewport* Viewport) {
+void BRenderingBatchManager::RenderBatches(BViewport* Viewport, TArray<BLightComponent*>& Lights) {
     GOpaqueBasePass->BeginPass(Viewport);
     for (unsigned int i = 0; i < Batches.Size(); ++i) {
         BRenderingBatch* Batch = Batches(i);
@@ -119,10 +119,10 @@ void BRenderingBatchManager::RenderBatches(BViewport* Viewport) {
     GOpaqueBasePass->EndPass();
 
     GDirectionalLightPass->BeginPass(Viewport);
-    for (unsigned int i = 0; i < Viewport->Lights.Size(); ++i) {
+    for (unsigned int i = 0; i < Lights.Size(); ++i) {
         for (unsigned int i = 0; i < Batches.Size(); ++i) {
             BRenderingBatch* Batch = Batches(i);
-            Batch->Lights = Viewport->Lights;
+            Batch->Lights = Lights;
             GDirectionalLightPass->BeginRenderBatch(Batch);
             {
                 Batch->ConfigureShader();

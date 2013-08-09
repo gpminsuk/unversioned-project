@@ -12,7 +12,8 @@ namespace Moses
     public interface IMosesMainInterface
     {
         void Tick(float deltaTime);
-        IntPtr CreateMosesWindow(IntPtr hWndParent);
-        void MessageTranslator(Message msg, params object[] list);
+        IntPtr CreateMosesWindow(double Width, double Height, IntPtr hWndParent);
+        void ResizeMosesWindow(IntPtr Handle, int left, int top, int right, int bottom);
+        void MessageTranslator(IntPtr Handle, Message msg, params object[] list);
     }
 }

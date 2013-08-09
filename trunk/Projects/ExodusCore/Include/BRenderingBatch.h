@@ -46,5 +46,5 @@ public:
 	void AddPrimitive(BPrimitive* Primitive);
 	void RemovePrimitive(BPrimitive* Primitive);
 
-	void RenderBatches(BViewport* Viewport);
+	void RenderBatches(BViewport* Viewport, TArray<BLightComponent*>& Lights);
 };

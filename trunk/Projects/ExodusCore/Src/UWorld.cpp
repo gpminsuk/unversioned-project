@@ -9,7 +9,6 @@
 #include "BPrimitive.h"
 #include "BCollisionBody.h"
 
-#include "CCameraViewport.h"
 #include "CTerrain.h"
 #include "BCamera.h"
 #include "CCharacter.h"
@@ -39,18 +38,12 @@ bool UWorld::Tick(unsigned long dTime) {
 }
 
 void UWorld::RemoveThing(BThing* Thing) {
-    for (unsigned int i = 0; i < Viewports.Size(); ++i) {
-        BViewport* Viewport = Viewports(i);
-        Viewport->Remove(Thing);
-    }
+	m_pRenderer->Render(Thing);
     m_pWorldData->RemoveThing(Thing);
 }
 
 void UWorld::AddThing(BThing* Thing) {
-    for (unsigned int i = 0; i < Viewports.Size(); ++i) {
-        BViewport* Viewport = Viewports(i);
-        Viewport->Render(Thing);
-    }
+	m_pRenderer->Render(Thing);
     m_pWorldData->AddThing(Thing);
 }
 

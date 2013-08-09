@@ -1,12 +1,14 @@
 #include "StdAfx.h"
 #include "BRenderer.h"
 #include "BViewport.h"
+#include "BDriver.h"
 
 #include "InputDefine.h"
 
 #include "UWorld.h"
 
 #include "CWindowApp.h"
+#include "CWindowsViewport.h"
 
 #include "RResourceManager.h"
 
@@ -26,7 +28,6 @@ CWindowApp::CWindowApp() {
 
 void CWindowApp::Initialize() {
     RResourceManager::LoadResources();
-
     if (m_pRenderer) {
         bRenderThreadQuit = false;
         m_pRenderer->Start();
@@ -60,9 +61,6 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info) {
 
     RegisterClassEx(&wcex);
 
-    m_WindowInfo.m_wWidth = 800;
-    m_WindowInfo.m_wHeight = 600;
-
     m_WindowInfo.m_hWnd = ::CreateWindow(
                               _T("CLASS NAME"),
                               _T("CAPTION"),
@@ -78,6 +76,13 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info) {
 
     ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
     UpdateWindow(m_WindowInfo.m_hWnd);
+		
+	BViewport* Viewport = new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, m_WindowInfo.m_hWnd);
+	GDriver->CreateDriver(Viewport);
+	m_pRenderer = new BRenderer(this);
+	m_pRenderer->AddViewport(Viewport);
+	Viewports.AddItem(Viewport);
+	m_pWorld->m_pRenderer = m_pRenderer;
 
     return true;
 }
@@ -91,8 +96,11 @@ bool CWindowApp::DestroyApp() {
     delete m_pRenderer;
     m_pRenderer = 0;
 
-    delete m_pViewport;
-    m_pViewport = 0;
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		delete Viewports(i);
+	}
+	Viewports.Clear();
+   
 
     RResourceManager::ReleaseAllResources();
     return true;
@@ -123,7 +131,10 @@ void CWindowApp::Do() {
 }
 
 bool CWindowApp::Tick(unsigned long Time) {
-    m_pViewport->UpdateViewport();
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		BViewport* Viewport = Viewports(i);
+		Viewport->UpdateViewport();
+	}
     m_pWorld->Tick(Time);
     return true;
 }
@@ -211,6 +222,7 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
     }
     InputMouse(Event, Param);
 }
+
 void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam) {
     TKeyInput_Param Param;
     Param.Key = (unsigned short) wParam;

@@ -18,8 +18,9 @@ public:
 
 	virtual void Tick(float deltaTime);
 	virtual void Run();
-	virtual IntPtr CreateMosesWindow(IntPtr hWndParent);
-	virtual void MessageTranslator(Moses::Message msg, ... array<System::Object^>^ args);
+	virtual IntPtr CreateMosesWindow(double Width, double Height, IntPtr hWndParent);
+	virtual void ResizeMosesWindow(IntPtr Handle, int left, int top, int right, int bottom);
+	virtual void MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args);
 
 	MosesMainCLI(DMosesApp* App);
 	~MosesMainCLI();

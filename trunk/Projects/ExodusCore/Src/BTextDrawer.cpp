@@ -24,7 +24,7 @@ void BTextDrawer::AddText(TString& Str) {
 void BTextDrawer::DrawTexts(BViewport* Viewport) {
     RShaderBase* pShader = RMaterialTable::Materials(0)->Shaders(0);
     GDriver->SetFillMode(FillMode_Solid);
-    GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
+    GDriver->SetRenderTarget(0, Viewport->GetBackBuffer());
     //GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
     GDriver->SetBlendState(
         TBlendState(BlendOp_Add, BlendState_SrcAlpha,

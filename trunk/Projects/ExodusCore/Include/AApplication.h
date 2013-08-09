@@ -30,7 +30,7 @@ public:
     ASystemInfo* SystemInfo;
 
     BRenderer *m_pRenderer;
-    BViewport *m_pViewport;
+	TArray<BViewport*> Viewports;
 
     UWorld* m_pWorld;
 

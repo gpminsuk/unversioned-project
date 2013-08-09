@@ -14,7 +14,10 @@ public:
 
 	gcroot<MosesMainCLI^> m_MosesMainCLI;
 
-	HWND CreateMosesRenderView(HWND ParenthWnd);
+	TArray<TWindowInfo> WindowInfos;
+
+	HWND CreateMosesRenderView(int Width, int Height, HWND ParenthWnd);
+	void ResizeMosesRenderView(HWND Handle, int left, int top, int right, int bottom);
 	virtual bool CreateApp(TApplicationInfo& Info);
 	virtual void Do();
 };

@@ -2,6 +2,7 @@
 
 #include "RResource.h"
 
+#include "BViewport.h"
 #include "BRTRenderPass.h"
 #include "BDriver.h"
 
@@ -18,7 +19,7 @@ void BRTRenderPass::BeginPass(BViewport* InViewport) {
 
     RMaterial* Material = RMaterialTable::Materials(0);	
     GDriver->SetFillMode(FillMode_Solid);
-    GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
+    GDriver->SetRenderTarget(0, InViewport->GetBackBuffer());
     GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
     Material->FindShader(RVertexProtocol::Protocols(1), RShaderPass::ShaderPasses(0))->BeginShader();
 }

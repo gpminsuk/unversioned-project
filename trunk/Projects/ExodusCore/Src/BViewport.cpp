@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "BCamera.h"
 #include "BDriver.h"
 #include "BRenderer.h"
 #include "BTextDrawer.h"
@@ -16,83 +17,53 @@
 
 #include "BRTRenderPass.h"
 
-BViewport::BViewport(void)
-    :
-    VisibleScenes(Scene_World | Scene_Collision) { // TODO
-    BatchManager = new BRenderingBatchManager();
+BViewport::BViewport(unsigned int Width, unsigned int Height):
+    VisibleScenes(Scene_World | Scene_Collision) {
+	Camera = new BCamera();
+	m_Width = Width;
+	m_Height = Height;
 }
 
 BViewport::~BViewport(void) {
-    delete BatchManager;
 }
 
 void BViewport::SortTemplates() {
 }
 
-void BViewport::Remove(BPrimitive* pPrimitive) {
-    BatchManager->RemovePrimitive(pPrimitive);
-}
-void BViewport::Remove(BComponent* pComponent) {
-    for (unsigned int i = 0; i < pComponent->Primitives.Size(); ++i) {
-        Remove(pComponent->Primitives(i));
-    }
-}
-
-void BViewport::Remove(BThing* pThing) {
-    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
-        BComponent* pComponent = pThing->Components(i);
-        for (unsigned int j = 0; j < pComponent->Primitives.Size(); ++j) {
-            Remove(pComponent->Primitives(j));
-        }
-    }
-    for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
-        BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
-        for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
-            Remove(pCollisionBody->Primitives(j));
-        }
-    }
-}
-
-void BViewport::Render(BPrimitive* pPrimitive) {
-    BatchManager->AddPrimitive(pPrimitive);
-}
-
-void BViewport::Render(BComponent* pComponent) {
-    for (unsigned int i = 0; i < pComponent->Primitives.Size(); ++i) {
-        Render(pComponent->Primitives(i));
-    }
-}
-
-void BViewport::Render(BThing* pThing) {
-    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
-        BComponent* pComponent = pThing->Components(i);
-        pComponent->RenderComponent(this);
-    }
-    for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
-        BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
-        for (unsigned int j = 0; j < pCollisionBody->Primitives.Size(); ++j) {
-            Render(pCollisionBody->Primitives(j));
-        }
-    }
-}
-
-void BViewport::RenderLight(BLightComponent* pLightComponent) {
-    Lights.AddItem(pLightComponent);
-}
-
-void BViewport::RemoveLight(BLightComponent* pLightComponent) {
-    Lights.DeleteItemByVal(pLightComponent);
-}
-
-void BViewport::RenderViewport() {
-    BatchManager->RenderBatches(this);
-
-    GBaseRTRenderPass->BeginPass(this);
-    GBaseRTRenderPass->DrawPrimitive();
-    GBaseRTRenderPass->EndPass();
-
-    GTextDrawer->DrawTexts(this);
-}
-
 void BViewport::Clear() {
+}
+
+RRenderTarget* BViewport::GetBackBuffer() {
+	return SwapChain->GetBackBuffer();
+}
+
+TVector3 BViewport::GetViewportOrigin() {
+    return Camera->m_Location;
+}
+
+//임시코드
+#include <d3d9.h>
+#include <d3dx9effect.h>
+
+void BViewport::UpdateViewport() {
+    if (Camera && Camera->ShouldUpdate() || true) {
+        Camera->Tick(0);
+        //임시코드
+        D3DXMatrixLookAtLH((D3DXMATRIXA16*) &m_ViewMatrix,
+                           (D3DXVECTOR3*) &Camera->m_Location,
+                           (D3DXVECTOR3*) &Camera->m_LookAt,
+                           (D3DXVECTOR3*) &Camera->m_Up);
+    }
+}
+
+void BViewport::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
+    Camera->InputMouse(Event, Param);
+}
+
+void BViewport::InputChar() {
+
+}
+
+void BViewport::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
+    Camera->InputKey(Event, Param);
 }

@@ -219,7 +219,7 @@
     <ClCompile Include="Src\CDirectXSoundDriver.cpp" />
     <ClCompile Include="Src\CPointLight.cpp" />
     <ClCompile Include="Src\CWaveIODriver.cpp" />
-    <ClCompile Include="Src\CWindowApp.cpp" />
+    <ClCompile Include="Src\CWindowsApplication.cpp" />
     <ClCompile Include="Src\CBoxPrimitive.cpp" />
     <ClCompile Include="Src\CCylinderPrimitive.cpp" />
     <ClCompile Include="Src\CMeshPrimitive.cpp" />
@@ -298,7 +298,7 @@
     <ClInclude Include="Include\CDirectXSoundDriver.h" />
     <ClInclude Include="Include\CPointLight.h" />
     <ClInclude Include="Include\CWaveIODriver.h" />
-    <ClInclude Include="Include\CWindowApp.h" />
+    <ClInclude Include="Include\CWindowsApplication.h" />
     <ClInclude Include="Include\CBoxPrimitive.h" />
     <ClInclude Include="Include\CCylinderPrimitive.h" />
     <ClInclude Include="Include\CMeshPrimitive.h" />

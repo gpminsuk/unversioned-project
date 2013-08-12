@@ -1187,14 +1187,16 @@ public:
 	TBoundingSphere Sphere;
 };
 
-namespace ECamera_Mode
+enum ECameraMode
 {
-enum Enum
-{
-	First_Person,
-	Thrid_Person,
-	Free_Mode,
-	Free_Mode_Editor,
-	QuarterView_Mode,
+	CameraMode_FirstPerson,
+	CameraMode_ThridPerson,
+	CameraMode_FreeMode,
+	CameraMode_Editor,
+	CameraMode_Right,
+	CameraMode_Left,
+	CameraMode_Top,
+	CameraMode_Bottom,
+	CameraMode_Front,
+	CameraMode_Back,
 };
-}

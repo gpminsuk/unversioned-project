@@ -4,13 +4,13 @@
 #include "BCamera.h"
 #include "BDriver.h"
 
-#include "CWindowApp.h"
+#include "CWindowsApplication.h"
 #include "CUIButton.h"
 
-CWindowsViewport::CWindowsViewport(unsigned int Width, unsigned int Height, HWND InHandle) 
-	: BViewport(Width, Height),
-	Handle(InHandle) {
-	SwapChain = GDriver->CreateSwapChain(this);
+CWindowsViewport::CWindowsViewport(unsigned int Width, unsigned int Height, EViewportProjectionType InProjectionType, EViewportRenderMode InRenderMode, ECameraMode InCameraMode, HWND InHandle) 
+	: BViewport(Width, Height, InProjectionType, InRenderMode, InCameraMode),
+	Handle(InHandle),
+	IsMainViewport(false) {
 }
 
 bool CWindowsViewport::Tick(unsigned long Time) {
@@ -19,4 +19,11 @@ bool CWindowsViewport::Tick(unsigned long Time) {
 
 void CWindowsViewport::SetProperty(TString& PropertyName, TString& Value) {
 
+}
+
+void CWindowsViewport::OnSizeChanged() {
+	RECT r;
+	::GetClientRect(Handle, &r);
+	Width = r.right;
+	Height = r.bottom;
 }

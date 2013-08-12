@@ -20,11 +20,7 @@ bool RResourceManager::LoadResources() {
     if (!GDriver) {
         return false;
     }
-    TString Filename;
-    //////////////////////////////////// Sound Loading
-    RTexture* Texture = new RTexture();
-    GDriver->CreateTextureBuffer(256, 256);
-
+    TString Filename;    
     Filename = "..\\..\\Resources\\renekton_brutal_TX_CM.DDS";
     extern RTextureBuffer* GDefaultTexture;
     GDefaultTexture = GDriver->CreateTextureBuffer(Filename);

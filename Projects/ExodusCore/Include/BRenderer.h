@@ -14,6 +14,7 @@ class BViewport;
 class BPrimitive;
 class RPrimitiveBuffer;
 class BRenderingBatchManager;
+class BRenderPassResource;
 class BLineBatcher;
 class BTextureBuffer;
 class AApplication;
@@ -39,8 +40,6 @@ public:
 	void ThreadSetup();
 	void ThreadExecute();
 	void ThreadDestroy();
-
-	void AddViewport(BViewport* pViewport);
 	
 	void RenderLight(BLightComponent* pLightComponent);
 	void RemoveLight(BLightComponent* pLightComponent);
@@ -49,9 +48,9 @@ public:
 	void Remove(BPrimitive* pPrimitive);	
 	void Render(BThing* pThing);
 	void Remove(BThing* pThing);
+	
+	TArray<BViewport*>& m_Viewports;
 protected:
-	TArray<BViewport*> m_Viewports;
-
 	BRenderingBatchManager* BatchManager;
 	BLineBatcher* LineBatcher;
 	TArray<BLightComponent*> Lights;

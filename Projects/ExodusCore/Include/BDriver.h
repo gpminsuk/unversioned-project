@@ -3,6 +3,7 @@
 #include "RResource.h"
 #include "RSystemMemory.h"
 
+class AApplication;
 class BViewport;
 class BPrimitive;
 class BRenderingBatch;
@@ -227,8 +228,8 @@ public:
 	BDriver();
 	virtual ~BDriver();
 
-	virtual bool CreateDriver(BViewport* InitialViewport) = 0;
-	virtual RSwapChain* CreateSwapChain(BViewport* Viewport) = 0;
+	virtual bool CreateDriver(AApplication* Application) = 0;
+	virtual bool ResizeBackBuffer(int Width, int Height) = 0;
 	virtual bool DestroyDriver() = 0;
 
 	virtual bool SetStreamSource(RDynamicPrimitiveBuffer* PrimitiveBuffer) = 0;
@@ -264,7 +265,8 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT) = 0;
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT) = 0;
 
-	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) = 0;
+	virtual RRenderTarget* GetBackBuffer() = 0;
+	virtual bool SetViewport(BViewport* Viewport) = 0;
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height) = 0;
 
 	virtual void InitializeVertexDecl(RVertexDeclaration* Decl) = 0;

@@ -5,6 +5,7 @@
 #include "BOpaqueBasePass.h"
 #include "BRenderingBatch.h"
 #include "BDriver.h"
+#include "BViewport.h"
 
 BOpaqueBasePass::BOpaqueBasePass() {
 }
@@ -16,7 +17,7 @@ void BOpaqueBasePass::BeginPass(BViewport* InViewport) {
     __super::BeginPass(InViewport);
 
     GDriver->SetRenderTarget(0, RPR->m_BaseSceneRT);
-
+	GDriver->SetFillMode(InViewport->GetFillMode());
     GDriver->Clear(true, 0x00000000, true, 1.0f);
 }
 

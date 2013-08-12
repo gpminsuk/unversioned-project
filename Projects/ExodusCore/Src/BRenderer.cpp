@@ -31,11 +31,11 @@ BRenderer::BRenderer(AApplication *App)
     :
     m_fFPS(0),
     m_iFTimeIdx(0),
+	m_Viewports(App->Viewports),
     AThread(App) {
     for (int i = 0; i < FPS_COUNTER_NUMBER; ++i)
         m_dFrameTime[i] = 0;
 	
-    GRenderPassResource.Initialize();
     GOpaqueBasePass = new BOpaqueBasePass();
     GBaseRTRenderPass = new BRTRenderPass();
     GDrawLinePass = new BDrawLinePass();
@@ -65,10 +65,6 @@ BRenderer::~BRenderer() {
     delete BatchManager;
 }
 
-void BRenderer::AddViewport(BViewport* pViewport) {
-    m_Viewports.AddItem(pViewport);
-}
-
 bool BRenderer::Initialize() {
     return true;
 }
@@ -88,7 +84,10 @@ bool BRenderer::Render() {
 		GBaseRTRenderPass->BeginPass(Viewport);
 		GBaseRTRenderPass->DrawPrimitive();
 		GBaseRTRenderPass->EndPass();
-
+		char f[30];
+		float ff = 1000.0f/(m_fFPS/FPS_COUNTER_NUMBER);
+		sprintf_s(f, "%f", ff);
+		GTextDrawer->AddText(TString(f));
 		GTextDrawer->DrawTexts(Viewport);
 
 		GDriver->EndScene(Viewport);

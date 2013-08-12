@@ -86,13 +86,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClosableHeader.xaml.cs">
+      <DependentUpon>ClosableHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModelView.xaml.cs">
+      <DependentUpon>ModelView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MosesMainInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MosesMain.xaml.cs">
       <DependentUpon>MosesMain.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RenderView.xaml.cs">
-      <DependentUpon>RenderView.xaml</DependentUpon>
+    <Compile Include="RenderViewport.xaml.cs">
+      <DependentUpon>RenderViewport.xaml</DependentUpon>
     </Compile>
     <Compile Include="ResourceManagerMain.xaml.cs">
       <DependentUpon>ResourceManagerMain.xaml</DependentUpon>
@@ -103,15 +109,24 @@
     <Compile Include="ToolBox.xaml.cs">
       <DependentUpon>ToolBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewportGroup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ClosableHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MosesMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="RenderView.xaml">
+    <Page Include="RenderViewport.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

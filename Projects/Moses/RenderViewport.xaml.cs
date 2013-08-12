@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 namespace Moses
 {
     /// <summary>
-    /// RenderView.xaml에 대한 상호 작용 논리
+    /// Interaction logic for RenderViewport.xaml
     /// </summary>
     public partial class NativeMethods
     {
@@ -27,28 +27,38 @@ namespace Moses
 
     public class DirectXHost : HwndHost
     {
+        public RenderViewport Viewport;
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
-            return new HandleRef(this, MosesMain.m_Backend.CreateMosesWindow(800, 600, hwndParent.Handle));
+            IntPtr CreatedViewport = MosesMain.m_Backend.CreateViewport(Viewport.ViewportType);
+            return new HandleRef(this, MosesMain.m_Backend.CreateViewportWindow(CreatedViewport, hwndParent.Handle));
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
         {
+            MosesMain.m_Backend.RemoveViewport(hwnd.Handle);
             NativeMethods.DestroyWindow(hwnd.Handle);
-        }
-
-        protected override void OnWindowPositionChanged(Rect rcBoundingBox)
-        {
-            MosesMain.m_Backend.ResizeMosesWindow(Handle, (int)rcBoundingBox.Left, (int)rcBoundingBox.Top, (int)rcBoundingBox.Right, (int)rcBoundingBox.Bottom);
         }
     }
 
-    public partial class RenderView : UserControl
+    public enum EViewportType
     {
-        public DirectXHost directXHost;
+        Perspective,
+        Top,
+        Bottom,
+        Right,
+        Left,
+        Front,
+        Back
+    };
+
+    public partial class RenderViewport : UserControl
+    {
+        public EViewportType ViewportType { get; set; }
 
         private bool mouseRightButtonDown = false;
         private bool mouseMovedAfterRightButtonDown = false;
+        private bool IsLoaded = false;
 
         private void Rectangle_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -72,17 +82,47 @@ namespace Moses
             }
         }
 
-        public RenderView()
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            MosesMain.m_Backend.MessageTranslator(GetWindowHandle(), Message.MosesMsg_MouseWheel, e);            
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!IsLoaded)
+            {
+                DirectXHost Host = new DirectXHost();
+                Host.Viewport = this;
+                ViewerBorder.Child = Host;
+                IsLoaded = true;
+            }
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                DirectXHost DXHost = (DirectXHost)ViewerBorder.Child;
+                DXHost.Dispose();
+                IsLoaded = false;
+            }            
+        }
+
+        public RenderViewport()
         {
             InitializeComponent();
-
-            directXHost = new DirectXHost();
-            ViewerBorder.Child = directXHost;
+            
+            Unloaded += OnUnloaded;
+            Loaded += OnLoaded;
         }
-                
+
         public IntPtr GetWindowHandle()
         {
-            return directXHost.Handle;
+            DirectXHost DXHost = (DirectXHost)ViewerBorder.Child;
+            return DXHost.Handle;
         }
+
+        public bool Resizing { get; set; }
     }
 }

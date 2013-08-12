@@ -17,24 +17,33 @@
 
 #include "BRTRenderPass.h"
 
-BViewport::BViewport(unsigned int Width, unsigned int Height):
-    VisibleScenes(Scene_World | Scene_Collision) {
-	Camera = new BCamera();
-	m_Width = Width;
-	m_Height = Height;
+BViewport::BViewport(unsigned int InWidth, unsigned int InHeight, EViewportProjectionType InProjectionType, EViewportRenderMode InRenderMode, ECameraMode InCameraMode):
+    VisibleScenes(Scene_World | Scene_Collision),
+	ProjectionType(InProjectionType),
+	RenderMode(InRenderMode),
+	X(0), Y(0) {
+	Camera = new BCamera(this, InCameraMode);
+	Width = InWidth;
+	Height = InHeight;
 }
 
 BViewport::~BViewport(void) {
+}
+
+EFillMode BViewport::GetFillMode() {
+	switch(RenderMode) {
+	case RenderMode_All:
+		return FillMode_Solid;
+	case RenderMode_Wireframe:
+		return FillMode_Wireframe;
+	}
+	return FillMode_Solid;
 }
 
 void BViewport::SortTemplates() {
 }
 
 void BViewport::Clear() {
-}
-
-RRenderTarget* BViewport::GetBackBuffer() {
-	return SwapChain->GetBackBuffer();
 }
 
 TVector3 BViewport::GetViewportOrigin() {
@@ -66,4 +75,9 @@ void BViewport::InputChar() {
 
 void BViewport::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
     Camera->InputKey(Event, Param);
+}
+
+void BViewport::Resize(int InWidth, int InHeight) {
+	Width = InWidth;
+	Height = InHeight;
 }

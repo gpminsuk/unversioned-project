@@ -20,6 +20,7 @@ public:
 
     EPlatform Platform;
 };
+ 
 
 class AApplication: public AObject {
     DECLARE_CLASS(AApplication,CLASS_Abstract)
@@ -41,6 +42,7 @@ public:
     bool bRenderThreadQuit;
 
     virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
+//	virtual void Resize() = 0;
 
     virtual bool CreateApp(TApplicationInfo& Info) = 0;
     virtual void Do() = 0;

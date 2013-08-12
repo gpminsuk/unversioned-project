@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 #include <windows.h>
+#include "BViewport.h"
+
 #include "DMosesApp.h"
 #include "MosesMainCLI.h"
 #include "UXMLParser.h"
@@ -32,13 +34,59 @@ void MosesMainCLI::Tick(float deltaTime)
 	m_Application->m_pRenderer->ThreadExecute();
 }
 
-IntPtr MosesMainCLI::CreateMosesWindow(double Width, double Height, IntPtr hWndParent)
-{
-	return IntPtr(m_Application->CreateMosesRenderView((int)Width, (int)Height, (HWND)hWndParent.ToPointer()));
+IntPtr MosesMainCLI::CreateViewport(Moses::EViewportType ViewportType) {
+	TViewportInfo Info;
+	switch(ViewportType) {
+	case Moses::EViewportType::Perspective:
+		Info.ProjectionType = Projection_Perpective;
+		Info.RenderMode = RenderMode_All;
+		Info.CameraMode = CameraMode_FirstPerson;
+		break;
+	case Moses::EViewportType::Top:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Top;
+		break;
+	case Moses::EViewportType::Back:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Back;
+		break;
+	case Moses::EViewportType::Bottom:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Bottom;
+		break;
+	case Moses::EViewportType::Front:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Front;
+		break;
+	case Moses::EViewportType::Left:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Left;
+		break;
+	case Moses::EViewportType::Right:
+		Info.ProjectionType = Projection_Orthogonal;
+		Info.RenderMode = RenderMode_Wireframe;
+		Info.CameraMode = CameraMode_Right;
+		break;
+	}
+	return IntPtr(m_Application->CreateViewport(Info));
 }
 
-void MosesMainCLI::ResizeMosesWindow(IntPtr Handle, int left, int top, int right, int bottom) {
-	m_Application->ResizeMosesRenderView((HWND)Handle.ToPointer(), left, top, right, bottom);
+IntPtr MosesMainCLI::CreateViewportWindow(IntPtr Viewport, IntPtr hWndParent)
+{
+	return IntPtr(m_Application->CreateViewportWindow((BViewport*)Viewport.ToPointer(), 800, 600, (HWND)hWndParent.ToPointer()));
+}
+
+void MosesMainCLI::RemoveViewport(IntPtr Handle) {
+	m_Application->RemoveViewport(m_Application->FindViewport((HWND)Handle.ToPointer()));
+}
+
+void MosesMainCLI::OnViewportsResized() {
+	m_Application->OnViewportsResized();
 }
 
 void MosesMainCLI::Run()
@@ -61,6 +109,24 @@ void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... arra
 			Point pt = EventArgs->GetPosition(nullptr);
 			Param.X = (unsigned short)pt.X;
 			Param.Y = (unsigned short)pt.Y;
+			Param.dX = m_Application->m_MousePt.x - Param.X;
+			Param.dY = m_Application->m_MousePt.y - Param.Y;
+			m_Application->m_MousePt.x = Param.X;
+			m_Application->m_MousePt.y = Param.Y;
+			m_Application->InputMouse(m_Application->FindViewport((HWND)Handle.ToPointer()), MOUSE_Move, Param);
+		}
+		break;
+	case Moses::Message::MosesMsg_MouseWheel:
+		{
+			MouseWheelEventArgs^ EventArgs = (MouseWheelEventArgs^)args[0];
+			TMouseInput_Param Param;
+			Param.bLButtonDown = (unsigned char)EventArgs->LeftButton;
+			Param.bRButtonDown = (unsigned char)EventArgs->RightButton;
+			Param.bMButtonDown = (unsigned char)EventArgs->MiddleButton;
+			Param.delta = -EventArgs->Delta;
+			Point pt = EventArgs->GetPosition(nullptr);
+			Param.X = (unsigned short)pt.X;
+			Param.Y = (unsigned short)pt.Y;
 			if(m_Application->m_MousePt.x) 
 				Param.dX = m_Application->m_MousePt.x - Param.X;
 			else
@@ -69,11 +135,9 @@ void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... arra
 				Param.dY = m_Application->m_MousePt.y - Param.Y;
 			else
 				Param.dY = 0;
-			if(m_Application->m_MousePt.x && m_Application->m_MousePt.y && Param.dX == 0 && Param.dY == 0)
-				return;
 			m_Application->m_MousePt.x = Param.X;
 			m_Application->m_MousePt.y = Param.Y;
-			m_Application->InputMouse(MOUSE_Move, Param);
+			m_Application->InputMouse(m_Application->FindViewport((HWND)Handle.ToPointer()), MOUSE_Wheel, Param);
 		}
 		break;
 	}

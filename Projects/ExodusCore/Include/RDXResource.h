@@ -99,16 +99,3 @@ public:
 	virtual unsigned int GetTypeSize(unsigned int Type);
 	virtual unsigned int GetStride();
 };
-
-class RDXSwapChain : public RSwapChain
-{
-public:
-	RDXSwapChain() : DXSwapChain(0) {}
-
-	struct IDirect3DSwapChain9* DXSwapChain;
-	RDXRenderTarget* BackBuffer;
-
-	virtual RRenderTarget* GetBackBuffer() {
-		return BackBuffer;
-	}
-};

@@ -19,8 +19,8 @@ public:
 		return m_pDevice;
 	}
 
-	virtual bool CreateDriver(BViewport* InitialViewport);
-	virtual RSwapChain* CreateSwapChain(BViewport* Viewport);
+	virtual bool CreateDriver(AApplication* Application);
+	virtual bool ResizeBackBuffer(int Width, int Height);
 	virtual bool DestroyDriver();
 
 	virtual bool SetIndices(RDynamicPrimitiveBuffer* PrimitiveBuffer);
@@ -56,7 +56,8 @@ public:
 	virtual bool SetRenderTarget(unsigned int Idx, RRenderTarget* RT);
 	virtual bool SetDepthStencilSurface(RRenderTarget* RT);
 
-	virtual bool SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ);
+	virtual RRenderTarget* GetBackBuffer();
+	virtual bool SetViewport(BViewport* Viewport);
 	virtual bool SetClipRect(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height);
 
 	virtual void InitializeVertexDecl(RVertexDeclaration* Decl);
@@ -73,5 +74,5 @@ public:
 	LPDIRECT3DDEVICE9 m_pDevice;
 	LPDIRECT3D9 m_pD3D;
 
-	RDXRenderTarget* InitialBackBuffer;
+	RRenderTarget* BackBuffer;
 };

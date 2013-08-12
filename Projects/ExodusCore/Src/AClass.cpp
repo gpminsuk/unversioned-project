@@ -10,8 +10,8 @@ IMPLEMENT_CLASS(AThread)
 #include "BThing.h"
 IMPLEMENT_CLASS(BThing)
 
-#include "CWindowApp.h"
-IMPLEMENT_CLASS(CWindowApp)
+#include "CWindowsApplication.h"
+IMPLEMENT_CLASS(CWindowsApplication)
 
 #include "UWorld.h"
 IMPLEMENT_CLASS(UWorld)

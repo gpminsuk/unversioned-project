@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RDXResource.h"
 
+#include "BCamera.h"
 #include "BViewport.h"
 #include "BLight.h"
 
@@ -65,8 +66,24 @@ bool RDirectXShader::SetParameter(BViewport* vp) {
         return false;
     //임시코드
     D3DXMATRIXA16 Proj;
-    D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI / 4,
-                               (float) vp->m_Width / (float) vp->m_Height, 1.f, 10000.0f);
+	switch(vp->ProjectionType) {
+	case Projection_Perpective:
+		D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI / 4,
+			(float) vp->Width / (float) vp->Height, 0.001f, 10000.0f);
+		break;
+	case Projection_Orthogonal: {
+		float ratio = vp->Width/(float)vp->Height;
+		D3DXMatrixOrthoOffCenterLH(&Proj, 
+			vp->Camera->m_X + ratio*vp->Camera->m_Distance/2.0f, 
+			vp->Camera->m_X - ratio*vp->Camera->m_Distance/2.0f,
+			vp->Camera->m_Y + vp->Camera->m_Distance/2.0f,
+			vp->Camera->m_Y - vp->Camera->m_Distance/2.0f,
+			0.00001f,
+			10000.0f);
+		}
+		break;
+	}
+    
     D3DXMATRIXA16 View;
     D3DXMatrixIdentity(&View);
     View._11 = vp->m_ViewMatrix._11;
@@ -100,7 +117,7 @@ bool RDirectXShader::EndShader() {
     CDirectXDriver* Driver = dynamic_cast<CDirectXDriver*>(GDriver);
     if (!Driver)
         return false;
-    Driver->GetDevice()->SetVertexDeclaration(NULL);
+    //Driver->GetDevice()->SetVertexDeclaration(NULL);
     Driver->GetDevice()->SetPixelShader(NULL);
     Driver->GetDevice()->SetVertexShader(NULL);
     return true;

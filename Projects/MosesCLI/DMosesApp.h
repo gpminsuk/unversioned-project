@@ -1,11 +1,11 @@
 #pragma once
 
-#include "CWindowApp.h"
+#include "CWindowsApplication.h"
 #include <vcclr.h>
 
 ref class MosesMainCLI;
 
-class DMosesApp : public CWindowApp
+class DMosesApp : public CWindowsApplication
 {
 	DECLARE_CLASS(DMosesApp,)
 public:
@@ -14,10 +14,7 @@ public:
 
 	gcroot<MosesMainCLI^> m_MosesMainCLI;
 
-	TArray<TWindowInfo> WindowInfos;
-
-	HWND CreateMosesRenderView(int Width, int Height, HWND ParenthWnd);
-	void ResizeMosesRenderView(HWND Handle, int left, int top, int right, int bottom);
+	HWND CreateViewportWindow(BViewport* Viewport, int Width, int Height, HWND ParentHandle);
 	virtual bool CreateApp(TApplicationInfo& Info);
 	virtual void Do();
 };

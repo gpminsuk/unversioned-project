@@ -18,8 +18,11 @@ public:
 
 	virtual void Tick(float deltaTime);
 	virtual void Run();
-	virtual IntPtr CreateMosesWindow(double Width, double Height, IntPtr hWndParent);
-	virtual void ResizeMosesWindow(IntPtr Handle, int left, int top, int right, int bottom);
+
+	virtual IntPtr CreateViewport(Moses::EViewportType ViewportType);
+	virtual IntPtr CreateViewportWindow(IntPtr Viewport, IntPtr hWndParent);
+	virtual void RemoveViewport(IntPtr Handle);
+	virtual void OnViewportsResized();
 	virtual void MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args);
 
 	MosesMainCLI(DMosesApp* App);

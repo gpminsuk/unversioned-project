@@ -3,7 +3,7 @@
 
 #include "BRenderer.h"
 
-#include "CWindowApp.h"
+#include "CWindowsApplication.h"
 #include "CDirectXDriver.h"
 #include "CWaveIODriver.h"
 #include "BViewport.h"

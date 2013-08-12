@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Moses.ModelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:uc="clr-namespace:Moses" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <uc:ViewportGroup>
+        <uc:RenderViewport ViewportType="Perspective" Grid.Column="0" Grid.Row="0"></uc:RenderViewport>
+    </uc:ViewportGroup>
+</UserControl>

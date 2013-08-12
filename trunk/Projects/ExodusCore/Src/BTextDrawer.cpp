@@ -2,11 +2,16 @@
 #include "BTextDrawer.h"
 #include "UFreeTypeDrawer.h"
 
+#include "BRenderPass.h"
 #include "BDriver.h"
 #include "BViewport.h"
 #include "RTexture.h"
 
 BTextDrawer* GTextDrawer;
+
+TText::~TText() {
+	delete TextBuffer;
+}
 
 BTextDrawer::BTextDrawer(void) {
 }
@@ -15,25 +20,27 @@ BTextDrawer::~BTextDrawer(void) {
 }
 
 void BTextDrawer::AddText(TString& Str) {
-    TText Text;
-    Text.Str = Str;
-    Text.TextBuffer = GDriver->CreateFontBuffer(Str.GetLength() * 20, 30);
+    TText* Text = new TText();
+    Text->Str = Str;
+    Text->TextBuffer = GDriver->CreateFontBuffer(Str.GetLength() * 20, 30);
     Texts.AddItem(Text);
 }
 
-void BTextDrawer::DrawTexts(BViewport* Viewport) {
-    RShaderBase* pShader = RMaterialTable::Materials(0)->Shaders(0);
+void BTextDrawer::DrawTexts(BViewport* InViewport) {
+	GDriver->SetVertexDeclaration(RVertexDeclaration::Position_TexCoord);
+
+    RMaterial* Material = RMaterialTable::Materials(0);	
+	RShaderBase* pShader = Material->FindShader(RVertexProtocol::Protocols(1), RShaderPass::ShaderPasses(0));
     GDriver->SetFillMode(FillMode_Solid);
-    GDriver->SetRenderTarget(0, Viewport->GetBackBuffer());
-    //GDriver->SetVertexDeclaration(VertexType_Position | VertexType_UV);
-    GDriver->SetBlendState(
+	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
+	GDriver->SetBlendState(
         TBlendState(BlendOp_Add, BlendState_SrcAlpha,
                     BlendState_InvSrcAlpha));
 
     for (unsigned int i = 0; i < Texts.Size(); ++i) {
-        GFontDrawer->DrawString(Texts[i].Str, Texts[i].TextBuffer);
+        GFontDrawer->DrawString(Texts[i]->Str, Texts[i]->TextBuffer);
 
-        GDriver->SetTexture(0, Texts[i].TextBuffer);
+        GDriver->SetTexture(0, Texts[i]->TextBuffer);
         pShader->BeginShader();
 
         struct VD {
@@ -43,8 +50,8 @@ void BTextDrawer::DrawTexts(BViewport* Viewport) {
 
         VD Vertices[4];
 
-        float OffsetX = 0.5f / Viewport->m_Width;
-        float OffsetY = 0.5f / Viewport->m_Height;
+        float OffsetX = 0.5f / InViewport->Width;
+        float OffsetY = 0.5f / InViewport->Height;
 
         float LineOffset = 1.0f / 10.0f;
 
@@ -52,13 +59,13 @@ void BTextDrawer::DrawTexts(BViewport* Viewport) {
         Vertices[1].Pos = TVector3(-0.9f, -0.9f + LineOffset * (i + 1), 0.0f);
         Vertices[2].Pos = TVector3(
                               -0.9f
-                              + ((float) Texts[i].TextBuffer->Width * LineOffset
-                                 * 20.0f / Viewport->m_Width),
+                              + ((float) Texts[i]->TextBuffer->Width * LineOffset
+                                 * 20.0f / InViewport->Width),
                               -0.9f + LineOffset * i, 0.0f);
         Vertices[3].Pos = TVector3(
                               -0.9f
-                              + ((float) Texts[i].TextBuffer->Width * LineOffset
-                                 * 20.0f / Viewport->m_Width),
+                              + ((float) Texts[i]->TextBuffer->Width * LineOffset
+                                 * 20.0f / InViewport->Width),
                               -0.9f + LineOffset * (i + 1), 0.0f);
 
         Vertices[0].UV = TVector2(0.0f - OffsetX, 1.0f - OffsetY);
@@ -74,6 +81,9 @@ void BTextDrawer::DrawTexts(BViewport* Viewport) {
                                         Indices, sizeof(TIndex16) / 3, Vertices, sizeof(VD));
     }
 
+	for(unsigned int i=0;i<Texts.Size();++i) {
+		delete Texts[i];
+	}
     Texts.Clear(false);
 
     GDriver->SetBlendState(TBlendState());

@@ -4,20 +4,22 @@
 
 #include "TDataTypes.h"
 
-class RSwapChain;
+class BViewport;
 
 class BCamera
 {
 public:
-	BCamera();
+	BCamera(BViewport* InParentViewport, ECameraMode InCameraMode);
 	virtual ~BCamera(void);
 
 	class BThing* m_Subject;
 
-	ECamera_Mode::Enum m_CameraMode;
+	ECameraMode m_CameraMode;
+	BViewport* ParentViewport;
 
 	TMatrix m_RotationMatrix;
 	float m_Distance, m_Pi, m_Theta;
+	float m_X, m_Y; // orthogonal
 
 	bool m_bIsUpdated;
 

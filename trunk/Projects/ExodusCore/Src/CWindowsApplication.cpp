@@ -2,21 +2,22 @@
 #include "BRenderer.h"
 #include "BViewport.h"
 #include "BDriver.h"
+#include "BRenderPass.h"
 
 #include "InputDefine.h"
 
 #include "UWorld.h"
 
-#include "CWindowApp.h"
+#include "CWindowsApplication.h"
 #include "CWindowsViewport.h"
 
 #include "RResourceManager.h"
 
-CWindowApp* CWindowApp::StaticThis = 0;
+CWindowsApplication* CWindowsApplication::StaticThis = 0;
 SYSTEM_INFO GSystemInformation;
 unsigned char GKeyMap[KEYMAP_SIZE] = { 0, };
 
-CWindowApp::CWindowApp() {
+CWindowsApplication::CWindowsApplication() {
     StaticThis = this;
 
     m_MouseMap.bLButtonDown = 0;
@@ -24,24 +25,48 @@ CWindowApp::CWindowApp() {
     m_MouseMap.bMButtonDown = 0;
 
     GetSystemInfo(&GSystemInformation);
+
+	m_pRenderer = 0;
 }
 
-void CWindowApp::Initialize() {
+void CWindowsApplication::Initialize() {
+	GDriver->CreateDriver(this);
+	m_pRenderer = new BRenderer(this);
+	m_pWorld->m_pRenderer = m_pRenderer;
+	m_pRenderer->m_Viewports = Viewports;
+	GRenderPassResource.Initialize(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight);
     RResourceManager::LoadResources();
-    if (m_pRenderer) {
-        bRenderThreadQuit = false;
-        m_pRenderer->Start();
-    } else {
-        bRenderThreadQuit = true;
-    }
-
-    if (m_pWorld) {
+    bRenderThreadQuit = false;
+    m_pRenderer->Start();
+    
+	if (m_pWorld) {
         m_pWorld->InitializeWorld();
     }
 }
 
-bool CWindowApp::CreateApp(TApplicationInfo& Info) {
+BViewport* CWindowsApplication::FindViewport(HWND hWnd) {
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		CWindowsViewport* Viewport = dynamic_cast<CWindowsViewport*>(Viewports(i));
+		if(Viewport->Handle == hWnd) {
+			return Viewports(i);
+		}
+	}
+	return Viewports(0);
+}
+
+BViewport* CWindowsApplication::CreateViewport(TViewportInfo& Info) {
+	BViewport* Viewport = new CWindowsViewport(Info.m_wWidth, Info.m_wHeight, Info.ProjectionType, Info.RenderMode, Info.CameraMode, Info.m_hWnd);
+	Viewports.AddItem(Viewport);
+	return Viewport;
+}
+
+void CWindowsApplication::RemoveViewport(BViewport* Viewport) {
+	Viewports.DeleteItemByVal(Viewport);
+}
+
+bool CWindowsApplication::CreateApp(TApplicationInfo& Info) {
     m_WindowInfo = (TWindowInfo&) Info;
+	TViewportInfo ViewportInfo;
     m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
     WNDCLASSEX wcex;
 
@@ -61,33 +86,29 @@ bool CWindowApp::CreateApp(TApplicationInfo& Info) {
 
     RegisterClassEx(&wcex);
 
-    m_WindowInfo.m_hWnd = ::CreateWindow(
-                              _T("CLASS NAME"),
-                              _T("CAPTION"),
-                              WS_OVERLAPPEDWINDOW,
-                              CW_USEDEFAULT,
-                              CW_USEDEFAULT,
-                              m_WindowInfo.m_wWidth + 14,
-                              m_WindowInfo.m_wHeight + 36,
-                              0,
-                              0,
-                              m_WindowInfo.m_hInstance,
-                              0);
+	ViewportInfo.m_hWnd = ::CreateWindow(
+		_T("CLASS NAME"),
+        _T("CAPTION"),
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		m_WindowInfo.m_wWidth + 14,
+		m_WindowInfo.m_wHeight + 36, 
+		NULL,
+		0,
+		m_WindowInfo.m_hInstance,
+		0);
+	ViewportInfo.m_wWidth = m_WindowInfo.m_wWidth;
+	ViewportInfo.m_wHeight = m_WindowInfo.m_wHeight;
+    ShowWindow(ViewportInfo.m_hWnd, SW_SHOW);
+    UpdateWindow(ViewportInfo.m_hWnd);
 
-    ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
-    UpdateWindow(m_WindowInfo.m_hWnd);
-		
-	BViewport* Viewport = new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, m_WindowInfo.m_hWnd);
-	GDriver->CreateDriver(Viewport);
-	m_pRenderer = new BRenderer(this);
-	m_pRenderer->AddViewport(Viewport);
-	Viewports.AddItem(Viewport);
-	m_pWorld->m_pRenderer = m_pRenderer;
-
-    return true;
+	m_WindowInfo.m_hWnd = ViewportInfo.m_hWnd;
+	Viewports.AddItem(new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, Projection_Perpective, RenderMode_All, CameraMode_FreeMode, ViewportInfo.m_hWnd));
+	return true;
 }
 
-bool CWindowApp::DestroyApp() {
+bool CWindowsApplication::DestroyApp() {
     if (m_pWorld)
         m_pWorld->DestroyWorld();
     delete m_pWorld;
@@ -106,7 +127,7 @@ bool CWindowApp::DestroyApp() {
     return true;
 }
 
-void CWindowApp::Do() {
+void CWindowsApplication::Do() {
     MSG msg;
     int Count = 0;
     DWORD PrevTime = timeGetTime();
@@ -130,7 +151,7 @@ void CWindowApp::Do() {
     //while(!bRenderThreadQuit);
 }
 
-bool CWindowApp::Tick(unsigned long Time) {
+bool CWindowsApplication::Tick(unsigned long Time) {
 	for(unsigned int i=0;i<Viewports.Size();++i) {
 		BViewport* Viewport = Viewports(i);
 		Viewport->UpdateViewport();
@@ -139,7 +160,7 @@ bool CWindowApp::Tick(unsigned long Time) {
     return true;
 }
 
-void CWindowApp::SetMousePos(float X, float Y, bool isRatio) {
+void CWindowsApplication::SetMousePos(float X, float Y, bool isRatio) {
     POINT MousePt;
     if (isRatio) {
         RECT rt;
@@ -156,7 +177,7 @@ void CWindowApp::SetMousePos(float X, float Y, bool isRatio) {
     ::SetCursorPos((int) MousePt.x, (int) MousePt.y);
 }
 
-void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam) {
+void CWindowsApplication::MouseEventTranslator(BViewport* Viewport, UINT Message, WPARAM wParam, LPARAM lParam) {
     TMouseInput_Param Param;
     Param.bLButtonDown = m_MouseMap.bLButtonDown;
     Param.bRButtonDown = m_MouseMap.bRButtonDown;
@@ -220,10 +241,10 @@ void CWindowApp::MouseEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam
     default:
         return;
     }
-    InputMouse(Event, Param);
+    InputMouse(Viewport, Event, Param);
 }
 
-void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam) {
+void CWindowsApplication::KeyEventTranslator(BViewport* Viewport, UINT Message, WPARAM wParam, LPARAM lParam) {
     TKeyInput_Param Param;
     Param.Key = (unsigned short) wParam;
     EKey_Event Event;
@@ -237,21 +258,41 @@ void CWindowApp::KeyEventTranslator(UINT Message, WPARAM wParam, LPARAM lParam) 
         Event = KEY_Up;
         break;
     }
-    InputKey(Event, Param);
+    InputKey(Viewport, Event, Param);
 }
 
-void CWindowApp::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
+void CWindowsApplication::OnViewportsResized() {
+	unsigned int MaxWidth = 0;
+	unsigned int MaxHeight = 0;
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		Viewports(i)->OnSizeChanged();
+		if(MaxWidth < Viewports(i)->Width) {
+			MaxWidth = Viewports(i)->Width;
+		}
+		if(MaxHeight < Viewports(i)->Height) {
+			MaxHeight = Viewports(i)->Height;
+		}
+	}
+	if(m_pRenderer) {
+		GRenderPassResource.Initialize(MaxWidth, MaxHeight);
+	}
+}
+
+void CWindowsApplication::InputMouse(BViewport* Viewport, EMouse_Event Event, TMouseInput_Param& Param) {
     m_pWorld->InputMouse(Event, Param);
-    m_pViewport->InputMouse(Event, Param);
+    Viewport->InputMouse(Event, Param);
 }
 
-void CWindowApp::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
+void CWindowsApplication::InputKey(BViewport* Viewport, EKey_Event Event, TKeyInput_Param& Param) {
     m_pWorld->InputKey(Event, Param);
-    m_pViewport->InputKey(Event, Param);
+	Viewport->InputKey(Event, Param);
 }
 
-void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam) {
-    switch (Message) {
+void CWindowsApplication::MessageTranslator(HWND Handle, UINT Message, WPARAM wParam, LPARAM lParam) {
+	switch (Message) {
+	case WM_SIZE:
+		OnViewportsResized();
+		break;
     case WM_LBUTTONDBLCLK:
     case WM_RBUTTONDBLCLK:
     case WM_MBUTTONDBLCLK:
@@ -263,23 +304,23 @@ void CWindowApp::MessageTranslator(UINT Message, WPARAM wParam, LPARAM lParam) {
     case WM_MBUTTONUP:
     case WM_MOUSEWHEEL:
     case WM_MOUSEMOVE:
-        MouseEventTranslator(Message, wParam, lParam);
+        MouseEventTranslator(FindViewport(Handle), Message, wParam, lParam);
         break;
     case WM_KEYDOWN:
     case WM_KEYUP:
-        KeyEventTranslator(Message, wParam, lParam);
+        KeyEventTranslator(FindViewport(Handle), Message, wParam, lParam);
         break;
     }
 }
 
-LRESULT CALLBACK CWindowApp::Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK CWindowsApplication::Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) {
     switch (Message) {
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
     default:
         if (StaticThis)
-            StaticThis->MessageTranslator(Message, wParam, lParam);
+            StaticThis->MessageTranslator(hWnd, Message, wParam, lParam);
         return DefWindowProc(hWnd, Message, wParam, lParam);
     }
     return 0;

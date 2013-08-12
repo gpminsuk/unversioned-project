@@ -19,13 +19,22 @@ BRenderPassResource::~BRenderPassResource() {
     }
 }
 
-void BRenderPassResource::Initialize() {
-    m_BaseSceneRT = GDriver->CreateRenderTarget(800, 600, PixelFormat_A8R8G8B8);
+void BRenderPassResource::Initialize(unsigned int Width, unsigned int Height) {
+	if (m_BaseSceneRT) {
+		if(RenderTargetWidth == Width && RenderTargetHeight == Height) {
+			return;
+		}
+        m_BaseSceneRT->Release();
+        delete m_BaseSceneRT;
+    }
+	RenderTargetHeight = Height;
+	RenderTargetWidth = Width;
+	GDriver->ResizeBackBuffer(Width, Height);
+    m_BaseSceneRT = GDriver->CreateRenderTarget(Width, Height, PixelFormat_A8R8G8B8);
 }
 
-BRenderPass::BRenderPass()
-    :
-    RPR(&GRenderPassResource) {
+BRenderPass::BRenderPass() {
+	RPR = &GRenderPassResource;
 }
 
 BRenderPass::~BRenderPass() {

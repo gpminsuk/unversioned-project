@@ -5,6 +5,7 @@
 #include "BRenderingBatch.h"
 #include "BCamera.h"
 
+#include "CWindowsApplication.h"
 #include "CDirectXDriver.h"
 #include "CWindowsViewport.h"
 
@@ -120,18 +121,20 @@ BYTE GVertexDeclUsage[] = {
 };
 
 CDirectXDriver::CDirectXDriver() {
-	InitialBackBuffer = new RDXRenderTarget();
 }
 
 CDirectXDriver::~CDirectXDriver() {
 }
 
-bool CDirectXDriver::CreateDriver(BViewport* InitialViewport) {
-	CWindowsViewport* WindowsViewport = dynamic_cast<CWindowsViewport*>(InitialViewport);
-    if ((m_pD3D = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
+bool CDirectXDriver::CreateDriver(AApplication* Application) {
+	CWindowsApplication* WindowsApplication = dynamic_cast<CWindowsApplication*>(Application);
+	if ((m_pD3D = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
         // TODO : Error Handling Code
         return false;
     }
+
+	int Width = WindowsApplication->m_WindowInfo.m_wWidth;
+	int Height = WindowsApplication->m_WindowInfo.m_wHeight;
 
     // TODO : Parameter Settings
     D3DPRESENT_PARAMETERS Parameters;
@@ -139,8 +142,8 @@ bool CDirectXDriver::CreateDriver(BViewport* InitialViewport) {
 
     Parameters.Windowed = true;
     Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	Parameters.BackBufferWidth = WindowsViewport->m_Width;
-    Parameters.BackBufferHeight = WindowsViewport->m_Height;
+	Parameters.BackBufferWidth = Width;
+    Parameters.BackBufferHeight = Height;
     Parameters.BackBufferCount = 1;
     Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
 
@@ -153,9 +156,9 @@ bool CDirectXDriver::CreateDriver(BViewport* InitialViewport) {
     if ((hResult = m_pD3D->CreateDevice(
                        D3DADAPTER_DEFAULT,
                        D3DDEVTYPE_HAL,
-					   WindowsViewport->Handle,
-                       //D3DCREATE_HARDWARE_VERTEXPROCESSING,
-                       D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+					   WindowsApplication->m_WindowInfo.m_hWnd,
+                       D3DCREATE_HARDWARE_VERTEXPROCESSING,
+                       //D3DCREATE_SOFTWARE_VERTEXPROCESSING,
                        &Parameters,
                        &m_pDevice)) != D3D_OK) {
         // TODO : Error Handling Code
@@ -186,11 +189,34 @@ bool CDirectXDriver::CreateDriver(BViewport* InitialViewport) {
     GetDevice()->SetRenderState(D3DRS_CULLMODE, GCullMode[CurrentCullMode]);
     GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-	
-	RDXSwapChain* DXSwapChain = dynamic_cast<RDXSwapChain*>(InitialViewport->SwapChain);
-	GetDevice()->GetSwapChain(0, &DXSwapChain->DXSwapChain);
-	GetDevice()->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &((RDXRenderTarget*)InitialViewport->SwapChain->GetBackBuffer())->m_pRTSurface);
-    return true;
+	BackBuffer = new RDXRenderTarget();
+	GetDevice()->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &dynamic_cast<RDXRenderTarget*>(BackBuffer)->m_pRTSurface);
+	return true;
+}
+
+bool CDirectXDriver::ResizeBackBuffer(int Width, int Height) {
+	// TODO : Parameter Settings
+	D3DPRESENT_PARAMETERS Parameters;
+	ZeroMemory(&Parameters, sizeof(Parameters));
+
+	Parameters.Windowed = true;
+	Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	Parameters.BackBufferWidth = Width;
+	Parameters.BackBufferHeight = Height;
+	Parameters.BackBufferCount = 1;
+	Parameters.BackBufferFormat = D3DFMT_A8R8G8B8;
+
+	Parameters.EnableAutoDepthStencil = TRUE;
+	Parameters.AutoDepthStencilFormat = D3DFMT_D16;
+	Parameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	//Parameters.PresentationInterval = D3DPRESENT_DONOTWAIT;
+
+	HRESULT hr = S_FALSE;
+	BackBuffer->Release();
+	//while((hr = GetDevice()->Reset(&Parameters)) != D3D_OK);
+	hr = GetDevice()->Reset(&Parameters);
+	GetDevice()->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &dynamic_cast<RDXRenderTarget*>(BackBuffer)->m_pRTSurface);
+	return true;
 }
 
 bool CDirectXDriver::DestroyDriver() {
@@ -212,7 +238,7 @@ bool CDirectXDriver::SetTexture(int nStage, RTextureBuffer* pTexture) {
     m_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
     m_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 
-    m_pDevice->SetTexture(0, pDXTexture->m_pTexture);
+    HRESULT hr = m_pDevice->SetTexture(0, pDXTexture->m_pTexture);
     return true;
 }
 
@@ -365,20 +391,19 @@ bool CDirectXDriver::Clear(bool bClearColor, DWORD Color, bool bClearDepth, floa
 }
 
 bool CDirectXDriver::BeginScene(BViewport* Viewport) {
-	IDirect3DSurface9* BackBuffer;
-	RDXSwapChain* DXSwapChain = dynamic_cast<RDXSwapChain*>(Viewport->SwapChain);
-	DXSwapChain->DXSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &BackBuffer);
-	GetDevice()->SetRenderTarget(0, BackBuffer);	
+	RDXRenderTarget* DXBackBuffer = dynamic_cast<RDXRenderTarget*>(BackBuffer);
+	GetDevice()->SetRenderTarget(0, DXBackBuffer->m_pRTSurface);
     m_pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.0f, 0);
 
     return SUCCEEDED(m_pDevice->BeginScene());
 }
 
 bool CDirectXDriver::EndScene(BViewport* Viewport) {
+	CWindowsViewport* WindowsViewport = dynamic_cast<CWindowsViewport*>(Viewport);
 	m_pDevice->EndScene();
-
-	RDXSwapChain* DXSwapChain = dynamic_cast<RDXSwapChain*>(Viewport->SwapChain);
-	DXSwapChain->DXSwapChain->Present(NULL, NULL, NULL, NULL, NULL);	
+	if(WindowsViewport->Handle) {
+		m_pDevice->Present(NULL, NULL, WindowsViewport->Handle, NULL);
+	}
 	return true;
 }
 
@@ -506,7 +531,10 @@ bool CDirectXDriver::SetRenderTarget(unsigned int Idx, RRenderTarget* RT) {
     RDXRenderTarget *DXRT = dynamic_cast<RDXRenderTarget*>(RT);
     if (!DXRT)
         return false;
-    GetDevice()->SetRenderTarget(Idx, DXRT->m_pRTSurface);
+    HRESULT hr = GetDevice()->SetRenderTarget(Idx, DXRT->m_pRTSurface);
+	if(hr != D3D_OK) {
+		return false;
+	}
     return true;
 }
 
@@ -521,7 +549,7 @@ bool CDirectXDriver::SetDepthStencilSurface(RRenderTarget* RT) {
 RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned int Height, EPixelFormat PixelFormat, ETextureUsage TexUsage) {
     RDXRenderTarget *DXRT = new RDXRenderTarget();
     RDXTextureBuffer *DXTex = dynamic_cast<RDXTextureBuffer*>(DXRT->m_pTexture);
-    D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage],
+    HRESULT hr = D3DXCreateTexture(GetDevice(), Width, Height, 1, GTextureUsage[TexUsage],
                       GPixelFormats[PixelFormat], D3DPOOL_DEFAULT, &DXTex->m_pTexture);
     if (D3D_OK != (DXTex->m_pTexture->GetSurfaceLevel(0, &DXRT->m_pRTSurface)))
         return NULL;
@@ -532,7 +560,7 @@ RRenderTarget* CDirectXDriver::CreateRenderTarget(unsigned int Width, unsigned i
 
 RTextureBuffer* CDirectXDriver::CreateTextureBuffer(unsigned int Width, unsigned int Height) {
     RDXTextureBuffer* DXTex = new RDXTextureBuffer();
-    D3DXCreateTexture(GetDevice(), Width, Height, 1,
+	D3DXCreateTexture(GetDevice(), Width, Height, 1,
                       GTextureUsage[TexUsage_Dynamic],
                       GPixelFormats[PixelFormat_A8R8G8B8], D3DPOOL_DEFAULT,
                       &DXTex->m_pTexture);
@@ -583,14 +611,18 @@ bool CDirectXDriver::SetVertexDeclaration(RVertexDeclaration* Decl) {
     return true;
 }
 
-bool CDirectXDriver::SetViewport(unsigned int x, unsigned int y, unsigned int Width, unsigned int Height, float MinZ, float MaxZ) {
+RRenderTarget* CDirectXDriver::GetBackBuffer() {
+	return BackBuffer;
+}
+
+bool CDirectXDriver::SetViewport(BViewport* Viewport) {
     D3DVIEWPORT9 vp;
-    vp.X = x;
-    vp.Y = y;
-    vp.Width = Width;
-    vp.Height = Height;
-    vp.MinZ = MinZ;
-    vp.MaxZ = MaxZ;
+    vp.X = Viewport->X;
+    vp.Y = Viewport->Y;
+    vp.Width = Viewport->Width;
+    vp.Height = Viewport->Height;
+    vp.MinZ = 0.0f;
+    vp.MaxZ = 0.1f;
     return GetDevice()->SetViewport(&vp) == D3D_OK;
 }
 
@@ -694,45 +726,4 @@ void CDirectXDriver::SetCullMode(ECullMode& CullMode) {
     if (CurrentCullMode != CullMode) {
         GetDevice()->SetRenderState(D3DRS_CULLMODE, CullMode);
     }
-}
-
-RSwapChain* CDirectXDriver::CreateSwapChain(BViewport* Viewport) {
-	CWindowsViewport* WindowsViewport = dynamic_cast<CWindowsViewport*>(Viewport);
-	RDXSwapChain* DXSwapChain = new RDXSwapChain();
-	
-	if(InitialBackBuffer) {
-		DXSwapChain->BackBuffer = InitialBackBuffer;
-		InitialBackBuffer = 0;
-	}
-	else {
-		D3DDISPLAYMODE d3ddm;
-		if(FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT,&d3ddm))) return false;
-
-		D3DPRESENT_PARAMETERS Parameters;
-		ZeroMemory(&Parameters, sizeof(Parameters));
-
-		Parameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		Parameters.BackBufferWidth = WindowsViewport->m_Width;
-		Parameters.BackBufferHeight = WindowsViewport->m_Height;
-		Parameters.BackBufferCount = 1;
-		Parameters.BackBufferFormat = d3ddm.Format;
-		Parameters.hDeviceWindow = WindowsViewport->Handle;
-		Parameters.Windowed = true;
-		Parameters.Flags = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-		Parameters.MultiSampleType  = D3DMULTISAMPLE_NONE;
-
-		HRESULT hr = GetDevice()->CreateAdditionalSwapChain(&Parameters, &DXSwapChain->DXSwapChain);
-		if(FAILED(hr)) {
-			return 0;
-		}
-
-		IDirect3DSurface9* pBackBuffer;
-		DXSwapChain->DXSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-
-		DXSwapChain->BackBuffer = new RDXRenderTarget();
-		DXSwapChain->BackBuffer->m_pRTSurface = pBackBuffer;
-		DXSwapChain->BackBuffer->m_SizeX = WindowsViewport->m_Width;
-		DXSwapChain->BackBuffer->m_SizeY = WindowsViewport->m_Height;
-	}	
-	return DXSwapChain;
 }

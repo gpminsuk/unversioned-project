@@ -36,14 +36,15 @@ namespace Moses
             DispatcherTimer GameLoop = new DispatcherTimer { Interval = TimeSpan.Zero };
             GameLoop.Tick += Idle;
             GameLoop.Start();
-            
         }
-
+        
         public void ShowWindow()
         {
             Show();
             resourceManagerWindow = new ResourceManagerMain();
-            resourceManagerWindow.Show();
+            //resourceManagerWindow.Show();
+
+            AddTab("HEHE");
         }
 
         public IntPtr GetWindowHandle()
@@ -54,6 +55,19 @@ namespace Moses
         void Idle(object Sender, EventArgs e)
         {
             m_Backend.Tick(0);
+        }
+
+        void AddTab(String Name)
+        {
+            TabItem Item = new TabItem();
+            ClosableHeader header = new ClosableHeader();
+            header.button_close.Click += (sender, e) =>
+            {
+                TabControl.Items.RemoveAt(1);
+            };
+            Item.Header = header;
+            Item.Content = new ModelView();
+            TabControl.Items.Add(Item);
         }
     }
 }

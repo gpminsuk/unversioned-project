@@ -12,9 +12,12 @@ public:
 	BRenderPassResource();
 	~BRenderPassResource();
 
+	unsigned int RenderTargetWidth;
+	unsigned int RenderTargetHeight;
+
 	RRenderTarget* m_BaseSceneRT;
 
-	void Initialize();
+	void Initialize(unsigned int Width, unsigned int Height);
 };
 
 class BRenderPass

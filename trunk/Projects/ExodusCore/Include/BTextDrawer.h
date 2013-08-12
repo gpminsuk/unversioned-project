@@ -7,6 +7,8 @@ class RTextureBuffer;
 class TText
 {
 public:
+	~TText();
+
 	TString Str;
 	RTextureBuffer* TextBuffer;
 };
@@ -17,7 +19,7 @@ public:
 	BTextDrawer(void);
 	virtual ~BTextDrawer(void);
 
-	TArray<TText> Texts;
+	TArray<TText*> Texts;
 
 	void AddText(TString& Str);
 	void DrawTexts(BViewport* Viewport);

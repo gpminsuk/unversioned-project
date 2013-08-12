@@ -197,9 +197,3 @@ public:
 
 	virtual bool Release() = 0;
 };
-
-class RSwapChain
-{
-public:
-	virtual RRenderTarget* GetBackBuffer() = 0;
-};

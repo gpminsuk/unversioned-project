@@ -19,8 +19,8 @@ void BRTRenderPass::BeginPass(BViewport* InViewport) {
 
     RMaterial* Material = RMaterialTable::Materials(0);	
     GDriver->SetFillMode(FillMode_Solid);
-    GDriver->SetRenderTarget(0, InViewport->GetBackBuffer());
-    GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
+	GDriver->SetRenderTarget(0, GDriver->GetBackBuffer());
+	GDriver->SetTexture(0, RPR->m_BaseSceneRT->m_pTexture);
     Material->FindShader(RVertexProtocol::Protocols(1), RShaderPass::ShaderPasses(0))->BeginShader();
 }
 
@@ -32,18 +32,15 @@ void BRTRenderPass::DrawPrimitive() {
 
     VD Vertices[4];
 
-    float OffsetX = 0.5f / RPR->m_BaseSceneRT->m_SizeX;
-    float OffsetY = 0.5f / RPR->m_BaseSceneRT->m_SizeY;
-
     Vertices[0].Pos = TVector3(-1.0f, -1.0f, 0.0f);
     Vertices[1].Pos = TVector3(-1.0f, 1.0f, 0.0f);
     Vertices[2].Pos = TVector3(1.0f, -1.0f, 0.0f);
     Vertices[3].Pos = TVector3(1.0f, 1.0f, 0.0f);
 
-    Vertices[0].UV = TVector2(0.0f - OffsetX, 1.0f - OffsetY);
-    Vertices[1].UV = TVector2(0.0f - OffsetX, 0.0f - OffsetY);
-    Vertices[2].UV = TVector2(1.0f - OffsetX, 1.0f - OffsetY);
-    Vertices[3].UV = TVector2(1.0f - OffsetX, 0.0f - OffsetY);
+    Vertices[0].UV = TVector2(0.0f, 1.0f);
+    Vertices[1].UV = TVector2(0.0f, 0.0f);
+    Vertices[2].UV = TVector2(1.0f, 1.0f);
+    Vertices[3].UV = TVector2(1.0f, 0.0f);
 
     TIndex16 Indices[2];
     Indices[0] = TIndex16(0, 1, 2);

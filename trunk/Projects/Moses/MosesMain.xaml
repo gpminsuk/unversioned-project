@@ -25,23 +25,27 @@
             <uc:ToolBox>
             </uc:ToolBox>
         </StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Stretch"  Height="3" ResizeDirection="Rows" />
-            <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="3" ResizeDirection="Columns" />
-            <uc:RenderView x:Name="m_RenderView" Grid.Column="0" Grid.Row="0"></uc:RenderView>
-            <uc:RenderView x:Name="m_RenderView2" Grid.Column="2" Grid.Row="0"></uc:RenderView>
-            <uc:RenderView x:Name="m_RenderView3" Grid.Column="2" Grid.Row="2"></uc:RenderView>
-            <uc:RenderView x:Name="m_RenderView4" Grid.Column="0" Grid.Row="2"></uc:RenderView>
-        </Grid>
+        <TabControl Name="TabControl">
+            <TabItem Header="World">
+                <uc:ViewportGroup>
+                    <uc:ViewportGroup.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </uc:ViewportGroup.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Stretch"  Height="3" ResizeDirection="Rows" />
+                    <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="3" ResizeDirection="Columns" />
+                    <uc:RenderViewport Grid.Column="0" Grid.Row="0" ViewportType="Top"/>
+                    <uc:RenderViewport Grid.Column="2" Grid.Row="0" ViewportType="Front"/>
+                    <uc:RenderViewport Grid.Column="2" Grid.Row="2" ViewportType="Right"/>
+                    <uc:RenderViewport Grid.Column="0" Grid.Row="2" ViewportType="Perspective"/>
+                </uc:ViewportGroup>           
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>

@@ -134,11 +134,11 @@ TSkeletalMesh::~TSkeletalMesh() {
 
 void TSkeletalMesh::UpdatePrimitive() {
     if (IsPlaying) {
-        CurrentFrame ++;
+        //CurrentFrame ++;
     }
 
     if (AnimationSequenceRef
-            && 1000 < CurrentFrame
+            && 50 < CurrentFrame
             && IsLooping) {
         CurrentFrame = 0;
     }
@@ -176,7 +176,7 @@ void TSkeletalMesh::UpdatePrimitive() {
 
 void TSkeletalMesh::CalcBoneMatrices() {
     for (unsigned int i = 0; i < Bones.Size(); ++i) {
-        Bones(i)->CalcBoneMatrix(CurrentFrame/20.0f);
+        Bones(i)->CalcBoneMatrix(CurrentFrame);
     }
 }
 

@@ -10,43 +10,57 @@ class BComponent;
 class BPrimitive;
 class BLightComponent;
 class BCamera;
-class RSwapChain;
 class RRenderTarget;
 
+enum EFillMode;
 enum ESceneFlag
 {
 	Scene_World = 1 << 0,
 	Scene_Collision = 1 << 1,
 };
 
+enum EViewportProjectionType
+{
+	Projection_Perpective,
+	Projection_Orthogonal
+};
+
+enum EViewportRenderMode
+{
+	RenderMode_All,
+	RenderMode_Wireframe
+};
+
 class BViewport: public AObject
 {
 public:
-	BViewport(unsigned int Width, unsigned int Height);
+	BViewport(unsigned int Width, unsigned int Height, EViewportProjectionType InProjectionType, EViewportRenderMode InRenderMode, ECameraMode InCameraMode);
 	virtual ~BViewport(void);
 
 	void operator=(BViewport& vp);
-	
-	RSwapChain* SwapChain;
+
+	EViewportProjectionType ProjectionType;
+	EViewportRenderMode RenderMode;
+
 	BCamera* Camera;
 
 	TMatrix m_ViewMatrix;
-	TMatrix m_ProjectionMatrix;
 
-	unsigned int m_Width;
-	unsigned int m_Height;
+	unsigned int Width;
+	unsigned int Height;
+	unsigned int X;
+	unsigned int Y;
 
 	unsigned long VisibleScenes;
 
 	void Clear();
 
-	RRenderTarget* GetBackBuffer();
-	
-	//void Render(BComponent* pComponent);
-	//void Remove(BComponent* pComponent);
+	virtual void Resize(int InWidth, int InHeight);
 
+	EFillMode GetFillMode();
 	void SortTemplates();
 
+	virtual void OnSizeChanged() = 0;
 	virtual void UpdateViewport();
 	virtual TVector3 GetViewportOrigin();
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);

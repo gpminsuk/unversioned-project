@@ -1,22 +1,26 @@
 #include "StdAfx.h"
 #include "BCamera.h"
-#include "CWindowApp.h"
+#include "CWindowsApplication.h"
 
 #include "BDriver.h"
 #include "BThing.h"
+#include "BViewport.h"
 
-BCamera::BCamera()
+BCamera::BCamera(BViewport* InParentViewport, ECameraMode InCameraMode)
     :
     m_LookAt(0.0f, 0.0f, 0.0f),
     m_Up(0.0f, 1.0f, 0.0f),
-    m_Distance(150.0f),
+    m_Distance(30.0f),
     m_Pi(0),
     m_Theta(0),
-    m_Subject(0) {
+    m_Subject(0),
+	m_CameraMode(InCameraMode),
+	m_X(0),
+	m_Y(0),
+	ParentViewport(InParentViewport) {
     m_Location.x = 0;
     m_Location.y = 0;
     m_Location.z = 0;
-	m_CameraMode = ECamera_Mode::First_Person;
 }
 
 BCamera::~BCamera(void) {
@@ -25,7 +29,7 @@ BCamera::~BCamera(void) {
 void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
     m_bIsUpdated = true;
     switch (m_CameraMode) {
-    case ECamera_Mode::First_Person: {
+    case CameraMode_FirstPerson: {
         switch (Event) {
         case MOUSE_Move: {
             float dY = (Param.dY / 100.0f), dX = (Param.dX / 100.0f);
@@ -37,10 +41,9 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         }
     }
     break;
-    case ECamera_Mode::Thrid_Person: {
+    case CameraMode_ThridPerson: {
         switch (Event) {
         case MOUSE_Move: {
-
             if (m_Pi + (-Param.dY / 100.0f) < (MATH_PI / 2.0f - 0.001f)
                     && (m_Pi + -Param.dY / 100.0f) > -(MATH_PI / 2.0f - 0.001f))
                 m_Pi += -Param.dY / 100.0f;
@@ -55,9 +58,9 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         }
     }
     break;
-    case ECamera_Mode::Free_Mode_Editor:
+    case CameraMode_Editor:
         break;
-    case ECamera_Mode::Free_Mode: {
+    case CameraMode_FreeMode: {
         switch (Event) {
         case MOUSE_Move: {
             float dY = (Param.dY / 100.0f), dX = (Param.dX / 100.0f);
@@ -67,24 +70,41 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         }
         break;
         }
-    }
+	}
+	case CameraMode_Back:
+	case CameraMode_Front:
+	case CameraMode_Top:
+	case CameraMode_Bottom:
+	case CameraMode_Left:
+	case CameraMode_Right:
+		switch (Event) {
+		case MOUSE_Move:
+			if(Param.bRButtonDown) {				
+				m_X -= Param.dX * m_Distance / ParentViewport->Width;
+				m_Y += Param.dY * m_Distance / ParentViewport->Height;
+			}
+		break;
+		case MOUSE_Wheel:
+			m_Distance *= 1.0f + (Param.delta / MOUSE_WHEEL_DELTA / 10.0f);
+		break;
+		}
     break;
     }
 }
 
 void BCamera::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
     switch (m_CameraMode) {
-    case ECamera_Mode::First_Person:
-    case ECamera_Mode::Thrid_Person:
-    case ECamera_Mode::Free_Mode_Editor:
-    case ECamera_Mode::Free_Mode:
+    case CameraMode_FirstPerson:
+    case CameraMode_ThridPerson:
+    case CameraMode_Editor:
+    case CameraMode_FreeMode:
         break;
     }
 }
 
 void BCamera::Tick(unsigned long dTime) {
     switch (m_CameraMode) {
-    case ECamera_Mode::First_Person: {
+    case CameraMode_FirstPerson: {
         if (m_Subject)
             m_Location = m_Subject->m_Location + TVector3(0.0f, 0.6f, 0.0f);
 
@@ -95,7 +115,7 @@ void BCamera::Tick(unsigned long dTime) {
         m_LookAt += m_Location;
     }
     break;
-    case ECamera_Mode::Thrid_Person: {
+    case CameraMode_ThridPerson: {
         if (m_Subject)
             m_LookAt = m_Subject->m_Location;
         else
@@ -108,8 +128,8 @@ void BCamera::Tick(unsigned long dTime) {
         m_Location += m_LookAt;
     }
     break;
-    case ECamera_Mode::Free_Mode_Editor:
-    case ECamera_Mode::Free_Mode: {
+    case CameraMode_Editor:
+    case CameraMode_FreeMode: {
         if (GKeyMap['W'])
             m_Location += (m_LookAt - m_Location).Normalize() / 100000.0f;
         if (GKeyMap['S'])
@@ -130,30 +150,47 @@ void BCamera::Tick(unsigned long dTime) {
         m_LookAt += m_Location;
     }
     break;
-    case ECamera_Mode::QuarterView_Mode: {
-        if (m_Subject) {
-            m_LookAt = m_Subject->m_Location;
-        } else {
-            m_LookAt = TVector3(0.0f, 0.0f, 0.0f);
-        }
-
-        m_Location = m_LookAt;
-        m_Location.x -= 300.0f;
-        m_Location.y += 50.0f;
-        m_Location.z += 0.0f;
-    }
-    break;
-    }
+	case CameraMode_Top:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(0, 1000, 0);
+		m_Up = TVector3(-1, 0, 0);
+		break;
+	case CameraMode_Bottom:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(0, -1000, 0);
+		m_Up = TVector3(1, 0, 0);
+		break;
+	case CameraMode_Right:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(1000, 0, 0);
+		m_Up = TVector3(0, -1, 0);
+		break;
+	case CameraMode_Left:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(-1000, 0, 0);
+		m_Up = TVector3(0, 1, 0);
+		break;
+	case CameraMode_Front:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(0, 0, 1000);
+		m_Up = TVector3(0, -1, 0);
+		break;
+	case CameraMode_Back:
+		m_LookAt = TVector3(0, 0, 0);
+		m_Location = m_LookAt + TVector3(0, 0, -1000);
+		m_Up = TVector3(0, 1, 0);
+		break;
+	}
     m_bIsUpdated = false;
 }
 
 bool BCamera::ShouldUpdate() {
     switch (m_CameraMode) {
-    case ECamera_Mode::First_Person:
-    case ECamera_Mode::Thrid_Person:
+    case CameraMode_FirstPerson:
+    case CameraMode_ThridPerson:
         return m_bIsUpdated || (!m_Subject) ? false : m_Subject->m_bIsUpdated;
-    case ECamera_Mode::Free_Mode_Editor:
-    case ECamera_Mode::Free_Mode:
+    case CameraMode_Editor:
+    case CameraMode_FreeMode:
         return m_bIsUpdated || GKeyMap['W'] || GKeyMap['S'] || GKeyMap['A']
                || GKeyMap['D'];
     }

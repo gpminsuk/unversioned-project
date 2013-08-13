@@ -17,14 +17,15 @@ bool RSystemMemoryIndexBuffer::Access(AAccessor& Accessor) {
 }
 
 bool RSystemMemoryVertexBuffer::Access(AAccessor& Accessor) {
-	unsigned int nVertexStride = Protocol->Decl->GetStride();
-    Accessor << nVertexStride;
+	unsigned int ProtocolIndex = 1;
+    Accessor << ProtocolIndex;
     Accessor << nVertices;
     if (Accessor.IsLoading()) {
-        pVertices = new char[nVertexStride * nVertices];
+		Protocol = RVertexProtocol::Protocols(ProtocolIndex);
+        pVertices = new char[sizeof(RVertexDeclaration::SkeletalMesh_GPU_Skin_VD) * nVertices];
     }
     for (unsigned int i = 0; i < nVertices; ++i) {
-        Accessor.Access(&pVertices[i * nVertexStride], nVertexStride);
+        Accessor.Access(&pVertices[i * sizeof(RVertexDeclaration::SkeletalMesh_GPU_Skin_VD)], sizeof(RVertexDeclaration::SkeletalMesh_GPU_Skin_VD));
     }
     return true;
 }

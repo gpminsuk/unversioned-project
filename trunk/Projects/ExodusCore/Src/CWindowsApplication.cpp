@@ -3,6 +3,7 @@
 #include "BViewport.h"
 #include "BDriver.h"
 #include "BRenderPass.h"
+#include "BRenderingBatch.h"
 
 #include "InputDefine.h"
 
@@ -29,49 +30,22 @@ CWindowsApplication::CWindowsApplication() {
 	m_pRenderer = 0;
 }
 
-void CWindowsApplication::Initialize() {
-	GDriver->CreateDriver(this);
-	m_pRenderer = new BRenderer(this);
-	m_pWorld->m_pRenderer = m_pRenderer;
-	m_pRenderer->m_Viewports = Viewports;
-	GRenderPassResource.Initialize(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight);
-    RResourceManager::LoadResources();
-    bRenderThreadQuit = false;
-    m_pRenderer->Start();
-    
-	if (m_pWorld) {
-        m_pWorld->InitializeWorld();
-    }
-}
-
 BViewport* CWindowsApplication::FindViewport(HWND hWnd) {
-	for(unsigned int i=0;i<Viewports.Size();++i) {
-		CWindowsViewport* Viewport = dynamic_cast<CWindowsViewport*>(Viewports(i));
-		if(Viewport->Handle == hWnd) {
-			return Viewports(i);
+	for(unsigned int i=0;i<Worlds.Size();++i) {
+		BViewport* Viewport = Worlds(i)->FindViewport(hWnd);
+		if(Viewport) {
+			return Viewport;
 		}
 	}
-	return Viewports(0);
+	return 0;
 }
 
-BViewport* CWindowsApplication::CreateViewport(TViewportInfo& Info) {
-	BViewport* Viewport = new CWindowsViewport(Info.m_wWidth, Info.m_wHeight, Info.ProjectionType, Info.RenderMode, Info.CameraMode, Info.m_hWnd);
-	Viewports.AddItem(Viewport);
-	return Viewport;
-}
-
-void CWindowsApplication::RemoveViewport(BViewport* Viewport) {
-	Viewports.DeleteItemByVal(Viewport);
-}
-
-bool CWindowsApplication::CreateApp(TApplicationInfo& Info) {
+bool CWindowsApplication::CreateApplicationWindow(TApplicationInfo& Info) {
     m_WindowInfo = (TWindowInfo&) Info;
-	TViewportInfo ViewportInfo;
     m_WindowInfo.m_hInstance = GetModuleHandle(NULL);
+
     WNDCLASSEX wcex;
-
     wcex.cbSize = sizeof(WNDCLASSEX);
-
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = Proc;
     wcex.cbClsExtra = 0;
@@ -86,7 +60,7 @@ bool CWindowsApplication::CreateApp(TApplicationInfo& Info) {
 
     RegisterClassEx(&wcex);
 
-	ViewportInfo.m_hWnd = ::CreateWindow(
+	m_WindowInfo.m_hWnd = ::CreateWindow(
 		_T("CLASS NAME"),
         _T("CAPTION"),
 		WS_OVERLAPPEDWINDOW,
@@ -98,36 +72,35 @@ bool CWindowsApplication::CreateApp(TApplicationInfo& Info) {
 		0,
 		m_WindowInfo.m_hInstance,
 		0);
-	ViewportInfo.m_wWidth = m_WindowInfo.m_wWidth;
-	ViewportInfo.m_wHeight = m_WindowInfo.m_wHeight;
-    ShowWindow(ViewportInfo.m_hWnd, SW_SHOW);
-    UpdateWindow(ViewportInfo.m_hWnd);
 
-	m_WindowInfo.m_hWnd = ViewportInfo.m_hWnd;
-	Viewports.AddItem(new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, Projection_Perpective, RenderMode_All, CameraMode_FreeMode, ViewportInfo.m_hWnd));
+    ShowWindow(m_WindowInfo.m_hWnd, SW_SHOW);
+    UpdateWindow(m_WindowInfo.m_hWnd);
+
+	GDriver->CreateDriver(this);
+	m_pRenderer = new BRenderer(this);
+
+	RResourceManager::LoadResources();
+	GRenderPassResource.Initialize(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight);
+
+	bRenderThreadQuit = false;
+	m_pRenderer->Start();
 	return true;
 }
 
 bool CWindowsApplication::DestroyApp() {
-    if (m_pWorld)
-        m_pWorld->DestroyWorld();
-    delete m_pWorld;
-    m_pWorld = 0;
-
     delete m_pRenderer;
     m_pRenderer = 0;
-
-	for(unsigned int i=0;i<Viewports.Size();++i) {
-		delete Viewports(i);
-	}
-	Viewports.Clear();
-   
-
+		
     RResourceManager::ReleaseAllResources();
     return true;
 }
 
 void CWindowsApplication::Do() {
+	static bool initialized = false;
+	if(!initialized) {
+		Worlds(0)->Viewports.AddItem(new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, Projection_Perpective, RenderMode_All, CameraMode_FreeMode, m_WindowInfo.m_hWnd));
+		initialized = true;
+	}
     MSG msg;
     int Count = 0;
     DWORD PrevTime = timeGetTime();
@@ -151,12 +124,11 @@ void CWindowsApplication::Do() {
     //while(!bRenderThreadQuit);
 }
 
-bool CWindowsApplication::Tick(unsigned long Time) {
-	for(unsigned int i=0;i<Viewports.Size();++i) {
-		BViewport* Viewport = Viewports(i);
-		Viewport->UpdateViewport();
+bool CWindowsApplication::Tick(unsigned long Time) {	
+	for(unsigned int i=0;i<Worlds.Size();++i) {
+		UWorld* World = Worlds(i);
+		World->Tick(Time);
 	}
-    m_pWorld->Tick(Time);
     return true;
 }
 
@@ -249,49 +221,46 @@ void CWindowsApplication::KeyEventTranslator(BViewport* Viewport, UINT Message, 
     Param.Key = (unsigned short) wParam;
     EKey_Event Event;
     switch (Message) {
-    case WM_KEYDOWN:
-        GKeyMap[Param.Key] = 0x01;
+	case WM_KEYDOWN:
         Event = KEY_Down;
         break;
     case WM_KEYUP:
-        GKeyMap[Param.Key] = 0x00;
         Event = KEY_Up;
         break;
     }
     InputKey(Viewport, Event, Param);
 }
 
-void CWindowsApplication::OnViewportsResized() {
-	unsigned int MaxWidth = 0;
-	unsigned int MaxHeight = 0;
-	for(unsigned int i=0;i<Viewports.Size();++i) {
-		Viewports(i)->OnSizeChanged();
-		if(MaxWidth < Viewports(i)->Width) {
-			MaxWidth = Viewports(i)->Width;
-		}
-		if(MaxHeight < Viewports(i)->Height) {
-			MaxHeight = Viewports(i)->Height;
-		}
-	}
-	if(m_pRenderer) {
-		GRenderPassResource.Initialize(MaxWidth, MaxHeight);
-	}
-}
-
 void CWindowsApplication::InputMouse(BViewport* Viewport, EMouse_Event Event, TMouseInput_Param& Param) {
-    m_pWorld->InputMouse(Event, Param);
+	for(unsigned int i=0;i<Worlds.Size();++i) {
+		UWorld* World = Worlds(i);
+		World->InputMouse(Event, Param);
+	}
     Viewport->InputMouse(Event, Param);
 }
 
 void CWindowsApplication::InputKey(BViewport* Viewport, EKey_Event Event, TKeyInput_Param& Param) {
-    m_pWorld->InputKey(Event, Param);
+	switch(Event) {
+	case KEY_Down:
+		GKeyMap[Param.Key] = 0x01;
+		break;
+	case KEY_Up:
+		GKeyMap[Param.Key] = 0x00;
+		break;
+	}
+	for(unsigned int i=0;i<Worlds.Size();++i) {
+		UWorld* World = Worlds(i);
+		World->InputKey(Event, Param);
+	}
 	Viewport->InputKey(Event, Param);
 }
 
 void CWindowsApplication::MessageTranslator(HWND Handle, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch (Message) {
 	case WM_SIZE:
-		OnViewportsResized();
+		for(unsigned int i=0;i<Worlds.Size();++i) {
+			Worlds(i)->OnViewportsResized();
+		}
 		break;
     case WM_LBUTTONDBLCLK:
     case WM_RBUTTONDBLCLK:

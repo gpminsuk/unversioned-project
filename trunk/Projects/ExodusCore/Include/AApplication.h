@@ -31,21 +31,15 @@ public:
     ASystemInfo* SystemInfo;
 
     BRenderer *m_pRenderer;
-	TArray<BViewport*> Viewports;
 
-    UWorld* m_pWorld;
-
-    class CBox* Box;						// ¹æ
-    class CDirectionalLight* DirectionalLight;
-
+    TArray<UWorld*> Worlds;
+	
     bool bQuit;
     bool bRenderThreadQuit;
 
     virtual void SetMousePos(float X, float Y, bool isRatio = false) = 0;
-//	virtual void Resize() = 0;
 
-    virtual bool CreateApp(TApplicationInfo& Info) = 0;
+    virtual bool CreateApplicationWindow(TApplicationInfo& Info) = 0;
     virtual void Do() = 0;
     virtual bool DestroyApp() = 0;
-    virtual void Initialize() = 0;
 };

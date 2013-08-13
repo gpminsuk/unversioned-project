@@ -16,6 +16,6 @@ void PS(in TVertexOutput VertexOutput,
 {
 	OutColor = GetDiffuse(VertexOutput);
 #ifdef POINT_LIGHT
-	OutColor *= GetPointLight(VertexOutput); 
+	OutColor += GetPointLight(VertexOutput); 
 #endif
 }

@@ -29,7 +29,7 @@ CCharacter::CCharacter() {
     bIsPhysical = false;
     bIsPassable = false;
 
-    m_Location = TVector3(15,0, 0);
+    m_Location = TVector3(0, 0, 0);
 
     RSKNImporter SKNImporter;
     RSKLImporter SKLImporter;
@@ -43,13 +43,14 @@ CCharacter::CCharacter() {
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
     ANMImporter.Import(TString("..\\..\\Resources\\renekton_attack1_60fps.anm"),
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
+	SkeletalMesh->Access(AWriteAccessor(TString("..\\..\\Resources\\Renekton_brutal.exskn")));
 
     CSkeletalMeshComponent* SkeletalMeshComponent =
         new CSkeletalMeshComponent();
     Components.AddItem(SkeletalMeshComponent);
 
-    SkeletalMeshComponent->SetSkeletalMesh(BoneHierarchy, SkeletalMesh,
-                                           AnimationSequence);
+    SkeletalMeshComponent->SetSkeletalMesh(0, SkeletalMesh,
+                                           0);
 
     CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(
         this);
@@ -65,7 +66,7 @@ CCharacter::~CCharacter() {
 void CCharacter::SetCharacterPosition(TVector3 pos) {
     m_Location = pos;
 
-    m_Location = GWorld->LineCheck(this, m_Location, pos).HitPosition;
+    //m_Location = GWorld->LineCheck(this, m_Location, pos).HitPosition;
     UpdateTransform();
 }
 

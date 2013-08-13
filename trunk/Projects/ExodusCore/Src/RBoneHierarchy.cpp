@@ -22,7 +22,7 @@ bool RBoneHierarchy::Access(AAccessor& Accessor) {
 }
 
 RBone* RBoneHierarchy::FindBone(TString& name) {
-    for (int i = 0; i < Bones.Size(); ++i) {
+    for (unsigned int i = 0; i < Bones.Size(); ++i) {
         if (Bones(i)->BoneName == name) {
             return Bones(i);
         }

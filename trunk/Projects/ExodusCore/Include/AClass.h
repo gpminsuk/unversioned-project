@@ -46,6 +46,12 @@ public:																					\
 #define DECLARE_CLASS(InClassName, ClassType)											\
 	DECLARE_CLASS_BASE(InClassName, ClassType)											\
 	DECLARE_CLASS_OPERATOR(InClassName)													\
+
+#define DECLARE_RESOURCE(InComponentClass)												\
+	class BComponent* CreateComponent()													\
+	{																					\
+		return (BComponent*)ConstructClass<BComponent*>(TString(#InComponentClass));	\
+	}																					\
  
 #define DECLARE_CLASS_BASE(InClassName, ClassType)										\
 public:																					\

@@ -3,22 +3,24 @@
 
 #include "BRenderer.h"
 #include "BLineBatcher.h"
-
+#include "BRenderPass.h"
 #include "BThing.h"
 
 #include "BPrimitive.h"
 #include "BCollisionBody.h"
+#include "BRenderingBatch.h"
 
 #include "CTerrain.h"
 #include "BCamera.h"
 #include "CCharacter.h"
 #include "CEmitter.h"
 #include "CCylinderPrimitive.h"
-
-UWorld* GWorld;
+#include "CWindowsViewport.h"
 
 UWorld::UWorld() {
-    GWorld = this;
+	BatchManager = new BRenderingBatchManager();
+	GLineBatcher = new BLineBatcher();
+	m_pWorldData = new TWorldOctree();
 }
 
 UWorld::~UWorld() {
@@ -33,46 +35,22 @@ UWorld::~UWorld() {
 }
 
 bool UWorld::Tick(unsigned long dTime) {
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		BViewport* Viewport = Viewports(i);
+		Viewport->UpdateViewport();
+	}
     m_pWorldData->Tick(dTime);
     return true;
 }
 
 void UWorld::RemoveThing(BThing* Thing) {
-	m_pRenderer->Render(Thing);
+	m_pRenderer->Render(BatchManager, Thing);
     m_pWorldData->RemoveThing(Thing);
 }
 
 void UWorld::AddThing(BThing* Thing) {
-	m_pRenderer->Render(Thing);
+	m_pRenderer->Render(BatchManager, Thing);
     m_pWorldData->AddThing(Thing);
-}
-
-bool UWorld::InitializeWorld() {
-    GLineBatcher = new BLineBatcher();
-
-    m_pWorldData = new TWorldOctree();
-
-//	m_Terrain = new CTerrain();
-    //AddThing(m_Terrain);
-    /*
-     m_Character = new CCharacter();
-     m_Character->SetCharacterPosition(TVector3(5.0f,12.0f,5.0f));
-     AddThing(m_Character);*/
-
-    /*m_Button = new CUIButtonComponent();
-     for(unsigned int i=0;i<Viewports.Size();++i)
-     {
-     BViewport* Viewport = Viewports(i);
-     Viewport->Render(m_Button);
-     }*/
-    /*m_Cylinder = new CCylinderPrimitive();
-     m_Cylinder->RenderType = RenderType_Opaque;
-     m_Cylinder->Translation = TVector3(5,5,5);
-     m_Cylinder->TM._41 = 5;
-     m_Cylinder->TM._42 = 2.5;
-     m_Cylinder->TM._43 = 5;*/
-    //m_pViewport->Render(m_Cylinder);
-    return TRUE;
 }
 
 bool UWorld::DestroyWorld() {
@@ -93,6 +71,46 @@ void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
 
 THitInfo UWorld::LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent) {
     return m_pWorldData->LineCheck(SourceThing, Start, End, Extent);
+}
+
+BViewport* UWorld::CreateViewport(TViewportInfo& Info) {
+	BViewport* Viewport = new CWindowsViewport(Info.m_wWidth, Info.m_wHeight, Info.ProjectionType, Info.RenderMode, Info.CameraMode, Info.m_hWnd);
+	Viewports.AddItem(Viewport);
+	return Viewport;
+}
+
+void UWorld::RemoveViewport(BViewport* Viewport) {
+	Viewports.DeleteItemByVal(Viewport);
+}
+
+void UWorld::OnViewportsResized() {
+	if(Viewports.Size() == 0) {
+		return;
+	}
+	unsigned int MaxWidth = 0;
+	unsigned int MaxHeight = 0;
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		Viewports(i)->OnSizeChanged();
+		if(MaxWidth < Viewports(i)->Width) {
+			MaxWidth = Viewports(i)->Width;
+		}
+		if(MaxHeight < Viewports(i)->Height) {
+			MaxHeight = Viewports(i)->Height;
+		}
+	}
+	if(m_pRenderer) {
+		GRenderPassResource.Initialize(MaxWidth, MaxHeight);
+	}
+}
+
+BViewport* UWorld::FindViewport(HWND hWnd) {
+	for(unsigned int i=0;i<Viewports.Size();++i) {
+		CWindowsViewport* Viewport = (CWindowsViewport*)Viewports(i);
+		if(Viewport->Handle == hWnd) {
+			return Viewport;
+		}
+	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////// World Octree Structure /////////////////////////////////////////////////
@@ -217,7 +235,7 @@ TWorldOctree::~TWorldOctree() {
     delete PrimitiveRootNode;
 }
 
-bool TWorldOctree::Tick(unsigned long dTime) {
+bool TWorldOctree::Tick(unsigned long dTime) {	
     for (unsigned int i = 0; i < AllObjects.Size(); ++i) {
         AllObjects(i)->Tick(dTime);
     }

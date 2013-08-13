@@ -7,6 +7,7 @@
 
 #include "UFreeTypeDrawer.h"
 
+class BRenderingBatchManager;
 class BRenderer;
 class BThing;
 
@@ -18,6 +19,19 @@ class THitInfo
 public:
 	class BThing* Thing;
 	TVector3 HitPosition;
+};
+
+struct TViewportInfo
+{
+public:
+	enum ECameraMode CameraMode;
+	enum EViewportRenderMode RenderMode;
+	enum EViewportProjectionType ProjectionType;
+
+	HWND m_hWnd;
+
+	int m_wWidth;
+	int m_wHeight;
 };
 
 class TWorldStructure
@@ -96,13 +110,19 @@ DECLARE_CLASS(UWorld,)
 		m_pRenderer = R;
 	}
 
-	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
 
 	virtual bool Tick(unsigned long dTime);
-
+	
 	TWorldStructure* m_pWorldData;
 	BRenderer* m_pRenderer;
+	BRenderingBatchManager* BatchManager;
+	TArray<BViewport*> Viewports;
+
+	BViewport* CreateViewport(TViewportInfo& Info);
+	void RemoveViewport(BViewport* Viewport);
+	BViewport* FindViewport(HWND hWnd);
+	void OnViewportsResized();
 
 	virtual void InputMouse(EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(EKey_Event Event, TKeyInput_Param& Param);
@@ -115,5 +135,3 @@ DECLARE_CLASS(UWorld,)
 	protected:
 
 };
-
-extern UWorld* GWorld;

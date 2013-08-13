@@ -6,7 +6,7 @@
              xmlns:uc="clr-namespace:Moses" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <uc:ViewportGroup>
-        <uc:RenderViewport ViewportType="Perspective" Grid.Column="0" Grid.Row="0"></uc:RenderViewport>
-    </uc:ViewportGroup>
+    <uc:World x:Name="World" WorldName="UOneThingWorld">
+        <uc:RenderViewport ViewportType="Perspective" Grid.Column="0" Grid.Row="0"/>
+    </uc:World>
 </UserControl>

@@ -15,6 +15,6 @@ public:
 	gcroot<MosesMainCLI^> m_MosesMainCLI;
 
 	HWND CreateViewportWindow(BViewport* Viewport, int Width, int Height, HWND ParentHandle);
-	virtual bool CreateApp(TApplicationInfo& Info);
+	virtual bool CreateApplicationWindow(TApplicationInfo& Info);
 	virtual void Do();
 };

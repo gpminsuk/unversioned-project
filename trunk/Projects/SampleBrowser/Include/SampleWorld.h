@@ -13,7 +13,6 @@ public:
 	class CCharacter* Character;
 	class CDirectionalLight* DirectionalLight;
 	
-	virtual bool InitializeWorld();
 	virtual bool DestroyWorld();
 	virtual bool Tick(DWORD dTime);	
 };

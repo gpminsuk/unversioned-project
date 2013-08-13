@@ -41,16 +41,28 @@ HWND DMosesApp::CreateViewportWindow(BViewport* Viewport, int Width, int Height,
 		ParentHandle,
 		0,
 		m_WindowInfo.m_hInstance,
-		0);
-	m_WindowInfo.m_hWnd = WindowViewport->Handle;
+		0);	
 	return WindowViewport->Handle;
 }
 
-bool DMosesApp::CreateApp(TApplicationInfo& Info) {
+bool DMosesApp::CreateApplicationWindow(TApplicationInfo& Info) {
 	m_WindowInfo = (TWindowInfo&)Info;
 
 	m_MosesMainCLI = gcnew MosesMainCLI(this);
+	m_MosesMainCLI->MainWindow->Width = m_WindowInfo.m_wWidth;
+	m_MosesMainCLI->MainWindow->Height = m_WindowInfo.m_wHeight;
 	m_MosesMainCLI->MainWindow->ShowWindow();
+
+	m_WindowInfo.m_hWnd = (HWND)m_MosesMainCLI->MainWindow->GetWindowHandle().ToPointer();
+
+	GDriver->CreateDriver(this);
+	m_pRenderer = new BRenderer(this);
+
+	RResourceManager::LoadResources();
+	GRenderPassResource.Initialize(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight);
+
+	bRenderThreadQuit = false;
+	m_pRenderer->Start();
 	return true;
 }
 

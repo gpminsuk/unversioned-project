@@ -41,19 +41,16 @@ public:
 	void ThreadExecute();
 	void ThreadDestroy();
 	
-	void RenderLight(BLightComponent* pLightComponent);
-	void RemoveLight(BLightComponent* pLightComponent);
+	void RenderLight(BRenderingBatchManager* BatchManager, BLightComponent* pLightComponent);
+	void RemoveLight(BRenderingBatchManager* BatchManager, BLightComponent* pLightComponent);
 
-	void Render(BPrimitive* pPrimitive);
-	void Remove(BPrimitive* pPrimitive);	
-	void Render(BThing* pThing);
-	void Remove(BThing* pThing);
-	
-	TArray<BViewport*>& m_Viewports;
+	void Render(BRenderingBatchManager* BatchManager, BPrimitive* pPrimitive);
+	void Remove(BRenderingBatchManager* BatchManager, BPrimitive* pPrimitive);	
+	void Render(BRenderingBatchManager* BatchManager, BThing* pThing);
+	void Remove(BRenderingBatchManager* BatchManager, BThing* pThing);
+
+	TArray<BRenderingBatchManager*> BatchManager;
 protected:
-	BRenderingBatchManager* BatchManager;
-	BLineBatcher* LineBatcher;
-	TArray<BLightComponent*> Lights;
 
 	DWORD m_dFrameTime[FPS_COUNTER_NUMBER];
 	int m_iFTimeIdx;

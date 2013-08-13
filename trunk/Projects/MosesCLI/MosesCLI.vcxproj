@@ -267,12 +267,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UOneThingWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DMosesApp.h" />
     <ClInclude Include="MosesMainCLI.h" />
     <ClInclude Include="UMosesWorld.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="UOneThingWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExodusCore\ExodusCore.vcxproj">

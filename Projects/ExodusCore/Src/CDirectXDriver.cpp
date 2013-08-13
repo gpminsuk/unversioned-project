@@ -215,6 +215,15 @@ bool CDirectXDriver::ResizeBackBuffer(int Width, int Height) {
 	BackBuffer->Release();
 	//while((hr = GetDevice()->Reset(&Parameters)) != D3D_OK);
 	hr = GetDevice()->Reset(&Parameters);
+
+	GetDevice()->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
+	GetDevice()->SetRenderState(D3DRS_ZWRITEENABLE,
+		CurrentDepthState.EnableDepthWrite);
+	GetDevice()->SetRenderState(D3DRS_ZFUNC,
+		GCompareFunction[CurrentDepthState.DepthTest]);
+	GetDevice()->SetRenderState(D3DRS_CULLMODE, GCullMode[CurrentCullMode]);
+	GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
 	GetDevice()->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &dynamic_cast<RDXRenderTarget*>(BackBuffer)->m_pRTSurface);
 	return true;
 }

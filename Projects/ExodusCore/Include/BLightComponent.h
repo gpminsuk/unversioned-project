@@ -11,7 +11,7 @@ public:
 	BLightComponent();
 	virtual ~BLightComponent();
 
-	virtual void RenderComponent(BRenderer* Renderer);
+	virtual void RenderComponent(BRenderingBatchManager* BatchManager, BRenderer* Renderer);
 	virtual void UpdateComponent() = 0;
 
 	virtual void ConfigureShader(RShader* Shader) = 0;

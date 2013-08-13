@@ -69,7 +69,7 @@ bool RDirectXShader::SetParameter(BViewport* vp) {
 	switch(vp->ProjectionType) {
 	case Projection_Perpective:
 		D3DXMatrixPerspectiveFovLH(&Proj, D3DX_PI / 4,
-			(float) vp->Width / (float) vp->Height, 0.001f, 10000.0f);
+			(float) vp->Width / (float) vp->Height, 1.0f, 10000.0f);
 		break;
 	case Projection_Orthogonal: {
 		float ratio = vp->Width/(float)vp->Height;
@@ -78,7 +78,7 @@ bool RDirectXShader::SetParameter(BViewport* vp) {
 			vp->Camera->m_X - ratio*vp->Camera->m_Distance/2.0f,
 			vp->Camera->m_Y + vp->Camera->m_Distance/2.0f,
 			vp->Camera->m_Y - vp->Camera->m_Distance/2.0f,
-			0.00001f,
+			1.0f,
 			10000.0f);
 		}
 		break;

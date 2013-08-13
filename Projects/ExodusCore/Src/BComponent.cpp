@@ -13,8 +13,8 @@ BComponent::~BComponent() {
     Primitives.Clear();
 }
 
-void BComponent::RenderComponent(BRenderer* Renderer) {
+void BComponent::RenderComponent(BRenderingBatchManager* BatchManager, BRenderer* Renderer) {
     for (unsigned int j = 0; j < Primitives.Size(); ++j) {
-        Renderer->Render(Primitives(j));
+        Renderer->Render(BatchManager, Primitives(j));
     }
 }

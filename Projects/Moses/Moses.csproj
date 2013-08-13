@@ -100,6 +100,9 @@
     <Compile Include="RenderViewport.xaml.cs">
       <DependentUpon>RenderViewport.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ResourceBrowser.xaml.cs">
+      <DependentUpon>ResourceBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ResourceManagerMain.xaml.cs">
       <DependentUpon>ResourceManagerMain.xaml</DependentUpon>
     </Compile>
@@ -109,7 +112,7 @@
     <Compile Include="ToolBox.xaml.cs">
       <DependentUpon>ToolBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewportGroup.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClosableHeader.xaml">
@@ -131,6 +134,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ResourceBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResourceManagerMain.xaml">
       <Generator>MSBuild:Compile</Generator>

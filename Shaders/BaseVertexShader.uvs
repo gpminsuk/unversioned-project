@@ -6,6 +6,5 @@ void VS(
 	out TVertexOutput VertexOutput,
 	out float4 OutPosition : POSITION)
 {
-	VertexOutput = GetVertexOutput(VertexInput);
-	OutPosition = CalcOutPosition(VertexInput);
+	VertexOutput = GetVertexOutput(OutPosition, VertexInput);
 }

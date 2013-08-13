@@ -31,19 +31,6 @@ public:
 	int m_wHeight;
 };
 
-struct TViewportInfo
-{
-public:
-	enum ECameraMode CameraMode;
-	enum EViewportRenderMode RenderMode;
-	enum EViewportProjectionType ProjectionType;
-
-	HWND m_hWnd;
-
-	int m_wWidth;
-	int m_wHeight;
-};
-
 class CWindowsApplication: public AApplication
 {
 DECLARE_CLASS(CWindowsApplication,)
@@ -57,11 +44,8 @@ DECLARE_CLASS(CWindowsApplication,)
 	CWindowsApplication();
 
 	static LRESULT CALLBACK Proc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
-
-	BViewport* CreateViewport(TViewportInfo& Info);
-	void RemoveViewport(BViewport* Viewport);
-
-	bool CreateApp(TApplicationInfo& Info);
+	
+	bool CreateApplicationWindow(TApplicationInfo& Info);
 	void Do();
 	bool Tick(unsigned long Time);
 	bool DestroyApp();
@@ -72,12 +56,10 @@ DECLARE_CLASS(CWindowsApplication,)
 	void MouseEventTranslator(BViewport* Viewport, UINT Message, WPARAM wParam, LPARAM lParam);
 	void KeyEventTranslator(BViewport* Viewport, UINT Message, WPARAM wParam, LPARAM lParam);
 
-	virtual void OnViewportsResized();
 	virtual void InputMouse(BViewport* Viewport, EMouse_Event Event, TMouseInput_Param& Param);
 	virtual void InputKey(BViewport* Viewport, EKey_Event Event, TKeyInput_Param& Param);
 
 	virtual void SetMousePos(float X, float Y, bool isRatio = false);
-	virtual void Initialize();
 };
 
 extern SYSTEM_INFO GSystemInformation;

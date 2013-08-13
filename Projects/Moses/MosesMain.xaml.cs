@@ -24,11 +24,13 @@ namespace Moses
     public partial class MosesMain : Window
     {
         static public IMosesMainInterface m_Backend;
+        static public MosesMain This;
 
         ResourceManagerMain resourceManagerWindow;
 
         public MosesMain(IMosesMainInterface Backend)
         {
+            This = this;
             m_Backend = Backend;            
 
             InitializeComponent();
@@ -37,14 +39,12 @@ namespace Moses
             GameLoop.Tick += Idle;
             GameLoop.Start();
         }
-        
+
         public void ShowWindow()
         {
             Show();
             resourceManagerWindow = new ResourceManagerMain();
             //resourceManagerWindow.Show();
-
-            AddTab("HEHE");
         }
 
         public IntPtr GetWindowHandle()
@@ -57,17 +57,19 @@ namespace Moses
             m_Backend.Tick(0);
         }
 
-        void AddTab(String Name)
+        public void AddTab(String Name)
         {
             TabItem Item = new TabItem();
             ClosableHeader header = new ClosableHeader();
             header.button_close.Click += (sender, e) =>
             {
-                TabControl.Items.RemoveAt(1);
+                TabControl.Items.Remove(Item);
+                (Item.Content as ModelView).World.DestroyWorld();
             };
             Item.Header = header;
             Item.Content = new ModelView();
             TabControl.Items.Add(Item);
+            Item.IsSelected = true;
         }
     }
 }

@@ -4,6 +4,9 @@
 #include "BPrimitive.h"
 #include "BDriver.h"
 
+#include "BLineBatcher.h"
+#include "BTextDrawer.h"
+#include "BRTRenderPass.h"
 #include "BOpaqueBasePass.h"
 #include "BDirectionalLightPass.h"
 #include "BDrawUIPass.h"
@@ -100,38 +103,57 @@ void BRenderingBatch::RenderBaseScene() {
 }
 
 BRenderingBatchManager::BRenderingBatchManager() {
+	LineBatcher = new BLineBatcher();
 }
 
 BRenderingBatchManager::~BRenderingBatchManager() {
 }
 
-void BRenderingBatchManager::RenderBatches(BViewport* Viewport, TArray<BLightComponent*>& Lights) {
-    GOpaqueBasePass->BeginPass(Viewport);
-    for (unsigned int i = 0; i < Batches.Size(); ++i) {
-        BRenderingBatch* Batch = Batches(i);
+void BRenderingBatchManager::RenderBatches() {
+	for (UINT i = 0; i < m_Viewports->Size(); ++i) {
+		BViewport* Viewport = (*m_Viewports)(i);
+		GDriver->BeginScene(Viewport);
 
-        GOpaqueBasePass->BeginRenderBatch(Batch);
-        {
-            Batch->RenderBaseScene();
-        }
-        GOpaqueBasePass->EndRenderBatch();
-    }
-    GOpaqueBasePass->EndPass();
+		GOpaqueBasePass->BeginPass(Viewport);
+		for (unsigned int i = 0; i < Batches.Size(); ++i) {
+			BRenderingBatch* Batch = Batches(i);
 
-    GDirectionalLightPass->BeginPass(Viewport);
-    for (unsigned int i = 0; i < Lights.Size(); ++i) {
-        for (unsigned int i = 0; i < Batches.Size(); ++i) {
-            BRenderingBatch* Batch = Batches(i);
-            Batch->Lights = Lights;
-            GDirectionalLightPass->BeginRenderBatch(Batch);
-            {
-                Batch->ConfigureShader();
-                Batch->RenderLight();
-            }
-            GDirectionalLightPass->EndRenderBatch();
-        }
-    }
-    GDirectionalLightPass->EndPass();
+			GOpaqueBasePass->BeginRenderBatch(Batch);
+			{
+				Batch->RenderBaseScene();
+			}
+			GOpaqueBasePass->EndRenderBatch();
+		}
+		GOpaqueBasePass->EndPass();
+
+		if(Lights.Size() > 0) {
+			GDirectionalLightPass->BeginPass(Viewport);
+			for (unsigned int i = 0; i < Lights.Size(); ++i) {
+				for (unsigned int i = 0; i < Batches.Size(); ++i) {
+					BRenderingBatch* Batch = Batches(i);
+					Batch->Lights = Lights;
+					GDirectionalLightPass->BeginRenderBatch(Batch);
+					{
+						Batch->ConfigureShader();
+						Batch->RenderLight();
+					}
+					GDirectionalLightPass->EndRenderBatch();
+				}
+			}
+			GDirectionalLightPass->EndPass();
+		}		
+
+		GBaseRTRenderPass->BeginPass(Viewport);
+		GBaseRTRenderPass->DrawPrimitive();
+		GBaseRTRenderPass->EndPass();
+		char f[30];
+		float ff = 1000.0f/(10.0f/FPS_COUNTER_NUMBER);
+		sprintf_s(f, "%f", ff);
+		GTextDrawer->AddText(TString(f));
+		GTextDrawer->DrawTexts(Viewport);
+
+		GDriver->EndScene(Viewport);
+	}    
 }
 
 void BRenderingBatchManager::RemovePrimitive(BPrimitive* Primitive) {

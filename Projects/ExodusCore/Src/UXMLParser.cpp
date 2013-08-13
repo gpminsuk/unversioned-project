@@ -2,7 +2,9 @@
 #include "UXMLParser.h"
 
 #include "BRenderer.h"
+#include "BRenderingBatch.h"
 
+#include "CWindowsViewport.h"
 #include "CWindowsApplication.h"
 #include "CDirectXDriver.h"
 #include "CWaveIODriver.h"
@@ -113,26 +115,23 @@ void CXMLApplicationParser::Parse() {
                     GSoundDriver = new CWaveIODriver();
 				}
             }
-        }
+		}
+		app->CreateApplicationWindow(Info);
         TXMLElement World;
         if (Application.GetChildElement("World", World)) {
             TString Value;
             if (World.GetValue("Class", Value)) {
-                app->m_pWorld = ConstructClass<UWorld>(Value);
-				app->m_pWorld->m_pRenderer = app->m_pRenderer;
+				UWorld* World = ConstructClass<UWorld>(Value);
+				World->m_pRenderer = app->m_pRenderer;
+				World->BatchManager->m_Viewports = &World->Viewports;
+				app->m_pRenderer->BatchManager.AddItem(World->BatchManager);
+				app->Worlds.AddItem(World);
             } else {
                 return;
 			}
-        }
-		        
-        if (app) {
-			if (!app->CreateApp(Info)) {
-				app->DestroyApp();
-			}
-            app->Initialize();
-            app->Do();
-            app->DestroyApp();
-            delete app;
-        }
+		}
+        app->Do();
+        app->DestroyApp();
+        delete app;
     }
 }

@@ -9,6 +9,6 @@ BLightComponent::BLightComponent() {
 BLightComponent::~BLightComponent() {
 }
 
-void BLightComponent::RenderComponent(BRenderer* Renderer) {
-    Renderer->RenderLight(this);
+void BLightComponent::RenderComponent(BRenderingBatchManager* BatchManager, BRenderer* Renderer) {
+    Renderer->RenderLight(BatchManager, this);
 }

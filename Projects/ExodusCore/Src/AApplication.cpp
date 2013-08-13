@@ -5,7 +5,7 @@
 #include "UFreeTypeDrawer.h"
 
 AApplication::AApplication(void) :
-    m_pRenderer(0), m_pWorld(0), bQuit(false) {
+    m_pRenderer(0), bQuit(false) {
     GFontDrawer = new UFreeTypeFontDrawer();
 }
 

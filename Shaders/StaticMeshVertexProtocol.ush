@@ -14,17 +14,13 @@ struct TVertexOutput
 
 #ifdef VERTEX_SHADER
 
-float4 CalcOutPosition(in TVertexInput VertexInput)
+TVertexOutput GetVertexOutput(out float4 OutPosition, in TVertexInput VertexInput)
 {
-	return mul(float4(VertexInput.Position, 1), ViewProjectionMatrix);
-}
-
-TVertexOutput GetVertexOutput(in TVertexInput VertexInput)
-{
+	OutPosition = mul(float4(VertexInput.Position, 1.0f), ViewProjectionMatrix);
 	TVertexOutput VertexOutput;
 	VertexOutput.TexCoord = VertexInput.TexCoord;
 	VertexOutput.Normal = VertexInput.Normal;
-	VertexOutput.PixelPosition = VertexInput.Position;
+	VertexOutput.PixelPosition = OutPosition;
 	return VertexOutput;
 }
 #endif

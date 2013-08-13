@@ -11,13 +11,9 @@ struct TVertexOutput
 
 #ifdef VERTEX_SHADER
 
-float4 CalcOutPosition(in TVertexInput VertexInput)
+TVertexOutput GetVertexOutput(out float4 OutPosition, in TVertexInput VertexInput)
 {
-	return float4(VertexInput.Position, 1);
-}
-
-TVertexOutput GetVertexOutput(in TVertexInput VertexInput)
-{
+	OutPosition = float4(VertexInput.Position, 1);
 	TVertexOutput VertexOutput;	
 	VertexOutput.TexCoord = VertexInput.TexCoord;
 	return VertexOutput;

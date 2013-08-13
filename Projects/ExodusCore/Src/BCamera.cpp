@@ -58,8 +58,34 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         }
     }
     break;
-    case CameraMode_Editor:
-        break;
+	case CameraMode_Editor: {
+		switch (Event) {
+		case MOUSE_Move:
+			if(Param.bRButtonDown) {
+				float dY = -(Param.dY / 100.0f), dX = (Param.dX / 100.0f);
+				if (m_Pi + dY < (MATH_PI / 2.0f) && (m_Pi + dY) > -(MATH_PI / 2.0f))
+					m_Pi += dY;
+				m_Theta += dX;
+			}
+			if(Param.bMButtonDown) {
+				TVector3 Up = m_Up.Normalize();
+				Up = Up * -Param.dY;
+				TVector3 Right = ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize();
+				Right = Right * -Param.dX;
+				m_Location += (Up + Right) / 10.f;
+				m_LookAt += (Up + Right) / 10.f;
+			}
+			break;
+		case MOUSE_Wheel: {
+			m_Distance += Param.delta / MOUSE_WHEEL_DELTA;
+			if(m_Distance <= 10) {
+				m_Distance = 10;
+			}
+		}
+		break;
+		}
+	}
+	break;
     case CameraMode_FreeMode: {
         switch (Event) {
         case MOUSE_Move: {
@@ -71,6 +97,7 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         break;
         }
 	}
+	break;
 	case CameraMode_Back:
 	case CameraMode_Front:
 	case CameraMode_Top:
@@ -131,23 +158,19 @@ void BCamera::Tick(unsigned long dTime) {
     case CameraMode_Editor:
     case CameraMode_FreeMode: {
         if (GKeyMap['W'])
-            m_Location += (m_LookAt - m_Location).Normalize() / 100000.0f;
+			m_LookAt += (m_LookAt - m_Location).Normalize() / 10.0f;
         if (GKeyMap['S'])
-            m_Location -= (m_LookAt - m_Location).Normalize() / 100000.0f;
+			m_LookAt -= (m_LookAt - m_Location).Normalize() / 10.0f;
         if (GKeyMap['A'])
-            m_Location +=
-                ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize()
-                / 100000.0f;
+			m_LookAt += ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize() / 10.0f;                
         if (GKeyMap['D'])
-            m_Location -=
-                ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize()
-                / 100000.0f;
+            m_LookAt -= ((m_LookAt - m_Location).Normalize() ^ m_Up).Normalize() / 10.0f;
 
-        m_LookAt.x = COSINE(m_Pi) * COSINE(m_Theta) * m_Distance;
-        m_LookAt.z = COSINE(m_Pi) * SINE(m_Theta) * m_Distance;
-        m_LookAt.y = SINE(m_Pi) * m_Distance;
+        m_Location.x = COSINE(m_Pi) * COSINE(m_Theta) * m_Distance;
+        m_Location.z = COSINE(m_Pi) * SINE(m_Theta) * m_Distance;
+        m_Location.y = SINE(m_Pi) * m_Distance;
 
-        m_LookAt += m_Location;
+        m_Location += m_LookAt;
     }
     break;
 	case CameraMode_Top:
@@ -181,6 +204,13 @@ void BCamera::Tick(unsigned long dTime) {
 		m_Up = TVector3(0, 1, 0);
 		break;
 	}
+	if(m_CameraMode != CameraMode_Top) {
+		TVector3 Side;
+		Side.x = (m_LookAt - m_Location).z;
+		Side.z = -(m_LookAt - m_Location).x;
+		Side.y = 0.0f;
+		m_Up = (m_LookAt - m_Location) ^ Side;
+	}	
     m_bIsUpdated = false;
 }
 

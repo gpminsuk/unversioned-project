@@ -4,6 +4,7 @@
 #include "RSystemMemory.h"
 
 class BPrimitive;
+class BLineBatcher;
 class BLight;
 
 class BRenderingBatch
@@ -41,10 +42,14 @@ public:
 	BRenderingBatchManager();
 	~BRenderingBatchManager();
 
+	BLineBatcher* LineBatcher;
+	TArray<BLightComponent*> Lights;
+	TArray<BViewport*>* m_Viewports;
 	TArray<BRenderingBatch*> Batches;
 
 	void AddPrimitive(BPrimitive* Primitive);
 	void RemovePrimitive(BPrimitive* Primitive);
 
-	void RenderBatches(BViewport* Viewport, TArray<BLightComponent*>& Lights);
+	void Render();
+	void RenderBatches();
 };

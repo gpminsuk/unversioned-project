@@ -19,6 +19,7 @@ public:
 class RSkeletalMesh: public AObject
 {
 DECLARE_CLASS(RSkeletalMesh,)
+DECLARE_RESOURCE(CSkeletalMeshComponent);
 	public:
 	~RSkeletalMesh()
 	{

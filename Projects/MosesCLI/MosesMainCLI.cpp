@@ -1,7 +1,16 @@
 #include "stdafx.h"
 
 #include <windows.h>
+#include "RResource.h"
+#include "RSkeletalMesh.h"
 #include "BViewport.h"
+#include "BRenderingBatch.h"
+#include "CSkeletalMeshComponent.h"
+#include "BComponent.h"
+
+#define generic GENERIC
+#include "UWorld.h"
+#undef GENERIC
 
 #include "DMosesApp.h"
 #include "MosesMainCLI.h"
@@ -34,13 +43,50 @@ void MosesMainCLI::Tick(float deltaTime)
 	m_Application->m_pRenderer->ThreadExecute();
 }
 
-IntPtr MosesMainCLI::CreateViewport(Moses::EViewportType ViewportType) {
+IntPtr MosesMainCLI::LoadObject(IntPtr pWorld, String^ Path)
+{
+	size_t i;
+	pin_ptr<const wchar_t> wch = PtrToStringChars(Path);
+	size_t size = ((Path->Length + 1) * 2);
+	TString Str;
+	wcstombs_s(&i, Str.Str, 1024, wch, Path->Length);
+	if(Path->EndsWith(".exskn")) {
+		RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(Str);
+		CSkeletalMeshComponent* Component = (CSkeletalMeshComponent*)SkeletalMesh->CreateComponent();
+		Component->SetSkeletalMesh(0, SkeletalMesh, 0);
+		UWorld* World = (UWorld*)pWorld.ToPointer();
+		Component->RenderComponent(World->BatchManager, World->m_pRenderer);
+	}
+	return IntPtr(0);
+}
+
+IntPtr MosesMainCLI::CreateWorld(String^ Name) {
+	size_t i;
+	pin_ptr<const wchar_t> wch = PtrToStringChars(Name);
+	size_t size = ((Name->Length + 1) * 2);
+	TString Str;
+	wcstombs_s(&i, Str.Str, 1024, wch, Name->Length);
+	UWorld* World = (UWorld*)ConstructClass<UWorld*>(Str);
+	World->m_pRenderer = m_Application->m_pRenderer;
+	World->BatchManager->m_Viewports = &World->Viewports;
+	m_Application->m_pRenderer->BatchManager.AddItem(World->BatchManager);
+	m_Application->Worlds.AddItem(World);
+	return IntPtr(World);
+}
+
+void MosesMainCLI::DestroyWorld(IntPtr World) {
+	m_Application->Worlds.DeleteItemByVal((UWorld*)World.ToPointer());
+	m_Application->m_pRenderer->BatchManager.DeleteItemByVal(((UWorld*)World.ToPointer())->BatchManager);
+	delete World.ToPointer();
+}
+
+IntPtr MosesMainCLI::CreateViewport(IntPtr World, Moses::EViewportType ViewportType) {
 	TViewportInfo Info;
 	switch(ViewportType) {
 	case Moses::EViewportType::Perspective:
 		Info.ProjectionType = Projection_Perpective;
 		Info.RenderMode = RenderMode_All;
-		Info.CameraMode = CameraMode_FirstPerson;
+		Info.CameraMode = CameraMode_Editor;
 		break;
 	case Moses::EViewportType::Top:
 		Info.ProjectionType = Projection_Orthogonal;
@@ -73,7 +119,7 @@ IntPtr MosesMainCLI::CreateViewport(Moses::EViewportType ViewportType) {
 		Info.CameraMode = CameraMode_Right;
 		break;
 	}
-	return IntPtr(m_Application->CreateViewport(Info));
+	return IntPtr(((UWorld*)World.ToPointer())->CreateViewport(Info));
 }
 
 IntPtr MosesMainCLI::CreateViewportWindow(IntPtr Viewport, IntPtr hWndParent)
@@ -81,18 +127,22 @@ IntPtr MosesMainCLI::CreateViewportWindow(IntPtr Viewport, IntPtr hWndParent)
 	return IntPtr(m_Application->CreateViewportWindow((BViewport*)Viewport.ToPointer(), 800, 600, (HWND)hWndParent.ToPointer()));
 }
 
-void MosesMainCLI::RemoveViewport(IntPtr Handle) {
-	m_Application->RemoveViewport(m_Application->FindViewport((HWND)Handle.ToPointer()));
+void MosesMainCLI::RemoveViewport(IntPtr World, IntPtr Handle) {
+	((UWorld*)World.ToPointer())->RemoveViewport(m_Application->FindViewport((HWND)Handle.ToPointer()));
 }
 
-void MosesMainCLI::OnViewportsResized() {
-	m_Application->OnViewportsResized();
+void MosesMainCLI::OnViewportsResized(IntPtr World) {
+	((UWorld*)World.ToPointer())->OnViewportsResized();
 }
 
 void MosesMainCLI::Run()
 {
 	MyApp = gcnew Application();
 	MyApp->Run(MainWindow);
+}
+
+void MosesMainCLI::WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, bool% handled) {
+	m_Application->MessageTranslator((HWND)hwnd.ToPointer(), msg, (LPARAM)wParam.ToInt64(), (LPARAM)lParam.ToInt64());
 }
 
 void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args)
@@ -138,6 +188,34 @@ void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... arra
 			m_Application->m_MousePt.x = Param.X;
 			m_Application->m_MousePt.y = Param.Y;
 			m_Application->InputMouse(m_Application->FindViewport((HWND)Handle.ToPointer()), MOUSE_Wheel, Param);
+		}
+		break;
+	case Moses::Message::MosesMsg_KeyDown:
+		{
+			KeyEventArgs^ EventArgs = (KeyEventArgs^)args[0];
+			TKeyInput_Param Param;
+			Param.Key = KeyInterop::VirtualKeyFromKey(EventArgs->Key);
+			Param.bLAltDown = Keyboard::IsKeyDown(Key::LeftAlt);
+			Param.bLCtrlDown = Keyboard::IsKeyDown(Key::LeftCtrl);
+			Param.bLShiftDown = Keyboard::IsKeyDown(Key::LeftShift);
+			Param.bRAltDown = Keyboard::IsKeyDown(Key::RightAlt);
+			Param.bRCtrlDown = Keyboard::IsKeyDown(Key::RightCtrl);
+			Param.bRShiftDown = Keyboard::IsKeyDown(Key::RightShift);
+			m_Application->InputKey(m_Application->FindViewport((HWND)Handle.ToPointer()), KEY_Down, Param);
+		}
+		break;
+	case Moses::Message::MosesMsg_KeyUp:
+		{
+			KeyEventArgs^ EventArgs = (KeyEventArgs^)args[0];
+			TKeyInput_Param Param;
+			Param.Key = KeyInterop::VirtualKeyFromKey(EventArgs->Key);
+			Param.bLAltDown = Keyboard::IsKeyDown(Key::LeftAlt);
+			Param.bLCtrlDown = Keyboard::IsKeyDown(Key::LeftCtrl);
+			Param.bLShiftDown = Keyboard::IsKeyDown(Key::LeftShift);
+			Param.bRAltDown = Keyboard::IsKeyDown(Key::RightAlt);
+			Param.bRCtrlDown = Keyboard::IsKeyDown(Key::RightCtrl);
+			Param.bRShiftDown = Keyboard::IsKeyDown(Key::RightShift);
+			m_Application->InputKey(m_Application->FindViewport((HWND)Handle.ToPointer()), KEY_Up, Param);
 		}
 		break;
 	}

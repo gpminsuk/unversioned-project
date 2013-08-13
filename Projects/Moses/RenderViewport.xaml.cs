@@ -25,18 +25,31 @@ namespace Moses
         internal static extern bool DestroyWindow(IntPtr hwnd);
     }
 
-    public class DirectXHost : HwndHost
+    class DXHwndHost : HwndHost
     {
-        public RenderViewport Viewport;
+        public DXHwndHost()
+        {
+            Focusable = true;
+        }
+
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
-            IntPtr CreatedViewport = MosesMain.m_Backend.CreateViewport(Viewport.ViewportType);
+            FrameworkElement IterWorld = (FrameworkElement)Parent;
+            while (!(IterWorld is World)) { IterWorld = (FrameworkElement)IterWorld.Parent; }
+            FrameworkElement IterRenderViewport = (FrameworkElement)Parent;
+            while (!(IterRenderViewport is RenderViewport)) { IterRenderViewport = (FrameworkElement)IterRenderViewport.Parent; }
+            IntPtr CreatedViewport = MosesMain.m_Backend.CreateViewport((IterWorld as World).pWorld, (IterRenderViewport as RenderViewport).ViewportType);
             return new HandleRef(this, MosesMain.m_Backend.CreateViewportWindow(CreatedViewport, hwndParent.Handle));
         }
 
         protected override void DestroyWindowCore(HandleRef hwnd)
         {
-            MosesMain.m_Backend.RemoveViewport(hwnd.Handle);
+            FrameworkElement IterWorld = (FrameworkElement)Parent;
+            while (!(IterWorld is World)) { IterWorld = (FrameworkElement)IterWorld.Parent; }
+            if (((World)IterWorld).pWorld.ToInt32() != 0)
+            {
+                MosesMain.m_Backend.RemoveViewport(((World)IterWorld).pWorld, hwnd.Handle);
+            }
             NativeMethods.DestroyWindow(hwnd.Handle);
         }
     }
@@ -58,12 +71,17 @@ namespace Moses
 
         private bool mouseRightButtonDown = false;
         private bool mouseMovedAfterRightButtonDown = false;
-        private bool IsLoaded = false;
+        private bool IsLoadedCalled = false;
 
         private void Rectangle_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             e.Handled = mouseMovedAfterRightButtonDown;
         }
+
+        private void Rectangle_ContextMenuClosing(object sender, ContextMenuEventArgs e)
+        {
+            e.Handled = mouseMovedAfterRightButtonDown;
+        }        
 
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
@@ -72,10 +90,49 @@ namespace Moses
             mouseMovedAfterRightButtonDown = false;
         }
 
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!IsLoadedCalled)
+            {
+                DXCanvas.Child = new DXHwndHost();
+                IsLoadedCalled = true;
+            }
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            if (IsLoadedCalled)
+            {
+                (DXCanvas.Child as DXHwndHost).Dispose();
+                IsLoadedCalled = false;
+            }
+        }
+
+        IntPtr GetHandle()
+        {
+            return (DXCanvas.Child as DXHwndHost).Handle;
+        }
+
+        public RenderViewport()
+        {
+            InitializeComponent();
+            
+            Unloaded += OnUnloaded;
+            Loaded += OnLoaded;
+
+            Focusable = true;
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Focus();
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            MosesMain.m_Backend.MessageTranslator(GetWindowHandle(), Message.MosesMsg_MouseMove, e);
+            MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_MouseMove, e);
             if (mouseRightButtonDown)
             {
                 mouseMovedAfterRightButtonDown = true;
@@ -85,44 +142,24 @@ namespace Moses
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
-            MosesMain.m_Backend.MessageTranslator(GetWindowHandle(), Message.MosesMsg_MouseWheel, e);            
+            MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_MouseWheel, e);
         }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
+        protected override void OnKeyUp(KeyEventArgs e)
         {
-            if (!IsLoaded)
-            {
-                DirectXHost Host = new DirectXHost();
-                Host.Viewport = this;
-                ViewerBorder.Child = Host;
-                IsLoaded = true;
-            }
+            base.OnKeyUp(e);
+            MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_KeyUp, e);
         }
 
-        void OnUnloaded(object sender, RoutedEventArgs e)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
-            if (IsLoaded)
-            {
-                DirectXHost DXHost = (DirectXHost)ViewerBorder.Child;
-                DXHost.Dispose();
-                IsLoaded = false;
-            }            
+            base.OnPreviewKeyDown(e);
         }
 
-        public RenderViewport()
+        protected override void OnKeyDown(KeyEventArgs e)
         {
-            InitializeComponent();
-            
-            Unloaded += OnUnloaded;
-            Loaded += OnLoaded;
+            base.OnKeyDown(e);
+            MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_KeyDown, e);
         }
-
-        public IntPtr GetWindowHandle()
-        {
-            DirectXHost DXHost = (DirectXHost)ViewerBorder.Child;
-            return DXHost.Handle;
-        }
-
-        public bool Resizing { get; set; }
     }
 }

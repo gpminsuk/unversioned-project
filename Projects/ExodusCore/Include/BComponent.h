@@ -5,6 +5,7 @@
 #include "Enumerations_Geom.h"
 
 class BSynchronizer;
+class BRenderingBatchManager;
 class BRenderer;
 
 class BComponent: public AObject
@@ -15,6 +16,6 @@ public:
 
 	TArray<class BPrimitive*> Primitives;
 
-	virtual void RenderComponent(BRenderer* Renderer);
+	virtual void RenderComponent(BRenderingBatchManager* BatchManager, BRenderer* Renderer);
 	virtual void UpdateComponent() = 0;
 };

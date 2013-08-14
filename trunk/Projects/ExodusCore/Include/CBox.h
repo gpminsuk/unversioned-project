@@ -4,6 +4,7 @@
 
 class CBox: public BThing
 {
+DECLARE_CLASS(CBox,);
 public:
 	CBox(EGeometrySideType _BoxSideType = SideType_Outside);
 	~CBox();

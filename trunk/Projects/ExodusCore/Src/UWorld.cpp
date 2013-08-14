@@ -34,6 +34,11 @@ UWorld::~UWorld() {
     //delete GLineBatcher;
 }
 
+bool UWorld::Access(AAccessor& Accessor) {
+	Accessor << ((TWorldOctree*)m_pWorldData)->AllObjects;
+	return true;
+}
+
 bool UWorld::Tick(unsigned long dTime) {
 	for(unsigned int i=0;i<Viewports.Size();++i) {
 		BViewport* Viewport = Viewports(i);

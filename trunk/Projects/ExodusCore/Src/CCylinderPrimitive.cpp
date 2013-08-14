@@ -12,10 +12,10 @@ CCylinderPrimitive::CCylinderPrimitive(ERenderType _RenderType) {
     switch (RenderType) {
     case RenderType_Opaque:
     case RenderType_Translucent:
-        Primitives.AddItem(GCylinderPrimitive);
+        Draws.AddItem(GCylinderPrimitive);
         break;
     case RenderType_Line:
-        Primitives.AddItem(GCylinderPrimitiveWireFrame);
+        Draws.AddItem(GCylinderPrimitiveWireFrame);
         break;
     }
 }
@@ -133,38 +133,38 @@ TCylinderPrimitive::TCylinderPrimitive(ERenderType _RenderType) {
 }
 
 unsigned int CCylinderPrimitive::GetNumIndices() {
-    return Primitives(0)->pBuffer->m_pIB->nIndices;
+    return Draws(0)->pBuffer->m_pIB->nIndices;
 }
 
 unsigned int CCylinderPrimitive::FillDynamicVertexBuffer(char** pData) {
-    memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
-           Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
-    for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
+    memcpy((*pData), Draws(0)->pBuffer->m_pVB->pVertices,
+           Draws(0)->pBuffer->m_pVB->nVertices
+           * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
+    for (unsigned int k = 0; k < Draws(0)->pBuffer->m_pVB->nVertices; ++k) {
         *((TVector3*) &((*pData)[k
-                                 * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
+                                 * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
                                          .TransformVector3(
                                              *((TVector3*) &((*pData)[k
-                                                     * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
+                                                     * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
     }
-    *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    *pData += Draws(0)->pBuffer->m_pVB->nVertices
+              * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CCylinderPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
     for (unsigned int k = 0; k < GetNumIndices(); ++k) {
         TIndex16 tmpIndex;
-        tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1
+        tmpIndex._1 = Draws(0)->pBuffer->m_pIB->pIndices[k]._1
                       + *BaseIndex;
-        tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2
+        tmpIndex._2 = Draws(0)->pBuffer->m_pIB->pIndices[k]._2
                       + *BaseIndex;
-        tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3
+        tmpIndex._3 = Draws(0)->pBuffer->m_pIB->pIndices[k]._3
                       + *BaseIndex;
         (*pData)[k] = tmpIndex;
     }
-    *BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
+    *BaseIndex += Draws(0)->pBuffer->m_pVB->nVertices;
     *pData += GetNumIndices();
 
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }

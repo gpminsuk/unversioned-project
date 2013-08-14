@@ -38,7 +38,7 @@ public:																					\
 		}																				\
 		else if(Ac.IsSaving())															\
 		{																				\
-			Ac << ##InClassName::Class()->ClassName;									\
+			Ac << A->GetClass()->ClassName;												\
 		}																				\
 		return Ac << *(AObject**)&A;													\
 	}																					\
@@ -47,12 +47,6 @@ public:																					\
 	DECLARE_CLASS_BASE(InClassName, ClassType)											\
 	DECLARE_CLASS_OPERATOR(InClassName)													\
 
-#define DECLARE_RESOURCE(InComponentClass)												\
-	class BComponent* CreateComponent()													\
-	{																					\
-		return (BComponent*)ConstructClass<BComponent*>(TString(#InComponentClass));	\
-	}																					\
- 
 #define DECLARE_CLASS_BASE(InClassName, ClassType)										\
 public:																					\
 	DECLARE_CONSTRUCTOR_##ClassType(InClassName)										\
@@ -67,6 +61,10 @@ class UClass_##InClassName : public AClass												\
 	};																					\
 	static UClass_##InClassName Class__##InClassName;									\
 	static AClass* Class()																\
+	{																					\
+		return (AClass*)&Class__##InClassName;											\
+	}																					\
+	virtual AClass* GetClass()															\
 	{																					\
 		return (AClass*)&Class__##InClassName;											\
 	}																					\

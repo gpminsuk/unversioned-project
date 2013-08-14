@@ -3,20 +3,21 @@
 #include "CCharacter.h"
 
 #include "CBoxPrimitive.h"
-#include "CSkeletalMeshComponent.h"
 #include "CSkeletalMeshPrimitive.h"
 
 #include "CCylinderCollisionBody.h"
 
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
-#include "RSkeletalMesh.h"
+#include "RMesh.h"
 
 #include "RSKNImporter.h"
 #include "RSKLImporter.h"
 #include "RANMImporter.h"
 
 #include "UWorld.h"
+
+IMPLEMENT_CLASS(CCharacter);
 
 CCharacter::CCharacter() {
     m_Height = 0.0f;
@@ -36,24 +37,22 @@ CCharacter::CCharacter() {
     RANMImporter ANMImporter;
     RAnimationSequence* AnimationSequence;
     RBoneHierarchy* BoneHierarchy;
-    RSkeletalMesh* SkeletalMesh;
+    RMesh* SkeletalMesh;
     SKNImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skn"),
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
     SKLImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skl"),
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
     ANMImporter.Import(TString("..\\..\\Resources\\renekton_attack1_60fps.anm"),
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
-	SkeletalMesh->Access(AWriteAccessor(TString("..\\..\\Resources\\Renekton_brutal.exskn")));
+	SaveAsset(BoneHierarchy, TString("..\\..\\Resources\\Renekton_brutal.exskl"));
+	SaveAsset(SkeletalMesh, TString("..\\..\\Resources\\Renekton_brutal.exskn"));
 
-    CSkeletalMeshComponent* SkeletalMeshComponent =
-        new CSkeletalMeshComponent();
-    Components.AddItem(SkeletalMeshComponent);
+	CSkeletalMeshPrimitive* SkeletalMeshPrimitive = new CSkeletalMeshPrimitive();
+    Primitives.AddItem(SkeletalMeshPrimitive);
+	SkeletalMeshPrimitive->SetSkeletalMesh(SkeletalMesh, BoneHierarchy);
+	SkeletalMeshPrimitive->CreateDraws();
 
-    SkeletalMeshComponent->SetSkeletalMesh(0, SkeletalMesh,
-                                           0);
-
-    CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(
-        this);
+    CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
     CollisionBodies.AddItem(CharacterCollisionBody);
 
     UpdateTransform();
@@ -98,18 +97,16 @@ void CCharacter::UpdateTransform() {
         CollisionBodies(0)->Primitives(i)->TM._42 = m_Location.y;
         CollisionBodies(0)->Primitives(i)->TM._43 = m_Location.z;
     }
-	for (unsigned int i = 0; i < Components(0)->Primitives.Size(); ++i) {
-		Components(0)->Primitives(i)->TM.SetIdentity();
-		Components(0)->Primitives(i)->Translation = m_Location;
-		Components(0)->Primitives(i)->TM._11 *= 0.05f;
-		Components(0)->Primitives(i)->TM._22 *= 0.05f;
-		Components(0)->Primitives(i)->TM._33 *= 0.05f;
+	for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+		Primitives(i)->TM.SetIdentity();
+		Primitives(i)->Translation = m_Location;
+		Primitives(i)->TM._11 *= 0.05f;
+		Primitives(i)->TM._22 *= 0.05f;
+		Primitives(i)->TM._33 *= 0.05f;
 		static float r = MATH_PI/2;
-		//Components(0)->Primitives(i)->TM.Rotate(TQuaternion(TVector3(0,1,0), r));
-		//r += 0.1f;
-        Components(0)->Primitives(i)->TM._41 = m_Location.x;
-        Components(0)->Primitives(i)->TM._42 = m_Location.y;
-		Components(0)->Primitives(i)->TM._43 = m_Location.z;
+		Primitives(i)->TM._41 = m_Location.x;
+        Primitives(i)->TM._42 = m_Location.y;
+		Primitives(i)->TM._43 = m_Location.z;
     }
 
     CollisionBodyBounds.Box.Extent = TVector3(5.0f, 5.0f, 5.0f);

@@ -11,7 +11,6 @@
 #include "BDirectionalLightPass.h"
 #include "BDrawUIPass.h"
 #include "BViewport.h"
-#include "BLightComponent.h"
 
 BRenderingBatch::BRenderingBatch(BPrimitive* InitialPrimitive)
     :
@@ -24,12 +23,12 @@ BRenderingBatch::~BRenderingBatch() {
 }
 
 bool BRenderingBatch::IsBatchable(BPrimitive* Primitive) {	
-	return (pMaterial == Primitive->GetMaterial() && RenderType == Primitive->RenderType && Protocol == Primitive->Primitives(0)->pBuffer->m_pVB->Protocol);
+	return (pMaterial == Primitive->GetMaterial() && RenderType == Primitive->RenderType && Protocol == Primitive->Draws(0)->pBuffer->m_pVB->Protocol);
 }
 
 void BRenderingBatch::RemovePrimitive(BPrimitive* Primitive) {
-	for (unsigned int i = 0; i < Primitive->Primitives.Size(); ++i) {
-		TPrimitive* Prim = Primitive->Primitives(i);
+	for (unsigned int i = 0; i < Primitive->Draws.Size(); ++i) {
+		BDraw* Prim = Primitive->Draws(i);
 		if (Prim) {
 			nVertices -= Prim->pBuffer->m_pVB->nVertices;
 		}
@@ -41,8 +40,8 @@ void BRenderingBatch::BatchPrimitive(BPrimitive* Primitive) {
 	pMaterial = Primitive->GetMaterial();
 	RenderType = Primitive->RenderType;
 	PrimitiveType = PrimitiveType_TriangleList;
-	for (unsigned int i = 0; i < Primitive->Primitives.Size(); ++i) {
-		TPrimitive* Prim = Primitive->Primitives(i);
+	for (unsigned int i = 0; i < Primitive->Draws.Size(); ++i) {
+		BDraw* Prim = Primitive->Draws(i);
 		if (Prim) {
 			Protocol = Prim->pBuffer->m_pVB->Protocol;
 			nVertices += Prim->pBuffer->m_pVB->nVertices;

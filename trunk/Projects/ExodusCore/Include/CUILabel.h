@@ -2,7 +2,7 @@
 
 #include "TDataTypes.h"
 #include "BPrimitive.h"
-#include "BComponent.h"
+#include "BThing.h"
 
 class CUILabelPrimitive: public BPrimitive
 {
@@ -15,14 +15,12 @@ public:
 	virtual unsigned int GetNumIndices();
 };
 
-class CUILabelComponent: public BComponent
+class CUILabel: public BThing
 {
 public:
 	int Width;
 	int Height;
 
-	CUILabelComponent();
-	~CUILabelComponent();
-
-	virtual void UpdateComponent();
+	CUILabel();
+	~CUILabel();
 };

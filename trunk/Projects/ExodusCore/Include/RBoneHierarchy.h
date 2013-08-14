@@ -2,6 +2,7 @@
 
 #include "AObject.h"
 #include "TDataTypes.h"
+#include "RResource.h"
 #include "RAnimationSequence.h"
 
 class RBone: public AObject
@@ -12,6 +13,7 @@ DECLARE_CLASS(RBone,)
 
 	int BoneIndex;
 	int SkinBoneIndex;
+	int ParentIndex;
 	RBone *Parent;
 	RAnimationBoneSequence* AnimationBoneSequenceRef;
 
@@ -21,7 +23,7 @@ DECLARE_CLASS(RBone,)
 	virtual bool Access(AAccessor& Accessor);
 };
 
-class RBoneHierarchy: public AObject
+class RBoneHierarchy: public RAsset
 {
 DECLARE_CLASS(RBoneHierarchy,)
 	public:

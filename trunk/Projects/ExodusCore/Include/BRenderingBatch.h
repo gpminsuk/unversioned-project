@@ -17,7 +17,7 @@ public:
 	RDynamicPrimitiveBuffer* PrimitiveBuffer;
 
 	TArray<BPrimitive*> Primitives;
-	TArray<BLightComponent*> Lights;
+	TArray<BLight*> Lights;
 
 	enum EPrimitiveType PrimitiveType;
 	enum ERenderType RenderType;
@@ -43,7 +43,7 @@ public:
 	~BRenderingBatchManager();
 
 	BLineBatcher* LineBatcher;
-	TArray<BLightComponent*> Lights;
+	TArray<BLight*> Lights;
 	TArray<BViewport*>* m_Viewports;
 	TArray<BRenderingBatch*> Batches;
 

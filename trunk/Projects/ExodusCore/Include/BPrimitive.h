@@ -20,11 +20,11 @@ enum ERenderType
 	RenderType_UI,
 };
 
-class TPrimitive
+class BDraw
 {
 public:
-	TPrimitive();
-	virtual ~TPrimitive();
+	BDraw();
+	virtual ~BDraw();
 
 	virtual void UpdatePrimitive() {
 	}
@@ -34,6 +34,7 @@ public:
 
 class BPrimitive: public AObject
 {
+DECLARE_CLASS(BPrimitive,CLASS_Abstract);
 public:
 	BPrimitive();
 	virtual ~BPrimitive(void);
@@ -44,7 +45,7 @@ public:
 
 	TMatrix TM;
 
-	TArray<TPrimitive*> Primitives;
+	TArray<BDraw*> Draws;
 	unsigned int NumIndices;
 	
 	BRenderingBatch* Batch;
@@ -54,6 +55,7 @@ public:
 	}
 
 	virtual RMaterial* GetMaterial() = 0;
+	virtual void CreateDraws() = 0;
 	virtual unsigned int FillDynamicVertexBuffer(char** pData) = 0;
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) = 0;
 	virtual unsigned int GetNumIndices() = 0;

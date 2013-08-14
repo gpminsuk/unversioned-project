@@ -77,7 +77,7 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
 			}
 			break;
 		case MOUSE_Wheel: {
-			m_Distance += Param.delta / MOUSE_WHEEL_DELTA;
+			m_Distance *= (1.0f + (Param.delta / MOUSE_WHEEL_DELTA * 0.1f));
 			if(m_Distance <= 10) {
 				m_Distance = 10;
 			}

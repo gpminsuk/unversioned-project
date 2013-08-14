@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Moses.WorldView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:uc="clr-namespace:Moses" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <uc:World x:Name="FirstWorld" ShouldCreateWorld="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Stretch"  Height="3" ResizeDirection="Rows" />
+        <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="3" ResizeDirection="Columns" />
+        <uc:RenderViewport Grid.Column="0" Grid.Row="0" ViewportType="Top"/>
+        <uc:RenderViewport Grid.Column="2" Grid.Row="0" ViewportType="Front"/>
+        <uc:RenderViewport Grid.Column="2" Grid.Row="2" ViewportType="Right"/>
+        <uc:RenderViewport Grid.Column="0" Grid.Row="2" ViewportType="Perspective"/>
+    </uc:World>
+</UserControl>

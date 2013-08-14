@@ -9,7 +9,6 @@
 #include "BRenderer.h"
 #include "BTextDrawer.h"
 #include "BThing.h"
-#include "BComponent.h"
 #include "BLineBatcher.h"
 #include "BPrimitive.h"
 #include "BRenderingBatch.h"

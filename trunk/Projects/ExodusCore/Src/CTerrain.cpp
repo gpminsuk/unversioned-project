@@ -1,14 +1,13 @@
 #include "StdAfx.h"
 #include "CTerrain.h"
-#include "CTerrainComponent.h"
 
+#include "CTerrainPrimitive.h"
 #include "CHeightFieldCollisionBody.h"
 
 #include "BCamera.h"
 
 CTerrain::CTerrain() {
-    CTerrainComponent* TerrainComponent = new CTerrainComponent();
-    Components.AddItem(TerrainComponent);
+    Primitives.AddItem(new CTerrainPrimitive());
 
     CHeightFieldCollisionBody* TerrainCollisionBody =
         new CHeightFieldCollisionBody(this);

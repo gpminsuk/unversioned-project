@@ -121,11 +121,16 @@ void CXMLApplicationParser::Parse() {
         if (Application.GetChildElement("World", World)) {
             TString Value;
             if (World.GetValue("Class", Value)) {
-				UWorld* World = ConstructClass<UWorld>(Value);
-				World->m_pRenderer = app->m_pRenderer;
-				World->BatchManager->m_Viewports = &World->Viewports;
-				app->m_pRenderer->BatchManager.AddItem(World->BatchManager);
-				app->Worlds.AddItem(World);
+				UWorld* pWorld = ConstructClass<UWorld>(Value);				
+				if (World.GetValue("Template", Value)) {
+					UWorldTemplate* WT = ConstructClass<UWorldTemplate>(Value);
+					WT->Create(pWorld);
+				}
+				pWorld->m_pRenderer = app->m_pRenderer;
+				pWorld->BatchManager->m_Viewports = &pWorld->Viewports;
+				app->m_pRenderer->BatchManager.AddItem(pWorld->BatchManager);
+				app->Worlds.AddItem(pWorld);
+				pWorld->SaveObject(TString("..\\..\\Resources\\FirstWorld.exmap"));
             } else {
                 return;
 			}

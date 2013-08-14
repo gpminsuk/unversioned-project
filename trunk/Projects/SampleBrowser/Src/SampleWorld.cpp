@@ -10,6 +10,9 @@ IMPLEMENT_CLASS(USampleWorld);
 
 USampleWorld::USampleWorld()
 {
+}
+
+void USampleWorld::Create(UWorld* World) {
 	Box = new CBox(SideType_Inside);
 	Box->m_Scale = TVector3(100.0f,100.0f,100.0f);
 	Box->UpdateTransform();
@@ -22,26 +25,12 @@ USampleWorld::USampleWorld()
 
 	Character = new CCharacter();
 	Character->UpdateTransform();
-	AddThing(Character);
+	World->AddThing(Character);
 }
 
 USampleWorld::~USampleWorld()
 {
-}
-
-bool USampleWorld::DestroyWorld()
-{
-	__super::DestroyWorld();
-
 	delete Box;
 	delete DirectionalLight;
 	delete Character;
-
-	return true;
-}
-
-bool USampleWorld::Tick(DWORD dTime)
-{
-	__super::Tick(dTime);
-	return true;
 }

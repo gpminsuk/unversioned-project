@@ -31,9 +31,9 @@ TTerrainPrimitive::~TTerrainPrimitive() {
 
 unsigned int CTerrainPrimitive::GetNumIndices() {
     unsigned int Ret = 0;
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
         TTerrainPrimitive* Prim =
-            dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+            dynamic_cast<TTerrainPrimitive*>(Draws(i));
         if (Prim) {
             Ret += Prim->nLODIndices;
         }
@@ -43,9 +43,9 @@ unsigned int CTerrainPrimitive::GetNumIndices() {
 
 unsigned int CTerrainPrimitive::FillDynamicVertexBuffer(char** pData) {
     unsigned int Ret = 0;
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
         TTerrainPrimitive* Prim =
-            dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+            dynamic_cast<TTerrainPrimitive*>(Draws(i));
         if (Prim) {
             memcpy((*pData), Prim->pBuffer->m_pVB->pVertices,
                    Prim->pBuffer->m_pVB->nVertices
@@ -65,9 +65,9 @@ unsigned int CTerrainPrimitive::FillDynamicVertexBuffer(char** pData) {
 }
 
 void CTerrainPrimitive::IndexTessellate() {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
         TTerrainPrimitive* Prim =
-            dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+            dynamic_cast<TTerrainPrimitive*>(Draws(i));
         if (Prim) {
             if (Prim->bShouldTessellate) {
                 Tessellate(LODOrigin);
@@ -79,9 +79,9 @@ void CTerrainPrimitive::IndexTessellate() {
 
 unsigned int CTerrainPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
     unsigned int Ret = 0;
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
         TTerrainPrimitive* Prim =
-            dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+            dynamic_cast<TTerrainPrimitive*>(Draws(i));
         if (Prim) {
             if (!Prim->pLODIndices)
                 continue;
@@ -176,6 +176,10 @@ CTerrainPrimitive::~CTerrainPrimitive(void) {
     DestroyTerrainPrimitive();
 }
 
+void CTerrainPrimitive::CreateDraws() {
+
+}
+
 RMaterial* CTerrainPrimitive::GetMaterial() {
 	return RMaterialTable::Materials(0);
 }
@@ -185,7 +189,7 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
     for (unsigned int nPatchX = 0; nPatchX < NumPatchX; ++nPatchX) {
         for (unsigned int nPatchY = 0; nPatchY < NumPatchY; ++nPatchY) {
             TTerrainPrimitive* Primitive = new TTerrainPrimitive();
-            Primitives.AddItem(Primitive);
+            Draws.AddItem(Primitive);
             Primitive->pBuffer = new RStaticPrimitiveBuffer();
 
             RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
@@ -270,10 +274,10 @@ bool CTerrainPrimitive::CreateTerrainPrimitive(unsigned int NumCellX, unsigned i
 }
 
 bool CTerrainPrimitive::DestroyTerrainPrimitive() {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        delete Primitives(i);
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
+        delete Draws(i);
     }
-    Primitives.Clear();
+    Draws.Clear();
 
     return true;
 }
@@ -281,9 +285,9 @@ bool CTerrainPrimitive::DestroyTerrainPrimitive() {
 void CTerrainPrimitive::UpdateTerrainPrimitive(TVector3 _LODOrigin) {
     if (LODOrigin != _LODOrigin) {
         LODOrigin = _LODOrigin;
-        for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+        for (unsigned int i = 0; i < Draws.Size(); ++i) {
             TTerrainPrimitive *Prim =
-                dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+                dynamic_cast<TTerrainPrimitive*>(Draws(i));
             if (Prim) {
                 Prim->bShouldTessellate = true;
                 Prim->LODOrigin = _LODOrigin;
@@ -295,9 +299,9 @@ void CTerrainPrimitive::UpdateTerrainPrimitive(TVector3 _LODOrigin) {
 ///////////////////////////////////////////////////// Render Thread Function //////////////////////////////////////////////////////
 
 bool CTerrainPrimitive::Tessellate(TVector3 Origin) {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
         TTerrainPrimitive *Prim =
-            dynamic_cast<TTerrainPrimitive*>(Primitives(i));
+            dynamic_cast<TTerrainPrimitive*>(Draws(i));
         if (Prim)
             Prim->Tessellate(Origin);
     }

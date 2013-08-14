@@ -10,6 +10,9 @@ bool RBone::Access(AAccessor& Accessor) {
     Accessor << BoneName;
     Accessor << TM;
     Accessor << InvTM;
+	Accessor << BoneIndex;
+	Accessor << SkinBoneIndex;
+	Accessor << ParentIndex;
 
     return true;
 }

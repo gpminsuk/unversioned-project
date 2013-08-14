@@ -22,7 +22,6 @@ bool RResourceManager::LoadResources() {
     }
     TString Filename;    
     Filename = "..\\..\\Resources\\renekton_brutal_TX_CM.DDS";
-    extern RTextureBuffer* GDefaultTexture;
     GDefaultTexture = GDriver->CreateTextureBuffer(Filename);
 
 	/////////////////////////////////////////////////////// Vertex Decl Loading

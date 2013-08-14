@@ -10,7 +10,7 @@ struct TParticleInstance
 	bool isAlive;
 };
 
-class TParticlePrimitive: public TPrimitive
+class TParticlePrimitive: public BDraw
 {
 public:
 	TParticlePrimitive();

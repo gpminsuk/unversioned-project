@@ -30,26 +30,6 @@
             </uc:ResourceBrowser>
         </StackPanel>
         <TabControl Name="TabControl">
-            <!--<TabItem Header="World">
-                <uc:World x:Name="FirstWorld" WorldName="UMosesWorld">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Stretch"  Height="3" ResizeDirection="Rows" />
-                    <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="3" ResizeDirection="Columns" />
-                    <uc:RenderViewport Grid.Column="0" Grid.Row="0" ViewportType="Top"/>
-                    <uc:RenderViewport Grid.Column="2" Grid.Row="0" ViewportType="Front"/>
-                    <uc:RenderViewport Grid.Column="2" Grid.Row="2" ViewportType="Right"/>
-                    <uc:RenderViewport Grid.Column="0" Grid.Row="2" ViewportType="Perspective"/>
-                </uc:World>
-            </TabItem>-->
         </TabControl>
     </DockPanel>
 </Window>

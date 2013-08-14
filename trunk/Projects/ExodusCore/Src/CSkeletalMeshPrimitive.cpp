@@ -3,33 +3,42 @@
 #include "BRenderingBatch.h"
 #include "BDriver.h"
 
-#define TEST_BIP_EXCLUDED
+IMPLEMENT_CLASS(CSkeletalMeshPrimitive)
 
 CSkeletalMeshPrimitive::CSkeletalMeshPrimitive() {
     RenderType = RenderType_Opaque;
-
-    extern RTextureBuffer* GDefaultTexture;
-    Texture = GDefaultTexture;
 }
 
 CSkeletalMeshPrimitive::~CSkeletalMeshPrimitive(void) {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        delete Primitives(i);
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
+        delete Draws(i);
     }
 }
 
-void CSkeletalMeshPrimitive::SetSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* AnimationSeq) {
-    SkeletalMeshTemplate = new TSkeletalMesh(InBoneHierarchy, InSkeletalMesh,
-            AnimationSeq);
-    UpdatePrimitive();
-    Primitives.AddItem(SkeletalMeshTemplate);
+void CSkeletalMeshPrimitive::SetSkeletalMesh(RMesh* InMesh, RBoneHierarchy* InBoneHierarchy) {
+	Mesh.Set(InMesh);
+	BoneHierarchy.Set(InBoneHierarchy);
+}
+
+bool CSkeletalMeshPrimitive::Access(AAccessor& Accessor) {
+	__super::Access(Accessor);
+	Accessor << Mesh;
+	Accessor << BoneHierarchy;
+	if(Accessor.IsLoading()) {
+		CreateDraws();
+	}
+	return true;
+}
+
+void CSkeletalMeshPrimitive::CreateDraws() {
+	Draws.AddItem(new CSkeletalMeshDraw(Mesh.Get(), BoneHierarchy.Get()));
 }
 
 void CSkeletalMeshPrimitive::UpdatePrimitive() {
     NumIndices = 0;
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        Primitives(i)->UpdatePrimitive();
-        NumIndices += Primitives(i)->pBuffer->m_pIB->nIndices;
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
+        Draws(i)->UpdatePrimitive();
+        NumIndices += Draws(i)->pBuffer->m_pIB->nIndices;
     }
 }
 
@@ -38,101 +47,101 @@ RMaterial* CSkeletalMeshPrimitive::GetMaterial() {
 }
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicVertexBuffer(char** pData) {
-	GDriver->SetTexture(0, Texture);
+	GDriver->SetTexture(0, GDefaultTexture);
 
-    unsigned int nVerticies = 0;
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        TPrimitive* Primitive = Primitives(i);
-        memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices,
-               Primitive->pBuffer->m_pVB->nVertices
-			   * Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride());
+	unsigned int nVerticies = 0;
+	for (unsigned int i = 0; i < Draws.Size(); ++i) {
+		BDraw* Primitive = Draws(i);
+		memcpy((*pData), Primitive->pBuffer->m_pVB->pVertices,
+			Primitive->pBuffer->m_pVB->nVertices
+			* Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride());
 		RVertexDeclaration::Position_Normal_TexCoord_VD* pVertices = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(*pData);
-        for (unsigned int k = 0; k < Primitive->pBuffer->m_pVB->nVertices; ++k) {			
-            pVertices[k].Position = TM.TransformVector3(pVertices[k].Position);
-        }
-        *pData += Primitive->pBuffer->m_pVB->nVertices
-                  * Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride();
-        nVerticies += Primitive->pBuffer->m_pVB->nVertices;
-    }
-    return nVerticies;
+		for (unsigned int k = 0; k < Primitive->pBuffer->m_pVB->nVertices; ++k) {			
+			pVertices[k].Position = TM.TransformVector3(pVertices[k].Position);
+		}
+		*pData += Primitive->pBuffer->m_pVB->nVertices
+			* Primitive->pBuffer->m_pVB->Protocol->Decl->GetStride();
+		nVerticies += Primitive->pBuffer->m_pVB->nVertices;
+	}
+	return nVerticies;
 }
 
 unsigned int CSkeletalMeshPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        TPrimitive* Primitive = Primitives(i);
-        for (unsigned int k = 0; k < Primitive->pBuffer->m_pIB->nIndices; ++k) {
-            TIndex16 tmpIndex;
-            tmpIndex._1 = Primitive->pBuffer->m_pIB->pIndices[k]._1
-                          + *BaseIndex;
-            tmpIndex._2 = Primitive->pBuffer->m_pIB->pIndices[k]._2
-                          + *BaseIndex;
-            tmpIndex._3 = Primitive->pBuffer->m_pIB->pIndices[k]._3
-                          + *BaseIndex;
-            (*pData)[k] = tmpIndex;
-        }
-        *BaseIndex += Primitive->pBuffer->m_pVB->nVertices;
-        *pData += Primitive->pBuffer->m_pIB->nIndices;
-    }
-    return 0;
+	for (unsigned int i = 0; i < Draws.Size(); ++i) {
+		BDraw* Primitive = Draws(i);
+		for (unsigned int k = 0; k < Primitive->pBuffer->m_pIB->nIndices; ++k) {
+			TIndex16 tmpIndex;
+			tmpIndex._1 = Primitive->pBuffer->m_pIB->pIndices[k]._1
+				+ *BaseIndex;
+			tmpIndex._2 = Primitive->pBuffer->m_pIB->pIndices[k]._2
+				+ *BaseIndex;
+			tmpIndex._3 = Primitive->pBuffer->m_pIB->pIndices[k]._3
+				+ *BaseIndex;
+			(*pData)[k] = tmpIndex;
+		}
+		*BaseIndex += Primitive->pBuffer->m_pVB->nVertices;
+		*pData += Primitive->pBuffer->m_pIB->nIndices;
+	}
+	return 0;
 }
 
 unsigned int CSkeletalMeshPrimitive::GetNumIndices() {
-    return NumIndices;
+	return NumIndices;
 }
 
-TSkeletalMesh::TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence)
-    :
-    CurrentFrame(0),
-    AnimationSequenceRef(InAnimationSequence),
-    Source(InSkeletalMesh) {
-    if (InBoneHierarchy) {
-        for (unsigned int i = 0; i < InBoneHierarchy->Bones.Size(); ++i) {
-            TBone* Parent = 0;
-            if (InBoneHierarchy->Bones[i]->Parent != 0) {
-                Parent = Bones[InBoneHierarchy->Bones[i]->Parent->BoneIndex];
-            }
-            Bones.AddItem(
-                new TBone(InBoneHierarchy->Bones[i], Parent,
-                          InBoneHierarchy->Bones[i]->AnimationBoneSequenceRef));
-            SkinBoneIndexMap.AddItem(InBoneHierarchy->Bones[i]->SkinBoneIndex);
-        }
-    }
+CSkeletalMeshDraw::CSkeletalMeshDraw(RMesh* InMesh, RBoneHierarchy* InBoneHierarchy)
+	:
+	Mesh(InMesh),
+	CurrentFrame(0),
+	AnimationSequenceRef(0) {
+		if (InBoneHierarchy) {
+			for (unsigned int i = 0; i < InBoneHierarchy->Bones.Size(); ++i) {
+				TBone* Parent = 0;
+				if (InBoneHierarchy->Bones[i]->ParentIndex != -1) {
+					Parent = Bones[InBoneHierarchy->Bones[InBoneHierarchy->Bones[i]->ParentIndex]->BoneIndex];
+				}
+				Bones.AddItem(
+					new TBone(InBoneHierarchy->Bones[i], Parent,
+					0));
+				SkinBoneIndexMap.AddItem(InBoneHierarchy->Bones[i]->SkinBoneIndex);
+			}
+		}
 
-    pBuffer = new RStaticPrimitiveBuffer();
+		pBuffer = new RStaticPrimitiveBuffer();
 
-    RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
-    RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
-    pBuffer->m_pVB = pVB;
-    pBuffer->m_pIB = pIB;
-	
-    pVB->Protocol = RVertexProtocol::Protocols(0);//InSkeletalMesh->SkeletalSubMeshes(0)->pVB->Declaration;
-    pVB->nVertices = InSkeletalMesh->SkeletalSubMeshes(0)->pVB->nVertices;
-    pVB->pVertices = new char[pVB->Protocol->Decl->GetStride()* pVB->nVertices];
-	RVertexDeclaration::Position_Normal_TexCoord_VD* pVertices = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(pVB->pVertices);
-	RVertexDeclaration::SkeletalMesh_GPU_Skin_VD* pSrcVertices = reinterpret_cast<RVertexDeclaration::SkeletalMesh_GPU_Skin_VD*>(InSkeletalMesh->SkeletalSubMeshes(0)->pVB->pVertices);
-	for(unsigned int i=0;i<pVB->nVertices;++i) {
-		pVertices[i].Position = pSrcVertices[i].Position;
-		pVertices[i].Normal = pSrcVertices[i].Normal;
-		pVertices[i].TexCoord = pSrcVertices[i].TexCoord;
-	}
+		RSystemMemoryVertexBuffer *pVB = new RSystemMemoryVertexBuffer();
+		RSystemMemoryIndexBuffer *pIB = new RSystemMemoryIndexBuffer();
+		pBuffer->m_pVB = pVB;
+		pBuffer->m_pIB = pIB;
 
-    pIB->nIndices = InSkeletalMesh->SkeletalSubMeshes(0)->pIB->nIndices;
-    pIB->pIndices = new ID[pIB->nIndices];
-    memcpy_s(pIB->pIndices, pIB->nIndices * sizeof(ID),
-             InSkeletalMesh->SkeletalSubMeshes(0)->pIB->pIndices,
-             pIB->nIndices * sizeof(ID));
+		pVB->Protocol = RVertexProtocol::Protocols(0);//InSkeletalMesh->SkeletalSubMeshes(0)->pVB->Declaration;
+		pVB->nVertices = InMesh->SkeletalSubMeshes(0)->pVB->nVertices;
+		pVB->pVertices = new char[pVB->Protocol->Decl->GetStride()* pVB->nVertices];
+		RVertexDeclaration::Position_Normal_TexCoord_VD* pVertices = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(pVB->pVertices);
+		RVertexDeclaration::SkeletalMesh_GPU_Skin_VD* pSrcVertices = reinterpret_cast<RVertexDeclaration::SkeletalMesh_GPU_Skin_VD*>(InMesh->SkeletalSubMeshes(0)->pVB->pVertices);
+		for(unsigned int i=0;i<pVB->nVertices;++i) {
+			pVertices[i].Position = pSrcVertices[i].Position;
+			pVertices[i].Normal = pSrcVertices[i].Normal;
+			pVertices[i].TexCoord = pSrcVertices[i].TexCoord;
+		}
 
-    UpdatePrimitive();
+		pIB->nIndices = InMesh->SkeletalSubMeshes(0)->pIB->nIndices;
+		pIB->pIndices = new ID[pIB->nIndices];
+		memcpy_s(pIB->pIndices, pIB->nIndices * sizeof(ID),
+			InMesh->SkeletalSubMeshes(0)->pIB->pIndices,
+			pIB->nIndices * sizeof(ID));
+
+		UpdatePrimitive();
 }
 
-TSkeletalMesh::~TSkeletalMesh() {
+CSkeletalMeshDraw::~CSkeletalMeshDraw() {
     for (unsigned int i = 0; i < Bones.Size(); ++i) {
         delete Bones[i];
     }
     Bones.Clear();
 }
 
-void TSkeletalMesh::UpdatePrimitive() {
+void CSkeletalMeshDraw::UpdatePrimitive() {
     if (IsPlaying) {
         //CurrentFrame ++;
     }
@@ -149,7 +158,7 @@ void TSkeletalMesh::UpdatePrimitive() {
     RSystemMemoryIndexBuffer *pIB = pBuffer->m_pIB;
 
     RVertexDeclaration::Position_Normal_TexCoord_VD* pVertex = reinterpret_cast<RVertexDeclaration::Position_Normal_TexCoord_VD*>(pVB->pVertices);
-    RVertexDeclaration::SkeletalMesh_GPU_Skin_VD* pSrcVertex = reinterpret_cast<RVertexDeclaration::SkeletalMesh_GPU_Skin_VD*>(Source->SkeletalSubMeshes(0)->pVB
+    RVertexDeclaration::SkeletalMesh_GPU_Skin_VD* pSrcVertex = reinterpret_cast<RVertexDeclaration::SkeletalMesh_GPU_Skin_VD*>(Mesh->SkeletalSubMeshes(0)->pVB
                                            ->pVertices);
 
     if (Bones.Size() > 0) {
@@ -174,49 +183,50 @@ void TSkeletalMesh::UpdatePrimitive() {
     }
 }
 
-void TSkeletalMesh::CalcBoneMatrices() {
+void CSkeletalMeshDraw::CalcBoneMatrices() {
     for (unsigned int i = 0; i < Bones.Size(); ++i) {
         Bones(i)->CalcBoneMatrix(CurrentFrame);
     }
 }
 
-void TSkeletalMesh::TBone::CalcBoneMatrix(unsigned int CurrentFrame) {
-    BoneTM.SetIdentity();
-    if (AnimationBoneSequenceRef) {
+void CSkeletalMeshDraw::TBone::CalcBoneMatrix(unsigned int CurrentFrame) {
+	BoneTM = Source->TM;
+	if (AnimationBoneSequenceRef) {
+		BoneTM.SetIdentity();
         TQuaternion Quat = AnimationBoneSequenceRef->GetRotKey(CurrentFrame);
         BoneTM.Rotate(Quat);
         TVector3 Pos = AnimationBoneSequenceRef->GetPosKey(CurrentFrame);
         BoneTM.Translate(Pos);
-    }
-    if (Parent) {
-        BoneTM *= Parent->BoneTM;
-    }
+		if (Parent) {
+			BoneTM *= Parent->BoneTM;
+		}
+    }    
 }
 
-TSkeletalMesh::TBone::TBone(RBone* InSource, TBone* InParent, RAnimationBoneSequence* InAnimationBoneSequence)
+CSkeletalMeshDraw::TBone::TBone(RBone* InSource, TBone* InParent, RAnimationBoneSequence* InAnimationBoneSequence)
     :
     Source(InSource),
     AnimationBoneSequenceRef(InAnimationBoneSequence),
     Parent(InParent) {
 }
 
-TSkeletalMesh::TBone::~TBone() {
+CSkeletalMeshDraw::TBone::~TBone() {
 }
 
-unsigned int TSkeletalMesh::TBone::NumTotalVertices_Recursive() {
+unsigned int CSkeletalMeshDraw::TBone::NumTotalVertices_Recursive() {
     unsigned int NumVertices = 0;
     return NumVertices;
 }
 
-unsigned int TSkeletalMesh::TBone::NumTotalIndices_Recursive() {
+unsigned int CSkeletalMeshDraw::TBone::NumTotalIndices_Recursive() {
     unsigned int NumIndices = 0;
     return NumIndices;
 }
 
-char* TSkeletalMesh::TBone::FillStaticVertexBuffer_Recursive(char* pVertices) {
+char* CSkeletalMeshDraw::TBone::FillStaticVertexBuffer_Recursive(char* pVertices) {
     return pVertices;
 }
 
-TSkeletalMesh::ID* TSkeletalMesh::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex) {
+CSkeletalMeshDraw::ID* CSkeletalMeshDraw::TBone::FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex) {
     return pIndices;
 }

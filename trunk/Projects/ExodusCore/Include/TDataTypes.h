@@ -43,7 +43,7 @@ public:
 		;
 	AACCESSOR_OPERATOR(char)
 		;
-
+	
 	virtual AAccessor& operator<<(class AObject*& A);
 
 	bool IsLoading() const {
@@ -421,6 +421,14 @@ public:
 		y /= Squared;
 		z /= Squared;
 		return *this;
+	}
+
+	friend AAccessor& operator<<(AAccessor& Ac, TVector3& V)
+	{
+		Ac << V.x;
+		Ac << V.y;
+		Ac << V.z;
+		return Ac;
 	}
 
 	float x;

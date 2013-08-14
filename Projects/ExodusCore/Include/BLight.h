@@ -3,6 +3,8 @@
 #include "TDataTypes.h"
 #include "BThing.h"
 
+class RShader;
+
 class BLight: public BThing
 {
 public:
@@ -10,4 +12,6 @@ public:
 
 	BLight(void);
 	virtual ~BLight(void);
+
+	virtual void ConfigureShader(RShader* InPixelShader);
 };

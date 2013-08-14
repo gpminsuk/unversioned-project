@@ -4,16 +4,15 @@
 
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
-#include "RSkeletalMesh.h"
+#include "RMesh.h"
 
-class TSkeletalMesh: public TPrimitive
+class CSkeletalMeshDraw: public BDraw
 {
 public:
 	typedef TIndex16 ID;
 
-	TSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* InAnimationSequence =
-			NULL);
-	~TSkeletalMesh();
+	CSkeletalMeshDraw(RMesh* InSkeletalMesh, RBoneHierarchy* InBoneHierarchy);
+	~CSkeletalMeshDraw();
 
 	class TBone
 	{
@@ -25,7 +24,7 @@ public:
 
 		RBone* Source;
 		TBone* Parent;
-		TArray<RSkeletalSubMesh*> SubMesheRefs;
+		TArray<RSubMesh*> SubMesheRefs;
 		RAnimationBoneSequence* AnimationBoneSequenceRef;
 
 		char* FillStaticVertexBuffer_Recursive(char* pVertices);
@@ -42,28 +41,31 @@ public:
 
 	TArray<TBone*> Bones;
 	TArray<int> SkinBoneIndexMap;
-	RSkeletalMesh* Source;
 	RAnimationSequence* AnimationSequenceRef;
+	RMesh* Mesh;
 	unsigned int CurrentFrame;
 	bool IsPlaying;
 	bool IsLooping;
 };
 
-class CSkeletalMeshPrimitive: public CMeshPrimitive
+class CSkeletalMeshPrimitive: public BPrimitive
 {
+	DECLARE_CLASS(CSkeletalMeshPrimitive,)
 public:
 	CSkeletalMeshPrimitive();
 	~CSkeletalMeshPrimitive(void);
 
-	TSkeletalMesh* SkeletalMeshTemplate;
-	RTextureBuffer* Texture;
+	RAssetPtr<RMesh> Mesh;
+	RAssetPtr<RBoneHierarchy> BoneHierarchy;
 
-	void SetSkeletalMesh(RBoneHierarchy* InBoneHierarchy, RSkeletalMesh* InSkeletalMesh, RAnimationSequence* AnimationSeq);
+	void SetSkeletalMesh(RMesh* InMesh, RBoneHierarchy* InBoneHierarchy);
 
+	virtual void CreateDraws();
+	virtual bool Access(AAccessor& Accessor);
 	virtual void UpdatePrimitive();
-
 	virtual RMaterial* GetMaterial();
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();
+
 };

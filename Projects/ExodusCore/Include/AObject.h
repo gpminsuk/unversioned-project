@@ -28,12 +28,11 @@ public:
     virtual bool Tick(unsigned long Time);
     virtual bool Access(AAccessor& Accessor);
     virtual void SetProperty(TString& PropertyName, TString& Value);
-
+	
     void SaveObject(TString& ResourceName);
 
-    static AObject* CreateObject(AClass* Class, TString& ResourceName);
+    static AObject* CreateObject(TString& ResourceName);
 protected:
-
     AObject(void);
     virtual ~AObject(void);
 
@@ -41,6 +40,10 @@ protected:
 };
 
 template<class T>
-T* LoadResource(TString& ResourceName) {
-    return (T*) AObject::CreateObject(T::Class(), ResourceName);
+T* LoadAsset(TString& ResourceName) {
+    RAsset* Asset = (RAsset*) AObject::CreateObject(ResourceName);
+	Asset->Path = ResourceName;
+	return (T*)Asset;
 }
+
+void SaveAsset(class RAsset* Asset, TString& ResourceName);

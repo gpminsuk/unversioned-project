@@ -2,9 +2,9 @@
 #include "BThing.h"
 
 class CCharacter: public BThing
-{
+{	
+DECLARE_CLASS(CCharacter,);
 public:
-
 	CCharacter();
 	~CCharacter();
 

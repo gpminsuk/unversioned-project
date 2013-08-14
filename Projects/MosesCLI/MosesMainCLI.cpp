@@ -2,11 +2,9 @@
 
 #include <windows.h>
 #include "RResource.h"
-#include "RSkeletalMesh.h"
+#include "RMesh.h"
 #include "BViewport.h"
 #include "BRenderingBatch.h"
-#include "CSkeletalMeshComponent.h"
-#include "BComponent.h"
 
 #define generic GENERIC
 #include "UWorld.h"
@@ -16,6 +14,8 @@
 #include "MosesMainCLI.h"
 #include "UXMLParser.h"
 #include "InputDefine.h"
+
+#include "CSkeletalMeshPrimitive.h"
 
 using namespace System::Windows::Input;
 
@@ -51,11 +51,23 @@ IntPtr MosesMainCLI::LoadObject(IntPtr pWorld, String^ Path)
 	TString Str;
 	wcstombs_s(&i, Str.Str, 1024, wch, Path->Length);
 	if(Path->EndsWith(".exskn")) {
-		RSkeletalMesh* SkeletalMesh = LoadResource<RSkeletalMesh>(Str);
-		CSkeletalMeshComponent* Component = (CSkeletalMeshComponent*)SkeletalMesh->CreateComponent();
-		Component->SetSkeletalMesh(0, SkeletalMesh, 0);
+		RMesh* Object = LoadAsset<RMesh>(Str);
 		UWorld* World = (UWorld*)pWorld.ToPointer();
-		Component->RenderComponent(World->BatchManager, World->m_pRenderer);
+		CSkeletalMeshPrimitive* pPrimitive = new CSkeletalMeshPrimitive();
+		pPrimitive->SetSkeletalMesh(Object, 0);
+		pPrimitive->CreateDraws();
+		World->m_pRenderer->Render(World->BatchManager, pPrimitive);
+	}
+	else if(Path->EndsWith(".exmap")) {
+		UWorld* World = LoadAsset<UWorld>(Str);
+		World->m_pRenderer = m_Application->m_pRenderer;
+		World->BatchManager->m_Viewports = &World->Viewports;
+		m_Application->m_pRenderer->BatchManager.AddItem(World->BatchManager);
+		m_Application->Worlds.AddItem(World);
+		for(unsigned int i=0;i<((TWorldOctree*)World->m_pWorldData)->AllObjects.Size();++i) {
+			World->m_pRenderer->Render(World->BatchManager, ((TWorldOctree*)World->m_pWorldData)->AllObjects(i));
+		}
+		return IntPtr(World);
 	}
 	return IntPtr(0);
 }

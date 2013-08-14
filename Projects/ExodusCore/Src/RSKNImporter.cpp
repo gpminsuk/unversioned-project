@@ -2,11 +2,11 @@
 
 #include "RSKNImporter.h"
 
-#include "RSkeletalMesh.h"
+#include "RMesh.h"
 #include "CDirectXDriver.h"
 #include "RShaderClasses.h"
 
-bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RSkeletalMesh*& Model) {
+bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RMesh*& Model) {
 	char* fn = Filename.Str;
 	TString NodeName;
 	TString ParentNodeName;
@@ -15,7 +15,7 @@ bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
 	if (!fp)
 		return false;
 
-	Model = new RSkeletalMesh();
+	Model = new RMesh();
 
 	int magic;
 	fread(&magic, sizeof(int), 1, fp);
@@ -25,7 +25,7 @@ bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
 	fread(&numObject, sizeof(short), 1, fp);
 
 	for (int n = 0; n < numObject; ++n) {
-		RSkeletalSubMesh* subMesh = new RSkeletalSubMesh();
+		RSubMesh* subMesh = new RSubMesh();
 
 		subMesh->pVB = new RSystemMemoryVertexBuffer();
 		subMesh->pIB = new RSystemMemoryIndexBuffer();

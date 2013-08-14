@@ -4,6 +4,8 @@
 
 #include "UFreeTypeDrawer.h"
 
+IMPLEMENT_CLASS(AApplication);
+
 AApplication::AApplication(void) :
     m_pRenderer(0), bQuit(false) {
     GFontDrawer = new UFreeTypeFontDrawer();

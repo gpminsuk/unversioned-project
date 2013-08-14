@@ -53,60 +53,60 @@ CUIButtonPrimitive::CUIButtonPrimitive(RTextureBuffer* InTexture) {
     Texture = InTexture;
 
     TUIButtonPrimitive* ButtonPrimitive = new TUIButtonPrimitive();
-    Primitives.AddItem(ButtonPrimitive);
+    Draws.AddItem(ButtonPrimitive);
 }
 
 CUIButtonPrimitive::~CUIButtonPrimitive(void) {
 }
 
 void CUIButtonPrimitive::Render(BRenderingBatch *Batch) {
-    Batch->nVertices += Primitives(0)->pBuffer->m_pVB->nVertices;
+    Batch->nVertices += Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CUIButtonPrimitive::GetNumIndices() {
-    return Primitives(0)->pBuffer->m_pIB->nIndices;
+    return Draws(0)->pBuffer->m_pIB->nIndices;
 }
 
 unsigned int CUIButtonPrimitive::FillDynamicVertexBuffer(char** pData) {
     GDriver->SetTexture(0, Texture);
 
-    memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
-           Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
-    for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
+    memcpy((*pData), Draws(0)->pBuffer->m_pVB->pVertices,
+           Draws(0)->pBuffer->m_pVB->nVertices
+           * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
+    for (unsigned int k = 0; k < Draws(0)->pBuffer->m_pVB->nVertices; ++k) {
         *((TVector3*) &((*pData)[k
-                                 * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
+                                 * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
                                          .TransformVector3(
                                              *((TVector3*) &((*pData)[k
-                                                     * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
+                                                     * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
     }
-    *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    *pData += Draws(0)->pBuffer->m_pVB->nVertices
+              * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CUIButtonPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
     for (unsigned int k = 0; k < GetNumIndices(); ++k) {
         TIndex16 tmpIndex;
-        tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1
+        tmpIndex._1 = Draws(0)->pBuffer->m_pIB->pIndices[k]._1
                       + *BaseIndex;
-        tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2
+        tmpIndex._2 = Draws(0)->pBuffer->m_pIB->pIndices[k]._2
                       + *BaseIndex;
-        tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3
+        tmpIndex._3 = Draws(0)->pBuffer->m_pIB->pIndices[k]._3
                       + *BaseIndex;
         (*pData)[k] = tmpIndex;
     }
-    *BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
+    *BaseIndex += Draws(0)->pBuffer->m_pVB->nVertices;
     *pData += GetNumIndices();
 
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, int height)
+CUIButton::CUIButton(int TexIndex, int x, int y, int width, int height)
     :
     Width(width),
     Height(height),
@@ -124,9 +124,6 @@ CUIButtonComponent::CUIButtonComponent(int TexIndex, int x, int y, int width, in
      }*/
 }
 
-CUIButtonComponent::~CUIButtonComponent() {
+CUIButton::~CUIButton() {
 
-}
-
-void CUIButtonComponent::UpdateComponent() {
 }

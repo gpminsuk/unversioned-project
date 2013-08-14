@@ -1,12 +1,11 @@
 #pragma once
 
 #include "BPrimitive.h"
-#include "BComponent.h"
+#include "BThing.h"
 
 class CUIButtonPrimitive;
-class CUIButtonComponent;
 
-class TUIButtonPrimitive: public TPrimitive
+class TUIButtonPrimitive: public BDraw
 {
 public:
 	TUIButtonPrimitive();
@@ -36,7 +35,7 @@ public:
 	virtual unsigned int GetNumIndices();
 };
 
-class CUIButtonComponent: public BComponent
+class CUIButton: public BThing
 {
 public:
 	int Width;
@@ -44,9 +43,7 @@ public:
 	int PosX;
 	int PosY;
 
-	CUIButtonComponent(int TexIndex, int x = 0, int y = 0, int width = 800, int height =
+	CUIButton(int TexIndex, int x = 0, int y = 0, int width = 800, int height =
 			600);
-	~CUIButtonComponent();
-
-	virtual void UpdateComponent();
+	~CUIButton();
 };

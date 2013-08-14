@@ -4,18 +4,20 @@
 
 #include "RResource.h"
 
+IMPLEMENT_CLASS(BPrimitive);
+
 BPrimitive::BPrimitive() {
 }
 
 BPrimitive::~BPrimitive(void) {
-    Primitives.Clear();
+    Draws.Clear();
 }
 
-TPrimitive::TPrimitive()
+BDraw::BDraw()
     :
     pBuffer(0) {
 }
 
-TPrimitive::~TPrimitive() {
+BDraw::~BDraw() {
     delete pBuffer;
 }

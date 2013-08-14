@@ -6,6 +6,8 @@
 #include "InputDefine.h"
 #include "Enumerations_Geom.h"
 
+class BPrimitive;
+
 class BThing: public AObject
 {
 DECLARE_CLASS(BThing, CLASS_Abstract)
@@ -13,7 +15,7 @@ DECLARE_CLASS(BThing, CLASS_Abstract)
 	TVector3 m_Location;
 	TVector3 m_Scale;
 
-	TArray<class BComponent*> Components;
+	TArray<BPrimitive*> Primitives;
 	TBounds PrimitiveBounds;
 	TArray<class BCollisionBody*> CollisionBodies;
 	TBounds CollisionBodyBounds;
@@ -21,8 +23,8 @@ DECLARE_CLASS(BThing, CLASS_Abstract)
 	BThing(void);
 	virtual ~BThing(void);
 
-	virtual TArray<class BPrimitive*> GetPrimitives();
 	public:
+	virtual bool Access(AAccessor& Accessor);
 	virtual bool Tick(unsigned long dTime);
 
 public:

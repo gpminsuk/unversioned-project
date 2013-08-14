@@ -211,8 +211,6 @@
     <ClCompile Include="Src\BLineBatcher.cpp" />
     <ClCompile Include="Src\BPrimitive.cpp" />
     <ClCompile Include="Src\BTextDrawer.cpp" />
-    <ClCompile Include="Src\BComponentThread.cpp" />
-    <ClCompile Include="Src\BComponentThreadManager.cpp" />
     <ClCompile Include="Src\BRenderer.cpp" />
     <ClCompile Include="Src\CDirectionalLight.cpp" />
     <ClCompile Include="Src\CDirectXDriver.cpp" />
@@ -241,14 +239,12 @@
     <ClCompile Include="Src\RImporter.cpp" />
     <ClCompile Include="Src\RAnimationSequence.cpp" />
     <ClCompile Include="Src\RBoneHierarchy.cpp" />
-    <ClCompile Include="Src\RSkeletalMesh.cpp" />
+    <ClCompile Include="Src\RMesh.cpp" />
     <ClCompile Include="Src\RSystemMemory.cpp" />
     <ClCompile Include="Src\RTexture.cpp" />
     <ClCompile Include="Src\InputDefine.cpp" />
     <ClCompile Include="Src\TDataTypes.cpp" />
     <ClCompile Include="Src\BCollisionBody.cpp" />
-    <ClCompile Include="Src\BComponent.cpp" />
-    <ClCompile Include="Src\BLightComponent.cpp" />
     <ClCompile Include="Src\BThing.cpp" />
     <ClCompile Include="Src\CCylinderCollisionBody.cpp" />
     <ClCompile Include="Src\CHeightFieldCollisionBody.cpp" />
@@ -257,10 +253,6 @@
     <ClCompile Include="Src\CCharacter.cpp" />
     <ClCompile Include="Src\CEmitter.cpp" />
     <ClCompile Include="Src\CTerrain.cpp" />
-    <ClCompile Include="Src\CBoxComponent.cpp" />
-    <ClCompile Include="Src\CDirectionalLightComponent.cpp" />
-    <ClCompile Include="Src\CSkeletalMeshComponent.cpp" />
-    <ClCompile Include="Src\CTerrainComponent.cpp" />
     <ClCompile Include="Src\UWorld.cpp" />
     <ClCompile Include="Src\UFreeTypeDrawer.cpp" />
     <ClCompile Include="Src\UXMLParser.cpp" />
@@ -290,8 +282,6 @@
     <ClInclude Include="Include\BLineBatcher.h" />
     <ClInclude Include="Include\BPrimitive.h" />
     <ClInclude Include="Include\BTextDrawer.h" />
-    <ClInclude Include="Include\BComponentThread.h" />
-    <ClInclude Include="Include\BComponentThreadManager.h" />
     <ClInclude Include="Include\BRenderer.h" />
     <ClInclude Include="Include\CDirectionalLight.h" />
     <ClInclude Include="Include\CDirectXDriver.h" />
@@ -315,7 +305,7 @@
     <ClInclude Include="Include\RImporter.h" />
     <ClInclude Include="Include\RAnimationSequence.h" />
     <ClInclude Include="Include\RBoneHierarchy.h" />
-    <ClInclude Include="Include\RSkeletalMesh.h" />
+    <ClInclude Include="Include\RMesh.h" />
     <ClInclude Include="Include\RSKLImporter.h" />
     <ClInclude Include="Include\RSystemMemory.h" />
     <ClInclude Include="Include\RTexture.h" />
@@ -324,8 +314,6 @@
     <ClInclude Include="Include\TDataTypes.h" />
     <ClInclude Include="Include\TWindowInfo.h" />
     <ClInclude Include="Include\BCollisionBody.h" />
-    <ClInclude Include="Include\BComponent.h" />
-    <ClInclude Include="Include\BLightComponent.h" />
     <ClInclude Include="Include\BThing.h" />
     <ClInclude Include="Include\CCylinderCollisionBody.h" />
     <ClInclude Include="Include\CHeightFieldCollisionBody.h" />
@@ -334,10 +322,6 @@
     <ClInclude Include="Include\CCharacter.h" />
     <ClInclude Include="Include\CEmitter.h" />
     <ClInclude Include="Include\CTerrain.h" />
-    <ClInclude Include="Include\CBoxComponent.h" />
-    <ClInclude Include="Include\CDirectionalLightComponent.h" />
-    <ClInclude Include="Include\CSkeletalMeshComponent.h" />
-    <ClInclude Include="Include\CTerrainComponent.h" />
     <ClInclude Include="Include\UWorld.h" />
     <ClInclude Include="Include\RSKNImporter.h" />
     <ClInclude Include="Src\UFreeTypeDrawer.h" />

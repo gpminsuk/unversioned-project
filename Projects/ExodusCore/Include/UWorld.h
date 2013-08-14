@@ -14,6 +14,11 @@ class BThing;
 class CCamera;
 class CCameraViewport;
 
+class UWorldTemplate : public AObject {
+public:
+	virtual void Create(class UWorld* World) = 0;
+};
+
 class THitInfo
 {
 public:
@@ -99,7 +104,7 @@ public:
 	void RemoveThing(class BThing* Thing);
 };
 
-class UWorld: public AObject
+class UWorld: public RAsset
 {
 DECLARE_CLASS(UWorld,)
 	public:
@@ -111,7 +116,8 @@ DECLARE_CLASS(UWorld,)
 	}
 
 	virtual bool DestroyWorld();
-
+	
+	virtual bool Access(AAccessor& Accessor);
 	virtual bool Tick(unsigned long dTime);
 	
 	TWorldStructure* m_pWorldData;

@@ -12,6 +12,7 @@ namespace Moses
     {
         public IntPtr pWorld;
         public String WorldName { get; set; }
+        public bool ShouldCreateWorld { get; set; }
 
         public World()
         {
@@ -20,8 +21,10 @@ namespace Moses
 
         protected override void OnInitialized(EventArgs e)
         {
-            pWorld = MosesMain.m_Backend.CreateWorld(WorldName);
-
+            if (ShouldCreateWorld)
+            {
+                pWorld = MosesMain.m_Backend.CreateWorld(WorldName);
+            }
             base.OnInitialized(e);
         }
 

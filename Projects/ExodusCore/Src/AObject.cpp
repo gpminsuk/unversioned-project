@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "AObject.h"
+#include "RResource.h"
 
 AReadAccessor::AReadAccessor(TString& Filename) {
     bIsLoading = true;
@@ -41,9 +42,12 @@ void AObject::SetProperty(TString& PropertyName, TString& Value) {
 
 }
 
-AObject* AObject::CreateObject(AClass* Class, TString& ResourceName) {
-    AObject* Object = Class->Constructor->Construct();
+AObject* AObject::CreateObject(TString& ResourceName) {
     AReadAccessor Accessor(ResourceName);
+	TString ClassName;
+	Accessor << ClassName;
+	AClass* Class = ::GetClass<AClass>(ClassName);
+	AObject* Object = Class->Constructor->Construct();
     if (Accessor.IsValid()) {
         Object->Access(Accessor);
     } else {
@@ -54,7 +58,13 @@ AObject* AObject::CreateObject(AClass* Class, TString& ResourceName) {
 
 void AObject::SaveObject(TString& ResourceName) {
     AWriteAccessor Accessor(ResourceName);
+	Accessor << GetClass()->ClassName;
     if (Accessor.IsValid()) {
         Access(Accessor);
     }
+}
+
+void SaveAsset(RAsset* Asset, TString& ResourceName) {
+	Asset->Path = ResourceName;
+	Asset->SaveObject(ResourceName);
 }

@@ -3,16 +3,15 @@
 
 #include "BPrimitive.h"
 #include "BCollisionBody.h"
-#include "BComponent.h"
 
 BThing::BThing(void) {
 }
 
 BThing::~BThing(void) {
-    for (unsigned int i = 0; i < Components.Size(); ++i) {
-        delete Components(i);
+    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
+        delete Primitives(i);
     }
-    Components.Clear();
+    Primitives.Clear();
 
     for (unsigned int i = 0; i < CollisionBodies.Size(); ++i) {
         delete CollisionBodies(i);
@@ -33,23 +32,15 @@ TVector3 BThing::LineCheck(TVector3& Start, TVector3& End, TVector3& Extent) {
     return HitPositions(0);
 }
 
-bool BThing::Tick(unsigned long dTime) {
-    for (unsigned int i = 0; i < Components.Size(); ++i) {
-        BComponent* Comp = Components(i);
-        Comp->UpdateComponent();
-    }
-    return true;
+bool BThing::Access(AAccessor& Accessor) {
+	__super::Access(Accessor);
+
+	Accessor << m_Scale;
+	Accessor << m_Location;
+	Accessor << Primitives;
+	return true;
 }
 
-TArray<BPrimitive*> BThing::GetPrimitives() {
-    TArray<BPrimitive*> Ret;
-    for (unsigned int i = 0; i < Components.Size(); ++i) {
-        BComponent* CP = Components(i);
-        Ret.AddItems(CP->Primitives);
-    }
-    for (unsigned int i = 0; i < CollisionBodies.Size(); ++i) {
-        BCollisionBody* CB = CollisionBodies(i);
-        Ret.AddItems(CB->Primitives);
-    }
-    return Ret;
+bool BThing::Tick(unsigned long dTime) {
+    return true;
 }

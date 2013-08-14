@@ -68,7 +68,7 @@ public:
 	unsigned int CheckLODLeafNode(TVector3 LODOrigin);
 };
 
-class TTerrainPrimitive: public TPrimitive
+class TTerrainPrimitive: public BDraw
 {
 public:
 	TTerrainPrimitive();
@@ -104,6 +104,7 @@ public:
 	bool DestroyTerrainPrimitive();
 	void UpdateTerrainPrimitive(TVector3 _LODOrigin);
 
+	virtual void CreateDraws();
 	virtual RMaterial* GetMaterial();
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual void IndexTessellate();

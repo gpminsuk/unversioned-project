@@ -31,9 +31,17 @@ namespace Moses
                 TreeViewItem Item = new TreeViewItem();
                 Item.Header = files[i];
                 TreeView.Items.Add(Item);
-                Item.MouseDoubleClick += (sender, e) => {
+                Item.MouseDoubleClick += (sender, e) =>
+                {
                     MosesMain.This.AddTab(Item.Header.ToString());
-                    MosesMain.m_Backend.LoadObject((MosesMain.This.TabControl.SelectedContent as ModelView).World.pWorld, Item.Header as string);
+                    if (MosesMain.This.TabControl.SelectedContent is ModelView)
+                    {
+                        MosesMain.m_Backend.LoadObject((MosesMain.This.TabControl.SelectedContent as ModelView).World.pWorld, Item.Header as string);
+                    }
+                    else if (MosesMain.This.TabControl.SelectedContent is WorldView)
+                    {
+                        (MosesMain.This.TabControl.SelectedContent as WorldView).FirstWorld.pWorld = MosesMain.m_Backend.LoadObject(new IntPtr(0), Item.Header as string);
+                    }
                 };
             }            
         }

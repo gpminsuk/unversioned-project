@@ -6,9 +6,7 @@
 #include "InputDefine.h"
 
 class BThing;
-class BComponent;
 class BPrimitive;
-class BLightComponent;
 class BCamera;
 class RRenderTarget;
 

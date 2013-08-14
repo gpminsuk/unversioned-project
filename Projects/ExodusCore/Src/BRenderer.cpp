@@ -7,7 +7,6 @@
 #include "BThing.h"
 
 #include "BCollisionBody.h"
-#include "BComponent.h"
 #include "BTextDrawer.h"
 #include "BOpaqueBasePass.h"
 #include "BRTRenderPass.h"
@@ -116,11 +115,9 @@ void BRenderer::Remove(BRenderingBatchManager* BatchManager, BPrimitive* pPrimit
 }
 
 void BRenderer::Remove(BRenderingBatchManager* BatchManager, BThing* pThing) {
-    for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
-        BComponent* pComponent = pThing->Components(i);
-        for (unsigned int j = 0; j < pComponent->Primitives.Size(); ++j) {
-            Remove(BatchManager, pComponent->Primitives(j));
-        }
+    for (unsigned int i = 0; i < pThing->Primitives.Size(); ++i) {
+        BPrimitive* pPrimitive = pThing->Primitives(i);
+        Remove(BatchManager, pPrimitive);
     }
     for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
         BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
@@ -131,9 +128,9 @@ void BRenderer::Remove(BRenderingBatchManager* BatchManager, BThing* pThing) {
 }
 
 void BRenderer::Render(BRenderingBatchManager* BatchManager, BThing* pThing) {
-	for (unsigned int i = 0; i < pThing->Components.Size(); ++i) {
-		BComponent* pComponent = pThing->Components(i);
-		pComponent->RenderComponent(BatchManager, this);
+	for (unsigned int i = 0; i < pThing->Primitives.Size(); ++i) {
+		BPrimitive* pPrimitive = pThing->Primitives(i);
+		Render(BatchManager, pPrimitive);
 	}
 	for (unsigned int i = 0; i < pThing->CollisionBodies.Size(); ++i) {
 		BCollisionBody* pCollisionBody = pThing->CollisionBodies(i);
@@ -143,10 +140,10 @@ void BRenderer::Render(BRenderingBatchManager* BatchManager, BThing* pThing) {
 	}
 }
 
-void BRenderer::RenderLight(BRenderingBatchManager* BatchManager,BLightComponent* pLightComponent) {
-	BatchManager->Lights.AddItem(pLightComponent);
+void BRenderer::RenderLight(BRenderingBatchManager* BatchManager, BLight* pLight) {
+	BatchManager->Lights.AddItem(pLight);
 }
 
-void BRenderer::RemoveLight(BRenderingBatchManager* BatchManager,BLightComponent* pLightComponent) {
-	BatchManager->Lights.DeleteItemByVal(pLightComponent);
+void BRenderer::RemoveLight(BRenderingBatchManager* BatchManager, BLight* pLight) {
+	BatchManager->Lights.DeleteItemByVal(pLight);
 }

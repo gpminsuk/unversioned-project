@@ -64,10 +64,24 @@ namespace Moses
             header.button_close.Click += (sender, e) =>
             {
                 TabControl.Items.Remove(Item);
-                (Item.Content as ModelView).World.DestroyWorld();
+                if (Item.Content is ModelView)
+                {
+                    (Item.Content as ModelView).World.DestroyWorld();
+                }
+                else if (Item.Content is WorldView)
+                {
+                    (Item.Content as WorldView).FirstWorld.DestroyWorld();
+                }
             };
             Item.Header = header;
-            Item.Content = new ModelView();
+            if (Name.EndsWith("exmap"))
+            {
+                Item.Content = new WorldView();
+            }
+            else
+            {
+                Item.Content = new ModelView();
+            }
             TabControl.Items.Add(Item);
             Item.IsSelected = true;
         }

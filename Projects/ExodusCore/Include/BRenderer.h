@@ -17,6 +17,7 @@ class BRenderingBatchManager;
 class BRenderPassResource;
 class BLineBatcher;
 class BTextureBuffer;
+class BLight;
 class AApplication;
 
 struct TRendererInfo
@@ -41,8 +42,8 @@ public:
 	void ThreadExecute();
 	void ThreadDestroy();
 	
-	void RenderLight(BRenderingBatchManager* BatchManager, BLightComponent* pLightComponent);
-	void RemoveLight(BRenderingBatchManager* BatchManager, BLightComponent* pLightComponent);
+	void RenderLight(BRenderingBatchManager* BatchManager, BLight* pLight);
+	void RemoveLight(BRenderingBatchManager* BatchManager, BLight* pLight);
 
 	void Render(BRenderingBatchManager* BatchManager, BPrimitive* pPrimitive);
 	void Remove(BRenderingBatchManager* BatchManager, BPrimitive* pPrimitive);	

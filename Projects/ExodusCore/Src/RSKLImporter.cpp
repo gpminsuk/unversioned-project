@@ -3,7 +3,7 @@
 
 #include "RBoneHierarchy.h"
 
-bool RSKLImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RSkeletalMesh*& Model) {
+bool RSKLImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RMesh*& Model) {
     char* fn = Filename.Str;
     TString NodeName;
     TString ParentNodeName;
@@ -33,6 +33,7 @@ bool RSKLImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
 
         RBone* bone = new RBone();
         bone->BoneName = name;
+		bone->ParentIndex = parentId;
         if (parentId != -1) {
             bone->Parent = BoneHierarchy->Bones(parentId);
         } else {

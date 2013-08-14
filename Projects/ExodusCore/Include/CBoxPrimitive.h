@@ -2,7 +2,7 @@
 
 #include "BPrimitive.h"
 
-class TBoxPrimitive: public TPrimitive
+class TBoxPrimitive: public BDraw
 {
 public:
 	TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSideType);
@@ -16,6 +16,7 @@ public:
 
 	EGeometrySideType SideType;
 
+	virtual void CreateDraws();
 	virtual RMaterial* GetMaterial();
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);

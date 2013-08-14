@@ -2,7 +2,7 @@
 
 #include "BPrimitive.h"
 
-class TCylinderPrimitive: public TPrimitive
+class TCylinderPrimitive: public BDraw
 {
 public:
 	TCylinderPrimitive(ERenderType _RenderType = RenderType_Opaque);

@@ -30,7 +30,7 @@ void CParticlePrimitive::CreateParticlePrimitive(unsigned int ParticleCount) {
     ParticlePoolSize = ParticleCount;
 
     TParticlePrimitive *Primitive = new TParticlePrimitive();
-    Primitives.AddItem(Primitive);
+    Draws.AddItem(Primitive);
 
     Primitive->pBuffer = new RStaticPrimitiveBuffer();
 
@@ -85,12 +85,12 @@ void CParticlePrimitive::UpdateParticlePrimitive(TArray<TParticleInstance*> Data
             //float Theta = ARCCOSINE(RotateVector.x/(ARCCOSINE(RotateVector.y)));
             //float Pi = ARCSINE(RotateDirection.y);
 
-            RVertexDeclaration::Position_TexCoord_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_TexCoord_VD*>(Primitives(0)->pBuffer->m_pVB
+            RVertexDeclaration::Position_TexCoord_VD *Vertex = reinterpret_cast<RVertexDeclaration::Position_TexCoord_VD*>(Draws(0)->pBuffer->m_pVB
                                                ->pVertices);
-            TIndex16 *Index = reinterpret_cast<TIndex16*>(Primitives(0)->pBuffer
+            TIndex16 *Index = reinterpret_cast<TIndex16*>(Draws(0)->pBuffer
                               ->m_pIB->pIndices);
             if (i
-                    < (unsigned int) (Primitives(0)->pBuffer->m_pVB->nVertices
+                    < (unsigned int) (Draws(0)->pBuffer->m_pVB->nVertices
                                       / 4)) {
                 Vertex[i * 4 + 0].Position = Inst->Position + -TangentVector
                                         + -TangentVector2;
@@ -118,10 +118,10 @@ void CParticlePrimitive::UpdateParticlePrimitive(TArray<TParticleInstance*> Data
 }
 
 void CParticlePrimitive::DestroyParticlePrimitive() {
-    for (unsigned int i = 0; i < Primitives.Size(); ++i) {
-        delete Primitives(i);
+    for (unsigned int i = 0; i < Draws.Size(); ++i) {
+        delete Draws(i);
     }
-    Primitives.Clear();
+    Draws.Clear();
 }
 
 unsigned int CParticlePrimitive::GetNumIndices() {
@@ -129,35 +129,35 @@ unsigned int CParticlePrimitive::GetNumIndices() {
 }
 
 unsigned int CParticlePrimitive::FillDynamicVertexBuffer(char** pData) {
-    memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
-           Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
-    for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
-        (*((RVertexDeclaration::Position_TexCoord_VD*) &((*pData)[k * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])))
+    memcpy((*pData), Draws(0)->pBuffer->m_pVB->pVertices,
+           Draws(0)->pBuffer->m_pVB->nVertices
+           * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
+    for (unsigned int k = 0; k < Draws(0)->pBuffer->m_pVB->nVertices; ++k) {
+        (*((RVertexDeclaration::Position_TexCoord_VD*) &((*pData)[k * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])))
         .Position = TM.TransformVector3(
                    *((TVector3*) &((*pData)[k
-                                            * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
+                                            * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
         //(*((VD*)&((*pData)[k*Primitives(0)->pBuffer->m_pVB->nVertexStride]))).Size = TVector3(0.1f,0.1f,0.1f);
     }
-    *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    *pData += Draws(0)->pBuffer->m_pVB->nVertices
+              * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CParticlePrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
     unsigned int nIndices = GetNumIndices();
     for (unsigned int k = 0; k < nIndices; ++k) {
         TIndex16 tmpIndex;
-        tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1
+        tmpIndex._1 = Draws(0)->pBuffer->m_pIB->pIndices[k]._1
                       + *BaseIndex;
-        tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2
+        tmpIndex._2 = Draws(0)->pBuffer->m_pIB->pIndices[k]._2
                       + *BaseIndex;
-        tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3
+        tmpIndex._3 = Draws(0)->pBuffer->m_pIB->pIndices[k]._3
                       + *BaseIndex;
         (*pData)[k] = tmpIndex;
     }
-    *BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
+    *BaseIndex += Draws(0)->pBuffer->m_pVB->nVertices;
     *pData += nIndices;
 
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }

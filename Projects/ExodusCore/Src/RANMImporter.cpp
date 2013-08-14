@@ -4,7 +4,7 @@
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
 
-bool RANMImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RSkeletalMesh*& Model) {
+bool RANMImporter::Import(TString& Filename, RAnimationSequence*& AnimationSequence, RBoneHierarchy*& BoneHierarchy, RMesh*& Model) {
     char* fn = Filename.Str;
     TString NodeName;
     TString ParentNodeName;

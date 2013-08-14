@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "RSkeletalMesh.h"
+#include "RMesh.h"
 #include "BDriver.h"
 
 IMPLEMENT_CLASS(RSystemMemoryIndexBuffer);

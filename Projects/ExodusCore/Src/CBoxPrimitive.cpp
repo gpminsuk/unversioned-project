@@ -15,10 +15,10 @@ CBoxPrimitive::CBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSide
     case RenderType_Opaque: {
         switch (_BoxSideType) {
         case SideType_Inside:
-            Primitives.AddItem(GBoxPrimitiveInside);
+            Draws.AddItem(GBoxPrimitiveInside);
             break;
         case SideType_Outside:
-            Primitives.AddItem(GBoxPrimitiveOutside);
+            Draws.AddItem(GBoxPrimitiveOutside);
             break;
         }
     }
@@ -163,7 +163,11 @@ TBoxPrimitive::TBoxPrimitive(ERenderType _RenderType, EGeometrySideType _BoxSide
 }
 
 unsigned int CBoxPrimitive::GetNumIndices() {
-    return Primitives(0)->pBuffer->m_pIB->nIndices;
+    return Draws(0)->pBuffer->m_pIB->nIndices;
+}
+
+void CBoxPrimitive::CreateDraws() {
+
 }
 
 RMaterial* CBoxPrimitive::GetMaterial() {
@@ -171,34 +175,34 @@ RMaterial* CBoxPrimitive::GetMaterial() {
 }
 
 unsigned int CBoxPrimitive::FillDynamicVertexBuffer(char** pData) {
-    memcpy((*pData), Primitives(0)->pBuffer->m_pVB->pVertices,
-           Primitives(0)->pBuffer->m_pVB->nVertices
-           * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
-    for (unsigned int k = 0; k < Primitives(0)->pBuffer->m_pVB->nVertices; ++k) {
+    memcpy((*pData), Draws(0)->pBuffer->m_pVB->pVertices,
+           Draws(0)->pBuffer->m_pVB->nVertices
+           * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride());
+    for (unsigned int k = 0; k < Draws(0)->pBuffer->m_pVB->nVertices; ++k) {
         *((TVector3*) &((*pData)[k
-                                 * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
+                                 * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])) = TM
                                          .TransformVector3(
                                              *((TVector3*) &((*pData)[k
-                                                     * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
+                                                     * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride()])));
     }
-    *pData += Primitives(0)->pBuffer->m_pVB->nVertices
-              * Primitives(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    *pData += Draws(0)->pBuffer->m_pVB->nVertices
+              * Draws(0)->pBuffer->m_pVB->Protocol->Decl->GetStride();
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }
 
 unsigned int CBoxPrimitive::FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex) {
     for (unsigned int k = 0; k < GetNumIndices(); ++k) {
         TIndex16 tmpIndex;
-        tmpIndex._1 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._1
+        tmpIndex._1 = Draws(0)->pBuffer->m_pIB->pIndices[k]._1
                       + *BaseIndex;
-        tmpIndex._2 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._2
+        tmpIndex._2 = Draws(0)->pBuffer->m_pIB->pIndices[k]._2
                       + *BaseIndex;
-        tmpIndex._3 = Primitives(0)->pBuffer->m_pIB->pIndices[k]._3
+        tmpIndex._3 = Draws(0)->pBuffer->m_pIB->pIndices[k]._3
                       + *BaseIndex;
         (*pData)[k] = tmpIndex;
     }
-    *BaseIndex += Primitives(0)->pBuffer->m_pVB->nVertices;
+    *BaseIndex += Draws(0)->pBuffer->m_pVB->nVertices;
     *pData += GetNumIndices();
 
-    return Primitives(0)->pBuffer->m_pVB->nVertices;
+    return Draws(0)->pBuffer->m_pVB->nVertices;
 }

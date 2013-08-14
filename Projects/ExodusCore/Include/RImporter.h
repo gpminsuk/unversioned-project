@@ -8,5 +8,5 @@ class AObject;
 class RImporter
 {
 public:
-	virtual bool Import(TString& Filename, class RAnimationSequence*& AnimationSequence, class RBoneHierarchy*& BoneHierarchy, class RSkeletalMesh*& Model) = 0;
+	virtual bool Import(TString& Filename, class RAnimationSequence*& AnimationSequence, class RBoneHierarchy*& BoneHierarchy, class RMesh*& Model) = 0;
 };

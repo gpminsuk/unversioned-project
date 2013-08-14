@@ -3,6 +3,7 @@
 #include "AObject.h"
 #include "TDataTypes.h"
 #include "RSystemMemory.h"
+#include "RAsset.h"
 
 class RSubMesh: public AObject
 {
@@ -29,4 +30,12 @@ DECLARE_CLASS(RMesh,)
 	TArray<RSubMesh*> SkeletalSubMeshes;
 
 	virtual bool Access(AAccessor& Accessor);
+
+	virtual TArray<TString> GetCreatablePrimitiveClassNames()
+	{
+		TArray<TString> Ret;
+		Ret.AddItem(TString("CMeshPrimitive"));
+		Ret.AddItem(TString("CSkeletalMeshPrimitive"));
+		return Ret;
+	}
 };

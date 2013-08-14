@@ -3,6 +3,7 @@
 #include "AObject.h"
 #include "TDataTypes.h"
 #include "RResource.h"
+#include "RAsset.h"
 #include "RAnimationSequence.h"
 
 class RBone: public AObject
@@ -51,4 +52,11 @@ DECLARE_CLASS(RBoneHierarchy,)
 
 	RBone* FindBone(TString& name);
 	virtual bool Access(AAccessor& Accessor);
+
+	virtual TArray<TString> GetCreatablePrimitiveClassNames()
+	{
+		TArray<TString> Ret;
+		Ret.AddItem(TString("CSkeletalMeshPrimitive"));
+		return Ret;
+	}
 };

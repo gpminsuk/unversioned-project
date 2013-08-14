@@ -2,15 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc="clr-namespace:Moses"
-             Height="Auto" Width="Auto">
+             Height="Auto" Width="Auto"
+             ContextMenuOpening="Rectangle_ContextMenuOpening"
+             ContextMenuClosing="Rectangle_ContextMenuClosing" >
     <Grid>
-        <Border x:Name="DXCanvas" />
-        <Rectangle Fill="Transparent" ContextMenuOpening="Rectangle_ContextMenuOpening" ContextMenuClosing="Rectangle_ContextMenuClosing">
-            <Rectangle.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="ABCABC"></MenuItem>
-                </ContextMenu>
-            </Rectangle.ContextMenu>
-        </Rectangle>
+        <Border x:Name="DXCanvas"/>
+        <Rectangle Fill="Transparent"/>
     </Grid>
 </UserControl>

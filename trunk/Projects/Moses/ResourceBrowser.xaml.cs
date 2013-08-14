@@ -43,7 +43,12 @@ namespace Moses
                         (MosesMain.This.TabControl.SelectedContent as WorldView).FirstWorld.pWorld = MosesMain.m_Backend.LoadObject(new IntPtr(0), Item.Header as string);
                     }
                 };
-            }            
+            }
+        }
+
+        public String GetSelectedAssetType()
+        {
+            return (TreeView.SelectedItem as TreeViewItem).Header.ToString();
         }
     }
 }

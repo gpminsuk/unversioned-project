@@ -31,7 +31,7 @@ CCharacter::CCharacter() {
     bIsPassable = false;
 
     m_Location = TVector3(0, 0, 0);
-
+	/*
     RSKNImporter SKNImporter;
     RSKLImporter SKLImporter;
     RANMImporter ANMImporter;
@@ -51,7 +51,7 @@ CCharacter::CCharacter() {
     Primitives.AddItem(SkeletalMeshPrimitive);
 	SkeletalMeshPrimitive->SetSkeletalMesh(SkeletalMesh, BoneHierarchy);
 	SkeletalMeshPrimitive->CreateDraws();
-
+	*/
     CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
     CollisionBodies.AddItem(CharacterCollisionBody);
 

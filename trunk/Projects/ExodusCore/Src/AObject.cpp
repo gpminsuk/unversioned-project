@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "AObject.h"
 #include "RResource.h"
+#include "RAsset.h"
 
 AReadAccessor::AReadAccessor(TString& Filename) {
     bIsLoading = true;

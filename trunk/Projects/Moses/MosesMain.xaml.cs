@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Collections;
-using ResourceManager;
 
 namespace Moses
 {
@@ -25,8 +24,6 @@ namespace Moses
     {
         static public IMosesMainInterface m_Backend;
         static public MosesMain This;
-
-        ResourceManagerMain resourceManagerWindow;
 
         public MosesMain(IMosesMainInterface Backend)
         {
@@ -40,11 +37,14 @@ namespace Moses
             GameLoop.Start();
         }
 
+        public ResourceBrowser GetResourceBrowser()
+        {
+            return ResourceBrowser;
+        }
+
         public void ShowWindow()
         {
             Show();
-            resourceManagerWindow = new ResourceManagerMain();
-            //resourceManagerWindow.Show();
         }
 
         public IntPtr GetWindowHandle()

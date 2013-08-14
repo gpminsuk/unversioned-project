@@ -181,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="Src\RAnimationController.cpp" />
     <ClCompile Include="Src\RANMImporter.cpp" />
+    <ClCompile Include="Src\RAsset.cpp" />
     <ClCompile Include="Src\RSKLImporter.cpp" />
     <ClCompile Include="Src\RSKNImporter.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -298,6 +299,7 @@
     <ClInclude Include="Include\CTerrainPrimitive.h" />
     <ClInclude Include="Include\RAnimationController.h" />
     <ClInclude Include="Include\RANMImporter.h" />
+    <ClInclude Include="Include\RAsset.h" />
     <ClInclude Include="Include\RDXResource.h" />
     <ClInclude Include="Include\RResource.h" />
     <ClInclude Include="Include\RResourceManager.h" />

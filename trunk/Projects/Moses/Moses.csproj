@@ -103,11 +103,8 @@
     <Compile Include="ResourceBrowser.xaml.cs">
       <DependentUpon>ResourceBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ResourceManagerMain.xaml.cs">
-      <DependentUpon>ResourceManagerMain.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ResourceView.xaml.cs">
-      <DependentUpon>ResourceView.xaml</DependentUpon>
+    <Compile Include="ThingCreatorMain.xaml.cs">
+      <DependentUpon>ThingCreatorMain.xaml</DependentUpon>
     </Compile>
     <Compile Include="ToolBox.xaml.cs">
       <DependentUpon>ToolBox.xaml</DependentUpon>
@@ -142,11 +139,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResourceManagerMain.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ResourceView.xaml">
+    <Page Include="ThingCreatorMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

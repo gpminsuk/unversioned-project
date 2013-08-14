@@ -16,6 +16,17 @@ IMPLEMENT_CLASS(CWindowsApplication)
 #include "UWorld.h"
 IMPLEMENT_CLASS(UWorld)
 
+#include "CMeshPrimitive.h"
+IMPLEMENT_CLASS(CMeshPrimitive)
+
+#include "RMesh.h"
+IMPLEMENT_CLASS(RMesh);
+IMPLEMENT_CLASS(RSubMesh);
+
+#include "RBoneHierarchy.h"
+IMPLEMENT_CLASS(RBoneHierarchy);
+IMPLEMENT_CLASS(RBone);
+
 AClassManager* GClassManager;
 
 void AClassManager::AddClass(AClass* Class) {

@@ -3,8 +3,10 @@
 #include <windows.h>
 #include "RResource.h"
 #include "RMesh.h"
+#include "BThing.h"
 #include "BViewport.h"
 #include "BRenderingBatch.h"
+#include "RAsset.h"
 
 #define generic GENERIC
 #include "UWorld.h"
@@ -37,21 +39,31 @@ MosesMainCLI::~MosesMainCLI()
 	delete MainWindow;
 }
 
+TString MosesMainCLI::ToTString(String^ Str) {
+	size_t i;
+	pin_ptr<const wchar_t> wch = PtrToStringChars(Str);
+	size_t size = ((Str->Length + 1) * 2);
+	TString Ret;
+	wcstombs_s(&i, Ret.Str, 1024, wch, Str->Length);
+	return Ret;
+}
+
 void MosesMainCLI::Tick(float deltaTime)
 {
 	m_Application->Tick(0);
 	m_Application->m_pRenderer->ThreadExecute();
 }
 
+IntPtr MosesMainCLI::LoadAsset(String^ Path) {
+	TString Str = ToTString(Path);
+	return IntPtr(::LoadAsset<RAsset>(Str));
+}
+
 IntPtr MosesMainCLI::LoadObject(IntPtr pWorld, String^ Path)
 {
-	size_t i;
-	pin_ptr<const wchar_t> wch = PtrToStringChars(Path);
-	size_t size = ((Path->Length + 1) * 2);
-	TString Str;
-	wcstombs_s(&i, Str.Str, 1024, wch, Path->Length);
+	TString Str = ToTString(Path);
 	if(Path->EndsWith(".exskn")) {
-		RMesh* Object = LoadAsset<RMesh>(Str);
+		RMesh* Object = ::LoadAsset<RMesh>(Str);
 		UWorld* World = (UWorld*)pWorld.ToPointer();
 		CSkeletalMeshPrimitive* pPrimitive = new CSkeletalMeshPrimitive();
 		pPrimitive->SetSkeletalMesh(Object, 0);
@@ -59,7 +71,7 @@ IntPtr MosesMainCLI::LoadObject(IntPtr pWorld, String^ Path)
 		World->m_pRenderer->Render(World->BatchManager, pPrimitive);
 	}
 	else if(Path->EndsWith(".exmap")) {
-		UWorld* World = LoadAsset<UWorld>(Str);
+		UWorld* World = ::LoadAsset<UWorld>(Str);
 		World->m_pRenderer = m_Application->m_pRenderer;
 		World->BatchManager->m_Viewports = &World->Viewports;
 		m_Application->m_pRenderer->BatchManager.AddItem(World->BatchManager);
@@ -73,11 +85,7 @@ IntPtr MosesMainCLI::LoadObject(IntPtr pWorld, String^ Path)
 }
 
 IntPtr MosesMainCLI::CreateWorld(String^ Name) {
-	size_t i;
-	pin_ptr<const wchar_t> wch = PtrToStringChars(Name);
-	size_t size = ((Name->Length + 1) * 2);
-	TString Str;
-	wcstombs_s(&i, Str.Str, 1024, wch, Name->Length);
+	TString Str = ToTString(Name);
 	UWorld* World = (UWorld*)ConstructClass<UWorld*>(Str);
 	World->m_pRenderer = m_Application->m_pRenderer;
 	World->BatchManager->m_Viewports = &World->Viewports;
@@ -153,8 +161,10 @@ void MosesMainCLI::Run()
 	MyApp->Run(MainWindow);
 }
 
-void MosesMainCLI::WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, bool% handled) {
-	m_Application->MessageTranslator((HWND)hwnd.ToPointer(), msg, (LPARAM)wParam.ToInt64(), (LPARAM)lParam.ToInt64());
+void MosesMainCLI::SetMousePosition(double X, double Y)
+{
+	m_Application->m_MousePt.x = (int)X;
+	m_Application->m_MousePt.y = (int)Y;
 }
 
 void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args)
@@ -231,4 +241,52 @@ void MosesMainCLI::MessageTranslator(IntPtr Handle, Moses::Message msg, ... arra
 		}
 		break;
 	}
+}
+
+void MosesMainCLI::AddToWorld(IntPtr World, IntPtr Thing, IntPtr Asset) {
+	UWorld* pWorld = (UWorld*)World.ToPointer();
+	BThing* pThing = (BThing*)Thing.ToPointer();
+	RAsset* pAsset = (RAsset*)Asset.ToPointer();
+	((CMeshPrimitive*)pThing->Primitives(0))->SetMesh((RMesh*)pAsset);
+	((CMeshPrimitive*)pThing->Primitives(0))->CreateDraws();
+	pWorld->AddThing(pThing);
+}
+
+IntPtr MosesMainCLI::CreateThing(String^ PrimitiveClassName, String^ ThingClassName) {
+	TString PrimitiveStr = ToTString(PrimitiveClassName);
+	BPrimitive* Primitive = ConstructClass<BPrimitive>(PrimitiveStr);
+	TString ThingStr = ToTString(ThingClassName);
+	BThing* Thing = ConstructClass<BThing>(ThingStr);
+	Thing->Primitives.AddItem(Primitive);
+	return IntPtr(Thing);
+}
+
+array<String^>^ MosesMainCLI::CreatablePrimitiveClassNames(IntPtr Asset) {
+	RAsset* pAsset = ((RAsset*)Asset.ToPointer());
+	TArray<TString> names = pAsset->GetCreatablePrimitiveClassNames();
+	array<String^>^ ret = gcnew array<String^>(names.Size());
+	for(unsigned int i=0;i<names.Size();++i) {
+		ret[i] = gcnew String(names[i].Str);
+	}
+	return ret;
+}
+
+array<String^>^ MosesMainCLI::CreatableThingClassNames(IntPtr Primitive) {
+	BPrimitive* pPrimitive = ((BPrimitive*)Primitive.ToPointer());
+	TArray<TString> names = pPrimitive->GetCreatableThingClassNames();
+	array<String^>^ ret = gcnew array<String^>(names.Size());
+	for(unsigned int i=0;i<names.Size();++i) {
+		ret[i] = gcnew String(names[i].Str);
+	}
+	return ret;
+}
+
+array<String^>^ MosesMainCLI::GetNeededAssetClassNames(IntPtr Thing) {
+	BPrimitive* Primitive = ((BThing*)Thing.ToPointer())->Primitives(0);
+	TArray<TString> names = Primitive->GetNeededAssetNames();
+	array<String^>^ ret = gcnew array<String^>(names.Size());
+	for(unsigned int i=0;i<names.Size();++i) {
+		ret[i] = gcnew String(names[i].Str);
+	}
+	return ret;
 }

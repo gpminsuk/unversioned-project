@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "RMesh.h"
 
-IMPLEMENT_CLASS(RMesh);
-IMPLEMENT_CLASS(RSubMesh);
-
 bool RSubMesh::Access(AAccessor& Accessor) {
     __super::Access(Accessor);
 

@@ -18,6 +18,7 @@ namespace Moses
         void Tick(float deltaTime);
 
         IntPtr LoadObject(IntPtr World, String Path);
+        IntPtr LoadAsset(String Path);
 
         IntPtr CreateWorld(String Name);
         void DestroyWorld(IntPtr World);
@@ -28,7 +29,14 @@ namespace Moses
 
         IntPtr CreateViewportWindow(IntPtr Viewport, IntPtr hWndParent);
 
-        void WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled);
+        void SetMousePosition(double X, double Y);
+
         void MessageTranslator(IntPtr Handle, Message msg, params object[] list);
+
+        void AddToWorld(IntPtr World, IntPtr Thing, IntPtr Asset);
+        IntPtr CreateThing(String PrimitiveClassName, String ThingClassName);
+        String[] CreatablePrimitiveClassNames(IntPtr Asset);
+        String[] CreatableThingClassNames(IntPtr Primitive);
+        String[] GetNeededAssetClassNames(IntPtr Asset);
     }
 }

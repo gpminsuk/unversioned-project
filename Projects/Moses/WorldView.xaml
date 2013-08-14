@@ -6,6 +6,11 @@
              xmlns:uc="clr-namespace:Moses" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ContextMenu x:Key="WorldContextMenu">
+            <MenuItem Header="Add Thing" x:Name="AddThingMenuItem" Click="MenuItemClick_AddThing"></MenuItem>
+        </ContextMenu>
+    </UserControl.Resources>
     <uc:World x:Name="FirstWorld" ShouldCreateWorld="False">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -19,9 +24,10 @@
         </Grid.RowDefinitions>
         <GridSplitter Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Stretch"  Height="3" ResizeDirection="Rows" />
         <GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="3" ResizeDirection="Columns" />
-        <uc:RenderViewport Grid.Column="0" Grid.Row="0" ViewportType="Top"/>
-        <uc:RenderViewport Grid.Column="2" Grid.Row="0" ViewportType="Front"/>
-        <uc:RenderViewport Grid.Column="2" Grid.Row="2" ViewportType="Right"/>
-        <uc:RenderViewport Grid.Column="0" Grid.Row="2" ViewportType="Perspective"/>
+        
+        <uc:RenderViewport Grid.Column="0" Grid.Row="0" ViewportType="Top" ContextMenu="{StaticResource WorldContextMenu}"/>
+        <uc:RenderViewport Grid.Column="2" Grid.Row="0" ViewportType="Front" ContextMenu="{StaticResource WorldContextMenu}"/>
+        <uc:RenderViewport Grid.Column="2" Grid.Row="2" ViewportType="Right" ContextMenu="{StaticResource WorldContextMenu}"/>
+        <uc:RenderViewport Grid.Column="0" Grid.Row="2" ViewportType="Perspective" ContextMenu="{StaticResource WorldContextMenu}"/>
     </uc:World>
 </UserControl>

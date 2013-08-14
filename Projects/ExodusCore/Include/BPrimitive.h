@@ -62,4 +62,7 @@ public:
 	virtual void IndexTessellate() {
 	}
 	;
+
+	virtual TArray<TString> GetNeededAssetNames() = 0;
+	virtual TArray<TString> GetCreatableThingClassNames() = 0;
 };

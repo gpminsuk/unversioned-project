@@ -23,6 +23,9 @@ namespace Moses
     {
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Unicode)]
         internal static extern bool DestroyWindow(IntPtr hwnd);
+
+        [DllImport("User32.dll")]
+        private static extern bool SetCursorPos(int X, int Y);
     }
 
     class DXHwndHost : HwndHost
@@ -73,21 +76,55 @@ namespace Moses
         private bool mouseMovedAfterRightButtonDown = false;
         private bool IsLoadedCalled = false;
 
+        public RenderViewport()
+        {
+            InitializeComponent();
+
+            Unloaded += OnUnloaded;
+            Loaded += OnLoaded;
+
+            Focusable = true;
+        }
+
+        private void SetContextMenuOpen(bool isOpen)
+        {
+            FrameworkElement IterWorld = (FrameworkElement)Parent;
+            while (!(IterWorld is World)) { IterWorld = (FrameworkElement)IterWorld.Parent; }
+            (IterWorld as World).IsContextMenuOpen = isOpen;
+        }
+
+        private bool GetContextMenuOpen()
+        {
+            FrameworkElement IterWorld = (FrameworkElement)Parent;
+            while (!(IterWorld is World)) { IterWorld = (FrameworkElement)IterWorld.Parent; }
+            return (IterWorld as World).IsContextMenuOpen;
+        }
+
         private void Rectangle_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            e.Handled = mouseMovedAfterRightButtonDown;
+            if (ContextMenu != null)
+            {
+                (ContextMenu.Items[0] as MenuItem).Header = "Add " + MosesMain.This.GetResourceBrowser().GetSelectedAssetType();
+                e.Handled = mouseMovedAfterRightButtonDown;
+                SetContextMenuOpen(!mouseMovedAfterRightButtonDown);
+                mouseMovedAfterRightButtonDown = false;
+            }            
         }
 
         private void Rectangle_ContextMenuClosing(object sender, ContextMenuEventArgs e)
         {
             e.Handled = mouseMovedAfterRightButtonDown;
-        }        
+            SetContextMenuOpen(false);
+        }
 
         protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseRightButtonDown(e);
             mouseRightButtonDown = true;
-            mouseMovedAfterRightButtonDown = false;
+            if (!GetContextMenuOpen())
+            {
+                mouseMovedAfterRightButtonDown = false;
+            }
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)
@@ -113,16 +150,6 @@ namespace Moses
             return (DXCanvas.Child as DXHwndHost).Handle;
         }
 
-        public RenderViewport()
-        {
-            InitializeComponent();
-            
-            Unloaded += OnUnloaded;
-            Loaded += OnLoaded;
-
-            Focusable = true;
-        }
-
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
@@ -132,10 +159,20 @@ namespace Moses
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_MouseMove, e);
-            if (mouseRightButtonDown)
+            if (!GetContextMenuOpen())
             {
-                mouseMovedAfterRightButtonDown = true;
+                MosesMain.m_Backend.MessageTranslator(GetHandle(), Message.MosesMsg_MouseMove, e);
+                if (mouseRightButtonDown)
+                {
+                    mouseMovedAfterRightButtonDown = true;
+                }
+            }
+            else
+            {
+                Point p = e.GetPosition(null);
+                MosesMain.m_Backend.SetMousePosition(p.X, p.Y);
+
+                mouseMovedAfterRightButtonDown = false;
             }
         }
 

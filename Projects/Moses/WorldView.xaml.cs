@@ -23,5 +23,16 @@ namespace Moses
         {
             InitializeComponent();
         }
+
+        private void MenuItemClick_AddThing(object sender, RoutedEventArgs e)
+        {
+            IntPtr Asset = MosesMain.m_Backend.LoadAsset(((sender as MenuItem).Header as string).Substring(4));
+            ThingCreator.ThingCreatorMain Main = new ThingCreator.ThingCreatorMain(Asset, "CMeshPrimitive", "CCharacter");
+            bool? result = Main.ShowDialog();
+            if (result.Value)
+            {
+                MosesMain.m_Backend.AddToWorld(FirstWorld.pWorld, Main.Thing, Asset);
+            }
+        }
     }
 }

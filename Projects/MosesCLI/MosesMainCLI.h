@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TDataTypes.h"
 #include "CDirectXDriver.h"
 #include "BRenderer.h"
 
@@ -17,10 +18,13 @@ public:
 	class DMosesApp* m_Application;
 	Application^ MyApp;
 
+	TString ToTString(String^ Str);
+
 	virtual void Tick(float deltaTime);
 	virtual void Run();
 
 	virtual IntPtr LoadObject(IntPtr World, String^ Path);
+	virtual IntPtr LoadAsset(String^ Path);
 
 	virtual IntPtr CreateWorld(String^ Name);
 	virtual void DestroyWorld(IntPtr World);
@@ -30,8 +34,16 @@ public:
 	virtual void RemoveViewport(IntPtr World, IntPtr Handle);
 	virtual void OnViewportsResized(IntPtr World);
 
-	virtual void WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, bool% handled);
+	virtual void SetMousePosition(double X, double Y);
 	virtual void MessageTranslator(IntPtr Handle, Moses::Message msg, ... array<System::Object^>^ args);
+
+	virtual void AddToWorld(IntPtr World, IntPtr Thing, IntPtr Asset);
+	virtual IntPtr CreateThing(String^ PrimitiveClassName, String^ ThingClassName);
+
+
+	virtual cli::array<String^>^ CreatablePrimitiveClassNames(IntPtr Asset);
+	virtual cli::array<String^>^ CreatableThingClassNames(IntPtr Asset);
+	virtual cli::array<String^>^ GetNeededAssetClassNames(IntPtr Asset);
 
 	MosesMainCLI(DMosesApp* App);
 	~MosesMainCLI();

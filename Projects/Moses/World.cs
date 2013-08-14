@@ -14,6 +14,8 @@ namespace Moses
         public String WorldName { get; set; }
         public bool ShouldCreateWorld { get; set; }
 
+        public bool IsContextMenuOpen = false;
+
         public World()
         {
             LayoutUpdated += OnLayoutUpdated;

@@ -1,0 +1,26 @@
+﻿<Window x:Class="ThingCreator.ThingCreatorMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:uc="clr-namespace:ThingCreator"
+        Title="ThingCreatorMain" Height="350" Width="525">
+    <DockPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Name="Grid" Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+            <Button Margin="50,5,50,5" Content="생성" Grid.Row="1" Grid.Column="0" Click="OnClick_Create"></Button>
+            <Button Margin="50,5,50,5" Content="취소" Grid.Row="1" Grid.Column="1" Click="OnClick_Cancel"></Button>
+        </Grid>
+    </DockPanel>
+</Window>

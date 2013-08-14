@@ -21,4 +21,15 @@ public:
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();
+
+	virtual TArray<TString> GetNeededAssetNames() {
+		TArray<TString> Ret;
+		return Ret;
+	}
+
+	virtual TArray<TString> GetCreatableThingClassNames() {
+		TArray<TString> Ret;
+		Ret.AddItem(TString("CBox"));
+		return Ret;
+	}
 };

@@ -4,6 +4,7 @@
 #include "AObject.h"
 #include "TDataTypes.h"
 #include "InputDefine.h"
+#include "RAsset.h"
 
 #include "UFreeTypeDrawer.h"
 
@@ -138,6 +139,11 @@ DECLARE_CLASS(UWorld,)
 			TVector3(0, 0, 0));
 	void AddThing(BThing* Thing);
 	void RemoveThing(BThing* Thing);
-	protected:
 
+	virtual TArray<TString> GetCreatablePrimitiveClassNames()
+	{
+		TArray<TString> Ret;
+		return Ret;
+	}
+	protected:
 };

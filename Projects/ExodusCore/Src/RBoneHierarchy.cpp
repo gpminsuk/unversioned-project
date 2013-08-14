@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "RBoneHierarchy.h"
 
-IMPLEMENT_CLASS(RBoneHierarchy);
-IMPLEMENT_CLASS(RBone);
-
 bool RBone::Access(AAccessor& Accessor) {
     __super::Access(Accessor);
 

@@ -123,4 +123,15 @@ public:
 	unsigned int MaxTessellationLevel;
 
 	TVector3 LODOrigin;
+
+	virtual TArray<TString> GetNeededAssetNames() {
+		TArray<TString> Ret;
+		return Ret;
+	}
+
+	virtual TArray<TString> GetCreatableThingClassNames() {
+		TArray<TString> Ret;
+		Ret.AddItem(TString("CTerrain"));
+		return Ret;
+	}
 };

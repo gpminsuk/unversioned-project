@@ -35,6 +35,8 @@ UWorld::~UWorld() {
 }
 
 bool UWorld::Access(AAccessor& Accessor) {
+	__super::Access(Accessor);
+
 	Accessor << ((TWorldOctree*)m_pWorldData)->AllObjects;
 	return true;
 }

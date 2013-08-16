@@ -1,11 +1,13 @@
 #pragma once
 
-#include "AObject.h"
+#include "RAsset.h"
 #include "TDataTypes.h"
 
-class RTexture: public AObject
+class RTexture: public RAsset
 {
 DECLARE_CLASS(RTexture,)
+public:
+	class RTextureBuffer* Buffer;
 	protected:
 	enum ETextureMemoryType
 	{
@@ -13,11 +15,16 @@ DECLARE_CLASS(RTexture,)
 		TMT_MANAGED,
 		TMT_VIDEO
 	};
+	TString FileName;
 	int Width;
 	int Height;
 	ETextureMemoryType MemoryType;
 
 	virtual bool Access(AAccessor& Accessor);
+	TArray<TString> GetCreatablePrimitiveClassNames() {
+		TArray<TString> Ret;
+		return Ret;
+	}
 };
 
 class RTextureBuffer

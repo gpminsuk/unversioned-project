@@ -39,10 +39,20 @@ protected:
     unsigned int m_iObjectId;		//오브젝트마다 고유의 아이디가있음
 };
 
+extern TArray<TString> GLoadedAssetFilenames;
+extern TArray<class RAsset*> GLoadedAssets;
+
 template<class T>
 T* LoadAsset(TString& ResourceName) {
+	for(unsigned int i=0;i<GLoadedAssetFilenames.Size();++i) {
+		if(GLoadedAssetFilenames(i) == ResourceName) {
+			return (T*)GLoadedAssets(i);
+		}
+	}
     RAsset* Asset = (RAsset*) AObject::CreateObject(ResourceName);
-	Asset->Path = ResourceName;
+	Asset->Path = ResourceName;	
+	GLoadedAssetFilenames.AddItem(ResourceName);
+	GLoadedAssets.AddItem(Asset);
 	return (T*)Asset;
 }
 

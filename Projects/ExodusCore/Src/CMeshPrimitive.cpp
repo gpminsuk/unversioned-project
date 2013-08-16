@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "CMeshPrimitive.h"
 #include "BDriver.h"
+#include "RTexture.h"
 #include "RMesh.h"
 
 CMeshDraw::CMeshDraw(RMesh* InMesh) :
@@ -41,11 +42,15 @@ CMeshPrimitive::~CMeshPrimitive(void) {
 
 void CMeshPrimitive::SetMesh(RMesh* InMesh) {
 	Mesh.Set(InMesh);
+	RTexture* t = new RTexture();
+	t->Buffer = GDefaultTexture;
+	Texture.Set(t);
 }
 
 bool CMeshPrimitive::Access(AAccessor& Accessor) {
 	__super::Access(Accessor);
 	Accessor << Mesh;
+	Accessor << Texture;
 	if(Accessor.IsLoading()) {
 		CreateDraws();
 	}
@@ -69,7 +74,7 @@ RMaterial* CMeshPrimitive::GetMaterial() {
 }
 
 unsigned int CMeshPrimitive::FillDynamicVertexBuffer(char** pData) {
-	GDriver->SetTexture(0, GDefaultTexture);
+	GDriver->SetTexture(0, Texture.Get()->Buffer);
 
 	unsigned int nVerticies = 0;
 	for (unsigned int i = 0; i < Draws.Size(); ++i) {

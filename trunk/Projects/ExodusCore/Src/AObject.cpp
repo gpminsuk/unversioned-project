@@ -3,6 +3,9 @@
 #include "RResource.h"
 #include "RAsset.h"
 
+TArray<TString> GLoadedAssetFilenames;
+TArray<RAsset*> GLoadedAssets;
+
 AReadAccessor::AReadAccessor(TString& Filename) {
     bIsLoading = true;
     fopen_s(&FilePointer, Filename.GetBuffer(), "rb");

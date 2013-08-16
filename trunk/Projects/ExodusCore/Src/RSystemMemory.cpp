@@ -6,6 +6,7 @@ IMPLEMENT_CLASS(RSystemMemoryIndexBuffer);
 IMPLEMENT_CLASS(RSystemMemoryVertexBuffer);
 
 bool RSystemMemoryIndexBuffer::Access(AAccessor& Accessor) {
+	__super::Access(Accessor);
     Accessor << nIndices;
     if (Accessor.IsLoading()) {
         pIndices = new TIndex16[nIndices];
@@ -17,6 +18,7 @@ bool RSystemMemoryIndexBuffer::Access(AAccessor& Accessor) {
 }
 
 bool RSystemMemoryVertexBuffer::Access(AAccessor& Accessor) {
+	__super::Access(Accessor);
 	unsigned int ProtocolIndex = 1;
     Accessor << ProtocolIndex;
     Accessor << nVertices;

@@ -3,6 +3,7 @@
 #include "RAsset.h"
 
 class RMesh;
+class RTexture;
 class RTextureBuffer;
 
 class CMeshDraw: public BDraw
@@ -23,6 +24,7 @@ public:
 	void SetMesh(RMesh* InMesh);
 
 	RAssetPtr<RMesh> Mesh;
+	RAssetPtr<RTexture> Texture;
 
 	virtual bool Access(AAccessor& Accessor);
 	virtual void UpdatePrimitive();

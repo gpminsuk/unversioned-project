@@ -213,7 +213,6 @@ bool CDirectXDriver::ResizeBackBuffer(int Width, int Height) {
 
 	HRESULT hr = S_FALSE;
 	BackBuffer->Release();
-	//while((hr = GetDevice()->Reset(&Parameters)) != D3D_OK);
 	hr = GetDevice()->Reset(&Parameters);
 
 	GetDevice()->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
@@ -264,15 +263,18 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
         dynamic_cast<RDXVideoMemoryVertexBuffer*>(PB->m_pVB);
     RDXVideoMemoryIndexBuffer* IB = dynamic_cast<RDXVideoMemoryIndexBuffer*>(PB
                                     ->m_pIB);
+
+	VB->Declaration = pBatch->Protocol->Decl;
+
     if (!VB || !IB) {
         return 0;
     }
     HRESULT hr;
     hr = m_pDevice->CreateVertexBuffer(
              pBatch->nVertices * pBatch->Protocol->Decl->GetStride(),
-             D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
+             D3DUSAGE_WRITEONLY,
              0,
-             D3DPOOL_DEFAULT,
+             D3DPOOL_MANAGED,
              &VB->VB,
              NULL);
     if (hr != D3D_OK) {
@@ -285,7 +287,7 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
     }
     void *pData;
     hr = VB->VB->Lock(0, pBatch->nVertices * pBatch->Protocol->Decl->GetStride()
-                      , (void**) &pData, D3DLOCK_DISCARD);
+                      , (void**) &pData, 0);
 
     if (hr != D3D_OK) {
         switch (hr) {
@@ -313,14 +315,13 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
     if (IB->nIndices) {
         hr = m_pDevice->CreateIndexBuffer(
                  IB->nIndices * sizeof(TIndex16),
-                 D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,
+                 D3DUSAGE_WRITEONLY,
                  D3DFMT_INDEX16,
-                 D3DPOOL_DEFAULT,
+                 D3DPOOL_MANAGED,
                  &IB->IB,
                  NULL);
 
-        hr = IB->IB->Lock(0, IB->nIndices * sizeof(TIndex16), (void**) &pData,
-                          D3DLOCK_DISCARD);
+        hr = IB->IB->Lock(0, IB->nIndices * sizeof(TIndex16), (void**) &pData, 0);
         if (hr != D3D_OK) {
             return false;
         } else {

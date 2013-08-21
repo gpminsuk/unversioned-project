@@ -34,6 +34,7 @@ public:
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();
 
+	virtual RTexture* GetTexture() { return Texture.Get(); }
 	virtual TArray<TString> GetNeededAssetNames() {
 		TArray<TString> Ret;
 		Ret.AddItem(TString("RMesh"));

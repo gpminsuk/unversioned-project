@@ -124,6 +124,7 @@ public:
 
 	TVector3 LODOrigin;
 
+	virtual RTexture* GetTexture() { return 0; }
 	virtual TArray<TString> GetNeededAssetNames() {
 		TArray<TString> Ret;
 		return Ret;

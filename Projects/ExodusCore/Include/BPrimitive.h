@@ -8,6 +8,7 @@
 #include "Enumerations_Geom.h"
 #include "RShaderClasses.h"
 
+class RTexture;
 class BSynchronizer;
 class BRenderingBatch;
 
@@ -63,6 +64,7 @@ public:
 	}
 	;
 
+	virtual RTexture* GetTexture() = 0;
 	virtual TArray<TString> GetNeededAssetNames() = 0;
 	virtual TArray<TString> GetCreatableThingClassNames() = 0;
 };

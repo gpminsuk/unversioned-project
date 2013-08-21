@@ -4,6 +4,7 @@
 #include "BPrimitive.h"
 #include "BDriver.h"
 
+#include "RTexture.h"
 #include "BLineBatcher.h"
 #include "BTextDrawer.h"
 #include "BRTRenderPass.h"
@@ -14,7 +15,9 @@
 
 BRenderingBatch::BRenderingBatch(BPrimitive* InitialPrimitive)
     :
-    nVertices(0) {
+    nVertices(0),
+	isDirty(true),
+	PrimitiveBuffer(0) {
 	BatchPrimitive(InitialPrimitive);
 }
 
@@ -23,7 +26,8 @@ BRenderingBatch::~BRenderingBatch() {
 }
 
 bool BRenderingBatch::IsBatchable(BPrimitive* Primitive) {	
-	return (pMaterial == Primitive->GetMaterial() && RenderType == Primitive->RenderType && Protocol == Primitive->Draws(0)->pBuffer->m_pVB->Protocol);
+	return (pMaterial == Primitive->GetMaterial() && RenderType == Primitive->RenderType && Protocol == Primitive->Draws(0)->pBuffer->m_pVB->Protocol) &&
+		(nVertices < (1 << (sizeof(short) * 8))) && false;
 }
 
 void BRenderingBatch::RemovePrimitive(BPrimitive* Primitive) {
@@ -40,6 +44,7 @@ void BRenderingBatch::BatchPrimitive(BPrimitive* Primitive) {
 	pMaterial = Primitive->GetMaterial();
 	RenderType = Primitive->RenderType;
 	PrimitiveType = PrimitiveType_TriangleList;
+	Texture = Primitive->GetTexture()->Buffer;
 	for (unsigned int i = 0; i < Primitive->Draws.Size(); ++i) {
 		BDraw* Prim = Primitive->Draws(i);
 		if (Prim) {
@@ -69,7 +74,8 @@ void BRenderingBatch::ConfigureShader() {
 }
 
 void BRenderingBatch::RenderLight() {
-    PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);
+	GDriver->SetStreamSource(PrimitiveBuffer);
+	GDriver->SetIndices(PrimitiveBuffer);
     if (PrimitiveBuffer) {
         switch (RenderType) {
         case RenderType_Line:
@@ -79,13 +85,21 @@ void BRenderingBatch::RenderLight() {
         case RenderType_UI:
             break;
         }
-        PrimitiveBuffer->Release();
-        delete PrimitiveBuffer;
     }
 }
 
 void BRenderingBatch::RenderBaseScene() {
-    PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);
+	if(isDirty) {
+		if(PrimitiveBuffer) {
+			PrimitiveBuffer->Release();
+			delete PrimitiveBuffer;
+		}
+		PrimitiveBuffer = GDriver->CreatePrimitiveBuffer(this);
+		isDirty = false;
+	}
+	GDriver->SetStreamSource(PrimitiveBuffer);
+	GDriver->SetIndices(PrimitiveBuffer);
+	GDriver->SetTexture(0, Texture);
     if (PrimitiveBuffer) {
         switch (RenderType) {
         case RenderType_Line:
@@ -96,8 +110,6 @@ void BRenderingBatch::RenderBaseScene() {
             GDrawFontPass->DrawPrimitive(this);
             break;
         }
-        PrimitiveBuffer->Release();
-        delete PrimitiveBuffer;
     }
 }
 
@@ -149,7 +161,7 @@ void BRenderingBatchManager::RenderBatches() {
 		float ff = 1000.0f/(10.0f/FPS_COUNTER_NUMBER);
 		sprintf_s(f, "%f", ff);
 		GTextDrawer->AddText(TString(f));
-		GTextDrawer->DrawTexts(Viewport);
+		//GTextDrawer->DrawTexts(Viewport);
 
 		GDriver->EndScene(Viewport);
 	}    

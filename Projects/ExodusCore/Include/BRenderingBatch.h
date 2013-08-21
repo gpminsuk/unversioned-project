@@ -7,15 +7,19 @@ class BPrimitive;
 class BLineBatcher;
 class BLight;
 
+class RTextureBuffer;
+
 class BRenderingBatch
 {
 public:
 	int nVertices;
 	RVertexProtocol* Protocol;
 	RMaterial* pMaterial;
+	bool isDirty;
 
 	RDynamicPrimitiveBuffer* PrimitiveBuffer;
 
+	RTextureBuffer* Texture;
 	TArray<BPrimitive*> Primitives;
 	TArray<BLight*> Lights;
 

@@ -27,9 +27,6 @@ public:
 	BDraw();
 	virtual ~BDraw();
 
-	virtual void UpdatePrimitive() {
-	}
-
 	class RStaticPrimitiveBuffer* pBuffer;
 };
 

@@ -32,6 +32,10 @@ bool RANMImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
             fps += 4294967296.0f;
         }
 
+		for (int i = 0; i < numBones; ++i) {
+			AnimationSequence->AnimationBoneSequences.AddItem(0);
+		}
+
         for (int i = 0; i < numBones; ++i) {
             char name[32];
             fread(name, sizeof(char) * 32, 1, fp);
@@ -57,9 +61,8 @@ bool RANMImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
                 PositionKey.Time = j;
                 BoneSeq->PosKeys.AddItem(PositionKey);
             }
-            AnimationSequence->AnimationBoneSequences.AddItem(BoneSeq);
-            RBone* bone = BoneHierarchy->FindBone(TString(name));
-            bone->AnimationBoneSequenceRef = BoneSeq;
+            RBone* Bone = BoneHierarchy->FindBone(TString(name));
+			AnimationSequence->AnimationBoneSequences(Bone->BoneIndex) = BoneSeq;
         }
     }
     fclose(fp);

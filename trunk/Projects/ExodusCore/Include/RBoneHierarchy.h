@@ -16,8 +16,7 @@ DECLARE_CLASS(RBone,)
 	int SkinBoneIndex;
 	int ParentIndex;
 	RBone *Parent;
-	RAnimationBoneSequence* AnimationBoneSequenceRef;
-
+	
 	TMatrix TM;
 	TMatrix InvTM;
 

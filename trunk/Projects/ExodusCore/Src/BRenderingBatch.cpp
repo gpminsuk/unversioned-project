@@ -41,8 +41,9 @@ void BRenderingBatch::RemovePrimitive(BPrimitive* Primitive) {
 }
 
 void BRenderingBatch::BatchPrimitive(BPrimitive* Primitive) {
+	Primitive->Batch = this;
 	pMaterial = Primitive->GetMaterial();
-	RenderType = Primitive->RenderType;
+	RenderType = Primitive->RenderType;	
 	PrimitiveType = PrimitiveType_TriangleList;
 	Texture = Primitive->GetTexture()->Buffer;
 	for (unsigned int i = 0; i < Primitive->Draws.Size(); ++i) {
@@ -89,6 +90,10 @@ void BRenderingBatch::RenderLight() {
 }
 
 void BRenderingBatch::RenderBaseScene() {
+	for (int i = 0; i < (int) Primitives.Size(); ++i) {
+		BPrimitive* Prim = Primitives(i);
+		Prim->UpdatePrimitive();
+	}
 	if(isDirty) {
 		if(PrimitiveBuffer) {
 			PrimitiveBuffer->Release();

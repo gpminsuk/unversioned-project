@@ -3,6 +3,7 @@
 #include "TDataTypes.h"
 
 #include "AClass.h"
+#include "AProperty.h"
 
 class ACriticalSection;
 

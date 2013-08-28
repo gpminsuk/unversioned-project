@@ -14,10 +14,9 @@
 #include "RSKNImporter.h"
 #include "RSKLImporter.h"
 #include "RANMImporter.h"
+#include "RSCBImporter.h"
 
 #include "UWorld.h"
-
-IMPLEMENT_CLASS(CCharacter);
 
 CCharacter::CCharacter() {
     m_Height = 0.0f;
@@ -31,13 +30,22 @@ CCharacter::CCharacter() {
     bIsPassable = false;
 
     m_Location = TVector3(0, 0, 0);
-	/*
-    RSKNImporter SKNImporter;
+	
+    /*RSKNImporter SKNImporter;
     RSKLImporter SKLImporter;
-    RANMImporter ANMImporter;
+	RANMImporter ANMImporter;
+	RSCBImporter SCBImporter;
     RAnimationSequence* AnimationSequence;
     RBoneHierarchy* BoneHierarchy;
-    RMesh* SkeletalMesh;
+	RMesh* SkeletalMesh;
+	SCBImporter.Import(TString("..\\..\\Resources\\Rift\\AIPath.scb"),
+		AnimationSequence, BoneHierarchy, SkeletalMesh);
+	CMeshPrimitive* MeshPrimitive = new CMeshPrimitive();
+	MeshPrimitive->SetMesh(SkeletalMesh);
+	MeshPrimitive->CreateDraws();
+	MeshPrimitive->RenderType = RenderType_Line;
+	Primitives.AddItem(MeshPrimitive);*/
+	/*
     SKNImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skn"),
                        AnimationSequence, BoneHierarchy, SkeletalMesh);
     SKLImporter.Import(TString("..\\..\\Resources\\Renekton_brutal.skl"),
@@ -52,8 +60,8 @@ CCharacter::CCharacter() {
 	SkeletalMeshPrimitive->SetSkeletalMesh(SkeletalMesh, BoneHierarchy);
 	SkeletalMeshPrimitive->CreateDraws();
 	*/
-    CCylinderCollisionBody* CharacterCollisionBody = new CCylinderCollisionBody(this);
-    CollisionBodies.AddItem(CharacterCollisionBody);
+	CCylinderCollisionBody* CylinderCollisionBody = new CCylinderCollisionBody(this);
+	CollisionBodies.AddItem(CylinderCollisionBody);
 
     UpdateTransform();
 }
@@ -100,9 +108,6 @@ void CCharacter::UpdateTransform() {
 	for (unsigned int i = 0; i < Primitives.Size(); ++i) {
 		Primitives(i)->TM.SetIdentity();
 		Primitives(i)->Translation = m_Location;
-		Primitives(i)->TM._11 *= 0.05f;
-		Primitives(i)->TM._22 *= 0.05f;
-		Primitives(i)->TM._33 *= 0.05f;
 		static float r = MATH_PI/2;
 		Primitives(i)->TM._41 = m_Location.x;
         Primitives(i)->TM._42 = m_Location.y;

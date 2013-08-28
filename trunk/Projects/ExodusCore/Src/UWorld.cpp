@@ -17,10 +17,13 @@
 #include "CCylinderPrimitive.h"
 #include "CWindowsViewport.h"
 
+UWorld* GWorld;
+
 UWorld::UWorld() {
 	BatchManager = new BRenderingBatchManager();
 	GLineBatcher = new BLineBatcher();
 	m_pWorldData = new TWorldOctree();
+	GWorld = this;
 }
 
 UWorld::~UWorld() {
@@ -42,11 +45,11 @@ bool UWorld::Access(AAccessor& Accessor) {
 }
 
 bool UWorld::Tick(unsigned long dTime) {
+	m_pWorldData->Tick(dTime);
 	for(unsigned int i=0;i<Viewports.Size();++i) {
 		BViewport* Viewport = Viewports(i);
 		Viewport->UpdateViewport();
 	}
-    m_pWorldData->Tick(dTime);
     return true;
 }
 
@@ -74,6 +77,15 @@ void UWorld::InputKey(EKey_Event Event, TKeyInput_Param& Param) {
 
 void UWorld::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
     m_pWorldData->InputMouse(Event, Param);
+	switch(Event) {
+	case MOUSE_LeftButtonDown:
+		THitInfo Info = LineCheck(0, TVector3(30,100,30), TVector3(30,-100,30));
+		if(Info.HitPosition != TVector3(0,0,0)) {
+			int i=0;
+			i=1;
+		}
+		break;
+	}
 }
 
 THitInfo UWorld::LineCheck(BThing* SourceThing, TVector3 Start, TVector3 End, TVector3 Extent) {

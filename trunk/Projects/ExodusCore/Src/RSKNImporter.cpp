@@ -68,7 +68,7 @@ bool RSKNImporter::Import(TString& Filename, RAnimationSequence*& AnimationSeque
 
 		subMesh->pVB->Protocol = RVertexProtocol::Protocols(0);
 
-		Model->SkeletalSubMeshes.AddItem(subMesh);
+		Model->SubMeshes.AddItem(subMesh);
 	}
 	fclose(fp);
 	return true;

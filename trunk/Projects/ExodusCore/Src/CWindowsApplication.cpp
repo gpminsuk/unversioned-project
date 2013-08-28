@@ -2,6 +2,7 @@
 #include "BRenderer.h"
 #include "BViewport.h"
 #include "BDriver.h"
+#include "BCamera.h"
 #include "BRenderPass.h"
 #include "BRenderingBatch.h"
 
@@ -98,7 +99,8 @@ bool CWindowsApplication::DestroyApp() {
 void CWindowsApplication::Do() {
 	static bool initialized = false;
 	if(!initialized) {
-		Worlds(0)->Viewports.AddItem(new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, Projection_Perpective, RenderMode_All, CameraMode_FreeMode, m_WindowInfo.m_hWnd));
+		Worlds(0)->Viewports.AddItem(new CWindowsViewport(m_WindowInfo.m_wWidth, m_WindowInfo.m_wHeight, Projection_Perpective, RenderMode_All, CameraMode_ThridPerson, m_WindowInfo.m_hWnd));
+		Worlds(0)->Viewports(0)->Camera->m_Subject = ((TWorldOctree*)Worlds(0)->m_pWorldData)->AllObjects(0);
 		initialized = true;
 	}
     MSG msg;
@@ -163,9 +165,7 @@ void CWindowsApplication::MouseEventTranslator(BViewport* Viewport, UINT Message
     if (m_MousePt.y)
         Param.dY = m_MousePt.y - Param.Y;
     else
-        Param.dY = 0;
-    if (m_MousePt.x && m_MousePt.y && Param.dX == 0 && Param.dY == 0)
-        return;
+        Param.dY = 0;	
     m_MousePt.x = Param.X;
     m_MousePt.y = Param.Y;
     EMouse_Event Event;
@@ -204,7 +204,7 @@ void CWindowsApplication::MouseEventTranslator(BViewport* Viewport, UINT Message
         Event = MOUSE_MiddleButtonUp;
         break;
     case WM_MOUSEWHEEL:
-        Param.delta = HIWORD(wParam);
+        Param.delta = -HIWORD(wParam);
         Event = MOUSE_Wheel;
         break;
     case WM_MOUSEMOVE:
@@ -262,6 +262,12 @@ void CWindowsApplication::MessageTranslator(HWND Handle, UINT Message, WPARAM wP
 			Worlds(i)->OnViewportsResized();
 		}
 		break;
+	case WM_MOUSEWHEEL:
+		RECT rt;
+		GetClientRect(Handle, &rt);
+		ClientToScreen(Handle, reinterpret_cast<POINT*>(&rt.left));
+		lParam -= rt.left;
+		lParam -= (rt.top << (sizeof(WORD)*8));
     case WM_LBUTTONDBLCLK:
     case WM_RBUTTONDBLCLK:
     case WM_MBUTTONDBLCLK:
@@ -271,7 +277,6 @@ void CWindowsApplication::MessageTranslator(HWND Handle, UINT Message, WPARAM wP
     case WM_LBUTTONUP:
     case WM_RBUTTONUP:
     case WM_MBUTTONUP:
-    case WM_MOUSEWHEEL:
     case WM_MOUSEMOVE:
         MouseEventTranslator(FindViewport(Handle), Message, wParam, lParam);
         break;

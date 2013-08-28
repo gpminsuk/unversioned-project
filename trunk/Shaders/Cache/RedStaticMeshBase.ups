@@ -18,4 +18,5 @@ void PS(in TVertexOutput VertexOutput,
 #ifdef POINT_LIGHT
 	OutColor += GetPointLight(VertexOutput); 
 #endif
+	//OutColor += float4(0.3,0.3,0.3,1);
 }

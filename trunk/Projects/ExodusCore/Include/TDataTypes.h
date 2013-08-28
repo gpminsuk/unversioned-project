@@ -220,6 +220,7 @@ public:
 		return atoi(Str);
 	}
 
+	static TString Format(const char* format, ...);
 	friend AAccessor& operator<<(AAccessor& Ac, TString& A)
 			{
 		for (unsigned int i = 0; i < 1024; ++i)
@@ -404,6 +405,13 @@ public:
 		return (x != v.x || y != v.y || z != v.z);
 	}
 
+	static TVector3 Lerp(TVector3 Start, TVector3 End, float t)
+	{
+		return Start * (1.0f - t) + End * t;
+	}
+
+	static TVector3 Slerp(TVector3 Start, TVector3 End, float t);
+
 	float SizeSquared()
 	{
 		return x * x + y * y + z * z;
@@ -417,9 +425,16 @@ public:
 	TVector3& Normalize()
 	{
 		float Squared = SQRT(SizeSquared());
-		x /= Squared;
-		y /= Squared;
-		z /= Squared;
+		if(Squared == 0.0f) {
+			x = 0.0f;
+			y = 0.0f;
+			z = 0.0f;
+		}
+		else {
+			x /= Squared;
+			y /= Squared;
+			z /= Squared;
+		}		
 		return *this;
 	}
 
@@ -678,6 +693,39 @@ public:
 	TMatrix(TVector3 Translation, TQuaternion Rotation, float Scale)
 			{
 		*this = TMatrix(Translation, Rotation, TVector3(Scale, Scale, Scale));
+	}
+
+	TMatrix(TVector3 Direction, TVector3 Up)
+	{
+		TVector3 Forward = Direction;
+		Forward.x = -Forward.x;
+		Forward.y = 0;
+		Forward.Normalize();
+
+		TVector3 Side =  Forward ^ Up;
+		Side.Normalize();
+
+		TVector3 PlaneUp = Side ^ Forward;
+		PlaneUp.Normalize();
+		_11 = Side.x;
+		_12 = PlaneUp.x;
+		_13 = -Forward.x;
+		_14 = 0.0f;
+
+		_21 = Side.y;
+		_22 = PlaneUp.y;
+		_23 = -Forward.y;
+		_24 = 0.0f;
+
+		_31 = Side.z;
+		_32 = PlaneUp.z;
+		_33 = -Forward.z;
+		_34 = 0.0f;
+
+		_41 = 0.0f;
+		_42 = 0.0f;
+		_43 = 0.0f;
+		_44 = 1.0f;
 	}
 
 	TVector3 TransformVector3(TVector3 In)
@@ -1090,6 +1138,17 @@ public:
 		_42 = Transform.y;
 		_43 = Transform.z;
 		return *this;
+	}
+
+	TVector3 GetTranslation()
+	{		
+		return TVector3(_41, _42, _43);
+	}
+
+	TQuaternion GetRotation()
+	{
+		float w = SQRT(1 + _11 + _22 + _33) / 2.0f;
+		return TQuaternion(w, (_32 - _23)/(4 * w),(_13 - _31)/(4 * w),(_21 - _12)/(4 * w));
 	}
 
 	TMatrix& Scale(TVector3 InScale)

@@ -23,11 +23,11 @@ DECLARE_CLASS(RMesh,)
 	public:
 	~RMesh()
 	{
-		for (unsigned int i = 0; i < SkeletalSubMeshes.Size(); ++i)
-			delete SkeletalSubMeshes(i);
-		SkeletalSubMeshes.Clear(true);
+		for (unsigned int i = 0; i < SubMeshes.Size(); ++i)
+			delete SubMeshes(i);
+		SubMeshes.Clear(true);
 	}
-	TArray<RSubMesh*> SkeletalSubMeshes;
+	TArray<RSubMesh*> SubMeshes;
 
 	virtual bool Access(AAccessor& Accessor);
 

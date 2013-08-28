@@ -27,6 +27,9 @@ IMPLEMENT_CLASS(RSubMesh);
 IMPLEMENT_CLASS(RBoneHierarchy);
 IMPLEMENT_CLASS(RBone);
 
+#include "CCharacter.h"
+IMPLEMENT_CLASS(CCharacter);
+
 AClassManager* GClassManager;
 
 void AClassManager::AddClass(AClass* Class) {

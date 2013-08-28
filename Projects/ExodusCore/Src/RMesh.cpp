@@ -13,6 +13,6 @@ bool RSubMesh::Access(AAccessor& Accessor) {
 bool RMesh::Access(AAccessor& Accessor) {
     __super::Access(Accessor);
 
-    Accessor << SkeletalSubMeshes;
+    Accessor << SubMeshes;
     return true;
 }

@@ -147,3 +147,5 @@ DECLARE_CLASS(UWorld,)
 	}
 	protected:
 };
+
+extern UWorld* GWorld;

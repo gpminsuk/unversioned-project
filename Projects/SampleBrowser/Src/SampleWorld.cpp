@@ -25,7 +25,7 @@ void USampleWorld::Create(UWorld* World) {
 
 	Character = new CCharacter();
 	Character->UpdateTransform();
-	//World->AddThing(Character);
+	World->AddThing(Character);
 }
 
 USampleWorld::~USampleWorld()

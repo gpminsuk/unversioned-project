@@ -179,9 +179,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\RAnimationController.cpp" />
+    <ClCompile Include="Src\AProperty.cpp" />
+    <ClCompile Include="Src\CMeshCollisionBody.cpp" />
+    <ClCompile Include="Src\RAnimationTree.cpp" />
     <ClCompile Include="Src\RANMImporter.cpp" />
     <ClCompile Include="Src\RAsset.cpp" />
+    <ClCompile Include="Src\RSCBImporter.cpp" />
     <ClCompile Include="Src\RSKLImporter.cpp" />
     <ClCompile Include="Src\RSKNImporter.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -264,6 +267,7 @@
     <ClInclude Include="Include\AApplication.h" />
     <ClInclude Include="Include\AClass.h" />
     <ClInclude Include="Include\AObject.h" />
+    <ClInclude Include="Include\AProperty.h" />
     <ClInclude Include="Include\ASystemInfo.h" />
     <ClInclude Include="Include\AThread.h" />
     <ClInclude Include="Include\BCamera.h" />
@@ -287,6 +291,7 @@
     <ClInclude Include="Include\CDirectionalLight.h" />
     <ClInclude Include="Include\CDirectXDriver.h" />
     <ClInclude Include="Include\CDirectXSoundDriver.h" />
+    <ClInclude Include="Include\CMeshCollisionBody.h" />
     <ClInclude Include="Include\CPointLight.h" />
     <ClInclude Include="Include\CWaveIODriver.h" />
     <ClInclude Include="Include\CWindowsApplication.h" />
@@ -297,10 +302,11 @@
     <ClInclude Include="Include\CPlanePrimitive.h" />
     <ClInclude Include="Include\CSkeletalMeshPrimitive.h" />
     <ClInclude Include="Include\CTerrainPrimitive.h" />
-    <ClInclude Include="Include\RAnimationController.h" />
+    <ClInclude Include="Include\RAnimationTree.h" />
     <ClInclude Include="Include\RANMImporter.h" />
     <ClInclude Include="Include\RAsset.h" />
     <ClInclude Include="Include\RDXResource.h" />
+    <ClInclude Include="Include\RSCBImporter.h" />
     <ClInclude Include="Include\RResource.h" />
     <ClInclude Include="Include\RResourceManager.h" />
     <ClInclude Include="Include\RShaderClasses.h" />

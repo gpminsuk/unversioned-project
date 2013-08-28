@@ -11,9 +11,11 @@ class BPrimitive;
 class BThing: public AObject
 {
 DECLARE_CLASS(BThing, CLASS_Abstract)
-
 	TVector3 m_Location;
+	TVector3 m_Rotation;
+	TVector3 m_FrameRotation;
 	TVector3 m_Scale;
+	bool m_IsMoving;
 
 	TArray<BPrimitive*> Primitives;
 	TBounds PrimitiveBounds;

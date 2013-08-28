@@ -46,9 +46,12 @@ void BCamera::InputMouse(EMouse_Event Event, TMouseInput_Param& Param) {
         case MOUSE_Move: {
             if (m_Pi + (-Param.dY / 100.0f) < (MATH_PI / 2.0f - 0.001f)
                     && (m_Pi + -Param.dY / 100.0f) > -(MATH_PI / 2.0f - 0.001f))
-                m_Pi += -Param.dY / 100.0f;
-            m_Theta += -Param.dX / 100.0f;
-
+                m_Pi += - Param.dY / 100.0f;
+            m_Theta += Param.dX / 100.0f;
+			if (m_Subject) {
+				m_Subject->m_Rotation.x = COSINE(m_Theta);
+				m_Subject->m_Rotation.z = SINE(m_Theta);
+			}
         }
         break;
         case MOUSE_Wheel: {

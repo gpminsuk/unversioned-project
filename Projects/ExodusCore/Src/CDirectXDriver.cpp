@@ -254,10 +254,6 @@ RDynamicPrimitiveBuffer* CDirectXDriver::CreatePrimitiveBuffer(BRenderingBatch* 
     if (!pBatch->Primitives.Size())
         return false;
 
-    for (int i = 0; i < (int) pBatch->Primitives.Size(); ++i) {
-        BPrimitive* Prim = pBatch->Primitives(i);
-        Prim->UpdatePrimitive();
-    }
     RDXDynamicPrimitiveBuffer* PB = new RDXDynamicPrimitiveBuffer();
     RDXVideoMemoryVertexBuffer* VB =
         dynamic_cast<RDXVideoMemoryVertexBuffer*>(PB->m_pVB);

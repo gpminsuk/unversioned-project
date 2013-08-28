@@ -4,45 +4,34 @@
 
 #include "RAnimationSequence.h"
 #include "RBoneHierarchy.h"
+#include "RAnimationTree.h"
 #include "RMesh.h"
+
+class TBone
+{
+public:
+	TBone(RBone* InSource, TBone* InParent);
+	~TBone();
+	
+	RBone* Source;
+	TBone* Parent;
+
+	TArray<TQuaternion> WeightedRot;
+	TArray<TVector3> WeightedPos;
+	TArray<float> Weights;
+	TMatrix TM;
+
+	void CalcBoneMatrix(RAnimationBoneSequence* AnimationBoneSequence, unsigned int CurrentFrame, float Weight);
+};
 
 class CSkeletalMeshDraw: public BDraw
 {
 public:
 	typedef TIndex16 ID;
 
-	CSkeletalMeshDraw(RMesh* InSkeletalMesh, RBoneHierarchy* InBoneHierarchy);
+	CSkeletalMeshDraw(RMesh* InMesh);
 	~CSkeletalMeshDraw();
 
-	class TBone
-	{
-	public:
-		TBone(RBone* InSource, TBone* InParent, RAnimationBoneSequence* InAnimationBoneSequence);
-		~TBone();
-
-		TMatrix BoneTM;
-
-		RBone* Source;
-		TBone* Parent;
-		TArray<RSubMesh*> SubMesheRefs;
-		RAnimationBoneSequence* AnimationBoneSequenceRef;
-
-		char* FillStaticVertexBuffer_Recursive(char* pVertices);
-		ID* FillStaticIndexBuffer_Recursive(ID* pIndices, unsigned short* BaseIndex);
-
-		unsigned int NumTotalVertices_Recursive();
-		unsigned int NumTotalIndices_Recursive();
-
-		void CalcBoneMatrix(unsigned int CurrentFrame);
-	};
-
-	virtual void UpdatePrimitive();
-	virtual void CalcBoneMatrices();
-
-	TArray<TBone*> Bones;
-	TArray<int> SkinBoneIndexMap;
-	RAnimationSequence* AnimationSequenceRef;
-	RMesh* Mesh;
 	unsigned int CurrentFrame;
 	bool IsPlaying;
 	bool IsLooping;
@@ -57,8 +46,12 @@ public:
 
 	RAssetPtr<RMesh> Mesh;
 	RAssetPtr<RBoneHierarchy> BoneHierarchy;
+	RAssetPtr<RAnimationTree> AnimationTree;
+
+	TArray<TBone*> Bones;
 
 	void SetSkeletalMesh(RMesh* InMesh, RBoneHierarchy* InBoneHierarchy);
+	void SetAnimationTree(RAnimationTree* InAnimationTree);
 
 	virtual void CreateDraws();
 	virtual bool Access(AAccessor& Accessor);
@@ -67,8 +60,9 @@ public:
 	virtual unsigned int FillDynamicVertexBuffer(char** pData);
 	virtual unsigned int FillDynamicIndexBuffer(TIndex16** pData, unsigned short* BaseIndex);
 	virtual unsigned int GetNumIndices();
+	void CalcBoneMatrices();
 
-	virtual RTexture* GetTexture() { return 0; }
+	virtual RTexture* GetTexture();
 	virtual TArray<TString> GetNeededAssetNames() {
 		TArray<TString> Ret;
 		Ret.AddItem(TString("RMesh"));

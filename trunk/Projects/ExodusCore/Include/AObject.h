@@ -29,6 +29,7 @@ public:
     virtual bool Tick(unsigned long Time);
     virtual bool Access(AAccessor& Accessor);
     virtual void SetProperty(TString& PropertyName, TString& Value);
+	virtual TString GetProperty(TString& PropertyName);
 	
     void SaveObject(TString& ResourceName);
 

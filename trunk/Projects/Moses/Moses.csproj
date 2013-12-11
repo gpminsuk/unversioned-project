@@ -109,6 +109,7 @@
     <Compile Include="ToolBox.xaml.cs">
       <DependentUpon>ToolBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Types\BThing.cs" />
     <Compile Include="World.cs" />
     <Compile Include="WorldView.xaml.cs">
       <DependentUpon>WorldView.xaml</DependentUpon>

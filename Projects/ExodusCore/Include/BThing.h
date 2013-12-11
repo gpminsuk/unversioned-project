@@ -11,6 +11,7 @@ class BPrimitive;
 class BThing: public AObject
 {
 DECLARE_CLASS(BThing, CLASS_Abstract)
+
 	TVector3 m_Location;
 	TVector3 m_Rotation;
 	TVector3 m_FrameRotation;
@@ -25,7 +26,7 @@ DECLARE_CLASS(BThing, CLASS_Abstract)
 	BThing(void);
 	virtual ~BThing(void);
 
-	public:
+public:
 	virtual bool Access(AAccessor& Accessor);
 	virtual bool Tick(unsigned long dTime);
 

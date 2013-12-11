@@ -46,6 +46,10 @@ void AObject::SetProperty(TString& PropertyName, TString& Value) {
 
 }
 
+TString AObject::GetProperty(TString& PropertyName) {
+	return TString();
+}
+
 AObject* AObject::CreateObject(TString& ResourceName) {
     AReadAccessor Accessor(ResourceName);
 	TString ClassName;

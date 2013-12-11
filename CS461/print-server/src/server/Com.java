@@ -58,4 +58,10 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    }
 	    return user;
 	}
+
+	@Override
+	public boolean signup(User u) throws RemoteException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

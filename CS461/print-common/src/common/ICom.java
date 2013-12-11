@@ -9,4 +9,5 @@ public interface ICom extends Remote {
 	public String ping() throws RemoteException;
 	
 	public User login(String id, String pwd) throws RemoteException;
+	public boolean signup(User u) throws RemoteException;
 }

@@ -15,12 +15,14 @@ public class MainClient {
             return;
         }
         System.setSecurityManager(new RMISecurityManager());
+        ICom com = null;
         try {
             Registry registry = LocateRegistry.getRegistry(args[0]);
-            ICom com = (ICom)registry.lookup("com");
-            new ClientFrame(com).setVisible(true);
+            com = (ICom)registry.lookup("com");
         } catch (Exception e) {        	
             e.printStackTrace();
         }
+        
+        new ClientFrame(com).setVisible(true);
     }
 }

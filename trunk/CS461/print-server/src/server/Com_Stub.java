@@ -11,11 +11,13 @@ public final class Com_Stub
     
     private static java.lang.reflect.Method $method_login_0;
     private static java.lang.reflect.Method $method_ping_1;
+    private static java.lang.reflect.Method $method_signup_2;
     
     static {
 	try {
 	    $method_login_0 = common.ICom.class.getMethod("login", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
 	    $method_ping_1 = common.ICom.class.getMethod("ping", new java.lang.Class[] {});
+	    $method_signup_2 = common.ICom.class.getMethod("signup", new java.lang.Class[] {dataset.User.class});
 	} catch (java.lang.NoSuchMethodException e) {
 	    throw new java.lang.NoSuchMethodError(
 		"stub class initialization failed");
@@ -52,6 +54,22 @@ public final class Com_Stub
 	try {
 	    Object $result = ref.invoke(this, $method_ping_1, null, -5977121354941433790L);
 	    return ((java.lang.String) $result);
+	} catch (java.lang.RuntimeException e) {
+	    throw e;
+	} catch (java.rmi.RemoteException e) {
+	    throw e;
+	} catch (java.lang.Exception e) {
+	    throw new java.rmi.UnexpectedException("undeclared checked exception", e);
+	}
+    }
+    
+    // implementation of signup(User)
+    public boolean signup(dataset.User $param_User_1)
+	throws java.rmi.RemoteException
+    {
+	try {
+	    Object $result = ref.invoke(this, $method_signup_2, new java.lang.Object[] {$param_User_1}, -2606815845293560872L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {

@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -25,20 +23,18 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import dataset.Project;
-import dataset.Task;
-import dataset.User;
 
-public class ManagerPage extends JSplitPane {
+public class ProgrammersListPage extends JSplitPane {
 	private static final long serialVersionUID = 1L;
-
-	public ManagerPage() {
+	
+	public ProgrammersListPage() {
 		super(JSplitPane.VERTICAL_SPLIT);
-
+		
 		GridBagConstraints gbc;
-
+		
 		JPanel projectListPanel = new JPanel(new GridBagLayout());
 		projectListPanel.setBorder(new LineBorder(Color.blue));
-
+		
 		JLabel lblTree = new JLabel("Projects");
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
@@ -46,7 +42,7 @@ public class ManagerPage extends JSplitPane {
 		gbc.gridy = 0;
 		gbc.weightx = 1.0;
 		projectListPanel.add(lblTree, gbc);
-
+		
 		final JTree tree = new JTree();
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -55,37 +51,34 @@ public class ManagerPage extends JSplitPane {
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
 		projectListPanel.add(tree, gbc);
-
-		addComponentListener(new ComponentListener() {
+		
+		addComponentListener(new ComponentListener() {			
 			@Override
 			public void componentShown(ComponentEvent e) {
 				tree.setModel(new TreeModel() {
 					List<Project> projects;
-
+					
 					@Override
-					public void valueForPathChanged(TreePath path,
-							Object newValue) {
-					}
-
+					public void valueForPathChanged(TreePath path, Object newValue) {}
+					
 					@Override
-					public void removeTreeModelListener(TreeModelListener l) {
-					}
-
+					public void removeTreeModelListener(TreeModelListener l) {}
+					
 					@Override
 					public boolean isLeaf(Object node) {
-						if (node instanceof String && node.equals("Projects")) {
-							return false;
+						if(node instanceof String && node.equals("Projects")) {
+							return false;					
 						}
-						if (node instanceof Project) {
+						if(node instanceof Project) {
 							return false;
 						}
 						return true;
 					}
-
+					
 					@Override
 					public Object getRoot() {
 						try {
-							if (Com.me() != null) {
+							if(Com.me() != null) {
 								projects = Com.get().getProjects(Com.me().id);
 							}
 						} catch (RemoteException e) {
@@ -93,197 +86,132 @@ public class ManagerPage extends JSplitPane {
 						}
 						return "Projects";
 					}
-
+					
 					@Override
 					public int getIndexOfChild(Object parent, Object child) {
-						if (parent instanceof String
-								&& parent.equals("Projects")) {
-							return projects.indexOf(child);
+						if(parent instanceof String && parent.equals("Projects")) {
+							return projects.indexOf(child);							
 						}
-						if (parent instanceof Project) {
+						if(parent instanceof Project) {
 							return ((Project) parent).tasks.indexOf(child);
 						}
 						return 0;
 					}
-
+					
 					@Override
 					public int getChildCount(Object parent) {
-						if (parent instanceof String
-								&& parent.equals("Projects")) {
-							return projects.size();
+						if(parent instanceof String && parent.equals("Projects")) {
+							return projects.size();							
 						}
-						if (parent instanceof Project) {
+						if(parent instanceof Project) {
 							return ((Project) parent).tasks.size();
 						}
 						return 0;
 					}
-
+					
 					@Override
 					public Object getChild(Object parent, int index) {
-						if (parent instanceof String
-								&& parent.equals("Projects")) {
+						if(parent instanceof String && parent.equals("Projects")) {
 							return projects.get(index);
 						}
-						if (parent instanceof Project) {
+						if(parent instanceof Project) {
 							return ((Project) parent).tasks.get(index);
 						}
 						return null;
 					}
-
+					
 					@Override
-					public void addTreeModelListener(TreeModelListener l) {
-					}
+					public void addTreeModelListener(TreeModelListener l) {}
 				});
 			}
-
+			
 			@Override
 			public void componentResized(ComponentEvent e) {
 				// TODO Auto-generated method stub
-
+				
 			}
-
+			
 			@Override
 			public void componentMoved(ComponentEvent e) {
 				// TODO Auto-generated method stub
-
+				
 			}
-
+			
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				// TODO Auto-generated method stub
-
+				
 			}
 		});
 
 		JPanel myInfoPanel = new JPanel();
 		myInfoPanel.setBorder(new LineBorder(Color.red));
-
+				
 		myInfoPanel.add(new JLabel("MY Name is"));
-
-		final JSplitPane upperPane = new JSplitPane(
-				JSplitPane.HORIZONTAL_SPLIT, projectListPanel, myInfoPanel);
+		
+		final JSplitPane upperPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, projectListPanel, myInfoPanel);
 		upperPane.setDividerSize(0);
 		setLeftComponent(upperPane);
-
+		
 		JPanel lowerPane = new JPanel(new FlowLayout());
-
+		
 		JButton btnCreateProject = new JButton("Create Project");
-		btnCreateProject.addActionListener(new ActionListener() {
+		btnCreateProject.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("CreateProject");
 			}
 		});
 		lowerPane.add(btnCreateProject);
-		final JButton btnRequestedTask = new JButton("Requested Tasks");
-		btnRequestedTask.addActionListener(new ActionListener() {
+		lowerPane.add(new JButton("My Requested Jobs"));
+		lowerPane.add(new JButton("Search Programmers"));
+		
+		JButton btnExit = new JButton("Back");
+		btnExit.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("RequestedTasks");
-			}
-		});
-		lowerPane.add(btnRequestedTask);
-		final JButton btnCreateTask = new JButton("Create Task");
-		btnCreateTask.setEnabled(false);
-		btnCreateTask.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(tree.getSelectionPath() != null) {
-					Com.inst.selectedProject = (Project) tree.getSelectionPath().getLastPathComponent();				 
-					((ClientFrame) getTopLevelAncestor()).ChangePage("CreateTask");
+				if(getTopLevelAncestor() instanceof JFrame) {
+					((ClientFrame)getTopLevelAncestor()).ChangePage("Manager");
 				}
-			}
-		});
-		lowerPane.add(btnCreateTask);
-		final JButton btnRequestTask = new JButton("Request Task To");
-		btnRequestTask.setEnabled(false);
-		btnRequestTask.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("ProgrammersList");
-			}
-		});
-		lowerPane.add(btnRequestTask);
-
-		tree.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent me) {
-			    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
-				if(tp != null) {
-					Object o = tp.getLastPathComponent();
-					if(o instanceof Task && ((Task)o).status.equals("Open")) {
-						btnRequestTask.setEnabled(true);
-					}
-					else {
-						btnRequestTask.setEnabled(false);
-					}
-					if(o instanceof Project) {
-						btnCreateTask.setEnabled(true);
-					}
-					else {
-						btnCreateTask.setEnabled(false);
-					}
-				}				
 			}
 		});
 		
-		JButton btnExit = new JButton("Exit");
-		btnExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (getTopLevelAncestor() instanceof JFrame) {
-					JFrame f = (JFrame) getTopLevelAncestor();
-					f.setVisible(false);
-					f.dispose();
-				}
-			}
-		});
-
 		lowerPane.add(btnExit);
-
+		
 		setRightComponent(lowerPane);
 		setDividerSize(0);
 
 		addComponentListener(new ComponentListener() {
-
+			
 			@Override
-			public void componentShown(ComponentEvent e) {
-			}
-
+			public void componentShown(ComponentEvent e) {}
+			
 			@Override
 			public void componentResized(ComponentEvent e) {
 				setDividerLocation(getHeight() - 40);
 			}
-
+			
 			@Override
-			public void componentMoved(ComponentEvent e) {
-			}
-
+			public void componentMoved(ComponentEvent e) {}
+			
 			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
+			public void componentHidden(ComponentEvent e) {}
 		});
-
+		
 		upperPane.addComponentListener(new ComponentListener() {
-
+			
 			@Override
-			public void componentShown(ComponentEvent e) {
-			}
-
+			public void componentShown(ComponentEvent e) {}
+			
 			@Override
 			public void componentResized(ComponentEvent e) {
 				upperPane.setDividerLocation(getWidth() - 150);
 			}
-
+			
 			@Override
-			public void componentMoved(ComponentEvent e) {
-			}
-
+			public void componentMoved(ComponentEvent e) {}
+			
 			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
+			public void componentHidden(ComponentEvent e) {}
 		});
 	}
 

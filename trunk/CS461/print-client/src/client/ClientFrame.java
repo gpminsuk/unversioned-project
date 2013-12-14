@@ -1,53 +1,25 @@
 package client;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-
-import common.ICom;
 
 public class ClientFrame extends JFrame {
-	private static final long serialVersionUID = 1L;
-	
-	public final ICom com;
+	private static final long serialVersionUID = 1L;	
 	
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel cards;
 	
-	public JPanel setupSignupPanel() {
-		return new SignupPage(cardLayout, cards);
+	public void ChangePage(String page) {
+		cardLayout.show(cards, page);
 	}
-	
-	public JPanel setupLoginPanel() {
-		return new LoginPage(cardLayout, cards);
-	}
-	
-	public JComponent setupJobDetailsPage() {
-		return new JobDetailPage();
-	}
-	
-	public JComponent setupJobsPage() {
-		return new JobDetailPage();
-	}
-	
-	public ClientFrame(ICom comm) {
+		
+	public ClientFrame() {
 		super();
-		this.com = comm;
 		
 		setMinimumSize(new Dimension(800, 600));
 		
@@ -78,9 +50,14 @@ public class ClientFrame extends JFrame {
 		
 		cards = new JPanel(cardLayout);
 		
-		cards.add(setupLoginPanel(), "Login");
-		cards.add(setupSignupPanel(), "Signup");
-		cards.add(setupJobsPage(), "Jobs");
+		cards.add(new LoginPage(), "Login");
+		cards.add(new SignupPage(), "Signup");
+		cards.add(new ProgrammerPage(), "Programmer");
+		cards.add(new ManagerPage(), "Manager");
+		cards.add(new CreateProjectPage(), "CreateProject");
+		cards.add(new CreateTaskPage(), "CreateTask");
+		cards.add(new ProgrammersListPage(), "ProgrammersList");
+		cards.add(new RequestedTasksPage(), "RequestedTasks");
 		
 		cardLayout.show(cards, "Login");
 				

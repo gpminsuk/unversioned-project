@@ -34,7 +34,7 @@ public class ProjectDetailPage extends JSplitPane {
 		lowerPane.add(new JButton("Create Job"));
 		
 		JButton btnExit = new JButton("Back");
-		btnExit.addActionListener(new ActionListener() {			
+		btnExit.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(getTopLevelAncestor() instanceof JFrame) {

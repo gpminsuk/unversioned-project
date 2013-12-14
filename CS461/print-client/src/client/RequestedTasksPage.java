@@ -24,14 +24,13 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import dataset.Project;
 import dataset.Task;
 import dataset.User;
 
-public class ManagerPage extends JSplitPane {
+public class RequestedTasksPage extends JSplitPane {
 	private static final long serialVersionUID = 1L;
 
-	public ManagerPage() {
+	public RequestedTasksPage() {
 		super(JSplitPane.VERTICAL_SPLIT);
 
 		GridBagConstraints gbc;
@@ -60,7 +59,7 @@ public class ManagerPage extends JSplitPane {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				tree.setModel(new TreeModel() {
-					List<Project> projects;
+					List<Task> tasks;
 
 					@Override
 					public void valueForPathChanged(TreePath path,
@@ -73,10 +72,10 @@ public class ManagerPage extends JSplitPane {
 
 					@Override
 					public boolean isLeaf(Object node) {
-						if (node instanceof String && node.equals("Projects")) {
+						if (node instanceof String && node.equals("Tasks")) {
 							return false;
 						}
-						if (node instanceof Project) {
+						if (node instanceof Task) {
 							return false;
 						}
 						return true;
@@ -86,22 +85,22 @@ public class ManagerPage extends JSplitPane {
 					public Object getRoot() {
 						try {
 							if (Com.me() != null) {
-								projects = Com.get().getProjects(Com.me().id);
+								tasks = Com.get().getManagerRequestedTasks(Com.me().id);
 							}
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						}
-						return "Projects";
+						return "Tasks";
 					}
 
 					@Override
 					public int getIndexOfChild(Object parent, Object child) {
 						if (parent instanceof String
-								&& parent.equals("Projects")) {
-							return projects.indexOf(child);
+								&& parent.equals("Tasks")) {
+							return tasks.indexOf(child);
 						}
-						if (parent instanceof Project) {
-							return ((Project) parent).tasks.indexOf(child);
+						if (parent instanceof Task) {
+							return ((Task) parent).requestedProgrammers.indexOf(child);
 						}
 						return 0;
 					}
@@ -109,11 +108,11 @@ public class ManagerPage extends JSplitPane {
 					@Override
 					public int getChildCount(Object parent) {
 						if (parent instanceof String
-								&& parent.equals("Projects")) {
-							return projects.size();
+								&& parent.equals("Tasks")) {
+							return tasks.size();
 						}
-						if (parent instanceof Project) {
-							return ((Project) parent).tasks.size();
+						if (parent instanceof Task) {
+							return ((Task) parent).requestedProgrammers.size();
 						}
 						return 0;
 					}
@@ -121,11 +120,11 @@ public class ManagerPage extends JSplitPane {
 					@Override
 					public Object getChild(Object parent, int index) {
 						if (parent instanceof String
-								&& parent.equals("Projects")) {
-							return projects.get(index);
+								&& parent.equals("Tasks")) {
+							return tasks.get(index);
 						}
-						if (parent instanceof Project) {
-							return ((Project) parent).tasks.get(index);
+						if (parent instanceof Task) {
+							return ((Task) parent).requestedProgrammers.get(index);
 						}
 						return null;
 					}
@@ -167,76 +166,51 @@ public class ManagerPage extends JSplitPane {
 
 		JPanel lowerPane = new JPanel(new FlowLayout());
 
-		JButton btnCreateProject = new JButton("Create Project");
-		btnCreateProject.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("CreateProject");
-			}
-		});
-		lowerPane.add(btnCreateProject);
-		final JButton btnRequestedTask = new JButton("Requested Tasks");
-		btnRequestedTask.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("RequestedTasks");
-			}
-		});
-		lowerPane.add(btnRequestedTask);
-		final JButton btnCreateTask = new JButton("Create Task");
-		btnCreateTask.setEnabled(false);
-		btnCreateTask.addActionListener(new ActionListener() {
+		final JButton btnAcceptProgrammer = new JButton("Accept");
+		btnAcceptProgrammer.setEnabled(false);
+		btnAcceptProgrammer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tree.getSelectionPath() != null) {
-					Com.inst.selectedProject = (Project) tree.getSelectionPath().getLastPathComponent();				 
-					((ClientFrame) getTopLevelAncestor()).ChangePage("CreateTask");
+					User u = (User) tree.getSelectionPath().getLastPathComponent();
+					Task t = (Task) tree.getSelectionPath().getParentPath().getLastPathComponent();
+					try {
+						if(Com.get().acceptTask(t.Id, u.id)) {
+							((ClientFrame) getTopLevelAncestor()).ChangePage("Manager");	
+						}
+						else {
+							
+						}
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
-		lowerPane.add(btnCreateTask);
-		final JButton btnRequestTask = new JButton("Request Task To");
-		btnRequestTask.setEnabled(false);
-		btnRequestTask.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("ProgrammersList");
-			}
-		});
-		lowerPane.add(btnRequestTask);
+		lowerPane.add(btnAcceptProgrammer);
 
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
 			    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
 				if(tp != null) {
 					Object o = tp.getLastPathComponent();
-					if(o instanceof Task && ((Task)o).status.equals("Open")) {
-						btnRequestTask.setEnabled(true);
+					if(o instanceof User) {
+						btnAcceptProgrammer.setEnabled(true);
 					}
 					else {
-						btnRequestTask.setEnabled(false);
-					}
-					if(o instanceof Project) {
-						btnCreateTask.setEnabled(true);
-					}
-					else {
-						btnCreateTask.setEnabled(false);
+						btnAcceptProgrammer.setEnabled(false);
 					}
 				}				
 			}
 		});
 		
-		JButton btnExit = new JButton("Exit");
+		JButton btnExit = new JButton("Back");
 		btnExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (getTopLevelAncestor() instanceof JFrame) {
-					JFrame f = (JFrame) getTopLevelAncestor();
-					f.setVisible(false);
-					f.dispose();
+					((ClientFrame) getTopLevelAncestor())
+					.ChangePage("Manager");
 				}
 			}
 		});

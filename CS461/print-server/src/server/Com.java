@@ -6,8 +6,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import common.ICom;
+
+import dataset.Project;
+import dataset.Task;
 import dataset.User;
 
 public class Com extends UnicastRemoteObject implements ICom {
@@ -29,7 +34,6 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    User user = null;
 	    try {
 		    Connection con = DB.getConnection();
-	        con.setAutoCommit(false);
 	        selectUser = con.prepareStatement(selectString);
 
 	        selectUser.setString(1, id);
@@ -42,6 +46,8 @@ public class Com extends UnicastRemoteObject implements ICom {
 	        	user = new User();
 	        	user.id = result.getString("Id");
 	        	user.password = result.getString("Password");
+	        	user.type = result.getString("Type");
+	        	user.lang = result.getInt("Lang");
 	        }
 	    }
 	    catch(Exception e) {
@@ -61,7 +67,339 @@ public class Com extends UnicastRemoteObject implements ICom {
 
 	@Override
 	public boolean signup(User u) throws RemoteException {
-		// TODO Auto-generated method stub
+		PreparedStatement insertUser = null;
+
+	    String insertString = "insert into users (Id, Password, Type, Lang) values (?, ?, ?, ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        insertUser = con.prepareStatement(insertString);
+
+	        insertUser.setString(1, u.id);
+	        insertUser.setString(2, u.password);
+	        insertUser.setString(3, u.type);
+	        insertUser.setInt(4, u.lang);
+	        
+	        return insertUser.execute();
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(insertUser != null) {
+	    		try {
+					insertUser.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
+
+	@Override
+	public boolean createProject(Project p) throws RemoteException {
+		PreparedStatement insertProject = null;
+
+	    String insertString = "insert into projects (Name, ManagerId) values (?, ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        insertProject = con.prepareStatement(insertString);
+
+	        insertProject.setString(1, p.name);
+	        insertProject.setString(2, p.managerId);
+	        
+	        int result = insertProject.executeUpdate(); 
+	        return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(insertProject != null) {
+	    		try {
+					insertProject.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
+
+	@Override
+	public boolean createTask(Task j) throws RemoteException {
+		PreparedStatement insertProject = null;
+
+	    String insertString = "insert into tasks (Name, Status, Description, ProjectId) values (?, ?, ?, ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        insertProject = con.prepareStatement(insertString);
+
+	        insertProject.setString(1, j.name);
+	        insertProject.setString(2, "Open");
+	        insertProject.setString(3, j.desc);
+	        insertProject.setInt(4, j.projectId);
+	        
+	        int result = insertProject.executeUpdate();
+	        return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(insertProject != null) {
+	    		try {
+					insertProject.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
+
+	public List<Task> getTasksInProject(int id) {
+		List<Task> ret = new ArrayList<Task>();
+
+		PreparedStatement selectTasks = null;
+
+	    String selectString = "select * from tasks where ProjectId = ?";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectTasks = con.prepareStatement(selectString);
+
+	        selectTasks.setInt(1, id);
+	        
+	        ResultSet result = selectTasks.executeQuery();
+	        while(result.next()) {
+	        	Task t = new Task();
+	        	t.getResult(result);
+	        	ret.add(t);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectTasks != null) {
+	    		try {
+					selectTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+	
+	@Override
+	public List<Project> getProjects(String id) throws RemoteException {
+		List<Project> ret = new ArrayList<Project>();
+
+		PreparedStatement selectProjects = null;
+
+	    String selectString = "select * from projects where ManagerId = ?";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectProjects = con.prepareStatement(selectString);
+
+	        selectProjects.setString(1, id);
+	        
+	        ResultSet result = selectProjects.executeQuery();
+	        while(result.next()) {
+	        	Project p = new Project();
+	        	p.Id = result.getInt("Id");
+	        	p.name = result.getString("Name");
+	        	p.managerId = result.getString("ManagerId");
+	        	p.tasks = getTasksInProject(p.Id);
+	        	ret.add(p);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectProjects != null) {
+	    		try {
+					selectProjects.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+
+	@Override
+	public List<User> getProgrammers() throws RemoteException {
+		List<User> ret = new ArrayList<User>();
+
+		PreparedStatement selectProgrammers = null;
+
+	    String selectString = "select * from projects where Type = Programmer";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectProgrammers = con.prepareStatement(selectString);
+	        
+	        ResultSet result = selectProgrammers.executeQuery();
+	        while(result.next()) {
+	        	User u = new User();
+	        	u.id = result.getString("Id");
+	        	u.lang = result.getInt("Lang");
+	        	ret.add(u);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectProgrammers != null) {
+	    		try {
+					selectProgrammers.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+
+	public List<User> getTaskRequestedUsers(int TaskId) {
+		List<User> ret = new ArrayList<User>();
+
+		PreparedStatement selectUsers = null;
+
+	    String selectString = "select * from users where Id in (select UserId from task_requested_by_user where TaskId = ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectUsers = con.prepareStatement(selectString);
+	        
+	        selectUsers.setInt(1, TaskId);
+	        
+	        ResultSet result = selectUsers.executeQuery();
+	        while(result.next()) {	        	
+	        	User u = new User();
+	        	u.id = result.getString("id");
+	        	u.type = result.getString("type");
+	        	u.lang = result.getInt("lang");
+	        	ret.add(u);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectUsers != null) {
+	    		try {
+					selectUsers.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+	
+	@Override
+	public List<Task> getManagerRequestedTasks(String id) throws RemoteException {
+		List<Task> ret = new ArrayList<Task>();
+
+		PreparedStatement selectRequestedTasks = null;
+
+	    String selectString = "select * from tasks where Id = (select TaskId from task_requested_by_user) and" +
+	    		"(select ManagerId from projects where Id = ProjectId) = ?";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectRequestedTasks = con.prepareStatement(selectString);
+	        
+	        selectRequestedTasks.setString(1, id);
+	        
+	        ResultSet result = selectRequestedTasks.executeQuery();
+	        while(result.next()) {	        	
+	        	Task u = new Task();
+	        	u.getResult(result);
+	        	u.requestedProgrammers = getTaskRequestedUsers(result.getInt("Id"));
+	        	ret.add(u);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectRequestedTasks != null) {
+	    		try {
+					selectRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+
+	@Override
+	public boolean acceptTask(int taskId, String userId) {
+		PreparedStatement updateRequestedTasks = null;
+		PreparedStatement insertRequestedTasks = null;
+		PreparedStatement deleteRequestedTasks = null;
+
+		String updateString = "update tasks set Status = 'Assigned' where Id = ?";
+		String insertString = "insert into task_programmer (TaskId, UserId) values(?, ?)";
+	    String deleteString = "delete from task_requested_by_user where TaskId = ? and UserId = ?";
+	    try {
+		    Connection con = DB.getConnection();
+		    
+		    updateRequestedTasks = con.prepareStatement(updateString);
+		    updateRequestedTasks.setInt(1, taskId);
+		    
+		    int result = updateRequestedTasks.executeUpdate();
+		    if(result != 1) {
+		    	return false;
+		    }
+		    
+		    insertRequestedTasks = con.prepareStatement(insertString);
+		    insertRequestedTasks.setInt(1, taskId);
+		    insertRequestedTasks.setString(2, userId);
+		    
+		    result = insertRequestedTasks.executeUpdate();
+		    if(result != 1) {
+		    	return false;
+		    }
+		    
+	        deleteRequestedTasks = con.prepareStatement(deleteString);
+	        
+	        deleteRequestedTasks.setInt(1, taskId);
+	        deleteRequestedTasks.setString(2, userId);
+	        
+	        result = deleteRequestedTasks.executeUpdate();
+	        return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(updateRequestedTasks != null) {
+	    		try {
+	    			updateRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    	if(insertRequestedTasks != null) {
+	    		try {
+	    			insertRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    	if(deleteRequestedTasks != null) {
+	    		try {
+					deleteRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
 		return false;
 	}
 }

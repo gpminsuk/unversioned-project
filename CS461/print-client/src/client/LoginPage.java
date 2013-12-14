@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -11,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -25,8 +25,9 @@ import javax.swing.border.LineBorder;
 
 public class LoginPage extends JPanel {
 	private static final long serialVersionUID = 1L;
+	private int loginTries = 0;
 
-	public LoginPage(final CardLayout pageLayout, final JPanel pages) {
+	public LoginPage() {
 		super();
 		
 		setBackground(Color.white);
@@ -93,13 +94,17 @@ public class LoginPage extends JPanel {
 		btnLogin.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pageLayout.show(pages, "Jobs");
-				/*
 				try {
-					System.out.println(com.login(idinput.getText(), idpassword.getText()));
+					Com.inst.me = Com.get().login(idinput.getText(), idpassword.getText());
+					if(Com.me() == null) {
+						info.setText("Login Failed (" + (++loginTries) + ")");
+					}
+					else {
+						((ClientFrame)getTopLevelAncestor()).ChangePage(Com.me().type);
+					}
 				} catch (RemoteException ex) {
 					ex.printStackTrace();
-				}*/
+				}
 			}
 		});
 		btnPane.add(btnLogin);
@@ -108,7 +113,7 @@ public class LoginPage extends JPanel {
 		btnSignup.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pageLayout.show(pages, "Signup");
+				((ClientFrame)getTopLevelAncestor()).ChangePage("Signup");
 			}
 		});
 		btnPane.add(btnSignup);

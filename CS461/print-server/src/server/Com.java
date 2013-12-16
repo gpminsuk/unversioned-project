@@ -11,6 +11,7 @@ import java.util.List;
 
 import common.ICom;
 
+import dataset.Note;
 import dataset.Project;
 import dataset.Task;
 import dataset.User;
@@ -570,8 +571,71 @@ public class Com extends UnicastRemoteObject implements ICom {
 	}
 
 	@Override
-	public void addNote(int taskId, String userId, String note) {
-		// TODO Auto-generated method stub
+	public boolean addNote(int taskId, String userId, String note) throws RemoteException {
+		PreparedStatement addNotequery = null;
 		
+		String addNoteString = "insert into notes (idnotes, Contents, Uploadedtime) values (?, ?, ?)";
+
+		try {
+		    Connection con = DB.getConnection();
+	        addNotequery = con.prepareStatement(addNoteString);
+
+	        addNotequery.setInt(1, taskId);
+	        addNotequery.setString(2, userId);
+	        addNotequery.setString(3, note);
+	        
+	        return addNotequery.execute();
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(addNotequery != null) {
+	    		try {
+					addNotequery.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
+
+	@Override
+	public List<Note> getNotes(int idnotes) throws RemoteException {
+		List<Note> ret = new ArrayList<Note>();
+
+		PreparedStatement selectNotes = null;
+
+	    String selectString = "select * from s where idnotes = ?";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectNotes = con.prepareStatement(selectString);
+
+	        selectNotes.setInt(1, idnotes);
+	        
+	        ResultSet result = selectNotes.executeQuery();
+	        while(result.next()) {
+	        	Note n = new Note();
+	        	n.id = result.getInt("idnotes");
+	        	n.taskId = result.getInt("tasks_Id");
+	        	n.content = result.getString("Contents");
+	        	n.time = result.getString("Uploadedtime");
+	        	ret.add(n);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectNotes != null) {
+	    		try {
+					selectNotes.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
 	}
 }

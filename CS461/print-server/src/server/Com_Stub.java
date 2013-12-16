@@ -72,11 +72,12 @@ public final class Com_Stub
     }
     
     // implementation of addNote(int, String, String)
-    public void addNote(int $param_int_1, java.lang.String $param_String_2, java.lang.String $param_String_3)
+    public boolean addNote(int $param_int_1, java.lang.String $param_String_2, java.lang.String $param_String_3)
 	throws java.rmi.RemoteException
     {
 	try {
-	    ref.invoke(this, $method_addNote_1, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2, $param_String_3}, 8415029964818584470L);
+	    Object $result = ref.invoke(this, $method_addNote_1, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2, $param_String_3}, 7677525730530121896L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {

@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import dataset.Project;
+import dataset.User;
 
 public class ProgrammersListPage extends JSplitPane {
 	private static final long serialVersionUID = 1L;
@@ -56,7 +59,7 @@ public class ProgrammersListPage extends JSplitPane {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				tree.setModel(new TreeModel() {
-					List<Project> projects;
+					List<User> programmers;
 					
 					@Override
 					public void valueForPathChanged(TreePath path, Object newValue) {}
@@ -66,11 +69,8 @@ public class ProgrammersListPage extends JSplitPane {
 					
 					@Override
 					public boolean isLeaf(Object node) {
-						if(node instanceof String && node.equals("Projects")) {
+						if(node instanceof String && node.equals("Programmers")) {
 							return false;					
-						}
-						if(node instanceof Project) {
-							return false;
 						}
 						return true;
 					}
@@ -79,40 +79,34 @@ public class ProgrammersListPage extends JSplitPane {
 					public Object getRoot() {
 						try {
 							if(Com.me() != null) {
-								projects = Com.get().getProjects(Com.me().id);
+								programmers = Com.get().getRequestProgrammers(Com.inst.selectedTask.Id);
 							}
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						}
-						return "Projects";
+						return "Programmers";
 					}
 					
 					@Override
 					public int getIndexOfChild(Object parent, Object child) {
-						if(parent instanceof String && parent.equals("Projects")) {
-							return projects.indexOf(child);							
-						}
-						if(parent instanceof Project) {
-							return ((Project) parent).tasks.indexOf(child);
+						if(parent instanceof String && parent.equals("Programmers")) {
+							return programmers.indexOf(child);							
 						}
 						return 0;
 					}
 					
 					@Override
 					public int getChildCount(Object parent) {
-						if(parent instanceof String && parent.equals("Projects")) {
-							return projects.size();							
-						}
-						if(parent instanceof Project) {
-							return ((Project) parent).tasks.size();
+						if(parent instanceof String && parent.equals("Programmers")) {
+							return programmers.size();							
 						}
 						return 0;
 					}
 					
 					@Override
 					public Object getChild(Object parent, int index) {
-						if(parent instanceof String && parent.equals("Projects")) {
-							return projects.get(index);
+						if(parent instanceof String && parent.equals("Programmers")) {
+							return programmers.get(index);
 						}
 						if(parent instanceof Project) {
 							return ((Project) parent).tasks.get(index);
@@ -155,15 +149,34 @@ public class ProgrammersListPage extends JSplitPane {
 		
 		JPanel lowerPane = new JPanel(new FlowLayout());
 		
-		JButton btnCreateProject = new JButton("Create Project");
-		btnCreateProject.addActionListener(new ActionListener() {			
+		final JButton btnRequestTask = new JButton("Request");
+		btnRequestTask.setEnabled(false);
+		btnRequestTask.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(tree.getSelectionPath() != null) {
+					User u = (User) tree.getSelectionPath().getLastPathComponent();
+					try {
+						if(u.status.equals("None")) {
+							if(Com.get().requestTask(Com.inst.selectedTask.Id, u.id)) {
+								Com.inst.selectedTask = null;
+								((ClientFrame)getTopLevelAncestor()).ChangePage("Manager");
+							}	
+						}	
+						else {
+							if(Com.get().cancelTask(Com.inst.selectedTask.Id, u.id)) {
+								Com.inst.selectedTask = null;
+								((ClientFrame)getTopLevelAncestor()).ChangePage("Manager");
+							}
+						}
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
 			}
 		});
-		lowerPane.add(btnCreateProject);
-		lowerPane.add(new JButton("My Requested Jobs"));
-		lowerPane.add(new JButton("Search Programmers"));
+		lowerPane.add(btnRequestTask);
 		
 		JButton btnExit = new JButton("Back");
 		btnExit.addActionListener(new ActionListener() {			
@@ -176,6 +189,28 @@ public class ProgrammersListPage extends JSplitPane {
 		});
 		
 		lowerPane.add(btnExit);
+
+		tree.setModel(null);
+		tree.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent me) {
+			    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+				if(tp != null) {
+					Object o = tp.getLastPathComponent();
+					if(o instanceof User) {
+						if(((User) o).status.equals("None")) {
+							btnRequestTask.setText("Request");
+						}
+						else {
+							btnRequestTask.setText("Cancel");
+						}
+						btnRequestTask.setEnabled(true);
+					}
+					else {
+						btnRequestTask.setEnabled(false);
+					}
+				}				
+			}
+		});
 		
 		setRightComponent(lowerPane);
 		setDividerSize(0);

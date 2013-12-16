@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import dataset.Task;
 
@@ -44,11 +45,12 @@ public class CreateTaskPage extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 		add(desc, gbc);
 
-		final JTextArea descinput = new JTextArea(20, 5);
-		descinput.setBackground(Color.gray);
+		final JTextArea descinput = new JTextArea(20, 20);
+		descinput.setBorder(new LineBorder(Color.black));
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.insets = new Insets(40, 0, 0, 0);
 		add(descinput, gbc);
 
 		final JLabel info = new JLabel("Fill out the form...");

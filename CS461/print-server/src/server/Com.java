@@ -44,10 +44,7 @@ public class Com extends UnicastRemoteObject implements ICom {
 	        if(result.getRow() > 0) {
 	        	result.first();
 	        	user = new User();
-	        	user.id = result.getString("Id");
-	        	user.password = result.getString("Password");
-	        	user.type = result.getString("Type");
-	        	user.lang = result.getInt("Lang");
+	        	user.getResult(result);
 	        }
 	    }
 	    catch(Exception e) {
@@ -157,7 +154,42 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    }
 	    return false;
 	}
+	
+	public List<Task> getAssignedTasksInProject(int id, String userId) {
+		List<Task> ret = new ArrayList<Task>();
 
+		PreparedStatement selectTasks = null;
+
+	    String selectString = "select * from tasks where ProjectId = ? and Id in (select TaskId from task_programmer where UserId = ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectTasks = con.prepareStatement(selectString);
+
+	        selectTasks.setInt(1, id);
+	        selectTasks.setString(2, userId);
+	        
+	        ResultSet result = selectTasks.executeQuery();
+	        while(result.next()) {
+	        	Task t = new Task();
+	        	t.getResult(result);
+	        	ret.add(t);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectTasks != null) {
+	    		try {
+					selectTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+	
 	public List<Task> getTasksInProject(int id) {
 		List<Task> ret = new ArrayList<Task>();
 
@@ -184,6 +216,44 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    	if(selectTasks != null) {
 	    		try {
 					selectTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+	
+	@Override
+	public List<Project> getWorkingProjects(String id) throws RemoteException {
+		List<Project> ret = new ArrayList<Project>();
+
+		PreparedStatement selectProjects = null;
+
+	    String selectString = "select * from projects where Id in (select ProjectId from tasks where Id in (select TaskId from task_programmer where UserId = ?));";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectProjects = con.prepareStatement(selectString);
+
+	        selectProjects.setString(1, id);
+	        
+	        ResultSet result = selectProjects.executeQuery();
+	        while(result.next()) {
+	        	Project p = new Project();
+	        	p.Id = result.getInt("Id");
+	        	p.name = result.getString("Name");
+	        	p.managerId = result.getString("ManagerId");
+	        	p.tasks = getAssignedTasksInProject(p.Id, id);
+	        	ret.add(p);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectProjects != null) {
+	    		try {
+					selectProjects.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -231,21 +301,23 @@ public class Com extends UnicastRemoteObject implements ICom {
 	}
 
 	@Override
-	public List<User> getProgrammers() throws RemoteException {
+	public List<User> getRequestProgrammers(int taskId) throws RemoteException {
 		List<User> ret = new ArrayList<User>();
 
 		PreparedStatement selectProgrammers = null;
 
-	    String selectString = "select * from projects where Type = Programmer";
+	    String selectString = "select *, if(? in (select TaskId from task_requested_by_user), 'Requested', 'None') as Status from users where Type = 'Programmer'";
 	    try {
 		    Connection con = DB.getConnection();
 	        selectProgrammers = con.prepareStatement(selectString);
 	        
+	        selectProgrammers.setInt(1, taskId);
+	        
 	        ResultSet result = selectProgrammers.executeQuery();
 	        while(result.next()) {
 	        	User u = new User();
-	        	u.id = result.getString("Id");
-	        	u.lang = result.getInt("Lang");
+	        	u.getResult(result);
+	        	u.status = result.getString("Status");
 	        	ret.add(u);
 	        }
 	    }
@@ -279,9 +351,7 @@ public class Com extends UnicastRemoteObject implements ICom {
 	        ResultSet result = selectUsers.executeQuery();
 	        while(result.next()) {	        	
 	        	User u = new User();
-	        	u.id = result.getString("id");
-	        	u.type = result.getString("type");
-	        	u.lang = result.getInt("lang");
+	        	u.getResult(result);
 	        	ret.add(u);
 	        }
 	    }
@@ -299,14 +369,51 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    }
 		return ret;
 	}
-	
+
+	@Override
+	public List<Task> getProgrammerRequestedTasks(String id) throws RemoteException {
+		List<Task> ret = new ArrayList<Task>();
+
+		PreparedStatement selectRequestedTasks = null;
+
+	    String selectString = "select * from tasks where Id = (select TaskId from task_requested_by_user " +
+	    		"where UserId = ?)";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectRequestedTasks = con.prepareStatement(selectString);
+	        
+	        selectRequestedTasks.setString(1, id);
+	        
+	        ResultSet result = selectRequestedTasks.executeQuery();
+	        while(result.next()) {	        	
+	        	Task u = new Task();
+	        	u.getResult(result);
+	        	ret.add(u);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectRequestedTasks != null) {
+	    		try {
+					selectRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
+	}
+
 	@Override
 	public List<Task> getManagerRequestedTasks(String id) throws RemoteException {
 		List<Task> ret = new ArrayList<Task>();
 
 		PreparedStatement selectRequestedTasks = null;
 
-	    String selectString = "select * from tasks where Id = (select TaskId from task_requested_by_user) and" +
+	    String selectString = "select * from tasks where Id = (select TaskId from task_requested_by_user " +
+	    		"where (select Type from users where Id = UserId) = 'Manager') and" +
 	    		"(select ManagerId from projects where Id = ProjectId) = ?";
 	    try {
 		    Connection con = DB.getConnection();
@@ -345,7 +452,7 @@ public class Com extends UnicastRemoteObject implements ICom {
 
 		String updateString = "update tasks set Status = 'Assigned' where Id = ?";
 		String insertString = "insert into task_programmer (TaskId, UserId) values(?, ?)";
-	    String deleteString = "delete from task_requested_by_user where TaskId = ? and UserId = ?";
+	    String deleteString = "delete from task_requested_by_user where TaskId = ?";
 	    try {
 		    Connection con = DB.getConnection();
 		    
@@ -369,7 +476,6 @@ public class Com extends UnicastRemoteObject implements ICom {
 	        deleteRequestedTasks = con.prepareStatement(deleteString);
 	        
 	        deleteRequestedTasks.setInt(1, taskId);
-	        deleteRequestedTasks.setString(2, userId);
 	        
 	        result = deleteRequestedTasks.executeUpdate();
 	        return result == 1;
@@ -401,5 +507,71 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    	}
 	    }
 		return false;
+	}
+
+	@Override
+	public boolean requestTask(int taskId, String userId) throws RemoteException {
+		PreparedStatement insertRequestedTasks = null;
+
+		String insertString = "insert into task_requested_by_user (TaskId, UserId) values(?, ?)";
+	    try {
+		    Connection con = DB.getConnection();
+		    
+		    insertRequestedTasks = con.prepareStatement(insertString);
+		    insertRequestedTasks.setInt(1, taskId);
+		    insertRequestedTasks.setString(2, userId);
+		    
+		    int result = insertRequestedTasks.executeUpdate();
+		    return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(insertRequestedTasks != null) {
+	    		try {
+	    			insertRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return false;
+	}
+
+	@Override
+	public boolean cancelTask(int taskId, String userId) throws RemoteException {
+		PreparedStatement deleteRequestedTasks = null;
+
+	    String deleteString = "delete from task_requested_by_user where TaskId = ? and UserId = ?";
+	    try {
+		    Connection con = DB.getConnection();
+		    
+		    deleteRequestedTasks = con.prepareStatement(deleteString);
+		    deleteRequestedTasks.setInt(1, taskId);
+		    deleteRequestedTasks.setString(2, userId);
+		    
+		    int result = deleteRequestedTasks.executeUpdate();
+		    return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(deleteRequestedTasks != null) {
+	    		try {
+	    			deleteRequestedTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return false;
+	}
+
+	@Override
+	public void addNote(int taskId, String userId, String note) {
+		// TODO Auto-generated method stub
+		
 	}
 }

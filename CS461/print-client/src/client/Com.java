@@ -8,6 +8,7 @@ import java.rmi.registry.Registry;
 import common.ICom;
 
 import dataset.Project;
+import dataset.Task;
 import dataset.User;
 
 public class Com {
@@ -15,6 +16,7 @@ public class Com {
 	public ICom com = null;
 	public User me = null;
 	public Project selectedProject = null;
+	public Task selectedTask = null;
 	
 	public Com(String[] args) {
 		Registry registry;

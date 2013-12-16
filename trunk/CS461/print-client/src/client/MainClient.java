@@ -1,10 +1,6 @@
 package client;
 
 import java.rmi.RMISecurityManager;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
-import common.ICom;
 
 
 public class MainClient {

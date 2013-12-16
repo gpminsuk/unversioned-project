@@ -59,6 +59,9 @@ public class ClientFrame extends JFrame {
 		cards.add(new ProgrammersListPage(), "ProgrammersList");
 		cards.add(new RequestedTasksPage(), "RequestedTasks");
 		
+		cards.add(new TaskDetailPage(), "TaskDetail");
+		cards.add(new ProjectDetailPage(), "ProjectDetail");
+		
 		cardLayout.show(cards, "Login");
 				
 		getContentPane().add(cards);

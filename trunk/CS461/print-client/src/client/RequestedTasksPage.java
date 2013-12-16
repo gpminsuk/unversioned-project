@@ -75,9 +75,6 @@ public class RequestedTasksPage extends JSplitPane {
 						if (node instanceof String && node.equals("Tasks")) {
 							return false;
 						}
-						if (node instanceof Task) {
-							return false;
-						}
 						return true;
 					}
 
@@ -85,7 +82,12 @@ public class RequestedTasksPage extends JSplitPane {
 					public Object getRoot() {
 						try {
 							if (Com.me() != null) {
-								tasks = Com.get().getManagerRequestedTasks(Com.me().id);
+								if(Com.me().type.equals("Programmer")) {
+									tasks = Com.get().getProgrammerRequestedTasks(Com.me().id);									
+								}
+								else {
+									tasks = Com.get().getManagerRequestedTasks(Com.me().id);									
+								}
 							}
 						} catch (RemoteException e) {
 							e.printStackTrace();
@@ -111,8 +113,10 @@ public class RequestedTasksPage extends JSplitPane {
 								&& parent.equals("Tasks")) {
 							return tasks.size();
 						}
-						if (parent instanceof Task) {
-							return ((Task) parent).requestedProgrammers.size();
+						if(Com.me().type.equals("Manager")) {
+							if (parent instanceof Task) {
+								return ((Task) parent).requestedProgrammers.size();
+							}
 						}
 						return 0;
 					}
@@ -123,8 +127,10 @@ public class RequestedTasksPage extends JSplitPane {
 								&& parent.equals("Tasks")) {
 							return tasks.get(index);
 						}
-						if (parent instanceof Task) {
-							return ((Task) parent).requestedProgrammers.get(index);
+						if(Com.me().type.equals("Manager")) {
+							if (parent instanceof Task) {
+								return ((Task) parent).requestedProgrammers.get(index);
+							}
 						}
 						return null;
 					}
@@ -166,20 +172,26 @@ public class RequestedTasksPage extends JSplitPane {
 
 		JPanel lowerPane = new JPanel(new FlowLayout());
 
-		final JButton btnAcceptProgrammer = new JButton("Accept");
-		btnAcceptProgrammer.setEnabled(false);
-		btnAcceptProgrammer.addActionListener(new ActionListener() {
+		final JButton btnAccept = new JButton("Accept");
+		btnAccept.setEnabled(false);
+		btnAccept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tree.getSelectionPath() != null) {
-					User u = (User) tree.getSelectionPath().getLastPathComponent();
-					Task t = (Task) tree.getSelectionPath().getParentPath().getLastPathComponent();
+					User u = null;
+					Task t = null;
+					if(Com.me().type.equals("Manager")) {
+						u = (User) tree.getSelectionPath().getLastPathComponent();
+						t = (Task) tree.getSelectionPath().getParentPath().getLastPathComponent();						
+					}
+					else {
+						u = (User) Com.me();
+						t = (Task) tree.getSelectionPath().getLastPathComponent();
+					}
+					
 					try {
 						if(Com.get().acceptTask(t.Id, u.id)) {
-							((ClientFrame) getTopLevelAncestor()).ChangePage("Manager");	
-						}
-						else {
-							
+							((ClientFrame) getTopLevelAncestor()).ChangePage(Com.me().type);	
 						}
 					} catch (RemoteException e1) {
 						e1.printStackTrace();
@@ -187,20 +199,44 @@ public class RequestedTasksPage extends JSplitPane {
 				}
 			}
 		});
-		lowerPane.add(btnAcceptProgrammer);
-
+		lowerPane.add(btnAccept);
+		tree.setModel(null);
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
-			    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
-				if(tp != null) {
-					Object o = tp.getLastPathComponent();
-					if(o instanceof User) {
-						btnAcceptProgrammer.setEnabled(true);
+				if(me.getClickCount() == 1) {
+					TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+					if(tp != null) {
+						Object o = tp.getLastPathComponent();
+
+						if(Com.me().type.equals("Manager")) {
+							if(o instanceof User) {
+								btnAccept.setEnabled(true);
+							}
+							else {
+								btnAccept.setEnabled(false);
+							}
+						}
+						else {
+							if(o instanceof Task) {
+								btnAccept.setEnabled(true);
+							}
+							else {
+								btnAccept.setEnabled(false);
+							}
+						}
 					}
-					else {
-						btnAcceptProgrammer.setEnabled(false);
+	            }
+	            else if(me.getClickCount() == 2) {
+	            	TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+					if(tp != null) {
+						Object o = tp.getLastPathComponent();
+						if(o instanceof Task) {
+							Com.inst.selectedTask = (Task) o;
+							((ClientFrame) getTopLevelAncestor())
+							.ChangePage("TaskDetail");							
+						}						
 					}
-				}				
+	            }    				
 			}
 		});
 		
@@ -210,7 +246,7 @@ public class RequestedTasksPage extends JSplitPane {
 			public void actionPerformed(ActionEvent e) {
 				if (getTopLevelAncestor() instanceof JFrame) {
 					((ClientFrame) getTopLevelAncestor())
-					.ChangePage("Manager");
+					.ChangePage(Com.me().type);
 				}
 			}
 		});

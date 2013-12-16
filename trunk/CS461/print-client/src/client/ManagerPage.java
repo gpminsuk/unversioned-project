@@ -26,7 +26,6 @@ import javax.swing.tree.TreePath;
 
 import dataset.Project;
 import dataset.Task;
-import dataset.User;
 
 public class ManagerPage extends JSplitPane {
 	private static final long serialVersionUID = 1L;
@@ -191,7 +190,7 @@ public class ManagerPage extends JSplitPane {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tree.getSelectionPath() != null) {
-					Com.inst.selectedProject = (Project) tree.getSelectionPath().getLastPathComponent();				 
+					Com.inst.selectedProject = (Project) tree.getSelectionPath().getLastPathComponent();
 					((ClientFrame) getTopLevelAncestor()).ChangePage("CreateTask");
 				}
 			}
@@ -202,30 +201,46 @@ public class ManagerPage extends JSplitPane {
 		btnRequestTask.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				((ClientFrame) getTopLevelAncestor())
-						.ChangePage("ProgrammersList");
+				if(tree.getSelectionPath() != null) {
+					Com.inst.selectedTask = (Task) tree.getSelectionPath().getLastPathComponent();
+					((ClientFrame) getTopLevelAncestor()).ChangePage("ProgrammersList");	
+				}				
 			}
 		});
 		lowerPane.add(btnRequestTask);
 
+		tree.setModel(null);
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent me) {
-			    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
-				if(tp != null) {
-					Object o = tp.getLastPathComponent();
-					if(o instanceof Task && ((Task)o).status.equals("Open")) {
-						btnRequestTask.setEnabled(true);
+				if(me.getClickCount() == 1) {
+				    TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+					if(tp != null) {
+						Object o = tp.getLastPathComponent();
+						if(o instanceof Task && ((Task)o).status.equals("Open")) {
+							btnRequestTask.setEnabled(true);
+						}
+						else {
+							btnRequestTask.setEnabled(false);
+						}
+						if(o instanceof Project) {
+							btnCreateTask.setEnabled(true);
+						}
+						else {
+							btnCreateTask.setEnabled(false);
+						}
+					}	
+				}
+	            else if(me.getClickCount() == 2) {
+	            	TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+					if(tp != null) {
+						Object o = tp.getLastPathComponent();
+						if(o instanceof Task) {
+							Com.inst.selectedTask = (Task) o;
+							((ClientFrame) getTopLevelAncestor())
+							.ChangePage("TaskDetail");							
+						}						
 					}
-					else {
-						btnRequestTask.setEnabled(false);
-					}
-					if(o instanceof Project) {
-						btnCreateTask.setEnabled(true);
-					}
-					else {
-						btnCreateTask.setEnabled(false);
-					}
-				}				
+	            }   			
 			}
 		});
 		

@@ -29,5 +29,5 @@ public interface ICom extends Remote {
 	public boolean cancelTask(int taskId, String userId) throws RemoteException;
 	public boolean acceptTask(int taskId, String userId) throws RemoteException;
 	
-	public void addNote(int taskId, String userId, String note) throws RemoteException;
+	public boolean addNote(int taskId, String userId, String note) throws RemoteException;
 }

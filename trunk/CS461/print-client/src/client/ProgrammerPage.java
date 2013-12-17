@@ -174,6 +174,17 @@ public class ProgrammerPage extends JSplitPane {
 			}
 		});
 		lowerPane.add(btnRequestedTask);
+		final JButton btnFindTask = new JButton("Find Task");
+		btnFindTask.setEnabled(false);
+		btnFindTask.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tree.getSelectionPath() != null) {
+					((ClientFrame) getTopLevelAncestor()).ChangePage("TaskList");	
+				}				
+			}
+		});
+		lowerPane.add(btnFindTask);
 		final JButton btnRequestComplete = new JButton("Request Complete");
 		btnRequestComplete.setEnabled(false);
 		btnRequestComplete.addActionListener(new ActionListener() {

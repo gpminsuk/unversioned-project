@@ -57,6 +57,7 @@ public class ClientFrame extends JFrame {
 		cards.add(new CreateProjectPage(), "CreateProject");
 		cards.add(new CreateTaskPage(), "CreateTask");
 		cards.add(new ProgrammersListPage(), "ProgrammersList");
+		cards.add(new TaskListPage(), "TaskList");
 		cards.add(new RequestedTasksPage(), "RequestedTasks");
 		
 		cards.add(new TaskDetailPage(), "TaskDetail");

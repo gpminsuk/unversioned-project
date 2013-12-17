@@ -20,6 +20,7 @@ public interface ICom extends Remote {
 	public List<User> getRequestProgrammers(int taskId) throws RemoteException;
 	public List<Task> getManagerRequestedTasks(String id) throws RemoteException;
 	public List<Task> getProgrammerRequestedTasks(String id) throws RemoteException;
+	public List<Task> getAllOpenTasks() throws RemoteException;
 	public List<Note> getNotes(int taskId) throws RemoteException;
 	
 	public boolean createProject(Project p) throws RemoteException;

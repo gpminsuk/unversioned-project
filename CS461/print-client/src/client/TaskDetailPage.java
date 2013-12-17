@@ -33,8 +33,26 @@ public class TaskDetailPage extends JSplitPane {
 		
 		final JTextField taskName = new JTextField();
 		panel.add(taskName);
+
+		panel.add(new JLabel("Task Status"));
+		
+		final JTextField taskStatus = new JTextField();
+		panel.add(taskStatus);
+		
+		panel.add(new JLabel("Task Description"));
+		
+		final JTextField taskDesc = new JTextField();
+		panel.add(taskDesc);
+
+		panel.add(new JLabel("Task Price"));
+		
+		final JTextField taskPrice = new JTextField();
+		panel.add(taskDesc);
+		
+		panel.add(new JLabel("Notes"));
 		
 		final JTextArea notesArea = new JTextArea(5,30);
+		notesArea.setEnabled(false);
 		panel.add(notesArea);
 
 		notesArea.addComponentListener(new ComponentListener() {
@@ -55,6 +73,9 @@ public class TaskDetailPage extends JSplitPane {
 				notesArea.setText(str);
 				
 				taskName.setText(Com.inst.selectedTask.name);
+				taskDesc.setText(Com.inst.selectedTask.desc);
+				taskPrice.setText(Com.inst.selectedTask.price + "");
+				taskStatus.setText(Com.inst.selectedTask.status);
 			}
 			
 			@Override

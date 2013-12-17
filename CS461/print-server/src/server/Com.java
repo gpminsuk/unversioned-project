@@ -673,18 +673,18 @@ public class Com extends UnicastRemoteObject implements ICom {
 		PreparedStatement updateProject = null;
 		PreparedStatement insertProject = null;
 
-	    String updateString = "update tasks set Status = 'Paid' where Id = ?";
+	    String updateString = "update tasks set Status = 'Paid' where Id = ? AND update users set Current_Balance = Current_Balance + (select Price from tasks where Id = ?)";
 		String insertString = "insert into payment_table (amount, taskid, userid) values((select Price from tasks where Id = ?), ?, ?)";		
 	    try {
 		    Connection con = DB.getConnection();
 		    
-		    insertProject = con.prepareStatement(updateString);
+		    insertProject = con.prepareStatement(insertString);
 
 		    insertProject.setInt(1, taskId);
 		    insertProject.setInt(2, taskId);
 		    insertProject.setString(3, userId);
 	        
-	        int result = updateProject.executeUpdate(); 
+	        int result = insertProject.executeUpdate(); 
 	        if(result != 1) {
 	        	return false;
 	        }
@@ -692,6 +692,7 @@ public class Com extends UnicastRemoteObject implements ICom {
 	        updateProject = con.prepareStatement(updateString);
 
 	        updateProject.setInt(1, taskId);
+	        updateProject.setInt(2, taskId);
 	        
 	        result = updateProject.executeUpdate(); 
 	        return result == 1;
@@ -700,6 +701,13 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    	e.printStackTrace();	    	
 	    }
 	    finally {
+	    	if(insertProject != null) {
+	    		try {
+	    			insertProject.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
 	    	if(updateProject != null) {
 	    		try {
 					updateProject.close();
@@ -709,5 +717,38 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    	}
 	    }
 	    return false;
+	}
+
+	@Override
+	public List<Task> getAllOpenTasks() throws RemoteException {
+		List<Task> ret = new ArrayList<Task>();
+
+		PreparedStatement selectTasks = null;
+
+	    String selectString = "select * from tasks where Status = 'Open'";
+	    try {
+		    Connection con = DB.getConnection();
+	        selectTasks = con.prepareStatement(selectString);
+	        
+	        ResultSet result = selectTasks.executeQuery();
+	        while(result.next()) {
+	        	Task t = new Task();
+	        	t.getResult(result);
+	        	ret.add(t);
+	        }
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(selectTasks != null) {
+	    		try {
+					selectTasks.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+		return ret;
 	}
 }

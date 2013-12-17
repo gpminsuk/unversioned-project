@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`notes` (
   `idnotes` INT NOT NULL,
   `Contents` VARCHAR(255) NULL,
   `tasks_Id` INT(11) NOT NULL,
-  `users_Id` LONGTEXT NOT NULL,
+  `users_Id` VARCHAR(45) NOT NULL,
   `Uploadedtime` VARCHAR(25) NULL,
   PRIMARY KEY (`idnotes`, `tasks_Id`, `users_Id`),
   INDEX `fk_notes_tasks_idx` (`tasks_Id` ASC),

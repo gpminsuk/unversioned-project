@@ -30,4 +30,7 @@ public interface ICom extends Remote {
 	public boolean acceptTask(int taskId, String userId) throws RemoteException;
 	
 	public boolean addNote(int taskId, String userId, String note) throws RemoteException;
+	
+	public boolean requestTaskFinish(int taskId) throws RemoteException;
+	public boolean approveTaskFinish(int taskId, String userId) throws RemoteException;
 }

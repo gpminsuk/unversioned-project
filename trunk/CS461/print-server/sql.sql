@@ -183,3 +183,7 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO users (Id, Password, Type, Lang) values ('p', 'p', 'Programmer', 0);
+INSERT INTO users (Id, Password, Type, Lang) values ('m', 'm', 'Manager', 0);
+INSERT INTO users (Id, Password, Type, Lang) values ('mm', 'mm', 'Manager', 0);

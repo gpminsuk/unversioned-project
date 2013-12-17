@@ -10,21 +10,13 @@ import java.sql.SQLException;
 public class MainServer {
 
 	public static void main(String[] args) {
-		ClassLoader s = ClassLoader.getSystemClassLoader();
-		URL[] urls = ((URLClassLoader)s).getURLs();
-		for(URL u : urls) {
-			System.out.println(u.getFile());
-		}
-		
-		
-		
 		try {
 			DB.getConnection();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			LocateRegistry.createRegistry(1099);
+			//LocateRegistry.createRegistry(1099);
 			Registry registry = LocateRegistry.getRegistry();
 			registry.rebind("com", new Com());
 		} catch (RemoteException e) {

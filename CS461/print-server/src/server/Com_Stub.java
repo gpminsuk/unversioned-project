@@ -11,37 +11,41 @@ public final class Com_Stub
     
     private static java.lang.reflect.Method $method_acceptTask_0;
     private static java.lang.reflect.Method $method_addNote_1;
-    private static java.lang.reflect.Method $method_cancelTask_2;
-    private static java.lang.reflect.Method $method_createProject_3;
-    private static java.lang.reflect.Method $method_createTask_4;
-    private static java.lang.reflect.Method $method_getManagerRequestedTasks_5;
-    private static java.lang.reflect.Method $method_getNotes_6;
-    private static java.lang.reflect.Method $method_getProgrammerRequestedTasks_7;
-    private static java.lang.reflect.Method $method_getProjects_8;
-    private static java.lang.reflect.Method $method_getRequestProgrammers_9;
-    private static java.lang.reflect.Method $method_getWorkingProjects_10;
-    private static java.lang.reflect.Method $method_login_11;
-    private static java.lang.reflect.Method $method_ping_12;
-    private static java.lang.reflect.Method $method_requestTask_13;
-    private static java.lang.reflect.Method $method_signup_14;
+    private static java.lang.reflect.Method $method_approveTaskFinish_2;
+    private static java.lang.reflect.Method $method_cancelTask_3;
+    private static java.lang.reflect.Method $method_createProject_4;
+    private static java.lang.reflect.Method $method_createTask_5;
+    private static java.lang.reflect.Method $method_getManagerRequestedTasks_6;
+    private static java.lang.reflect.Method $method_getNotes_7;
+    private static java.lang.reflect.Method $method_getProgrammerRequestedTasks_8;
+    private static java.lang.reflect.Method $method_getProjects_9;
+    private static java.lang.reflect.Method $method_getRequestProgrammers_10;
+    private static java.lang.reflect.Method $method_getWorkingProjects_11;
+    private static java.lang.reflect.Method $method_login_12;
+    private static java.lang.reflect.Method $method_ping_13;
+    private static java.lang.reflect.Method $method_requestTask_14;
+    private static java.lang.reflect.Method $method_requestTaskFinish_15;
+    private static java.lang.reflect.Method $method_signup_16;
     
     static {
 	try {
 	    $method_acceptTask_0 = common.ICom.class.getMethod("acceptTask", new java.lang.Class[] {int.class, java.lang.String.class});
 	    $method_addNote_1 = common.ICom.class.getMethod("addNote", new java.lang.Class[] {int.class, java.lang.String.class, java.lang.String.class});
-	    $method_cancelTask_2 = common.ICom.class.getMethod("cancelTask", new java.lang.Class[] {int.class, java.lang.String.class});
-	    $method_createProject_3 = common.ICom.class.getMethod("createProject", new java.lang.Class[] {dataset.Project.class});
-	    $method_createTask_4 = common.ICom.class.getMethod("createTask", new java.lang.Class[] {dataset.Task.class});
-	    $method_getManagerRequestedTasks_5 = common.ICom.class.getMethod("getManagerRequestedTasks", new java.lang.Class[] {java.lang.String.class});
-	    $method_getNotes_6 = common.ICom.class.getMethod("getNotes", new java.lang.Class[] {int.class});
-	    $method_getProgrammerRequestedTasks_7 = common.ICom.class.getMethod("getProgrammerRequestedTasks", new java.lang.Class[] {java.lang.String.class});
-	    $method_getProjects_8 = common.ICom.class.getMethod("getProjects", new java.lang.Class[] {java.lang.String.class});
-	    $method_getRequestProgrammers_9 = common.ICom.class.getMethod("getRequestProgrammers", new java.lang.Class[] {int.class});
-	    $method_getWorkingProjects_10 = common.ICom.class.getMethod("getWorkingProjects", new java.lang.Class[] {java.lang.String.class});
-	    $method_login_11 = common.ICom.class.getMethod("login", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
-	    $method_ping_12 = common.ICom.class.getMethod("ping", new java.lang.Class[] {});
-	    $method_requestTask_13 = common.ICom.class.getMethod("requestTask", new java.lang.Class[] {int.class, java.lang.String.class});
-	    $method_signup_14 = common.ICom.class.getMethod("signup", new java.lang.Class[] {dataset.User.class});
+	    $method_approveTaskFinish_2 = common.ICom.class.getMethod("approveTaskFinish", new java.lang.Class[] {int.class, java.lang.String.class});
+	    $method_cancelTask_3 = common.ICom.class.getMethod("cancelTask", new java.lang.Class[] {int.class, java.lang.String.class});
+	    $method_createProject_4 = common.ICom.class.getMethod("createProject", new java.lang.Class[] {dataset.Project.class});
+	    $method_createTask_5 = common.ICom.class.getMethod("createTask", new java.lang.Class[] {dataset.Task.class});
+	    $method_getManagerRequestedTasks_6 = common.ICom.class.getMethod("getManagerRequestedTasks", new java.lang.Class[] {java.lang.String.class});
+	    $method_getNotes_7 = common.ICom.class.getMethod("getNotes", new java.lang.Class[] {int.class});
+	    $method_getProgrammerRequestedTasks_8 = common.ICom.class.getMethod("getProgrammerRequestedTasks", new java.lang.Class[] {java.lang.String.class});
+	    $method_getProjects_9 = common.ICom.class.getMethod("getProjects", new java.lang.Class[] {java.lang.String.class});
+	    $method_getRequestProgrammers_10 = common.ICom.class.getMethod("getRequestProgrammers", new java.lang.Class[] {int.class});
+	    $method_getWorkingProjects_11 = common.ICom.class.getMethod("getWorkingProjects", new java.lang.Class[] {java.lang.String.class});
+	    $method_login_12 = common.ICom.class.getMethod("login", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
+	    $method_ping_13 = common.ICom.class.getMethod("ping", new java.lang.Class[] {});
+	    $method_requestTask_14 = common.ICom.class.getMethod("requestTask", new java.lang.Class[] {int.class, java.lang.String.class});
+	    $method_requestTaskFinish_15 = common.ICom.class.getMethod("requestTaskFinish", new java.lang.Class[] {int.class});
+	    $method_signup_16 = common.ICom.class.getMethod("signup", new java.lang.Class[] {dataset.User.class});
 	} catch (java.lang.NoSuchMethodException e) {
 	    throw new java.lang.NoSuchMethodError(
 		"stub class initialization failed");
@@ -87,12 +91,28 @@ public final class Com_Stub
 	}
     }
     
+    // implementation of approveTaskFinish(int, String)
+    public boolean approveTaskFinish(int $param_int_1, java.lang.String $param_String_2)
+	throws java.rmi.RemoteException
+    {
+	try {
+	    Object $result = ref.invoke(this, $method_approveTaskFinish_2, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2}, 971880559428658611L);
+	    return ((java.lang.Boolean) $result).booleanValue();
+	} catch (java.lang.RuntimeException e) {
+	    throw e;
+	} catch (java.rmi.RemoteException e) {
+	    throw e;
+	} catch (java.lang.Exception e) {
+	    throw new java.rmi.UnexpectedException("undeclared checked exception", e);
+	}
+    }
+    
     // implementation of cancelTask(int, String)
     public boolean cancelTask(int $param_int_1, java.lang.String $param_String_2)
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_cancelTask_2, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2}, 5028217639837982636L);
+	    Object $result = ref.invoke(this, $method_cancelTask_3, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2}, 5028217639837982636L);
 	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -108,7 +128,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_createProject_3, new java.lang.Object[] {$param_Project_1}, 4496976345018856263L);
+	    Object $result = ref.invoke(this, $method_createProject_4, new java.lang.Object[] {$param_Project_1}, 4496976345018856263L);
 	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -124,7 +144,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_createTask_4, new java.lang.Object[] {$param_Task_1}, 3085195118709780660L);
+	    Object $result = ref.invoke(this, $method_createTask_5, new java.lang.Object[] {$param_Task_1}, 3085195118709780660L);
 	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -140,7 +160,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getManagerRequestedTasks_5, new java.lang.Object[] {$param_String_1}, -4968941638834759035L);
+	    Object $result = ref.invoke(this, $method_getManagerRequestedTasks_6, new java.lang.Object[] {$param_String_1}, -4968941638834759035L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -156,7 +176,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getNotes_6, new java.lang.Object[] {new java.lang.Integer($param_int_1)}, -6857016128287231881L);
+	    Object $result = ref.invoke(this, $method_getNotes_7, new java.lang.Object[] {new java.lang.Integer($param_int_1)}, -6857016128287231881L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -172,7 +192,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getProgrammerRequestedTasks_7, new java.lang.Object[] {$param_String_1}, 2647625058675784885L);
+	    Object $result = ref.invoke(this, $method_getProgrammerRequestedTasks_8, new java.lang.Object[] {$param_String_1}, 2647625058675784885L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -188,7 +208,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getProjects_8, new java.lang.Object[] {$param_String_1}, 7570449714732488324L);
+	    Object $result = ref.invoke(this, $method_getProjects_9, new java.lang.Object[] {$param_String_1}, 7570449714732488324L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -204,7 +224,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getRequestProgrammers_9, new java.lang.Object[] {new java.lang.Integer($param_int_1)}, -2183302197464079L);
+	    Object $result = ref.invoke(this, $method_getRequestProgrammers_10, new java.lang.Object[] {new java.lang.Integer($param_int_1)}, -2183302197464079L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -220,7 +240,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_getWorkingProjects_10, new java.lang.Object[] {$param_String_1}, 4799066939231664806L);
+	    Object $result = ref.invoke(this, $method_getWorkingProjects_11, new java.lang.Object[] {$param_String_1}, 4799066939231664806L);
 	    return ((java.util.List) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -236,7 +256,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_login_11, new java.lang.Object[] {$param_String_1, $param_String_2}, 8255974224146657066L);
+	    Object $result = ref.invoke(this, $method_login_12, new java.lang.Object[] {$param_String_1, $param_String_2}, 8255974224146657066L);
 	    return ((dataset.User) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -252,7 +272,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_ping_12, null, -5977121354941433790L);
+	    Object $result = ref.invoke(this, $method_ping_13, null, -5977121354941433790L);
 	    return ((java.lang.String) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -268,7 +288,23 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_requestTask_13, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2}, 8790665978755444986L);
+	    Object $result = ref.invoke(this, $method_requestTask_14, new java.lang.Object[] {new java.lang.Integer($param_int_1), $param_String_2}, 8790665978755444986L);
+	    return ((java.lang.Boolean) $result).booleanValue();
+	} catch (java.lang.RuntimeException e) {
+	    throw e;
+	} catch (java.rmi.RemoteException e) {
+	    throw e;
+	} catch (java.lang.Exception e) {
+	    throw new java.rmi.UnexpectedException("undeclared checked exception", e);
+	}
+    }
+    
+    // implementation of requestTaskFinish(int)
+    public boolean requestTaskFinish(int $param_int_1)
+	throws java.rmi.RemoteException
+    {
+	try {
+	    Object $result = ref.invoke(this, $method_requestTaskFinish_15, new java.lang.Object[] {new java.lang.Integer($param_int_1)}, 1800355340895019487L);
 	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
@@ -284,7 +320,7 @@ public final class Com_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    Object $result = ref.invoke(this, $method_signup_14, new java.lang.Object[] {$param_User_1}, -2606815845293560872L);
+	    Object $result = ref.invoke(this, $method_signup_16, new java.lang.Object[] {$param_User_1}, -2606815845293560872L);
 	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;

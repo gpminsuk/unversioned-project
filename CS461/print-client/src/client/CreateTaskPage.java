@@ -34,6 +34,17 @@ public class CreateTaskPage extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 		add(name, gbc);
 
+		JLabel price = new JLabel("Price : ");
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.WEST;
+		add(price, gbc);
+
+		final JTextField priceinput = new JTextField(20);
+		gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		add(priceinput, gbc);
+		
 		final JTextField nameinput = new JTextField(20);
 		gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.WEST;
@@ -73,6 +84,7 @@ public class CreateTaskPage extends JPanel {
 					t.name = nameinput.getText();
 					t.desc = descinput.getText();
 					t.projectId = Com.inst.selectedProject.Id;
+					t.price = Integer.parseInt(priceinput.getText());
 					
 					if (Com.get().createTask(t)) {
 						((ClientFrame)getTopLevelAncestor()).ChangePage("Manager");

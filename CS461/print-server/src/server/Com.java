@@ -638,4 +638,76 @@ public class Com extends UnicastRemoteObject implements ICom {
 	    }
 		return ret;
 	}
+
+	@Override
+	public boolean requestTaskFinish(int taskId) throws RemoteException {
+		PreparedStatement updateProject = null;
+
+	    String updateString = "update tasks set Status = 'Finished' where Id = ?";
+	    try {
+		    Connection con = DB.getConnection();
+	        updateProject = con.prepareStatement(updateString);
+
+	        updateProject.setInt(1, taskId);
+	        
+	        int result = updateProject.executeUpdate(); 
+	        return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(updateProject != null) {
+	    		try {
+					updateProject.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
+
+	@Override
+	public boolean approveTaskFinish(int taskId, String userId) throws RemoteException {
+		PreparedStatement updateProject = null;
+		PreparedStatement insertProject = null;
+
+	    String updateString = "update tasks set Status = 'Paid' where Id = ?";
+		String insertString = "insert into payment_table (amount, taskid, userid) values((select Price from tasks where Id = ?), ?, ?)";		
+	    try {
+		    Connection con = DB.getConnection();
+		    
+		    insertProject = con.prepareStatement(updateString);
+
+		    insertProject.setInt(1, taskId);
+		    insertProject.setInt(2, taskId);
+		    insertProject.setString(3, userId);
+	        
+	        int result = updateProject.executeUpdate(); 
+	        if(result != 1) {
+	        	return false;
+	        }
+	        
+	        updateProject = con.prepareStatement(updateString);
+
+	        updateProject.setInt(1, taskId);
+	        
+	        result = updateProject.executeUpdate(); 
+	        return result == 1;
+	    }
+	    catch(Exception e) {
+	    	e.printStackTrace();	    	
+	    }
+	    finally {
+	    	if(updateProject != null) {
+	    		try {
+					updateProject.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	    	}
+	    }
+	    return false;
+	}
 }
